@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>用户管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+	</head>
+
+	<body>
+		<div class="page-container">
+			<div class="remark">
+				<i class="fa fa-list-ol fa-2x"></i><span>*运营端管理员管理，可添加、编辑、删除用户、停/启用用户以及重置用户密码</span>
+			</div>
+			<div class="content">
+				<div class="search">
+					<div class="form-inline">
+						<select id="selRole" class="form-control">
+							<option value="">请选择角色</option>
+						</select>
+						<select id="selStatus" class="form-control">
+							<option value="0">请选择状态</option>
+							<option value="1">启用</option>
+							<option value="2">停用</option>
+						</select>
+						<input id="txtKey" class="form-control" type="text" placeholder="姓名" />
+						<button type="button" class="btn btn-default" onclick="reloadGrid();" role-auth="os/users|get">查 询</button>
+					</div>
+				</div>
+				<div class="user-list">
+					<table id="grid-table" class="grid-module">
+					</table>
+					<div id="grid-pager">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-info hide">
+			<form class="form-horizontal model-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">姓名</label>
+					<input type="text" class="form-control" placeholder="姓名" bind="real_name" nulltip="姓名" maxlength="10">
+				</div>
+				<div class="form-group form-inline">
+					<label>工号</label>
+					<input type="text" class="form-control" placeholder="工号" bind="work_number" maxlength="10">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">帐号</label>
+					<input type="text" class="form-control" placeholder="输入手机号作为登录帐号" bind="account_name" nulltip="帐号" valitype="mobile" maxlength="11">
+				</div>
+				<div class="form-group form-inline password-line">
+					<label class="input-flag">密码</label>
+					<input type="text" class="form-control form-control-password" placeholder="密码" bind="password" nulltip="密码" maxlength="20" valitype="password" valirange="6-20" valitip="密码长度为 6-20 位。">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">邮箱</label>
+					<input type="text" class="form-control" placeholder="邮箱" bind="email" nulltip="邮箱" maxlength="30" valitype="email">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">职位</label>
+					<input type="text" class="form-control" placeholder="职位" bind="department" nulltip="职位" maxlength="20">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">角色</label>
+					<span class="form-control roles" style="height: auto;">
+						<!--<label><input type="checkbox" rid="1"/> 运营</label>-->
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">电话</label>
+					<input type="text" class="form-control" placeholder="电话" bind="phone_number" nulltip="电话" maxlength="12" valitype="tel">
+				</div>
+			</form>
+		</div>
+		<div class="pnl-resetpwd hide">
+			<form class="form-horizontal model-resetpwd">
+				<div class="form-group form-inline">
+					<label class="input-flag">新密码</label>
+					<input id="txtPwd" type="text" class="form-control form-control-pwd-reset" placeholder="新密码" nulltip="新密码" maxlength="20" valitype="password" valirange="6-20" valitip="密码长度为 6-20 位。">
+				</div>
+				<div class="form-group form-inline hide">
+					<label class="input-flag">确认密码</label>
+					<input id="txtPwd1" type="password" class="form-control" placeholder="确认密码" nulltip1="确认密码" maxlength="20">
+				</div>
+			</form>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info" onclick="openModelInfo('add');" role-auth="os/users|post"><i class="fa fa-plus"></i> 添加用户</a>
+			<a class="btn btn-sm btn-danger" onclick="openModelInfo('update');" show-on="singleselect" role-auth="os/users/0|put"><i class="fa fa-edit"></i> 编辑</a>
+			<a class="btn btn-sm btn-danger" onclick="openResetPwdPOP();" show-on="singleselect" role-auth="os/users/0|patch"><i class="fa fa-cog"></i> 重置密码</a>
+			<a class="btn btn-sm btn-danger" show-on="multiselect" onclick="setDisable(1);" role-auth="os/users|patch"><i class="fa fa-unlock"></i> 启用</a>
+			<a class="btn btn-sm btn-danger" show-on="multiselect" onclick="setDisable(2);" role-auth="os/users|patch"><i class="fa fa-lock"></i> 停用</a>
+			<a class="btn btn-sm btn-danger" show-on="multiselect" onclick="deleteModels();" role-auth="os/users|delete"><i class="fa fa-trash"></i> 删除</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			var grid_selector = "#grid-table";
+			var pager_selector = "#grid-pager";
+			var roleJSON = {};
+			$(document).ready(function() {
+				//token
+				$.token();
+				//role
+				$.ajaxGet(OSAPIURL + "/roles?status=0&isall=true&sidx=create_time&sort=desc", function(response) {
+					roleJSON = response.data.rows;
+					//bind data to select
+					for(var i in roleJSON) {
+						$("#selRole").append("<option value='" + roleJSON[i].id + "'>" + roleJSON[i].name + "</option>");
+					}
+				});
+				//grid
+				//133 = remark 21(padding+border) + search margin-bottom 10 + pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".remark").height() - $(".search").height() - 153;
+				//alert($(".remark").height());
+				var colNames = ['', '', '', '', '姓名', '工号', '帐号', '邮箱', '职位', '电话', '角色', '状态', '创建时间'];
+				var colModel = [{
+					name: 'id',
+					index: 'id',
+					hidden: true,
+				}, {
+					name: 'role_ids',
+					index: 'role_ids',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue) {
+								return cellvalue;
+							}
+							var roleIds = [];
+							for(var i in rowObject.roles) {
+								roleIds.push(rowObject.roles[i].role_id);
+							}
+							return roleIds;
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'status',
+					index: 'status',
+					hidden: true
+				}, {
+					name: 'real_name',
+					index: 'real_name',
+					hidden: true
+				}, {
+					name: '__real_name',
+					index: '__real_name',
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"openModelInfo('update'," + rowObject.id + ");\" role-auth=\"os/users/0|put\" role-auth-tip=\"你无权限修改用户信息。\">" + rowObject.real_name + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'work_number',
+					index: 'work_number',
+					sortable: true
+				}, {
+					name: 'account_name',
+					index: 'account_name',
+					sortable: true
+				}, {
+					name: 'email',
+					index: 'email',
+					sortable: true
+				}, {
+					name: 'department',
+					index: 'department',
+					sortable: true
+				}, {
+					name: 'phone_number',
+					index: 'phone_number',
+					sortable: true
+				}, {
+					name: 'role_names',
+					index: 'role_names',
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue) {
+								return cellvalue;
+							}
+							if(rowObject.roles.length == 0) {
+								return '';
+							}
+							var roleNames = "";
+							for(var i in rowObject.roles) {
+								roleNames += "," + rowObject.roles[i].role_name;
+							}
+							return roleNames.substr(1);
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'status_name',
+					index: 'status_name',
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return rowObject.status == 2 ? "<span class='fa fa-lock'><span> 停用" : "启用";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'create_time',
+					index: 'create_time',
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return $.convertToDate(cellvalue).Format("yyyy-MM-dd");
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				grid = $(grid_selector).initJqGrid({
+					grid_selector: grid_selector,
+					pager: pager_selector,
+					url: OSAPIURL + "/users",
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight,
+					beforeSelectRow: function(rowid, e) {
+						return rowid != 1;
+					},
+					onCellSelect: function(rowid, iCol, cellcontent, e) {},
+					sortname: "create_time",
+					sortorder: "desc"
+				});
+			});
+
+			function ver_pwd(pwd) {
+				var re = new RegExp("[a-zA-Z]");
+				var len = re.test(pwd);
+				if(!len) {
+					return false;
+				}
+				re = new RegExp("[0-9]");
+				len = re.test(pwd);
+				if(!len) {
+					return false;
+				}
+				//				re = new RegExp("((?=[\x21-\x7e]+)[^A-Za-z0-9])");
+				//				len = re.test(pwd);
+				//				if(!len) {
+				//					return false;
+				//				}
+				return true;
+
+				return new RegExp("((?=[\x21-\x7e]+)[^A-Za-z0-9])").test(pwd);
+
+				if(/^(([a-z]+[0-9]+)|([0-9]+[a-z]+))[a-z0-9]*$/i.test(pwd) == false ||
+					/[\.@#\$%\^&\*\(\)\[\]\\?\\\/\|\-~`\+\=\,\r\n\:\'\"]+/.test(pwd) == false) {
+					return false;
+				}
+				return true;
+			}
+			//add and update
+			function openModelInfo(action, id) {
+				var actionTxt = (action == "add" ? "添加" : "修改");
+				var modalId = $.modal().show(actionTxt + "用户", ".pnl-info",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var userData = userController.getJSON();
+						//密码判断
+						if(action == "add" && !ver_pwd(userData.password)) {
+							$.showErrorGritter("密码格式不符，必须包含字母、数字。");
+							$(formContainer + " .form-control-password").focus();
+							return false;
+						}
+						var roleIds = "",
+							roleNames = "";
+						$(formContainer).find(".roles input:checked").each(function() {
+							if(roleIds) {
+								roleIds += ",";
+							}
+							roleIds += $(this).attr("rid");
+							if(roleNames) {
+								roleNames += ",";
+							}
+							roleNames += $(this).attr("rval");
+						});
+						if(!roleIds) {
+							$.showErrorGritter("你还未为用户分配权限。");
+							return false;
+						}
+						userData.roles = roleIds.split(",");
+						userData.role_names = roleNames;
+						userData.role_ids = roleIds;
+						$.ajaxByAction(action, OSAPIURL + "/users" + (action == "update" ? ("/" + userData.id) : ""), userData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionTxt + "用户成功。");
+									modal.modal('hide');
+									userData.password = "";
+									if(action == "add")
+										userData.id = response.data;
+									userData.__real_name = userData.real_name;
+									$(grid).jqGrid(action == "add" ? "addRowData" : "setRowData", action == "update" ? userData.id : response.data, userData);
+									$(grid).reloadGrid();
+								} else {
+									$.showErrorGritter("保存用户信息失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-info";
+				var rowData = {
+					role_ids: ""
+				};
+				var userController = new Controller(formContainer);
+				//bind roles
+				$(formContainer).find(".roles").html("");
+				for(var i in roleJSON) {
+					$(formContainer).find(".roles").append("<label><input type='checkbox' status='" + roleJSON[i].status + "' rid='" + roleJSON[i].id + "' rval='" + roleJSON[i].name + "'/> " + roleJSON[i].name + "</label>");
+				}
+				if(action == "update") {
+					var rowIndex = id || $(grid_selector).jqGrid('getGridParam', 'selrow');
+					if(!rowIndex) {
+						return false;
+					}
+					rowData = $(grid_selector).jqGrid('getRowData', rowIndex);
+					$(formContainer).find(".password-line").remove();
+					//checked the selected roles
+					var role_ids = rowData.role_ids.split(',');
+					for(var i in role_ids) {
+						$(formContainer).find(".roles input[rid='" + role_ids[i] + "']").attr("checked", "checked");
+					}
+				} else {
+					var tmpPwd = $.uuid().substring(0, 6);
+					while(!ver_pwd(tmpPwd)) {
+						tmpPwd = $.uuid().substring(0, 6);
+					}
+					rowData.password = tmpPwd;
+				}
+				//$(formContainer).find(".roles input[status=2]").attr("disabled", "disabled");
+				$(formContainer).find(".roles input[status=2]").parent().css("color", "#bbb").attr("title", "此角色已停用");
+				userController.set(rowData);
+			}
+			//reset pwd
+			function openResetPwdPOP() {
+				var rowIndex = $(grid).jqGrid('getGridParam', 'selrow');
+				var modalId = $.modal().show("重置密码", ".pnl-resetpwd",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var pwd = $(formContainer + " #txtPwd").val();
+						//密码判断
+						if(!ver_pwd(pwd)) {
+							$.showErrorGritter("密码格式不符，必须包含字母、数字。");
+							//$(formContainer + " .form-control-password").focus();
+							return false;
+						}
+						var pwd1 = $(formContainer + " #txtPwd1").val();
+						if(pwd != pwd1) {
+							//$.showErrorGritter("两次密码输入不一致，请重新输入。");
+							//return false;
+						}
+						var pwdData = {
+							id: rowIndex,
+							new_password: pwd
+						};
+						$.ajaxPatch(OSAPIURL + "/users/" + pwdData.id, pwdData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("重置密码成功。");
+									modal.modal('hide');
+								} else {
+									$.showErrorGritter("重置密码失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-resetpwd";
+				var tmpPwd = $.uuid().substring(0, 6);
+				while(!ver_pwd(tmpPwd)) {
+					tmpPwd = $.uuid().substring(0, 6);
+				}
+				$(formContainer + " .form-control-pwd-reset").val(tmpPwd);
+
+			}
+			//delete module
+			function deleteModels() {
+				$.modal().confirm("你将删除选择的用户，删除后不能恢复，确认删除吗？", function() {
+					var selRowsIndex = $(grid).jqGrid('getGridParam', 'selarrrow');
+					if(selRowsIndex.length > 0) {
+						$.ajaxDelete(OSAPIURL + "/users", {
+								ids: selRowsIndex
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("删除用户信息成功。");
+									//refresh data
+									//var len = selRowsIndex.length;
+									//for (var i = 0; i < len; i++) {
+									//	$(grid).jqGrid("delRowData", $(grid).jqGrid('getGridParam', 'selrow'));
+									//}
+									$(grid).reloadGrid();
+								} else if(response.code > 0 && response.data.not_allow) {
+									var cannotDelModels = response.data.not_allow;
+									var canotDelNames = [];
+									for(var i in cannotDelModels) {
+										$(grid).jqGrid("setSelection", cannotDelModels[i].id);
+										canotDelNames.push(cannotDelModels[i].real_name);
+									}
+									$.showErrorGritter("用户 [" + canotDelNames.join(',') + "] 删除失败，该账户已进行业务操作，本次删除操作取消。");
+								} else {
+									$.showErrorGritter("删除用户失败：" + response.msg);
+								}
+							});
+					}
+					//					var rowIndex = $(grid).jqGrid('getGridParam', 'selrow');
+					//					if (rowIndex) {
+					//						$.ajaxDelete(OSAPIURL + "/users/" + rowIndex.toString(), null,
+					//							function(response) {
+					//								if (response.code == 0) {
+					//									//success
+					//									$.showSuccessGritter("删除用户成功。");
+					//									//refresh data
+					//									$(grid).jqGrid("delRowData", $(grid).jqGrid('getGridParam', 'selrow'));
+					//								} else {
+					//									$.showErrorGritter("提交删除失败：" + response.msg);
+					//								}
+					//							});
+					//					}
+				});
+			}
+
+			function setDisable(state) {
+				var statusArr = $.getSelectRowIdsForjqGrid(grid, "status");
+				if(statusArr.indexOf("2") >= 0 && state == 2) {
+					$.showErrorGritter("已停用的帐号不能进行停用操作。");
+					return false;
+				}
+				if(statusArr.indexOf("1") >= 0 && state == 1) {
+					$.showErrorGritter("已启用的帐号不能进行启用操作。");
+					return false;
+				}
+				var doDisable = function() {
+					var status = state == 2 ? "停用" : "启用";
+					var selRowsIndex = $(grid).jqGrid('getGridParam', 'selarrrow');
+					if(selRowsIndex.length > 0) {
+						$.ajaxPatch(OSAPIURL + "/users", {
+								ids: selRowsIndex,
+								status: state
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(status + " 用户成功。");
+									//refresh data
+									var len = selRowsIndex.length;
+									for(var i = 0; i < len; i++) {
+										var rowIndex = $(grid).jqGrid('getGridParam', 'selrow');
+										$(grid).jqGrid("setRowData", rowIndex, {
+											status_name: status,
+											status: state
+										});
+										$(grid).jqGrid("setSelection", rowIndex);
+									}
+								} else {
+									$.showErrorGritter("修改状态失败：" + response.msg);
+								}
+							});
+					}
+				};
+
+				if(state == 2) {
+					$.modal().confirm("账户停用后该账户将无法登陆，可再次启用后恢复使用，确认停用该账户吗？", function() {
+						doDisable();
+					})
+				} else {
+					doDisable();
+				}
+			}
+
+			function reloadGrid() {
+				var url = OSAPIURL + "/users?status=";
+				var statusId = $("#selStatus").val();
+				if(statusId != "") {
+					url += statusId;
+				}
+				var roleId = $("#selRole").val();
+				if(roleId != "") {
+					url += "&role=" + roleId;
+				}
+				var key = $("#txtKey").val();
+				if(key != "") {
+					url += "&key=" + key;
+				}
+				$("#grid-table").jqGrid('setGridParam', {
+					page: 1,
+					url: url
+				}).trigger("reloadGrid", {});
+			}
+		</script>
+	</body>
+
+</html>

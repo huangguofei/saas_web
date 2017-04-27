@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>公海操作记录查询</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.page-container,
+			.page-container .content {
+				padding: 0;
+			}
+			
+			.record-public-sea-content {
+				padding-left: 10px;
+			}
+			
+			.crm-client-record-public-sea .record-public-sea-hide {
+				display: none;
+			}
+			
+			.crm-client-record-public-sea .record-public-sea-active {
+				display: block;
+			}
+			
+			.record-public-sea-nav {
+				margin-bottom: 14px;
+				height: 45px;
+				line-height: 45px;
+				background-color: #f3f3f3;
+				padding-left: 10px;
+			}
+			
+			.crm-client-record-public-sea .record-public-sea-nav-tabs,
+			.crm-client-record-public-sea .record-public-sea-nav-tabs:hover {
+				color: #666;
+				display: inline-block;
+				margin-left: 5px;
+				font-size: 14px;
+				padding: 0 5px;
+				text-decoration: none;
+			}
+			
+			.crm-client-record-public-sea .record-public-sea-nav-tabs.active {
+				color: #009ed8;
+				border-bottom: 2px solid #009ed8;
+			}
+			
+			.summery-view li,
+			.detail-view li {
+				border-bottom: 1px solid #eee;
+				padding: 10px 5px;
+			}
+			
+			.summery-view li:last-child,
+			.detail-view li:last-child {
+				border: 0;
+			}
+			
+			.ui-jqgrid tr.ui-row-ltr td:nth-child(4),
+			.ui-jqgrid tr.ui-row-rtl td:nth-child(4),
+			.ui-jqgrid tr.ui-row-ltr td:nth-child(5),
+			.ui-jqgrid tr.ui-row-rtl td:nth-child(5) {
+				padding-left: 0;
+				padding-right: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container crm-client-record-public-sea">
+			<div class="content">
+				<!--公海操作记录查询-->
+				<div class="content-record record-public-sea">
+					<!--公海操作记录查询导航   移入记录/抢取记录-->
+					<div class="record-public-sea-nav">
+						<a href="javascript:;" class="record-public-sea-nav-tabs record-immigration active" index="immigration">移入记录</a>
+						<a href="javascript:;" class="record-public-sea-nav-tabs record-snatch" index="snatch">抢取记录</a>
+					</div>
+					<!--移入记录-->
+					<div class="record-public-sea-content record-public-sea-immigration record-public-sea-active">
+						<div class="search">
+
+						</div>
+						<table id="grid-table-record-public-sea-immigration"></table>
+						<div id="grid-pager-record-public-sea-immigration"></div>
+					</div>
+					<!--抢取记录-->
+					<div class="record-public-sea-content record-public-sea-snatch record-public-sea-hide">
+						<div class="search">
+
+						</div>
+						<table id="grid-table-record-public-sea-snatch"></table>
+						<div id="grid-pager-record-public-sea-snatch"></div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			var gridSelectorOfRecordPublicSeaImmigration = "#grid-table-record-public-sea-immigration",
+				pagerSelectOfRecordPublicSeaImmigration = "#grid-pager-record-public-sea-immigration",
+				gridSelectorOfRecordPublicSeaSnatch = "#grid-table-record-public-sea-snatch",
+				pagerSelectOfRecordPublicSeaSnatch = "#grid-pager-record-public-sea-snatch",
+				isFirstInitGridOfRecordPublicSeaImmigration = false,
+				isFirstInitGridOfRecordPublicSeaSnatch = false;
+			var crm={
+            	data_type: {//移交类型
+            		COMPANY:　1,//单位
+            		DEPA: 2,//部门
+            		CONTACT: 3//联系人
+            	}
+            }	
+			////移入记录或抢取记录按钮
+			$(".record-public-sea-nav-tabs").click(function() {
+				$(".record-public-sea-nav-tabs").removeClass("active");
+				$(this).addClass("active");
+				var index = $(this).attr("index");
+				$(".record-public-sea-content").removeClass("record-public-sea-active").addClass("record-public-sea-hide");
+				$(".record-public-sea-" + index).removeClass("record-public-sea-hide").addClass("record-public-sea-active");
+				switch(index) {
+					case "immigration":
+						initGridOfRecordPublicSeaImmigration();
+						break;
+					case "snatch":
+						initGridOfRecordPublicSeaSnatch();
+						break;
+					default:
+						initGridOfRecordPublicSeaImmigration();
+				}
+			});
+			////移入记录
+			function initGridOfRecordPublicSeaImmigration() {
+				if(isFirstInitGridOfRecordPublicSeaImmigration) {
+					$(gridOfRecordPublicSeaImmigration).jqGrid('setGridParam', {
+						page: 1,
+						url: BSAPIURL + "/crm/records/transfers_to_sea?data_type="+crm.data_type.COMPANY+","+crm.data_type.CONTACT+","+crm.data_type.DEPA
+					}).trigger("reloadGrid", {});
+					return true;
+				}
+				////公海操作记录  search
+				$.initSearchControls4TagMode({
+					auto: true,
+					url: BSAPIURL + "/crm/records/transfers_to_sea",
+					grid: gridSelectorOfRecordPublicSeaImmigration,
+					container: ".record-public-sea-immigration .search",
+					key_name: "key",
+					removeHeight4Grid: $(".record-public-sea-nav").outerHeight(true)+$(".search").outerHeight(true)-30,
+					key_placeholder: "请输入客户单位名称、移入人进行查询",
+					onChange: function(selectTags) {},
+					groups: [{
+						type: "date",
+						text: "移交日期",
+						items: [{
+							name: "date_begin",
+							placeholder: "年/月/日",
+							type: "date"
+						}, {
+							type: "text",
+							value: "至"
+						}, {
+							name: "date_end",
+							placeholder: "年/月/日",
+							type: "date"
+						}]
+					}, {
+						name: "data_type",
+						text: "移交内容",
+						items: [{
+								key: "客户单位",
+								value: crm.data_type.COMPANY
+							}, {
+								key: "科室/部门",
+								value: crm.data_type.DEPA
+							}
+						]
+					}]
+				});
+				var gridHeight=$(window).height()-$(".record-public-sea-nav").outerHeight(true)-$(".search").outerHeight(true)-125;
+				/////公海操作记录的表格
+				var colNames = ['客户单位', '移入人', '移入时间', '移入内容', '具体内容', '移入部门', '移入原因'];
+				var colModel = [{
+					name: "client_full_name",
+					index: "client_full_name",
+					sortable: false
+				}, {
+					name: "put_into_employee_name",
+					index: "put_into_employee_name",
+					sortable: false
+				}, {
+					name: "put_into_date",
+					index: "put_into_date",
+					sortable: true
+				}, {
+					name: "put_into_content",
+					index: "put_into_content",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						if(rowObject.put_into_depas.length > 0) {
+							var depasDom = "科室/部门";
+						}
+						if(rowObject.put_into_contacts.length > 0) {
+							var contactsDom = "联系人";
+						}
+						if(rowObject.put_into_clients.length > 0) {
+							var clientsDom = "客户单位";
+						}
+						return "<ul class='summery-view'>"+((clientsDom?"<li>"+clientsDom+"</li>":"")+(depasDom?"<li>"+depasDom+"</li>":"")+(contactsDom?"<li>"+contactsDom+"</li>":""))+"</ul>";
+					}
+				}, {
+					name: "put_into_content_detail",
+					index: "put_into_content_detail",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						var client_name="";
+						var depasClientName="";
+                        var depasDom=[];
+                        for(var i in rowObject.put_into_depas){
+                            depasDom.push(rowObject.put_into_depas[i].depa_name);
+                            depasClientName=rowObject.put_into_depas[i].client_name;
+                        }
+                        var contactsDom=[];
+                        var dividedContacts={};
+                        for(var i in rowObject.put_into_contacts){
+                        	client_name=rowObject.put_into_contacts[i].client_name;
+                        	if(dividedContacts[rowObject.put_into_contacts[i].depa_id]){
+                        		dividedContacts[rowObject.put_into_contacts[i].depa_id].contacts.push(rowObject.put_into_contacts[i].contact_name);
+                        	}else{
+                        		dividedContacts[rowObject.put_into_contacts[i].depa_id]={};
+                        		dividedContacts[rowObject.put_into_contacts[i].depa_id].contacts=[];
+                        		dividedContacts[rowObject.put_into_contacts[i].depa_id].depa_name=rowObject.put_into_contacts[i].depa_name;
+                        		dividedContacts[rowObject.put_into_contacts[i].depa_id].contacts.push(rowObject.put_into_contacts[i].contact_name);
+                        	}
+                        }
+                        for(var i  in dividedContacts){
+                        	contactsDom.push(client_name+">"+dividedContacts[i].depa_name+">"+dividedContacts[i].contacts.join(","));
+                        }
+                        var clientsDom=[];
+                        for(var i in rowObject.put_into_clients){
+                            clientsDom.push(rowObject.put_into_clients[i].client_name);
+                        }
+						return "<ul class='detail-view'>"+ (clientsDom.length>0?"<li>"+clientsDom.join("<br>")+"</li>":"")+(depasDom.length>0?"<li>"+(depasClientName+">"+depasDom.join(","))+"</li>":"")+(contactsDom.length>0?"<li>"+contactsDom.join("<br>")+"</li>":"")+"</ul>";
+					}
+				}, {
+					name: "scope_depa_name",
+					index: "scope_depa_name",
+					sortable: false
+				}, {
+					name: "put_into_note",
+					index: "put_into_note",
+					sortable: false
+				}];
+				gridOfRecordPublicSeaImmigration = $(gridSelectorOfRecordPublicSeaImmigration).initJqGrid({
+					pager: pagerSelectOfRecordPublicSeaImmigration,
+					url: BSAPIURL + "/crm/records/transfers_to_sea?data_type="+crm.data_type.COMPANY+","+crm.data_type.DEPA+","+crm.data_type.CONTACT,
+					colNames: colNames,
+					multiselect: false,
+					height: gridHeight,
+					colModel: colModel,
+                    gridComplete: function(){
+                    	$(".ui-row-ltr").each(function(){
+                    		var _this=$(this);
+                    		$(this).find(".summery-view li").each(function(index){
+                    			$(this).css({
+                    				height: _this.find(".detail-view li:nth-child("+(parseInt(index)+1)+")").outerHeight(true)+"px",
+                    				"line-height":_this.find(".detail-view li:nth-child("+(parseInt(index)+1)+")").outerHeight(true)/1.5+"px"
+                    			});
+                    			
+                    		});
+                    	});
+                    },
+				});
+				isFirstInitGridOfRecordPublicSeaImmigration = true;
+			}
+			////抢取记录
+			function initGridOfRecordPublicSeaSnatch() {
+				if(isFirstInitGridOfRecordPublicSeaSnatch) {
+					$(gridOfRecordPublicSeaSnatch).jqGrid('setGridParam', {
+						page: 1,
+						url: BSAPIURL + "/crm/records/pickup_from_sea?"
+					}).trigger("reloadGrid", {});
+					return true;
+				}
+				////公海操作记录  search
+				$.initSearchControls4TagMode({
+					auto: true,
+					url: BSAPIURL + "/crm/records/pickup_from_sea",
+					grid: gridSelectorOfRecordPublicSeaSnatch,
+					container: ".record-public-sea-snatch .search",
+					key_name: "key",
+					removeHeight4Grid: $(".record-public-sea-nav").outerHeight(true)+$(".search").outerHeight(true)-30,
+					key_placeholder: "请输入客户单位名称、移入人进行查询",
+					onChange: function(selectTags) {},
+					groups: [{
+						type: "date",
+						text: "移交日期",
+						items: [{
+							name: "date_begin",
+							placeholder: "年/月/日",
+							type: "date"
+						}, {
+							type: "text",
+							value: "至"
+						}, {
+							name: "date_end",
+							placeholder: "年/月/日",
+							type: "date"
+						}]
+					}, {
+						name: "data_type",
+						text: "抢取内容",
+						items: [{
+								key: "客户单位",
+								value: crm.data_type.COMPANY
+							}, {
+								key: "科室/部门",
+								value: crm.data_type.DEPA
+							}
+						]
+					}]
+				});
+				var gridHeight=$(window).height()-$(".record-public-sea-nav").outerHeight(true)-$(".search").outerHeight(true)-310;
+				/////公海操作记录的表格
+				var colNames = ['客户单位', '抢取人', '抢取日期', '抢取内容', '具体内容', '抢取结果'];
+				var colModel = [{
+					name: "client_full_name",
+					index: "client_full_name",
+					sortable: false
+				}, {
+					name: "request_employee_name",
+					index: "request_employee_name",
+					sortable: false
+				}, {
+					name: "request_date",
+					index: "request_date",
+					sortable: true
+				}, {
+					name: "request_content",
+					index: "request_content",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						if(rowObject.request_depas.length > 0) {
+							var depasDom = "科室/部门";
+						}
+						if(rowObject.request_contacts.length > 0) {
+							var contactsDom = "联系人";
+						}
+						if(rowObject.request_clients.length > 0) {
+							var clientsDom = "客户单位";
+						}
+						return "<span>" + ((clientsDom ? clientsDom : "") + "<br/>" + (depasDom ? depasDom : "") + "<br/>" + (contactsDom ? contactsDom : "")) + "</span>";
+					}
+				}, {
+					name: "client_full_name",
+					index: "client_full_name",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						var depasDom = [];
+						for(var i in rowObject.request_depas) {
+							depasDom.push(rowObject.request_depas[i].depa_name);
+						}
+						var contactsDom = "",
+							contact = [];
+						if(rowObject.request_contacts.length != 0) {
+//							contact[rowObject.request_contacts[0].depa_id] = {
+//								"deparName": rowObject.request_contacts[0].depa_name,
+//								"data": [rowObject.request_contacts[0].contact_name]
+//							};
+							for(var i in rowObject.request_contacts) {
+								if(contact[rowObject.request_contacts[i].depa_id]) {
+									contact[rowObject.request_contacts[i].depa_id].data.push(rowObject.request_contacts[i].contact_name);
+								} else {
+									contact[rowObject.request_contacts[i].depa_id] = {
+										"deparName": rowObject.request_contacts[i].depa_name,
+										"data": [rowObject.request_contacts[i].contact_name]
+									};
+								}
+							}
+							for(var i in contact) {
+								contactsDom += contact[i].deparName + ">" + contact[i].data.join(",") + "</br>";
+							}
+						}
+						var clientsDom = [];
+						for(var i in rowObject.request_clients) {
+							clientsDom.push(rowObject.request_clients[i].client_name);
+						}
+						return(clientsDom ? clientsDom.join("，") + "<br/>" : "") + (depasDom ? depasDom.join("，") + "<br/>" : "") + contactsDom;
+					}
+				}, {
+					name: "request_success",
+					index: "request_success",
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.request_success ? "成功" : "失败";
+					}
+				}];
+				gridOfRecordPublicSeaSnatch = $(gridSelectorOfRecordPublicSeaSnatch).initJqGrid({
+					pager: pagerSelectOfRecordPublicSeaSnatch,
+					url: BSAPIURL + "/crm/records/pickup_from_sea?data_type="+crm.data_type.COMPANY+","+crm.data_type.CONTACT+","+crm.data_type.DEPA,
+					colNames: colNames,
+					multiselect: false,
+					height: gridHeight,
+					colModel: colModel
+				});
+				isFirstInitGridOfRecordPublicSeaSnatch = true;
+			}
+			////默认加载
+			initGridOfRecordPublicSeaImmigration();
+		</script>
+	</body>
+
+</html>

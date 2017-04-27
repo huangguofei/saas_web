@@ -1,0 +1,377 @@
+*,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: "microsoft yahei";
+}
+
+p.tip {
+	margin: 0;
+	color: #666;
+}
+
+#gritter-notice-wrapper.login-center {
+	top: 50px;
+	right: auto;
+	bottom: auto;
+	left: 50%;
+	margin-left: -150px;
+}
+
+#gritter-notice-wrapper.reg-center {
+	top: 130px;
+}
+
+
+/*login*/
+
+.login {
+	background: url(../images/login-bg.jpg) center top no-repeat;
+}
+
+@media (min-width: 1900px) {
+	.login {
+		background-size: 100%;
+	}
+}
+
+.login-container a {
+	color: #fff;
+}
+
+.login-container .header {
+	margin-top: 140px;
+	text-align: center;
+}
+
+.login-container .header p {
+	margin-top: 10px;
+}
+
+.login-container .content {
+	margin-top: 50px;
+}
+
+.login-container .content .link-forget {
+	color: #333;
+}
+
+.login-container .footer {
+	position: fixed;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	height: 50px;
+	line-height: 50px;
+	background-color: #303231;
+}
+
+.login-container .footer .copyright {
+	text-align: center;
+	color: #FFF;
+}
+
+.login-container .footer .copyright .footer-link {
+	position: absolute;
+	margin-left: 100px;
+}
+
+.box-login-mask {
+	background-color: #DAE8E9;
+	opacity: 1;
+}
+
+.box-login-mask,
+.box-login {
+	position: relative;
+	margin: 0 auto;
+}
+
+.box-login {
+	border: 1px solid #EEE7E1;
+	-moz-box-shadow: 2px 2px 5px #bbb;
+	-webkit-box-shadow: 2px 2px 5px #bbb;
+	box-shadow: 2px 2px 5px #bbb;
+}
+
+.box-login h3 {
+	text-align: center;
+}
+
+.box-login p.btns {
+	margin-top: 10px;
+}
+
+.box-login .btns input {
+	float: none;
+	width: 100%;
+	border-radius: 3px!important;
+}
+
+
+/*reg*/
+
+.reg {
+	background: url(../images/reg-top-bg.jpg) center top no-repeat;
+}
+
+.reg-container p.tip {
+	margin: 0 auto;
+	margin-top: -10px;
+	margin-bottom: 10px;
+	padding-left: 10px;
+	width: 350px;
+	text-align: left;
+	color: #777;
+}
+
+.reg-container .header {
+	margin-top: 20px;
+	text-align: center;
+}
+
+.reg-container .header p {
+	font-size: 18px;
+}
+
+.reg-container .content {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50px;
+	bottom: 0;
+	margin-top: 90px;
+	margin-bottom: 50px;
+	background-color: #FFF;
+}
+
+.reg-container .box {
+	margin: 0 auto;
+	margin-top: 40px;
+	width: 800px;
+	min-height: 200px;
+	border: 1px solid #BBBBBB;
+	background-color: #F8F8F8;
+}
+
+.reg-container .box h3 {
+	margin: 20px;
+	text-align: center;
+}
+
+.reg-container .box .step {
+	height: 6px;
+	margin: 0 110px;
+	background-color: #bbb;
+}
+
+.reg-container .box .step:after {
+	clear: both;
+}
+
+.reg-container .box .step .proc {
+	height: 6px;
+	width: 0;
+	background-color: #CB182B;
+}
+
+.reg-container .box .step .c1,
+.reg-container .box .step .c2,
+.reg-container .box .step .c3 {
+	float: left;
+	margin-top: -7px;
+	width: 20px;
+	height: 20px;
+	background-color: #bbb;
+	border-radius: 10px;
+}
+
+.reg-container .box .step .c1 {
+	margin-left: -1px;
+}
+
+.reg-container .box .step .c2 {
+	margin-left: 260px;
+}
+
+.reg-container .box .step .c3 {
+	float: right;
+	margin-right: -1px;
+}
+
+.reg-container .box .step .t1,
+.reg-container .box .step .t2,
+.reg-container .box .step .t3 {
+	float: left;
+	margin-top: -7px;
+}
+
+.reg-container .box .step .t1 {
+	margin-left: -33px;
+}
+
+.reg-container .box .step .t2 {
+	margin-left: 190px;
+}
+
+.reg-container .box .step .t3 {
+	float: right;
+	margin-right: -20px;
+}
+
+.reg-container .box .step1 .t1 {
+	color: #CB182B;
+}
+
+.reg-container .box .step1 .c1 {
+	border: 5px solid #CB182B;
+	background-color: #fff;
+}
+
+.reg-container .box .step2 .t1,
+.reg-container .box .step2 .t2 {
+	color: #CB182B;
+}
+
+.reg-container .box .step2 .proc {
+	width: 290px;
+}
+
+.reg-container .box .step2 .c1 {
+	background-color: #CB182B;
+}
+
+.reg-container .box .step2 .c2 {
+	border: 5px solid #CB182B;
+	background-color: #fff;
+}
+
+.reg-container .box .step3 .t1,
+.reg-container .box .step3 .t2,
+.reg-container .box .step3 .t3 {
+	color: #CB182B;
+}
+
+.reg-container .box .step3 .proc {
+	width: 570px;
+}
+
+.reg-container .box .step3 .c1,
+.reg-container .box .step3 .c2 {
+	background-color: #CB182B;
+}
+
+.reg-container .box .step3 .c3 {
+	border: 5px solid #CB182B;
+	background-color: #fff;
+}
+
+.reg-container .form-control {
+	display: inline-block;
+	margin: 0 200px 20px;
+	padding: 10px 20px;
+	width: 350px;
+	height: auto;
+	border-radius: 0;
+}
+
+.step-con1 .form-group-city {
+	position: relative;
+	margin: 0 0 20px 0;
+	width: 350px;
+	display: inline-block;
+	text-align: left;
+}
+
+.step-con1 .form-group-city .form-control {
+	margin: 0;
+}
+
+.step-con1 .select-city {
+	margin: 0 0 20px;
+	padding: 9px 5px 9px 18px;
+	width: 173px;
+}
+
+.reg-container .form-button {
+	display: inline-block;
+	margin: 0 200px 50px;
+	padding: 10px 20px;
+	width: 350px;
+	height: auto;
+	border-radius: 0;
+	font-size: 15px;
+	background-color: #CA192B;
+}
+
+.step-con2 .form-button {
+	margin: 0 0 50px;
+	width: 173px;
+}
+
+.step-con2 .step-prev {
+	background-color: #666;
+	border-color: #666;
+	color: #fff;
+}
+
+.reg-container .form-button .fa {
+	margin-left: 10px;
+	font-size: 16px;
+}
+
+.reg-container .box .step-con {
+	margin-top: 90px;
+	text-align: center;
+}
+
+.reg-container .box .step-con3 .note {
+	margin-bottom: 50px;
+	font-size: 16px;
+}
+
+.reg-container .box .step-con2 {
+	margin-top: 60px;
+}
+
+.reg-container .box .step-con2 .btn-sendcode {
+	position: absolute;
+	margin: 0;
+	margin: 4px 0 0 -300px;
+	width: 96px;
+}
+
+.reg-container .step-con2 .img-code {
+	position: absolute;
+	margin-left: -315px;
+	margin-top: 5px;
+	cursor: pointer;
+}
+
+
+/*
+ * forget*/
+
+.forget-container .box .step .t1 {
+	margin-left: -18px;
+}
+
+.forget-container .box .step .t2 {
+	margin-left: 225px;
+}
+
+.forget-container .step-con1 .img-code {
+	position: absolute;
+	margin-left: -315px;
+	margin-top: 5px;
+	cursor: pointer;
+}

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title></title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.click-to-detail {
+				cursor: pointer;
+			}
+			
+			.visit-detail {
+				border: 1px solid #e3e3e3;
+				border-collapse: collapse;
+				width: 100%;
+			}
+			
+			.visit-detail thead td {
+				background-color: #f8f8f8;
+			}
+			
+			.visit-detail td {
+				border: 1px solid #e3e3e3;
+				text-align: center;
+				padding: 10px 0;
+			}
+			
+			.visit-detail td:nth-child(1) {
+				width: 10%;
+			}
+			
+			.visit-detail td:nth-child(2) {
+				width: 10%;
+			}
+			
+			.visit-detail td:nth-child(3) {
+				width: 30%;
+			}
+			
+			.visit-detail td:nth-child(4) {
+				width: 10%;
+			}
+			
+			.visit-detail td:nth-child(5) {
+				width: 30%;
+			}
+			
+			.visit-detail td:nth-child(6) {
+				width: 10%;
+			}
+			
+			.grid-wrap.contacts .ui-jqgrid .ui-jqgrid-htable th div {
+				padding-top: 2px;
+			}
+			
+			.grid-wrap.contacts .ui-jqgrid .ui-jqgrid-htable tr:nth-child(2) th,
+			.grid-wrap.contacts .ui-jqgrid .ui-jqgrid-htable tr:nth-child(3) th,
+			.grid-wrap.contacts .ui-jqgrid .ui-jqgrid-htable tr:nth-child(2) th span.ui-jqgrid-resize,
+			.grid-wrap.contacts .ui-jqgrid .ui-jqgrid-htable tr:nth-child(3) th span.ui-jqgrid-resize {
+				height: 25px!important;
+			}
+			
+			.grid-wrap.contacts .ui-jqgrid .ui-jqgrid-htable tr:nth-child(1) th,
+			.grid-wrap.contacts .ui-jqgrid .ui-jqgrid-htable tr:nth-child(2) th,
+			.grid-wrap.contacts .ui-jqgrid .ui-jqgrid-htable tr:nth-child(1) th span.ui-jqgrid-resize,
+			.grid-wrap.contacts .ui-jqgrid .ui-jqgrid-htable tr:nth-child(2) th span.ui-jqgrid-resize {
+				/*height: 0!important;*/
+			}
+			
+			.grid-wrap.contacts .ui-jqgrid .ui-jqgrid-htable tr:nth-child(2) th:nth-child(5) {
+				border-bottom: 1px solid #e3e3e3;
+				text-align: center!important;
+			}
+			
+			.grid-wrap.contacts .ui-jqgrid .ui-jqgrid-htable tr:nth-child(2) th:nth-child(5) div {
+				text-align: center;
+			}
+			
+			.ui-jqgrid-view>.ui-jqgrid-titlebar {
+				height: 20px;
+			    background-color: #f8f8f8;
+			    padding-left: 2px;
+			    line-height: 20px;
+			    font-size: 14px;
+			    color: #333;
+			    border: 1px solid #e3e3e3;
+			    border-bottom: 0;
+			    margin-right: 1px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container">
+			<div class="content">
+				<div class="grid-wrap">
+					<table id="grid-table"></table>
+					<div id="grid-pager"></div>
+				</div>
+			</div>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-danger def-btn-danger btn-print" onclick="printDom()"><img src="../resources/images/print.png" alt="" />打印</a>
+			<a class="btn btn-danger def-btn-danger btn-export" onclick="exportGrid(true);"><img class="btn-export-img" src="../resources/images/export-icon.png" alt="" />导出</a>
+		</div>
+		<div class="visit-detail-container hide">
+			<table class="visit-detail">
+				<thead>
+					<tr>
+						<td>姓名</td>
+						<td>日期</td>
+						<td>客户</td>
+						<td>产品</td>
+						<td>工作目的</td>
+						<td>协助人</td>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			var queryObj=$.getQueryObject();
+			console.log(queryObj);
+			var queryType=queryObj.client_depa_id?"contacts":queryObj.client_id?"depas":"clients";
+			queryType.areas="";
+			$(".grid-wrap").addClass(queryType);
+			var gridUrl=BSAPIURL+"/report/visit/"+queryType+$.toQueryString(queryObj,true);//+"&areas=''";
+			var detailUrl=BSAPIURL+"/report/visit/"+(queryType=="clients"?"client":queryType=="depas"?"depa":"contact")+"/plans"+$.toQueryString(queryObj,true);//+"&areas=''";
+			if(queryType=="contacts") loadContactGrid();
+			if(queryType=="depas") loadDepaGrid();
+			if(queryType=="clients") loadClientGrid();
+			//加载客户单位的表格
+			function loadClientGrid(){
+				var colNames = ['客户单位', '拜访指标', '计划拜访家次', '实际拜访家次', '拜访总时长', '指标完成率', '日均拜访家次'];//, 'B级拜访数', 'C级拜访数', '拜访总时长', '计划执行率', '日均拜访数'];
+				var colModel = [{
+					name: "client_full_name",
+					formatter: function(cellvalue, options, rowObject){
+						return "<a class='click-to-detail' onclick=\"parent.openTab('"+queryObj.employee_name+"客户科室/部门拜访统计("+cellvalue+")','views/crm-visit-total.html"+$.toQueryString(queryObj,true)+"&client_id="+rowObject.client_id+"&client_full_name="+cellvalue+"')\">"+cellvalue+"</a>"
+					}
+				},{
+					name: "count_quota"
+				}, {
+					name: "count_plan",
+					formatter: function(cellvalue, options, rowObject){
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('计划拜访明细','1','"+rowObject.client_id+"')\">"+cellvalue+"</a>";
+					}
+				}, {
+					name: "count_visit",
+					formatter: function(cellvalue, options, rowObject){
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('实际拜访明细','9','"+rowObject.client_id+"')\">"+cellvalue+"</a>";
+					}
+				}, {
+					name: "visit_long_cn"
+				}, {
+					name: "complete_rate"
+				}, {
+					name: "average_visit"
+				}];
+				visitGrid = $("#grid-table").initJqGrid({
+					url: gridUrl,
+					pager: "#grid-pager",
+					colNames: colNames,
+					footerBtnContainer: "#grid-footer-container",
+					rowNum: 100000,
+					caption: queryObj.employee_name+"科室/部门拜访统计",
+					height: $(window).height() - 180,
+					colModel: colModel
+				});
+			}
+			//加载统计科室/部门的表格
+			function loadDepaGrid(){
+				var colNames = ['客户科室/部门', '拜访指标', '计划拜访数', '实际拜访数', '拜访总时长', '指标完成率', '日均拜访数'];//, 'B级拜访数', 'C级拜访数', '拜访总时长', '计划执行率', '日均拜访数'];
+				var colModel = [{
+					name: "depa_name",
+					formatter: function(cellvalue, options, rowObject){
+						if(!cellvalue) return cellvalue;
+						return "<a class='click-to-detail' onclick=\"parent.openTab('客户联系人拜访统计("+cellvalue+"，"+queryObj.client_full_name+")','views/crm-visit-total.html"+$.toQueryString(queryObj,true)+"&client_depa_id="+rowObject.depa_id+"&depa_name="+cellvalue+"')\">"+(cellvalue+"（"+rowObject.client_full_name+"）")+"</a>"
+					}
+				},{
+					name: "count_quota"
+				}, {
+					name: "count_plan",
+					formatter: function(cellvalue, options, rowObject){
+						if(!cellvalue) return cellvalue;
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('计划拜访明细','1','"+rowObject.depa_id+"')\">"+cellvalue+"</a>";
+					}
+				}, {
+					name: "count_visit",
+					formatter: function(cellvalue, options, rowObject){
+						if(!cellvalue) return cellvalue;
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('实际拜访明细','9','"+rowObject.depa_id+"')\">"+cellvalue+"</a>";
+					}
+				}, {
+					name: "visit_long_cn"
+				}, {
+					name: "complete_rate"
+				}, {
+					name: "average_visit"
+				}];
+				visitGrid = $("#grid-table").initJqGrid({
+					url: gridUrl,
+					pager: "#grid-pager",
+					colNames: colNames,
+					footerBtnContainer: "#grid-footer-container",
+					rowNum: 100000,
+					caption: "客户科室/部门拜访统计（"+queryObj.client_full_name+"）",
+					height: $(window).height() - 180,
+					colModel: colModel
+				});
+			}
+			//加载统计联系人的表格
+			function loadContactGrid(){//       
+				var colNames = ['客户科室/部门', '拜访指标','计划拜访数', '计划内','计划外','计划内协访','计划外协访','实际拜访数', '拜访总时长','拜访计划执行率', '指标完成率', '日均拜访数'];//, 'B级拜访数', 'C级拜访数', '拜访总时长', '计划执行率', '日均拜访数'];
+				var colModel = [{
+					name: "depa_name",
+					formatter: function(cellvalue, options, rowObject){
+						return (cellvalue+"（"+rowObject.depa_name+","+rowObject.client_full_name+"）");
+					}
+				},{
+					name: "count_quota"
+				}, {
+					name: "count_plan",
+//					cellattr: function(rowId, value, rowObject, colModel, arrData) {
+//			        	return ' colspan=4';
+//			        },
+					formatter: function(cellvalue, options, rowObject){
+						if(!cellvalue) return cellvalue;
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('计划拜访明细','1','"+rowObject.contact_id+"')\">"+cellvalue+"</a>";
+					}
+				}, {
+					name: "count_plan_visit_in_normal",
+					formatter: function(cellvalue, options, rowObject){
+						if(!cellvalue) return cellvalue;
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('实际拜访明细','2','"+rowObject.contact_id+"')\">"+cellvalue+"</a>";
+					}
+				}, {
+					name: "count_plan_visit_out_normal",
+					formatter: function(cellvalue, options, rowObject){
+						if(!cellvalue) return cellvalue;
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('实际拜访明细','3','"+rowObject.contact_id+"')\">"+cellvalue+"</a>";
+					}
+				}, {
+					name: "count_plan_visit_in_assist",
+					formatter: function(cellvalue, options, rowObject){
+						if(!cellvalue) return cellvalue;
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('实际拜访明细','4','"+rowObject.contact_id+"')\">"+cellvalue+"</a>";
+					}
+				}, {
+					name: "count_plan_visit_out_assist",
+					formatter: function(cellvalue, options, rowObject){
+						if(!cellvalue) return cellvalue;
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('实际拜访明细','5','"+rowObject.contact_id+"')\">"+cellvalue+"</a>";
+					}
+				}, {
+					name: "count_visit",
+					formatter: function(cellvalue, options, rowObject){
+						if(!cellvalue) return cellvalue;
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('实际拜访明细','9','"+rowObject.contact_id+"')\">"+cellvalue+"</a>";
+					}
+				},{
+					name: "visit_long_cn"
+				}, {
+					name: "plan_rate"
+				},{
+					name: "complete_rate"
+				}, {
+					name: "average_visit"
+				}];
+				visitGrid = $("#grid-table").initJqGrid({
+					url: gridUrl,
+					pager: "#grid-pager",
+					colNames: colNames,
+					loadComplete: function(){
+						$("#grid-table").jqGrid('setGroupHeaders', {
+							useColSpanStyle: false,
+							numberOfColumns: 4,
+							groupHeaders:[{
+								startColumnName: 'count_plan_visit_in_normal', numberOfColumns:4, titleText: '实际拜访数'
+							}]
+						});
+					},
+					footerBtnContainer: "#grid-footer-container",
+					rowNum: 100000,
+					caption: "客户联系人拜访统计（"+queryObj.depa_name+"，"+queryObj.client_full_name+"）",
+					height: $(window).height() - 180,
+					colModel: colModel
+				});
+			}
+
+			//查看明细
+			function openVisitDetailPop(queryTypeCn,queryTypeCode,dataId){
+				//var conditions={};
+				//	conditions[queryType=="client"?"client_id":queryType=="depa"?"depa_id":"contact_id"]=dataId;
+				//	conditions.query_type=queryTypeCode;
+				var modalId= $.modal({
+					height: $(window).height()-200,
+					width: 900,
+					showOKButton: false,
+					cancelButtonText: "关闭",
+					shownCallback: function(){
+						$.ajaxGet(detailUrl+"&query_type="+queryTypeCode+"&"+(queryType=="client"?"client_id":queryType=="depa"?"depa_id":"contact_id")+"="+dataId,function(resp){
+							if(resp.code!=0) {
+								$.showErrorGritter("查询拜访明细失败："+resp.msg);
+								return false;
+							}
+							var allTrDom="";
+							for(var i in resp.data.rows){
+								var oneRecord=resp.data.rows[i];
+								var trDom=
+									"<tr>"
+									+"	<td>"+(oneRecord.employee_name+"，"+oneRecord.depa_name)+"</td>"
+									+"	<td>"+(oneRecord.work_schedule_item_date+"-"+oneRecord.work_schedule_item_am_or_pm_cn)+"</td>"
+									+"	<td>"+getClientHtml(oneRecord.relations.crm_contact)+"</td>"
+									+"	<td>"+getProducts(oneRecord.relations.product)+"</td>"
+									+"	<td>"+oneRecord.work_schedule_item_content+"</td>"
+									+"	<td>"+(oneRecord.relations.by_helper?"（协助）"+getByHelperHtml(oneRecord.relations.by_helper):"（协助人）"+getHelperHtml(oneRecord.relations.helper))+"</td>"
+									+"</tr>";
+								allTrDom+=trDom;
+							}
+							$("#"+modalId+" .visit-detail tbody").html(allTrDom);
+						});
+					}
+				}).show(queryTypeCn,".visit-detail-container",function(modal){
+					
+				});
+			}
+			
+			//处理客户成对应的HTML
+			function getClientHtml(data) {
+				var clientSpanDom = "";
+				var contactGroup = {};
+				for(var i in data) {
+					if(contactGroup[data[i].client_id]) {
+						if(contactGroup[data[i].client_id][data[i].depa_id]) {
+							contactGroup[data[i].client_id][data[i].depa_id].client_id = data[i].client_id;
+							contactGroup[data[i].client_id][data[i].depa_id].client_full_name = data[i].client_full_name;
+							contactGroup[data[i].client_id][data[i].depa_id].depa_id = data[i].depa_id;
+							contactGroup[data[i].client_id][data[i].depa_id].depa_name = data[i].depa_name;
+							contactGroup[data[i].client_id][data[i].depa_id].contacts.push({
+								contact_id: data[i].contact_id,
+								contact_name: data[i].contact_name
+							});
+						} else {
+							contactGroup[data[i].client_id][data[i].depa_id] = {};
+							contactGroup[data[i].client_id][data[i].depa_id].contacts = [];
+							contactGroup[data[i].client_id][data[i].depa_id].client_id = data[i].client_id;
+							contactGroup[data[i].client_id][data[i].depa_id].client_full_name = data[i].client_full_name;
+							contactGroup[data[i].client_id][data[i].depa_id].depa_id = data[i].depa_id;
+							contactGroup[data[i].client_id][data[i].depa_id].depa_name = data[i].depa_name;
+							contactGroup[data[i].client_id][data[i].depa_id].contacts.push({
+								contact_id: data[i].contact_id,
+								contact_name: data[i].contact_name
+							});
+						}
+					} else {
+						contactGroup[data[i].client_id] = {};
+						contactGroup[data[i].client_id][data[i].depa_id] = {};
+						contactGroup[data[i].client_id][data[i].depa_id].contacts = [];
+						contactGroup[data[i].client_id][data[i].depa_id].client_id = data[i].client_id;
+						contactGroup[data[i].client_id][data[i].depa_id].client_full_name = data[i].client_full_name;
+						contactGroup[data[i].client_id][data[i].depa_id].depa_id = data[i].depa_id;
+						contactGroup[data[i].client_id][data[i].depa_id].depa_name = data[i].depa_name;
+						contactGroup[data[i].client_id][data[i].depa_id].contacts.push({
+							contact_id: data[i].contact_id,
+							contact_name: data[i].contact_name
+						});
+					}
+				}
+				for(var z in contactGroup) {
+					for(var x in contactGroup[z]) {
+						var aCompanyAdepaContactIds = [];
+						var aCompanyAdepaContactNames = [];
+						for(var y in contactGroup[z][x]) {
+							if(y != "contacts") continue;
+							for(var p in contactGroup[z][x].contacts) {
+								aCompanyAdepaContactIds.push(contactGroup[z][x].contacts[p].contact_id);
+								aCompanyAdepaContactNames.push(contactGroup[z][x].contacts[p].contact_name);
+							}
+							clientSpanDom += "<span class='seled-client' data-contact-id='" + aCompanyAdepaContactIds.join(",") + "'>" + contactGroup[z][x].client_full_name + ">" + contactGroup[z][x].depa_name + ">" + aCompanyAdepaContactNames.join("、") + "</span><br/>";
+						}
+					}
+				}
+				return (clientSpanDom||"--");
+			}
+			//处理产品成对应的HTML
+			function getProducts(data){
+				return "A产品";
+			}
+			////处理协助人成对应HTML
+			function getHelperHtml(data) {
+				var helperDomArr = [];
+				for(var i in data) {
+					helperDomArr.push("<span class='seled-assist-people' data-employee-id='" + data[i].employee_id + "'>" + data[i].employee_name + "</span>");
+				}
+				return helperDomArr.join("、");
+			}
+			//处理被协助人成对应HTML   别人的计划需要自己协助的才有
+			function getByHelperHtml(data) {
+				var byHelperDomArr = [];
+				for(var i in data) {
+					if(data[i].employee_name) byHelperDomArr.push("<span class='seled-assist-people' data-employee-id='" + data[i].employee_id + "'>" + data[i].employee_name + "</span>");
+				}
+				return byHelperDomArr.join("、");
+			}
+			//处理知会对象成对应HTML
+			function getNotifierHtml(data, index) {
+				var notifierDomArr = [];
+				if(data.length > 0 && data[index].relations.notifier && data[index].relations.notifier.length > 0) {
+					for(var q in data[index].relations.notifier) {
+						notifierDomArr.push("<span class='seled-assist-people' data-employee-id='" + data[index].relations.notifier[q].employee_id + "'>" + data[index].relations.notifier[q].employee_name + "</span>");
+					}
+				}
+				return notifierDomArr.join("、");
+			}
+			/////导出按钮
+			function exportGrid(){
+				console.log(gridUrl+"&export=1")
+				$.downloadFile(gridUrl+"&export=1");
+			}
+			
+			//打印
+			function printDom() {
+				print($("#gview_grid-table"));
+			}
+		</script>
+	</body>
+
+</html>

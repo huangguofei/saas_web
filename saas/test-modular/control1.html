@@ -1,0 +1,25 @@
+<style>
+	.control-1 {
+		margin: 10px;
+	}
+	
+	.control-1 .btn-m1-1 {
+		padding: 10px;
+		border: 1px solid #5F9EA0;
+	}
+</style>
+<div class="control-1">
+	<div>
+		我是Control1的内容
+		<button type="button" class="btn-m1-1">我是按钮</button>
+	</div>
+	<div></div>
+</div>
+
+<script>
+	$(document).ready(function() {
+		$(".btn-m1-1").click(function() {
+			alert("我是Control1按钮");
+		});
+	});
+</script>

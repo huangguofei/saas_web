@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>年假设置</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.tab-content .tab-pane-rule .search a.active {
+				color: #333;
+				font-weight: bold;
+				text-decoration: underline;
+			}
+			
+			.model-anurule-info .form-control-month {
+				width: 150px;
+			}
+			
+			.model-anurule-info .form-group-anu-mins div.form-control {
+				padding-left: 0;
+				margin-left: 115px;
+			}
+			
+			.model-anurule-info .form-group-anu-mins input.form-control {
+				margin: 0 5px;
+				width: 60px;
+				height: 30px;
+			}
+			
+			.model-anurule-info .form-group-anu-mins .btn-add {
+				display: inline-block;
+				margin: 0 0 0 5px;
+				padding: 4px 8px;
+			}
+			
+			.btn-add,
+			.btn-add:hover {
+				display: inline-block;
+				margin: 0 0 0 5px;
+				padding: 4px 8px;
+				float: right;
+				font-size: 14px;
+				color: #009ed8;
+				cursor: pointer;
+				margin-top: -5px;
+			}
+			
+			.label-levels {
+				color: #CA192B;
+			}
+			
+			.model-anurule-info .form-group-rule-seted>hr {
+				margin-top: 0;
+				margin-bottom: 15px;
+			}
+			
+			.model-anurule-info .form-group-rule-seted>p {
+				margin: 0 0 5px 0;
+			}
+			
+			.note {
+				display: inline-block;
+				/*padding-left: 30px;*/
+				color: #999!important;
+			}
+			
+			.panel-body b {
+				font-size: 16px;
+				color: #333;
+			}
+			
+			.model-leave-cleared-info .form-group>div {
+				padding-left: 30px;
+				margin-bottom: 8px;
+			}
+			
+			.model-leave-cleared-info .form-group>div>div {
+				padding-left: 30px;
+				margin-top: 5px;
+				margin-bottom: 3px;
+			}
+			
+			.model-leave-cleared-info .form-group .form-control-select {
+				padding: 0;
+				width: 80px;
+				height: 30px;
+			}
+			
+			.page-annual .annual-head {
+				max-height: 170px;
+				min-height: 146px;
+				border: 1px solid #e3e3e3;
+				padding: 20px 0 0 24px;
+				min-width: 1055px;
+				margin-bottom: 14px;
+			}
+			
+			.annual-head-img {
+				height: 100px;
+				width: 7%;
+				border: 1px solid #e3e3e3;
+				background-color: #009ed8;
+			}
+			
+			.annual-head-img img {
+				margin: 20px 23px;
+			}
+			
+			.page-annual .panel-special {
+				padding: 13px 0 0 24px;
+				font-size: 14px;
+			}
+			
+			.panel-special-cleared h5 {
+				font-size: 16px;
+				margin-top: 4px;
+				margin-right: 30px;
+			}
+			
+			.panel-special-cleared .leave-cleared-view {
+				font-size: 14px;
+				color: #656565;
+				display: inline-block;
+				margin-top: 3px;
+			}
+			
+			.page-annual .panel-special.panel-special-cleared {
+				padding: 17px 0 0 24px;
+			}
+			
+			.panel-special-cycle {
+				color: #ca192b;
+			}
+			
+			.panel-special-cycle span {
+				display: inline-block;
+				width: 100%;
+				border-bottom: 1px solid #e3e3e3;
+				padding-bottom: 18px;
+			}
+			
+			.annual-head-body {
+				width: 93%;
+			}
+			
+			.page-annual .panel-special .panel-body {
+				padding: 0;
+			}
+			
+			.page-annual .panel-special .panel-body p.note {
+				padding-left: 17px;
+				color: #666;
+			}
+			
+			.page-annual .panel-special .panel-body .btn-edit {
+				margin-left: 30px;
+				color: #cb1929;
+				cursor: pointer;
+				font-size: 14px;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cycle-edit .leave-cycle-item {
+				float: left;
+				width: 350px;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cycle-edit .leave-cycle-btns {
+				padding-top: 20px;
+				float: left;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cycle-edit:after {
+				clear: both;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cleared-edit {
+				color: #666;
+				font-size: 12px;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cleared-edit p.note {
+				padding-left: 30px;
+				color: #666;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cleared-edit .form-group>div {
+				margin-bottom: 8px;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cleared-edit .form-group>div>div {
+				padding-left: 30px;
+				margin-top: 5px;
+				margin-bottom: 3px;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cleared-edit .form-group .form-control-select {
+				padding: 0;
+				width: 87px;
+				height: 30px;
+				border-radius: 0;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cleared-edit .leave-cleared-item>div {
+				float: left;
+				margin-right: 2%;
+			}
+			
+			.leave-cleared-item label {
+				font-size: 14px;
+				color: #666;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cleared-edit .leave-cleared-btns {
+				/*padding-top: 10px;*/
+				float: left;
+				margin-top: 6px;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cleared-edit .leave-cleared-btns a {
+				cursor: pointer;
+				display: inline-block;
+				margin-right: 20px;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cleared-edit .leave-cleared-btns a img {
+				cursor: pointer;
+				margin-right: 5px;
+				vertical-align: inherit;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cleared-edit .leave-cleared-btns a.btn-save-cleared {
+				color: #009ed8;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cleared-edit .leave-cleared-btns a.btn-edit-close {
+				color: #ca192b;
+			}
+			
+			.page-annual .panel-special .panel-body .leave-cleared-edit:after {
+				clear: both;
+			}
+			
+			.rule-container {
+				border-bottom: 1px dashed #eee;
+				margin: 0 6%!important;
+				height: 36px;
+				line-height: 36px;
+			}
+			
+			.close-icon-container .close-icon {
+				right: 1%;
+			}
+			
+			.form-group-anu-mins .form-control-count-month,
+			.form-group-anu-mins .form-control-count-month:focus,
+			.rule-container input,
+			.rule-container input:focus {
+				border: none;
+				width: 60px;
+				color: #CA192B;
+				border-bottom: 1px solid #CA192B;
+				/*text-decoration: underline;*/
+				text-align: center;
+				margin: 0 10px;
+				padding: 0 8px;
+				border-radius: 0;
+				height: 20px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-annual">
+			<div class="content">
+				<div class="annual-head at">
+					<div class="lt annual-head-img">
+						<img src="../resources/images/annual-icon.png" alt="" />
+					</div>
+					<div class="annual-head-body lt">
+						<div class="panel-special panel-special-cycle">
+							<!--<div class="panel-title panel-title-horizontal">
+								<h5><b>年假周期</b></h5>
+							</div>-->
+							<div class="panel-body">
+								<div class="leave-cycle-view">
+									<span class="label-leave-cycle">
+										加载中...
+									</span>
+									<!--<button type="button" class="btn btn-default btn-sm btn-edit"><i class="fa fa-edit"></i> 设 置  </button>-->
+								</div>
+								<div class="leave-cycle-edit hide">
+									<div class="leave-cycle-item">
+										<label><input type="radio" class="form-control-radio" name="rdLeaveCycle" value="1" checked="checked" /> 以入职时间起算，一年为一周期 </label>
+										<p class="note">
+											例：A员工在2015年7月2日入职， <br>则A员工的年假周期为每年7月2日至第二年7月1日
+										</p>
+									</div>
+									<!--<div class="leave-cycle-item">
+										<label><input type="radio" class="form-control-radio" name="rdLeaveCycle" value="2" /> 以自然年为一周期 </label>
+										<p class="note">
+											例：A员工在2015年7月2日入职，<br>A员工的年假周期为每年1月1日至12月31日
+										</p>
+									</div>
+									<div class="leave-cycle-btns">
+										<button type="button" class="btn btn-default btn-save-cycle"> 保 存 </button>
+										<button type="button" class="btn btn-default btn-edit-close"> 取 消 </button>
+									</div>-->
+								</div>
+							</div>
+						</div>
+						<div class="panel-special panel-special-cleared">
+							<!--<div class="panel-title panel-title-horizontal">
+								<h5><b>年假清零时间</b></h5>
+							</div>-->
+							<div class="form-horizonta panel-body">
+								<h5 class="lt"><b>年假清零时间</b></h5>
+								<div class="leave-cleared-view">
+									<span class="label-leave-cleared">
+										加载中...
+									</span>
+									<!--<button type="button" class="btn btn-default btn-sm btn-edit"><i class="fa fa-edit"></i> 设 置  </button>-->
+									<a class="btn-edit"><img src="../resources/images/btn-edit-img.png" /> 设 置 </a>
+								</div>
+								<div class="leave-cleared-edit at hide">
+									<div class="form-group form-inline leave-cleared-item at">
+										<div>
+											<label><input type="radio" class="form-control-radio" name="rdCleardCycle" value="1" checked="checked" /> 每一年假周期到期后 </label>
+											<div>
+												<div>
+													<label><input type="radio" class="form-control-radio" name="rdCleardType" value="1" /> 自动清零 </label>
+													<span class="note">
+														( 剩余未休年假自动清零  )
+													</span>
+												</div>
+												<div>
+													<label><input type="radio" class="form-control-radio" name="rdCleardType" value="2" /> 自动累积 </label>
+													<span class="note">
+														( 剩余未休年假自动累积  )
+													</span>
+												</div>
+											</div>
+										</div>
+										<div>
+											<label><input type="radio" class="form-control-radio" name="rdCleardCycle" value="2" /> 指定每年
+											<select class="form-control form-control-select form-control-month" disabled="disabled">
+												<option value='01'>1月</option>
+												<option value='02'>2月</option>
+												<option value='03'>3月</option>
+												<option value='04'>4月</option>
+												<option value='05'>5月</option>
+												<option value='06'>6月</option>
+												<option value='07'>7月</option>
+												<option value='08'>8月</option>
+												<option value='09'>9月</option>
+												<option value='10'>10月</option>
+												<option value='11'>11月</option>
+												<option value='12' selected="selected">12月</option>
+											</select>
+											<select class="form-control form-control-select form-control-day" disabled="disabled">
+												
+											</select> 清零 </label>
+											<span class="note">
+												( 指定每年一固定日期清零剩余年假  )
+											</span>
+										</div>
+										<div class="leave-cleared-btns lt">
+											<a class="btn-save-cleared"><img src="../resources/images/btn-save-img.png" alt="" />保 存 </a>
+											<a class="btn-edit-close"><img src="../resources/images/btn-cancel-img.png" alt="" />取 消 </a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div>
+					<table id="grid-table-annual" class="grid-module">
+					</table>
+					<div id="grid-pager-annual">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-anurule-info hide">
+			<form class="form-horizontal model-anurule-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">设置 <span class="label-levels"></span> 年假规则，设置后将更新已设置的规则</label>
+					<a class="btn-add"><i class="fa fa-plus"></i> 添加规则</a>
+				</div>
+				<!--<div class="form-group form-group-anu-mins form-inline" style="margin-top: 40px;">
+					<label style="min-width: 30px;"></label>-->
+				<!--<span>入职时间满</span>
+					<input type="text" class="form-control form-control-count-month" placeholder="月数" maxlength="3" data-type="int">
+					<span>个月后，年假天数为</span>
+					<input type="text" class="form-control form-control-count-day" placeholder="天数" maxlength="3" data-type="int">
+					<span>天 </span>-->
+
+				<!--</div>-->
+				<div class="form-group form-group-rule-seted form-inline">
+
+				</div>
+			</form>
+		</div>
+		<div class="pnl-anumonth-info hide">
+			<form class="form-horizontal model-anumonth-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">设置 <span class="label-levels"></span> 年假起算时间，设置后将更新已设置的起算时间</label>
+				</div>
+				<div class="form-group form-group-anu-mins form-inline" style="margin-top: 40px;">
+					<label style="min-width: 30px;"></label>
+					<span>入职时间满</span>
+					<input type="text" class="form-control form-control-count-month" placeholder="月数" maxlength="3" data-type="int" style="width: 130px; margin: 0 5px;">
+					<span>个月后可修年假</span>
+				</div>
+			</form>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openSetStartingTimeOfAnnualPop();" show-on1="singleselect" role-auth1="saas/companies/accounts/0/roles|post"><i class="fa fa-edit"></i> 设置年假起算时间</a>
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openAnnualRuleInfoPop();" show-on1="singleselect" role-auth1="saas/companies/accounts/0/roles|post"><i class="fa fa-edit"></i> 设置年假规则</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			//APIS
+			var ANNUALAPIS = {
+				//年假规则
+				rules: BSAPIURL + "/year_holiday/rules",
+				//年假配置信息
+				config: BSAPIURL + "/year_holiday/config",
+				//设置年假周期
+				annualCycle: BSAPIURL + "/year_holiday/config/round",
+				//设置年假清零
+				annualCleared: BSAPIURL + "/year_holiday/config/reset_date",
+				//设置年假起算时间
+				annualMonth: BSAPIURL + "/year_holiday/rules/begin_month"
+			};
+			//考勤规则
+			var gridSelectorOfAnnual = "#grid-table-annual";
+			var pagerSelectorOfAnnual = "#grid-pager-annual";
+			var gridOfAnnual;
+
+			$(document).ready(function() {
+				//token
+				$.token();
+				//打开编辑状态
+				$(".btn-edit").click(function() {
+					$(this).parent().next().removeClass("hide");
+					$(this).parent().addClass("hide");
+					$('.ui-jqgrid-bdiv').css("height", $('.ui-jqgrid-bdiv').outerHeight(true) - 25);
+					initAnnualConfigData();
+				});
+				//关闭编辑状态
+				$(".btn-edit-close").click(function() {
+					showViewMode(this);
+					$('.ui-jqgrid-bdiv').css("height", $('.ui-jqgrid-bdiv').outerHeight(true) + 25);
+
+				});
+				var showViewMode = function(obj) {
+					$(obj).parent().parent().parent().prev().removeClass("hide");
+					$(obj).parent().parent().parent().addClass("hide");
+				};
+				//年假周期保存
+				$(".btn-save-cycle").click(function() {
+					var btnDom = this;
+					$.ajaxPut(ANNUALAPIS.annualCycle, {
+						round_type: $("input[name='rdLeaveCycle']:checked").val()
+					}, function(response) {
+						if(response.code == 0) {
+							//success
+							showViewMode(btnDom);
+							initAnnualConfigData();
+							$.showSuccessGritter("设置完成。");
+						} else {
+							$.showErrorGritter("设置失败：" + response.msg);
+						}
+					});
+				});
+				//年假清零保存
+				$(".btn-save-cleared").click(function() {
+					var btnDom = this;
+					$.ajaxPut(ANNUALAPIS.annualCleared, {
+						reset_type: $("input[name='rdCleardCycle']:checked").val(),
+						is_reset: $("input[name='rdCleardType']:checked").val(),
+						month: $(".form-control-month").val(),
+						day: $(".form-control-day").val()
+					}, function(response) {
+						if(response.code == 0) {
+							//success
+							showViewMode(btnDom);
+							initAnnualConfigData();
+							$.showSuccessGritter("设置完成。");
+							$('.ui-jqgrid-bdiv').css("height", $('.ui-jqgrid-bdiv').outerHeight(true) + 90);
+
+						} else {
+							$.showErrorGritter("设置失败：" + response.msg);
+						}
+					});
+				});
+				//年假清零
+				var formContainer = ".leave-cleared-edit";
+				$(formContainer + " input[name='rdCleardCycle']").click(function() {
+					var cycleVal = $(this).val();
+					if(cycleVal == 2) {
+						//指定日期清零
+						$(formContainer + " .form-control-select").removeAttr("disabled");
+						$(formContainer + " input[name='rdCleardType']").attr("disabled", "disabled");
+						$(formContainer + " input[name='rdCleardType']").removeAttr("checked");
+						$(formContainer + " .form-control-day option[value='31']").prop("selected", "selected");
+					} else {
+						$(formContainer + " .form-control-select").attr("disabled", "disabled");
+						$(formContainer + " input[name='rdCleardType']").removeAttr("disabled");
+						//if($(formContainer + " input[name='rdCleardType'][value='1']"))
+						$(formContainer + " input[name='rdCleardType'][select='true']").prop("checked", "checked");
+					}
+				});
+				for(var i = 1; i <= 31; i++) {
+					$(".form-control-day").append("<option " + (i == 31 ? "selected=\"selected\"" : "") + " value=\"" + (i < 10 ? "0" : "") + i + "\">" + i + "日</option>");
+				}
+				//初始年假数据
+				initAnnualLeaveData();
+			});
+			//年假规则配置
+			function initAnnualConfigData() {
+				$.ajaxGet(ANNUALAPIS.config, function(response) {
+					if(response.code == 0) {
+						//success
+						var configData = response.data;
+						//年度周期, 1-入职时间计算, 2-自然年度计算
+						var resetRoundType = {
+							1: "以入职时间起算，一年为一周期",
+							2: "以自然年为一周期"
+						};
+						$("input[name='rdLeaveCycle'][value='" + configData.reset_round_type + "']").attr("checked", "checked");
+						$(".label-leave-cycle").text(resetRoundType[configData.reset_round_type] ? resetRoundType[configData.reset_round_type] : "以入职时间起算，一年为一周期");
+						//年假清零时间
+						var resetDateArr = configData.reset_date.split("-");
+						var annualResetType = {
+							1: "每一年假周期到期后，" + (configData.is_reset == 1 ? "自动清零" : "自动累计"),
+							2: "每年 " + resetDateArr[0] + "月" + resetDateArr[1] + "日 自动清零"
+						};
+						$(".label-leave-cleared").text(annualResetType[configData.reset_type] ? annualResetType[configData.reset_type] : "每一年假周期到期后，自动清零");
+						$("input[name='rdCleardType'][value='" + configData.is_reset + "']").prop("checked", "checked");
+						$("input[name='rdCleardType']").attr("select", "false");
+						$("input[name='rdCleardType'][value='" + configData.is_reset + "']").attr("select", "true");
+						$("input[name='rdCleardCycle'][value='" + configData.reset_type + "']").prop("checked", "checked").trigger("click");
+						if(configData.reset_date) {
+							$(".form-control-month").val(resetDateArr[0]);
+							$(".form-control-day").val(resetDateArr[1]);
+						}
+					} else {
+						$.showErrorGritter("获取年假配置信息失败：" + response.msg);
+					}
+				});
+			}
+			//初始年假数据
+			function initAnnualLeaveData() {
+				//年假规则配置
+				initAnnualConfigData();
+				//grid
+				var gridHeight = $(window).height() - $(".annual-head").outerHeight(true) - 135;
+				var colNames = ['', '', '职位级别', '年假起算时间', '年假规则'];
+				var colModel = [{
+					name: 'employee_level',
+					index: 'employee_level',
+					hidden: true
+				}, {
+					name: '__rule',
+					index: '__rule',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return JSON.stringify(rowObject.rule_data);
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'employee_level_cn',
+					index: 'employee_level_cn',
+					sortable: true
+				}, {
+					name: '__begin_month',
+					index: '__begin_month',
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<p style='margin:10px;'>入职时间满 " + rowObject.begin_month + " 个月后可休年假</p>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: '__rules',
+					index: '__rules',
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var resHtml = "";
+							for(var i in rowObject.rule_data) {
+								resHtml += "<p style='margin:10px;'>入职时间满 " + rowObject.rule_data[i].month + " 个月后，年假天数为 " + rowObject.rule_data[i].holiday + " 天</p>";
+							}
+							return resHtml;
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				gridOfAnnual = $(gridSelectorOfAnnual).initJqGrid({
+					showPager: false,
+					pager: pagerSelectorOfAnnual,
+					url: ANNUALAPIS.rules,
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight
+				});
+			}
+			//设置年假规则
+			function openAnnualRuleInfoPop() {
+				if(!$(gridOfAnnual).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择职位后再设置规则。");
+					return false;
+				}
+				var modalId = $.modal({
+
+				}).show("设置年假规则", ".pnl-anurule-info",
+					function(modal) {
+						var setedRules = [];
+						var canSubmit = true;
+						$(formContainer + " .form-group-rule-seted>p").each(function() {
+							var oneRule = {};
+							oneRule.month = $(this).find(".form-control-count-month").val();
+							oneRule.holiday = $(this).find(".form-control-count-day").val();
+							if(oneRule.month && oneRule.holiday) {
+								setedRules.push(oneRule);
+							} else if(!oneRule.month && !oneRule.holiday) {
+
+							} else {
+								canSubmit = false;
+								$.showErrorGritter("您有填写过的规则未填写完整，请填写完整或者删除后提交！");
+							}
+						});
+						if(setedRules.length == 0) {
+							$.showErrorGritter("请先设置年假规则。");
+							return false;
+						}
+						if(!canSubmit) return false;
+						$.ajaxPut(ANNUALAPIS.rules, {
+							employee_levels: $(gridOfAnnual).getSelectRowIdsForjqGrid("employee_level"),
+							rule_data: setedRules
+						}, function(response) {
+							if(response.code == 0) {
+								//success
+								modal.modal("hide");
+								$(gridOfAnnual).reloadGrid();
+								$.showSuccessGritter("年假规则设置成功。");
+							} else {
+								$.showErrorGritter("设置失败：" + response.msg);
+							}
+						});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-anurule-info";
+				var appendRuleItem = function(monthCount, dayCount) {
+					var ruleSetedDom = $(formContainer + " .form-group-rule-seted");
+					if(ruleSetedDom.find("hr").length == 0) {
+						ruleSetedDom.append("<hr>");
+					}
+					var ruleItemDom = $("<p class='rule-container close-icon-container'>" +
+						//"	<label style=\"min-width: 30px;\"></label>" +
+						"<span>入职时间满</span>" +
+						"<input type=\"text\" class=\"form-control-count-month\" placeholder=\"月数\" value='" + monthCount + "' maxlength=\"3\" data-type=\"int\">" +
+						//"	<span class='month-count'>" + monthCount + "</span>" +
+						"<span>个月后，年假天数为</span>" +
+						"<input type=\"text\" class=\"form-control-count-day\" placeholder=\"天数\" value='" + dayCount + "' maxlength=\"3\" data-type=\"int\">" +
+						//"	<span class='day-count'>" + dayCount + "</span>" +
+						"<span>天</span>" +
+						"<img class='close-icon' src='../resources/images/filter-close.png' onclick='$(this).parent().remove();'/>" +
+						"</p>");
+					ruleItemDom.data("rule", {
+						month: monthCount,
+						day: dayCount,
+						holiday: dayCount
+					});
+					ruleSetedDom.append(ruleItemDom);
+				};
+				$(formContainer + " .btn-add").click(function() {
+					var ruleDom = $(
+						"<p class='rule-container close-icon-container'><span>入职时间满</span>" +
+						"<input type=\"text\" class=\"form-control-count-month\" placeholder=\"月数\" maxlength=\"3\" data-type=\"int\">" +
+						"<span>个月后，年假天数为</span>" +
+						"<input type=\"text\" class=\"form-control-count-day\" placeholder=\"天数\" maxlength=\"3\" data-type=\"int\">" +
+						"<span>天 </span>" +
+						"<img class='close-icon' src='../resources/images/filter-close.png' onclick='$(this).parent().remove();'/>" +
+						"</p>"
+					);
+					var ruleSetedDom = $(formContainer + " .form-group-rule-seted");
+					ruleSetedDom.append(ruleDom);
+					$(formContainer + " .form-group-rule-seted input").unbind("change").change(function() {
+						onSetHolidayRuleInputChange(formContainer, this);
+					});
+					//添加.
+					//					if(!monthCount || parseInt(monthCount) <= 0) {
+					//						monthDom.focus();
+					//						$.showErrorGritter("入职月数输入有误，请重新录入。");
+					//						return false;
+					//					}
+					//					if(!dayCount || parseInt(dayCount) <= 0) {
+					//						dayDom.focus();
+					//						$.showErrorGritter("年假天数输入有误，请重新录入。");
+					//						return false;
+					//					}
+
+					///已有的规则
+					//appendRuleItem(monthCount, dayCount);
+				});
+				if(!$(gridOfAnnual).isSelectedMultipleRowForjqGrid()) {
+					var ruleData = JSON.parse($(gridOfAnnual).jqGrid('getRowData', $(gridOfAnnual).jqGrid('getGridParam', 'selrow')).__rule);
+					for(var i in ruleData) {
+						appendRuleItem(ruleData[i].month, ruleData[i].holiday);
+					}
+				}
+				$(formContainer + " .label-levels").text($(gridOfAnnual).getSelectRowIdsForjqGrid("employee_level_cn").join(","));
+			}
+			//设置年假起算时间
+			function openSetStartingTimeOfAnnualPop() {
+				if(!$(gridOfAnnual).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择职位后再设置规则。");
+					return false;
+				}
+				var modalId = $.modal().showOfMini("设置年假起算时间", ".pnl-anumonth-info",
+					function(modal) {
+						var month = $(formContainer + " .form-control-count-month").val();
+						if(!month) {
+							$.showErrorGritter("请先录入年假起算月数。");
+							return false;
+						}
+						$.ajaxPut(ANNUALAPIS.annualMonth, {
+							employee_levels: $(gridOfAnnual).getSelectRowIdsForjqGrid("employee_level"),
+							begin_month: month
+						}, function(response) {
+							if(response.code == 0) {
+								//success
+								modal.modal("hide");
+								$(gridOfAnnual).reloadGrid();
+								$.showSuccessGritter("年假规则设置成功。");
+							} else {
+								$.showErrorGritter("设置失败：" + response.msg);
+							}
+						});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-anumonth-info";
+				$(formContainer + " .label-levels").text($(gridOfAnnual).getSelectRowIdsForjqGrid("employee_level_cn").join(","));
+			}
+			//设置年假规则input   change事件处理函数
+			function onSetHolidayRuleInputChange(formContainer, obj) {
+				if(parseInt($(obj).val()) < 0) {
+					if($(obj).hasClass("form-control-count-month")) {
+						$.showErrorGritter("入职月数输入有误，请重新录入。");
+					} else {
+						$.showErrorGritter("年假天数输入有误，请重新录入。");
+					}
+					$(obj).focus();
+					return false;
+				}
+				$(obj).parent().addClass("checking-this");
+				var monthCount = $(obj).parent().find(".form-control-count-month").val();
+				var dayCount = $(obj).parent().find(".form-control-count-day").val();
+				if(monthCount && dayCount) {
+					var annualRule = [];
+					var isExist = false;
+					$(formContainer + " .form-group-rule-seted p").each(function() {
+						if($(this).hasClass("checking-this")) return false;
+						var oneRule = {};
+						oneRule.monthCount = parseInt($(this).find(".form-control-count-month").val());
+						if(monthCount == $(this).find(".form-control-count-month").val()) {
+							isExist = true;
+						}
+						oneRule.dayCount = parseInt($(this).find(".form-control-count-day").val());
+						annualRule.push(oneRule);
+					});
+					if(isExist) {
+						$.showErrorGritter(monthCount + "个月规则已存在！");
+						$(obj).focus();
+						return false;
+					}
+					//控制新添加的规则是否合理
+					for(var i in annualRule) {
+						var oneRule = annualRule[i];
+						if(monthCount > oneRule.monthCount && dayCount < oneRule.dayCount) {
+							$.showErrorGritter("该规则入职月数大于" + oneRule.monthCount + "个月，但是年假天数小于" + oneRule.dayCount + "天，请重新输入！");
+							$(obj).focus();
+							return false;
+						}
+					}
+				}
+				$(obj).parent().removeClass("checking-this");
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>粘贴</title>
+		<style>
+			#ret {
+				width: 200px;
+				height: 200px;
+				border: 1px solid #e3e3e3;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h5>Ctrl+V 图片看效果</h5>
+		<div id="ret" contenteditable="true"></div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<script>
+			$(document).on("paste", function(event) {
+				var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+				console.log(items)
+				for(index in items) {
+					var item = items[index];
+					console.log(item)
+					if(item.kind === 'file') {
+						var blob = item.getAsFile();
+						var reader = new FileReader();
+						reader.onload = function(event) {
+							//粘贴转换完成，开始上传
+							$("#ret").html(event.target.result);
+							$.ajaxPost("http://api.saas.com/im/image/base64", {
+								data: event.target.result
+							}, function(response) {
+								if(response.code > 0) {
+									alert(response.msg);
+									return;
+								}
+
+								$("#ret").append("<img src='" + response.data.path + "'/>");
+							});
+						};
+						reader.readAsDataURL(blob);
+					}
+				}
+			});
+		</script>
+	</body>
+
+</html>

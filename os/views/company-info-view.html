@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>企业信息管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/city-picker.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+	</head>
+
+	<body>
+		<div class="pnl-company-info">
+			<form class="company-info">
+				<div class="header">
+					<h4>重庆艾视医药有限公司</h4>
+					<img class="logo" src="../resources/images/logo-black.png" />
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<ul>
+							<li class="form-group form-inline">
+								<label>注册时间</label>
+								<span class="form-control form-control-noborder">2016-02-06 16：00</span>
+								<label>版本使用情况</label>
+								<span class="form-control form-control-noborder">未使用</span>
+								<label>企业状态</label>
+								<span class="form-control form-control-noborder">未使用</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<ul>
+							<li class="form-group-line">
+								<label>企业基本信息</label>
+								<hr>
+							</li>
+							<li class="form-group form-inline">
+								<label>企业名称</label>
+								<span class="form-control form-control-noborder">重庆艾视医药有限公司</span>
+								<label>所在城市</label>
+								<span class="form-control form-control-noborder">四川省成都市</span>
+								<label>详细地址</label>
+								<span class="form-control form-control-noborder">重庆市南岸区茶园玉马路18号A3 4-1</span>
+							</li>
+							<li class="form-group form-inline">
+								<label>所属行业</label>
+								<span class="form-control form-control-noborder">医疗行业</span>
+								<label>企业性质</label>
+								<span class="form-control form-control-noborder">私营企业</span>
+								<label>企业帐号</label>
+								<span class="form-control form-control-noborder">15213333333</span>
+							</li>
+							<li class="form-group form-inline">
+								<label>企业电话</label>
+								<span class="form-control form-control-noborder">023-8886489</span>
+								<label>传真</label>
+								<span class="form-control form-control-noborder">023-8886489</span>
+							</li>
+							<li class="form-group form-inline">
+								<label></label>
+							</li>
+							<li class="form-group-line">
+								<label>企业证照</label>
+								<hr>
+							</li>
+							<li class="form-group form-inline">
+								<label>组织机构代码</label>
+								<span class="form-control form-control-noborder">12345678-9</span>
+								<label>资质凭证</label>
+								<span>
+									<img class="img-qa" src="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" width="100" />
+									<img class="img-qa" src="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" width="100" />
+									<img class="img-qa" src="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" width="100" />
+								</span>
+							</li>
+							<li class="form-group-line">
+								<label>企业联系人</label>
+								<hr>
+							</li>
+							<li class="form-group form-inline">
+								<label>联系人</label>
+								<span class="form-control form-control-noborder">吴星</span>
+								<label>职务</label>
+								<span class="form-control form-control-noborder">行政助理</span>
+								<label>手机号码</label>
+								<span class="form-control form-control-noborder">13332334899</span>
+							</li>
+							<li class="form-group form-inline">
+								<label>办公电话</label>
+								<span class="form-control form-control-noborder">13332334899</span>
+								<label>QQ</label>
+								<span class="form-control form-control-noborder">3659854112</span>
+								<label>电子邮件</label>
+								<span class="form-control form-control-noborder">13332334899@163.com</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<ul>
+							<li class="form-group form-inline">
+								<label>认证状态</label>
+								<span class="form-control form-control-noborder"><span class="label label-warning">待审核</span></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<ul>
+							<li class="form-group form-inline">
+								<label>备注</label>
+								<span class="form-control form-control-noborder">XXXXXXXXXXXX</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<ul class="nav nav-tabs" role="tablist">
+							<li>
+								<a class="pref"></a>
+							</li>
+							<li role="presentation" class="active"><a href="#tab-process" aria-controls="table" role="tab" data-toggle="tab">处理信息</a></li>
+							<li role="presentation"><a href="#tab-comp-log" aria-controls="profile" role="tab" data-toggle="tab">企业信息变更记录</a></li>
+						</ul>
+						<!-- Tab panes -->
+						<div class="tab-content">
+							<div role="tabpanel" class="tab-pane active" id="tab-process">
+								<table id="grid-tab-process">
+								</table>
+							</div>
+							<div role="tabpanel" class="tab-pane" id="tab-comp-log">
+								<table id="grid-tab-comp-log">
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.data.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.js"></script>
+	</body>
+
+</html>

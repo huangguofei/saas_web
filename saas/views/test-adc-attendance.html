@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>考勤</title>
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-datetimepicker.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			body {
+				margin: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="sigin">
+			<h4>签到、签退测试</h4>
+			<p>
+				经度：<input type="text" id="txtLon" value="106.545186" /> 纬度：
+				<input type="text" id="txtLat" value="29.552195" />
+				<label class="form-inline"><input type="radio" name="hgf" value="1">关联客户</label>
+				<label class="form-inline"><input type="radio" name="hgf" value="2">备注</label>
+				<label>签到地点：<input type="text" id="txtLocation" placeholder="输入签到地点名称"/></label>
+				<button type="button" id="btnUpSigninImg">上传图片</button>
+				<button type="button" id="btnSignin">签到</button>
+				<button type="button" id="btnSignout">签退</button>
+			</p>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/moment-with-locales.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datetimepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datetimepicker.zh-CN.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/approval.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/attendance.js"></script>
+		<script>
+			$(document).ready(function() {
+				$.ajaxGet(BASEAPIURL + "/upload/signature?type=1", function(response) {
+					if(response.code == 0) {
+						$("#btnUpSigninImg").initUploader({
+							url: response.data.host,
+							params: {
+								'key': response.data.dir + response.data.random + ".png",
+								'policy': response.data.policy,
+								'OSSAccessKeyId': response.data.accessid,
+								'success_action_status': '200', //让服务端返回200,不然，默认会返回204
+								'signature': response.data.signature,
+							},
+							FilesAdded: function(up, files) {
+								return true;
+							},
+							FileUploaded: function(up, file, response) {
+								$.showSuccessGritter("OK");
+							}
+						});
+					} else {
+						$.showErrorGritter("获取凭证失败：" + response.msg);
+					}
+				});
+
+				//def imgId
+				$("#btnUpSigninImg").data("fileId", "75cf446f-c62a-4221-aa89-c182707c03b7");
+
+				$("#btnSignin").click(function() {
+					var val = $(".sigin input[type='radio']:checked").val();
+					var clientId = "5b0858cd-a857-4962-b334-4f101e3e88b5";
+					var remark = "管理客户备注信息";
+					if(val == 1) {
+						remark = "";
+					} else {
+						clientId = "";
+					}
+					$.ajaxPost(BSAPIURL + "/sign/in", {
+						attendance_in_lat: $("#txtLat").val(),
+						attendance_in_lon: $("#txtLon").val(),
+						attendance_in_picture: $("#btnUpSigninImg").data("fileId"),
+						attendance_in_address: $("#txtLocation").val(),
+						client_id: clientId,
+						remark: remark
+					}, function(response) {
+						if(response.code == 0) {
+							//success
+							$.showSuccessGritter("OK");
+						} else {
+							$.showErrorGritter("提交失败：" + response.msg);
+						}
+					});
+				});
+				$("#btnSignout").click(function() {
+					var val = $(".sigin input[type='radio']:checked").val();
+					var clientId = "5b0858cd-a857-4962-b334-4f101e3e88b5";
+					var remark = "管理客户备注信息";
+					if(val == 1) {
+						remark = "";
+					} else {
+						clientId = "";
+					}
+					$.ajaxPost(BSAPIURL + "/sign/out", {
+						attendance_out_lat: $("#txtLat").val(),
+						attendance_out_lon: $("#txtLon").val(),
+						attendance_out_address: $("#txtLocation").val(),
+						attendance_out_picture: $("#btnUpSigninImg").data("fileId"),
+						client_id: clientId,
+						remark: remark
+					}, function(response) {
+						if(response.code == 0) {
+							//success
+							$.showSuccessGritter("OK");
+						} else {
+							$.showErrorGritter("提交失败：" + response.msg);
+						}
+					});
+				});
+
+				function createData() {
+					var val = $(".sigin input[type='radio']:checked").val();
+					if(val == 1)
+						return "5b0858cd-a857-4962-b334-4f101e3e88b5";
+					else
+						return "关联客户备注信息";
+				}
+			});
+		</script>
+	</body>
+
+</html>

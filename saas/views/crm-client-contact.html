@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head lang="zh-CN">
+        <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+        <meta charset="utf-8"/>
+        <title>联系人</title>
+        <meta name="viewport" contnet="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="../resources/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css"/>
+        <link rel="stylesheet" href="../resources/css/jquery.gritter.css"/>
+        <link rel="stylesheet" href="../resources/css/ui.jqgrid.css"/>
+        <link rel="stylesheet" href="../resources/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="../resources/css/datepicker.css"/>
+        <link rel="stylesheet" href="../resources/css/main-page.css"/>
+        <style></style>
+    </head>
+    <body>
+        <div class="page-container crm-client-contact">
+            <div class="remark">
+                <i class="fa fa-list-ol fa-2x"></i><span>*联系人信息查询</span>
+            </div>
+            <div class="content">
+                <div class="search">
+
+                </div>
+                <table id="grid-table-client-contact"></table>
+                <div id="grid-pager-client-contact"></div>
+            </div>
+        </div>
+        <script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+        <script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+        <script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+        <script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+        <script type="text/javascript" src="../resources/js/sortable.js"></script>
+        <script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+        <script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+        <script type="text/javascript" src="../resources/js/main.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                    ////token
+                    $.token();
+                }
+            );
+            var gridTableSelectorOfClientContact = "#grid-table-client-contact";
+            var gridPagerSelectorOfClientContact = "#grid-pager-client-contact"
+            var isFirstInitGridOfClientContact = false;
+            function initGridOfClientContact(){
+                ////search
+                $.initSearchControls4TagMode({
+                    auto: true,
+                    url: "",
+                    grid: gridTableSelectorOfClientContact,
+                    container: ".search",
+                    key_name: "key",
+                    key_placeholder: "请输入单位名称、负责人进行查找",
+                    onChange: function(selectTags){},
+                    groups: [
+                        {
+                            name: "client_company_type",
+                            text: "客户单位类型",
+                            items: [
+                                {
+                                    key: "商业公司",
+                                    value: "0"
+                                },{
+                                    key: "医院",
+                                    value: "1"
+                                }
+                            ]
+                        },{
+                            name: "client_important_level",
+                            text: "客户重要等级",
+                            items: [
+                                {
+                                    key: "A级",
+                                    value: "0"
+                                },{
+                                    key: "B级",
+                                    value: "1"
+                                }
+                            ]
+                        },{
+                            name: "credentials_level",
+                            text: "资质等级",
+                            items: [
+                                {
+                                    key: "三级特等",
+                                    value: "00"
+                                },{
+                                    key: "三级甲等",
+                                    value: "01"
+                                },{
+                                    key: "三级乙等",
+                                    value: "02"
+                                },{
+                                    key: "三级丙等",
+                                    value: "03"
+                                },{
+                                    key: "二级甲等",
+                                    value: "10"
+                                },{
+                                    key: "二级乙等",
+                                    value: "11"
+                                },{
+                                    key: "二级丙等",
+                                    value: "12"
+                                },{
+                                    key: "一级甲等",
+                                    value: "20"
+                                },{
+                                    key: "一级乙等",
+                                    value: "21"
+                                },{
+                                    key: "一级丙等",
+                                    value: "22"
+                                },{
+                                    key: "其他",
+                                    value: "30"
+                                }
+                            ]
+                        },{
+
+                        }
+                    ]
+                });
+            }
+        </script>
+    </body>
+</html>

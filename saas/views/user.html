@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>企业帐号管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+			.set-customer-service {
+				
+			}
+
+			.page-container {
+				padding-top: 4px;
+			}
+			
+			.set-customer-service div label {
+				width: 50px;
+				margin-left: 40px;
+			}
+			
+			.reset-password {
+				margin-top: 10px;
+			}
+			
+			.reset-password label {
+				
+			}
+			
+			.account-count {
+				height: 115px;
+				background-color: #fff;
+				padding: 20px 0;
+				border: 1px solid #e3e3e3;
+				margin-bottom: 14px;
+				font-size: 16px;
+				color: #666;
+			}
+			
+			.account-count label {
+				margin-right: 0!important;
+				width: 32%;
+				text-align: center;
+				line-height: 37px;
+			}
+			
+			.divided-line:after {
+				height: 50px;
+				margin-top: -25px;
+			}
+			
+			#grid-pager_right .btn img {
+				margin-right: 0;
+				margin-top: -3px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container company-user-container">
+			<!--<div class="remark hide">
+				<img src="../resources/images/account-icon.png" alt="" /><span>*企业可登录的账户管理</span>
+			</div>-->
+			<div class="content">
+				<div class="search">
+					<div class="account-count">
+						<label class="divided-line"><img src="../resources/images/buy-icon.png" alt="已购买" /><br>已购买<span class="label-total-count">0</span>个账户</label>
+						<label class="divided-line"><img src="../resources/images/used-icon.png" alt="已使用" /><br>已使用<span class="label-used-count">0</span>个账户</label>
+						<label><img src="../resources/images/unuse-icon.png" alt="未使用" /><br>未使用<span class="label-nouse-count">0</span>个账户</label>
+					</div>
+					<!--<hr class="line-count">-->
+				</div>
+				<div class="role-list">
+					<table id="grid-table" class="grid-module">
+					</table>
+					<div id="grid-pager">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-info hide">
+			<form class="form-horizontal model-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">角色名称</label>
+					<input type="text" class="form-control" placeholder="角色名称" bind="name" nulltip="角色名称">
+				</div>
+				<div class="form-group form-inline">
+					<label>备注</label>
+					<textarea class="form-control" bind="remark"></textarea>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-roles hide">
+			<form class="form-horizontal model-roles">
+				<div class="form-group form-inline">
+					<table border="0">
+						<tr>
+							<td style="width: 90px; text-align: center; border-right: 1px solid #eee;" valign="top">
+								角色
+							</td>
+							<td style=" padding-left: 15px;">
+								<div class="tree tree-selectable tree-role">
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</form>
+		</div>
+		<div class="set-customer-service-container hide">
+			<div class="set-customer-service">
+				<div>
+					<span>是否允许员工联系客服？</span>
+				</div>
+				<div style="margin-top: 10px; padding-left: 30px;">
+					<label>
+						<input type="radio" checked="checked" name="setCustomerService" value="2"/> 是
+					</label>
+					<label>
+						<input type="radio"  name="setCustomerService" value="1"/> 否
+					</label>
+				</div>
+			</div>
+
+		</div>
+		<div class="reset-password-container hide">
+			<div class="form-group form-inline reset-password">
+				<label class="input-flag text-align-right">新密码：</label>
+				<input type="text" class="form-control" />
+			</div>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openSetRolesPOP();" role-auth="saas/companies/accounts/0/roles|post"><img src="../resources/images/fen-pei-icon.png" alt="图标" /> 分配角色</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" onclick="openSetCustomerService();" role-auth="saas/companies/accounts/selected/contact_customer|put"><img src="../resources/images/phone-icon.png" alt="" /> 联系客服</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" onclick="openResetPasswordPop();"  enable-on="singleselect" role-auth="saas/companies/accounts/selected/contact_customer|put"><img src="../resources/images/reset-pwd-icon.png" alt="" /> 重置密码</a>
+			<a class="btn btn-sm btn-danger def-btn-danger hide" onclick="openSetRolesPOP();" enable-on="singleselect" role-auth="saas/companies/accounts/0/roles|post"><img src="../resources/images/account-icon.png" alt="" /> 更换账号</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" show-on1="multiselect" onclick="setDisable(1);" role-auth="saas/companies/accounts/selected/status|put"><img src="../resources/images/lock-up.png" alt="" /> 启用</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" show-on1="multiselect" onclick="setDisable(2);" role-auth="saas/companies/accounts/selected/status|put"><img src="../resources/images/lock-down.png" alt="" /> 停用</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			var grid_selector = "#grid-table";
+			var pager_selector = "#grid-pager";
+			var roleJSON = [];
+			var gridHeight;
+			$(document).ready(function() {
+				//账户数情况
+				loadTopInfp();
+
+				//load roles
+				loadRoles(function(roles) {
+					roleJSON = roles;
+					//search
+					var roles4Search = [];
+					roles4Search.push({
+						key: "全部",
+						value: 0
+					});
+					for(var i in roles) {
+						var roleData = roles[i];
+						roles4Search.push({
+							key: roleData.role_name,
+							value: roleData.role_id
+						});
+						//user roles
+						console.log("<label><input type='checkbox' value='" + roleData.role_id + "'> " + roleData.role_name + "</label>")
+						$(".tree-role").append("<label><input type='checkbox' value='" + roleData.role_id + "'> " + roleData.role_name + "</label>");
+					}
+					//
+					console.log(roles4Search);
+					$.initSearchControls4TagMode({
+						auto: true,
+						url: SAASAPIS.BS.company.accounts,
+						grid: "#grid-table",
+						container: ".search",
+						key_name: "key",
+						//removeHeight4Grid: 15,
+						key_placeholder: "请输入姓名、手机号码进行查询",
+						onChange: function(selectTags) {},
+						groups: [{
+							name: "status",
+							text: "状态",
+							items: [{
+								key: "全部",
+								value: "0"
+							}, {
+								key: "启用",
+								value: "1"
+							}, {
+								key: "停用",
+								value: "2"
+							}]
+						}, {
+							name: "roles",
+							text: "角色",
+							items: roles4Search
+						}]
+					});
+					gridHeight=$(window).height()- $(".search").outerHeight(true)-140;
+					//grid
+					var colNames = ['','', '', '', '姓名', '帐号', '角色', '状态', '创建时间'];
+					var colModel = [{
+						name: 'id',
+						hidden: true,
+						formatter: function(cellvalue, options, rowObject){
+							return rowObject.account_id;
+						}
+					},{
+						name: 'account_id',
+						hidden: true,
+						formatter: function(cellvalue, options, rowObject){
+							return rowObject.account_id;
+						}
+					}, {
+						name: 'account_status',
+						hidden: true
+					}, {
+						name: '__roles',
+						hidden: true,
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								if(cellvalue) {
+									return cellvalue;
+								}
+								var roleIds = [];
+								for(var i in rowObject.roles) {
+									roleIds.push(rowObject.roles[i].role_id);
+								}
+								return JSON.stringify(roleIds);
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: 'account_real_name',
+						//sortable: true,
+						formatter:function(cellvalue, options, rowObject){
+							if(rowObject.can_contact_customer&&$.cookie("_u_is_admin")){
+								return "<img style='width:18px;margin-top:-5px;' src=\"../resources/images/customer-service.png\">"+cellvalue;
+							}else{
+								return cellvalue;
+							}
+						}
+					}, {
+						name: 'account_mobile',
+						//sortable: true,
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return cellvalue;
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: '__RoleNames',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								if(cellvalue) {
+									return cellvalue;
+								}
+								var roleNames = [];
+								for(var i in rowObject.roles) {
+									roleNames.push(rowObject.roles[i].role_name);
+								}
+								if(roleNames.length == 0) {
+									return "";
+								}
+								return roleNames.join(",");
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: 'account_status_cn',
+						width: 50,
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return cellvalue;
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: 'account_register_time',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return cellvalue;
+							} catch(e) {
+								return '';
+							}
+						}
+					}];
+					grid = $(grid_selector).initJqGrid({
+						grid_selector: grid_selector,
+						pager: pager_selector,
+						url: SAASAPIS.BS.company.accounts,
+						colNames: colNames,
+						height: gridHeight,
+						storeRowDataInCache: true,
+						sortorder: "desc",
+						colModel: colModel
+					});
+				});
+				//token
+				$.token();
+				//alert($(".search").outerHeight(true))
+			});
+			//加载顶部信息
+			function loadTopInfp() {
+				$.ajaxGet(SAASAPIS.BS.company.static_count, function(response) {
+					if(response.code == 0) {
+						//success
+						$(".label-total-count").text(response.data.all_account_count);
+						$(".label-used-count").text(response.data.used_account_count);
+						$(".label-nouse-count").text(response.data.not_used_account_count);
+					} else {
+						$.showErrorGritter("查询企业账户数量失败：" + response.msg);
+					}
+				});
+			}
+			//加载角色
+			function loadRoles(callback) {
+				$.ajaxGet(SAASAPIS.BS.company.roles, function(response) {
+					if(response.code == 0) {
+						//success
+						if(callback) {
+							callback(response.data.rows);
+						}
+					} else {
+						$.showErrorGritter("加载角色失败：" + response.msg);
+					}
+				});
+			}
+			//联系客服与否
+			function openSetCustomerService() {
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要设置的帐号。");
+					return false;
+				}
+				var rowDatas=getSelectedDatas(grid);
+				var account_ids=[];
+				for(var i in rowDatas){
+					account_ids.push(rowDatas[i].account_id);
+				}
+				var modalId = $.modal().showOfMini("联系客服", ".set-customer-service-container", function(modal) {
+					$.ajaxPut(BSAPIURL+"/companies/accounts/selected/contact_customer",{
+						account_can_contact_customer: $("#"+modalId+" input:checked").val(),
+						account_ids: account_ids
+					},function(resp){
+						if(resp.code==0){
+							$.showSuccessGritter("设置成功！");
+							$(grid).reloadGrid();
+							$("#" + modalId).modal("hide");
+						}else{
+							$.showErrorGritter("服务器返回失败："+resp.msg);
+						}
+					});
+				});
+			}
+			//重置密码
+			function openResetPasswordPop(){
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要重置的帐号。");
+					return false;
+				}
+				var rowDatas=getSelectedDatas(grid);
+				var modalId=$.modal().showOfMini("重置密码",".reset-password-container",function(modal){
+					var newPwd=$("#"+modalId+" input").val();
+					if(!newPwd||newPwd.length<6) {
+						$.showErrorGritter("密码长度不得小于6，请重新输入！");
+						return false;
+					}
+					$.ajaxPut(BSAPIURL+"/companies/accounts/selected/password",{
+						account_ids:rowDatas[0].account_id,
+						new_password: newPwd
+					},function(resp){
+						if(resp.code!=0) {
+							$.showErrorGritter("重置密码失败："+resp.msg);
+							return false;
+						}else{
+							$.showSuccessGritter("重置密码成功！");
+							$("#"+modalId).modal("hide");
+						}
+					});
+				});
+			}
+			//分配角色
+			function openSetRolesPOP() {
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要分配角色的帐号。");
+					return false;
+				}
+//				var rowIndex = $(grid).jqGrid('getGridParam', 'selrow');
+//				var rowData = $(grid_selector).jqGrid('getRowData', rowIndex);
+				var rowDatas=getSelectedDatas(grid);
+				console.log(rowDatas);
+				var account_ids=[];
+				for(var i  in rowDatas){
+					if(rowDatas[i].account_id) account_ids.push(rowDatas[i].account_id);
+				}
+				var modalId = $.modal().show("分配角色", ".pnl-roles",
+					function(modal) {
+						var selectRoleIds = [];
+						$(formContainer + " .tree-role input:checked").each(function() {
+							selectRoleIds.push($(this).val());
+						});
+						if(selectRoleIds.length == 0) {
+							alert("请选择要分配的角色。");
+							return false;
+						}
+						var userRolesData = {
+							role_ids: selectRoleIds,
+							account_ids:account_ids
+						};
+						$.ajaxPost(BSAPIURL+"/companies/accounts/roles", userRolesData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("分配角色成功。");
+									modal.modal('hide');
+									$(grid).reloadGrid();
+								} else {
+									$.showErrorGritter("分配角色失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-roles";
+				console.log(rowDatas)
+				if(rowDatas.length==1){
+					var roles = rowDatas[0].roles;
+					console.log(roles)
+					for(var i in roles) {
+						$(formContainer + " .tree-role input[value='" + roles[i].role_id + "']").attr("checked", "checked");
+					}
+				}
+			}
+			//启用、停用
+			function setDisable(state) {
+				var status = state == 2 ? "停用" : "启用";
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要" + status + "的帐号。");
+					return false;
+				}
+				//判断是否启用、禁用
+				var statusArr = $(grid).getSelectRowIdsForjqGrid("account_status");
+				var aNames = $(grid).getSelectRowIdsForjqGrid("account_real_name");
+				var tipNames = [];
+				/*if(state == 2) {
+					//禁用
+					for(var i in statusArr) {
+						if(statusArr[i] == 2) {
+							tipNames.push(aNames[i]);
+						}
+					}
+					if(tipNames.length > 0) {
+						$.showErrorGritter("[" + tipNames.join(",") + "] 状态为禁用，不能再次禁用。");
+						return false;
+					}
+				}
+				if(state == 1) {
+					//启用
+					for(var i in statusArr) {
+						if(statusArr[i] == 1) {
+							tipNames.push(aNames[i]);
+						}
+					}
+					if(tipNames.length > 0) {
+						$.showErrorGritter("[" + tipNames.join(",") + "] 状态为启用，不能再次启用。");
+						return false;
+					}
+				}*/
+
+				var selRowsIndex = $(grid).jqGrid('getGridParam', 'selarrrow');
+				if(selRowsIndex.length > 0) {
+					$.ajaxPut(SAASAPIS.BS.company.account.status, {
+							account_ids: $(grid).getSelectRowIdsForjqGrid("account_id"),
+							account_status: state
+						},
+						function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter(status + " 账户成功。");
+								//refresh data
+								loadTopInfp();
+								var len = selRowsIndex.length;
+								for(var i = 0; i < len; i++) {
+									var rowIndex = $(grid).jqGrid('getGridParam', 'selrow');
+									$(grid).jqGrid("setRowData", rowIndex, {
+										account_status_cn: status,
+										account_status: state
+									});
+									$(grid).jqGrid("setSelection", rowIndex);
+								}
+							} else {
+								$.showErrorGritter("修改状态失败：" + response.msg);
+							}
+						});
+				}
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>找回密码</title>
+		<link rel="stylesheet" href="resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="resources/css/index.css" />
+		<link rel="stylesheet" href="resources/css/login.css" />
+	</head>
+
+	<body class="reg forget">
+		<div class="login-container reg-container forget-container">
+			<div class="header">
+				<img src="resources/images/logo-black.png" />
+				<p>一体化办公解决方案提供商</p>
+			</div>
+			<div class="content">
+				<div class="box">
+					<h3 class="text-align-center">找回密码</h3>
+					<div class="step step1">
+						<p class="c1"></p>
+						<p class="c2"></p>
+						<p class="c3"></p>
+						<p class="proc"></p>
+						<p class="clear"></p>
+						<p class="t1">确认帐号</p>
+						<p class="t2">安全验证</p>
+						<p class="t3">重置密码</p>
+					</div>
+					<div class="clear step-con step-con1">
+						<input type="text" class="form-control form-control-account" placeholder="请输入手机号码或邮箱地址" nulltip="邮箱或手机" bind="account" maxlength="30">
+						<input type="text" class="form-control form-control-imgcode" placeholder="验证码" maxlength="6" nulltip="验证码" bind="captcha_code" /><img class="img-code-common img-code1" src="resources/images/code.jpg" title="点击更换验证码" />
+						<button class="form-button btn btn-danger" g="gostep" step="2">下一步 <i class="fa fa-angle-right"></i></button>
+					</div>
+					<div class="clear step-con step-con2 hide">
+						<p>为了您的帐号安全，请完成身份验证！</p>
+						<span class="form-control text-align-left text-control-account"></span>
+						<input type="text" class="form-control form-control-imgcode2" placeholder="验证码" maxlength="6" bind="captcha_code2" /><img class="img-code-common img-code2" src="resources/images/code.jpg" title="点击更换验证码" />
+						<input type="text" class="form-control form-control-code" placeholder="请输入手机验证码" maxlength="6" bind="code">
+						<a href="javascript:;" style="top:51%" class="btn btn-success btn-sendcode" enb="1">发送验证码</a>
+						<button class="form-button btn step-prev" g="gostep" step="1"><i class="fa fa-angle-left" style="margin: 0 10px 0 0;"></i>上一步 </button>
+						<button class="form-button btn btn-danger" g="gostep" step="3">下一步 <i class="fa fa-angle-right"></i></button>
+					</div>
+					<div class="clear step-con step-con3 hide">
+						<input type="password" class="form-control" placeholder="请输入密码" nulltip="密码" bind="password">
+						<p class="tip">密码为6-12位，字母、数字和符号的组合。</p>
+						<input type="password" class="form-control" placeholder="再次确认密码" nulltip="密码" bind="password1">
+						<button class="form-button btn btn-danger" g="gostep" step="4"> 确 定 </button>
+					</div>
+					<div class="clear step-con step-con4 hide">
+						<p class="note">
+							<i class="fa fa-check-circle fa-3x text-success"></i><br /><br /> 密码重置成功！
+						</p>
+						<a href="login.html" class="form-button btn btn-danger">登 录</a>
+					</div>
+				</div>
+			</div>
+			<div class="footer">
+				<div class="copyright">
+					<span>Copyright  2001-2016 Weaver Network All Rights Reserved. 渝ICP备XXXXXXX号</span>
+					<span class="footer-link"><a href="index.html">返回首页</a> &nbsp;|&nbsp; <a href="register.html">注册帐号</a> </span>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<!--[if IE]>
+			<script type="text/javascript" src="resources/js/placeholder.js"></script>
+			<script type="text/javascript">
+				$("input[placeholder]").each(function() {
+					$(this).placeholder({
+						word: $(this).attr("placeholder")
+					});
+				});
+			</script>
+		<![endif]-->
+		<script type="text/javascript">
+			var CODETYPE = "forgot";
+			var isMobile = false;
+			var forController = new Controller(".step-con");
+			var forModel = {
+				name: ""
+			};
+			$(document).ready(function() {
+				forController.set(forModel);
+				//token
+				$.token();
+				//code
+				setTimeout(function() {
+					initVerifyCode();
+				}, 500);
+				$(".btn-sendcode").click(function() {
+					if($(this).attr("enb") == 0) {
+						return false;
+					}
+					sendVerCode(2);
+				});
+				$("button[g='gostep']").click(function() {
+					var step = $(this).attr("step");
+					var con_container;
+					if(step == 1) {
+						con_container = undefined;
+					} else if(step == 2) {
+						con_container = ".step-con1";
+					} else if(step == 3) {
+						con_container = ".step-con2";
+					} else if(step == 4) {
+						con_container = ".step-con3";
+					}
+					if(!con_container || inputValidateForGritter(con_container, "login-center reg-center")) {
+						var modeData = forController.getJSON();
+						if(step == 2) {
+							//验证
+							//sendVerCode(1);
+							var mobileValiRes = mobileValidate(modeData.account);
+							var emailValiRes = emailValidate(modeData.account);
+							if(!mobileValiRes && !emailValiRes) {
+								$.clearGritter();
+								$.showErrorGritter("帐号有误，请输入手机号码或邮箱找回密码。", {
+									position: "login-center reg-center"
+								});
+								$(".form-control-account").focus();
+								return false;
+							}
+							isMobile = mobileValiRes;
+							var captcha_code = modeData.captcha_code;
+							if(!captcha_code) {
+								$.clearGritter();
+								$.showErrorGritter("请输入右侧的图像验证码。", {
+									position: "login-center reg-center"
+								});
+								return false;
+							}
+							//step1
+							$.ajaxPost(SAASAPIS.BS.account.forgot.step1, {
+									account: modeData.account,
+									captcha_type: CODETYPE,
+									captcha_code: captcha_code
+								},
+								function(response) {
+									if(response.code == 0) {
+										changeStep(2);
+										initVerifyCodeOfStep2();
+										$(".text-control-account").text(modeData.account);
+									} else {
+										$.clearGritter();
+										initVerifyCode();
+										$(".form-control-imgcode").focus();
+										$(".form-control-imgcode").val("");
+										$.showErrorGritter("帐号验证失败：" + response.msg, {
+											position: "login-center reg-center"
+										});
+									}
+								});
+						} else if(step == 3) {
+							if(!modeData.code) {
+								$.clearGritter();
+								$.showErrorGritter("请先输入收到的验证码。", {
+									position: "login-center reg-center"
+								});
+								$(".form-control-code").focus();
+								$(".form-control-code").val("");
+								return false;
+							}
+							//验证
+							$.ajaxPost(SAASAPIS.BS.account.forgot.step2, {
+									sms_code: modeData.code,
+									sms_code_type: CODETYPE,
+									account: modeData.account
+								},
+								function(response) {
+									if(response.code == 0) {
+										changeStep(step);
+									} else {
+										$.clearGritter();
+										$.showErrorGritter("验证手机号失败：" + response.msg, {
+											position: "login-center reg-center"
+										});
+									}
+								});
+						} else if(step == 4) {
+							//提交
+							if(modeData.password.length < 6 || modeData.password1.length < 6) {
+								$.clearGritter();
+								$.showErrorGritter("密码长度至少6位。", {
+									position: "login-center reg-center"
+								});
+								return false;
+							}
+							if(modeData.password != modeData.password1) {
+								$.clearGritter();
+								$.showErrorGritter("两次密码不一致，重新输入。", {
+									position: "login-center reg-center"
+								});
+								return false;
+							}
+							if(!checkPassword(modeData.password)){
+								return false;
+							}
+							//alert(JSON.stringify(modeData));
+							$.ajaxPost(SAASAPIS.BS.account.forgot.step3, modeData,
+								function(response) {
+									if(response.code == 0) {
+										$(".step-con").addClass("hide");
+										$(".step-con4").removeClass("hide");
+									} else {
+										$.clearGritter();
+										$.showErrorGritter("重置密码失败：" + response.msg, {
+											position: "login-center reg-center"
+										});
+									}
+								});
+						} else if(step != 4) {
+							changeStep(step);
+						}
+					}
+				});
+				$(".img-code1").click(function() {
+					initVerifyCode();
+				});
+				$(".img-code2").click(function() {
+					initVerifyCodeOfStep2();
+				});
+			});
+
+			function checkPassword(str) {
+				var reg2 = /([a-zA-Z0-9!@#$%^&*()_?<>{}=+-]){6,12}/;
+				var reg3 = /[a-zA-Z]+/;
+				var reg4 = /[0-9]+/;
+				if(reg2.test(str) && reg3.test(str) && reg4.test(str)) {
+					return true;
+				} else if(!reg2.test(str)) {
+					$.showErrorGritter("密码长度在6-12位");
+					return false;
+				} else if(!reg3.test(str)) {
+					$.showErrorGritter("密码需含有字母");
+					return false;
+				} else if(!reg4.test(str)) {
+					$.showErrorGritter("密码需含有数字");
+					return false;
+				}
+			}
+
+			function changeStep(step) {
+				$(".step").removeClass("step1").removeClass("step2").removeClass("step3").addClass("step" + step);
+				$(".step-con").addClass("hide");
+				$(".step-con" + step).removeClass("hide");
+			}
+
+			function sendVerCode(step) {
+				var modeData = forController.getJSON();
+				var mobileValiRes = mobileValidate(modeData.account);
+				var emailValiRes = emailValidate(modeData.account);
+				if(!mobileValiRes && !emailValiRes) {
+					$.clearGritter();
+					$.showErrorGritter("帐号有误，请输入手机号码或邮箱找回密码。", {
+						position: "login-center reg-center"
+					});
+					$(".form-control-account").focus();
+					return false;
+				}
+				isMobile = mobileValiRes;
+				var captcha_code = step == 1 ? modeData.captcha_code : modeData.captcha_code2;
+				if(!captcha_code) {
+					$.clearGritter();
+					$.showErrorGritter("请输入右侧的图像验证码。", {
+						position: "login-center reg-center"
+					});
+					return false;
+				}
+				$.ajaxGet((isMobile ? SAASAPIS.BASE.code.sms : SAASAPIS.BASE.code.email) + $.toQueryString({
+					type: CODETYPE,
+					mobile: modeData.account,
+					email: modeData.account,
+					captcha_type: CODETYPE,
+					captcha_code: captcha_code
+				}, true), function(response) {
+					if(response.code != 0) {
+						initVerifyCodeOfStep2();
+						$(".form-control-imgcode2").focus();
+						$(".form-control-imgcode2").val("");
+						$.showErrorGritter("获取" + (isMobile ? "手机" : "邮件") + "验证码失败：" + response.msg, {
+							time: 3000
+						});
+					} else {
+						initCountdown();
+						changeStep(2);
+						$(".text-control-account").text(modeData.account);
+					}
+				});
+			}
+
+			function initCountdown() {
+				var linkSendCode = $(".btn-sendcode");
+				linkSendCode.removeClass("act").attr("enb", "0").attr("disabled", "disabled");
+				var ss = 60;
+				var stob = setInterval(function() {
+					if(ss > 0) {
+						ss--;
+						linkSendCode.text("获取(" + ss + "s)");
+					} else {
+						linkSendCode.removeAttr("disabled");
+						linkSendCode.addClass("act").attr("enb", "1").text("发送验证码");
+						clearInterval(stob);
+					}
+				}, 1000);
+			}
+
+			function initVerifyCode() {
+				$(".img-code1").attr("src", SAASAPIS.BASE.captcha + "?height=32&width=110&type=" + CODETYPE + "&t=" + new Date().getTime());
+				$(".form-control-imgcode1").val("");
+			}
+
+			function initVerifyCodeOfStep2() {
+				$(".img-code2").attr("src", SAASAPIS.BASE.captcha + "?height=32&width=110&type=" + CODETYPE + "&t=" + new Date().getTime());
+				$(".form-control-imgcode2").val("");
+				$(".form-control-imgcode2").trigger("change")
+			}
+		</script>
+	</body>
+
+</html>

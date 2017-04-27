@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title></title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<style>
+
+		</style>
+	</head>
+
+	<body>
+		<div id="d2" style="max-height:400px;border:1px solid #ccc;overflow-y: scroll;">
+			<table id="d1" style="height:800px;">
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+		<script src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript">
+		$(document).ready(function() {           // 初始化内容  
+			        
+				for(var  i  =  0 ;i  <35;i++) {              
+						$("#d1>tbody").append("<tr>" +
+							"<td width=\"30%\"><span class=\"file-name\">这是文本文件"+i+"</span></td>" +
+							"<td width=\"20%\">2016-08-30 16:03</td>" +
+							"<td width=\"10%\">1.5MB</td>" +
+							"<td width=\"20%\">徐娇</td>" +
+							"<td width=\"20%\">" +
+							"<i class=\"fa fa-eye\" aria-hidden=\"true\" title=\"预览\">预览</i>" +
+							"<i class=\"fa fa-download\" aria-hidden=\"true\" title=\"下载\">下载</i>" +
+							"</td>" +
+							"</tr>");              
+				}   
+			//$("#d2").scrollTop($("#d2")[0].scrollHeight);	                 
+			$("#d2").scroll(function() {               // 被卷去的高度  
+					var  scrollTop  =  $("#d2")[0].scrollHeight;               // 页面高度  
+					console.log(scrollTop)
+					var  pageHeight  =  $(document).height();               // 可视区域高度  
+					var  viewHeight  =  $(window).height();               //alert(viewHeight);              //当滚动到底部时  
+					if((scrollTop + viewHeight) > (pageHeight - 20)) {                  
+						if(scrollTop < 1000) { //防止无限制的增长                      for(var i = 0  i < 2  i++){                          $(".flow").each(function(){                              
+						$("#d1>tbody").append( 
+							"<tr>" +
+							"<td width=\"30%\"><span class=\"file-name\">这是文本文件</span></td>" +
+							"<td width=\"20%\">2016-08-30 16:03</td>" +
+							"<td width=\"10%\">1.5MB</td>" +
+							"<td width=\"20%\">徐娇</td>" +
+							"<td width=\"20%\">" +
+							"<i class=\"fa fa-eye\" aria-hidden=\"true\" title=\"预览\">预览</i>" +
+							"<i class=\"fa fa-download\" aria-hidden=\"true\" title=\"下载\">下载</i>" +
+							"</td>" +
+							"</tr>"
+						);   
+					}                  
+				}                  
+			});      
+		});          
+			/*  
+			 * 获取指定范围随机数      * @param min，最小取值      * @param max，最大取值      */
+			            
+			function  getRandom(min, max) {           //x上限，y下限           var x = max;           var y = min;           if(x<y){              x=min;              y=max;          }  
+				        
+				var  rand  =  parseInt(Math.random()  *  (x  -  y  +  1)  +  y);          
+				return  rand;      
+			} 
+			//WebSocket JavaScript 接口定义:
+			/*[Constructor( in DOMString url, optional in DOMString protocol)]
+			interface WebSocket {
+				readonly attribute DOMString URL;
+				// ready state
+				const unsigned short CONNECTING = 0;
+				const unsigned short OPEN = 1;
+				const unsigned short CLOSED = 2;
+				readonly attribute unsigned short readyState;
+				readonly attribute unsigned long bufferedAmount;
+
+				// networking
+				attribute Function onopen;
+				attribute Function onmessage;
+				attribute Function onclose;
+				boolean send( in DOMString data);
+				void close();
+			};
+			WebSocket implements EventTarget;
+			*/
+			/************************
+			 * 
+			 *readyState表示连接有四种状态：
+			 *CONNECTING(0)： 表示还没建立连接；
+			 *OPEN(1)： 已经建立连接， 可以进行通讯；
+			 *CLOSING(2)： 通过关闭握手， 正在关闭连接；
+			 *CLOSED(3)： 连接已经关闭或无法打开；
+			 *url是代表 WebSocket 服务器的网络地址， 协议通常是” ws” 或“ wss(加密通信)”, send 方法就是发送数据到服务器端；
+			 *close 方法就是关闭连接；
+			 *onopen连接建立， 即握手成功触发的事件；
+			 *onmessage收到服务器消息时触发的事件；
+			 *onerror异常触发的事件；
+			 *onclose关闭连接触发的事件；
+			 ******************************************/
+			//-----------------------------------------------------
+			//JavaScript调用浏览器接口实例如下：
+//			var wsServer = 'ws://localhost:8888/Demo'; //服务器地址
+//			var websocket = new WebSocket(wsServer); //创建WebSocket对象
+//			//websocket.send("hello"); //向服务器发送消息
+//			alert(websocket.readyState); //查看websocket当前状态
+//
+//			websocket.onopen = function(evt) {
+//				//已经建立连接
+//				console.log("已经建立连接" + JSON.stringify(evt));
+//			};
+//			websocket.onclose = function(evt) {
+//				//已经关闭连接
+//				console.log("已经关闭连接" + JSON.stringify(evt));
+//			};
+//			websocket.onmessage = function(evt) {
+//				//收到服务器消息，使用evt.data提取
+//				console.log("收到服务器消息，使用evt.data提取" + JSON.stringify(evt));
+//			};
+//			websocket.onerror = function(evt) {
+//				//产生异常
+//				console.log("产生异常" + JSON.stringify(evt));
+//			};
+		</script>
+	</body>
+
+</html>

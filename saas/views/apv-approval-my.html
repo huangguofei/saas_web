@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>审批中心</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			body {
+				overflow: hidden;
+			}
+			
+			.page-container,
+			.page-container .content {
+				padding: 0;
+			}
+			
+			.page-approval .content .left-menu {
+				/*position: static;*/
+				float: left;
+				width: 190px;
+				/*min-height: 260px;*/
+				border-right: 1px solid #ddd;
+				background-color: #f3f3f3;
+			}
+			
+			.page-approval .content .main-wrap {
+				/*float: left;*/
+				margin-left: 200px;
+				padding-top: 14px;
+			}
+			
+			.page-approval .content .left-menu .pnl-doc-add {
+				margin-right: 10px;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box a {
+				display: block;
+				/*text-align: center;*/
+				padding: 10px 20px;
+				color: #666;
+				font-size: 14px;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box-doc-my {
+				margin-top: 10px;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box a:hover {
+				background-color: #f3f3f3;
+				text-decoration: none;
+				color: #666;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box a.active {
+				background-color: #fff;
+				color: #009ed8;
+				border: 1px solid #ddd;
+				border-width: 1px 0 1px 0;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box a:after {
+				content: " ";
+			    position: absolute;
+			    left: 190px;
+			    height: 42px;
+			    width: 1px;
+			    margin-top: -10px;
+			    margin-left: -1px;
+			    background: #ddd;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box a.active:after {
+				background: #fff;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box-share .tree-dept-menu {
+				position: absolute;
+				left: 70px;
+				z-index: 5;
+				min-height: 20px;
+				min-width: 20px;
+				display: none;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box-share a.active:hover+.tree-dept-menu,
+			.page-approval .content .left-menu .pnl-menu-box-share .tree-dept-menu:hover {
+				display: block;
+			}
+			
+			.icon-close {
+				color: #d9534f;
+				cursor: pointer;
+			}
+			
+			.icon-close:hover {
+				color: red;
+			}
+			
+			.form-control-dept-select,
+			.form-control-employee-select {
+				min-height: 34px;
+				height: auto;
+			}
+			
+			.list-dept-select-temp .item,
+			.form-control-dept-select .item,
+			.form-control-employee-select .item {
+				display: inline-block;
+				padding: 3px 8px;
+				margin-bottom: 5px;
+				border: 1px solid #eee;
+			}
+			
+			.list-employee .item-employee {
+				margin: 0 0 5px 5px;
+				width: 50px;
+				height: auto;
+				max-height: 60px;
+				display: inline-block;
+				overflow: hidden;
+				text-align: center;
+				border: 1px solid transparent;
+			}
+			
+			.list-employee .item-employee.active {
+				border-color: #666;
+			}
+			
+			.list-employee .item-employee.active:before {
+				position: absolute;
+				margin-top: 10px;
+				display: inline-block;
+				width: 40px;
+				text-align: center;
+				font: normal normal normal 14px/1 FontAwesome;
+				font-size: inherit;
+				text-rendering: auto;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+				box-sizing: border-box;
+				content: "\f058";
+				color: #666;
+				font-size: 20px;
+			}
+			
+			.list-employee .item-employee .head {
+				width: 40px;
+				height: 40px;
+			}
+			
+			.pnl-bottom-btns {
+				text-align: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-approval">
+			<!--<div class="remark">
+				<img src="../resources/images/mannagement-icon.png" alt="" /><span>*审批管理</span>
+			</div>-->
+			<div class="content">
+				<div class="left-menu">
+					<div class="pnl-menu-box active">
+						<a href="javascript:;" class="active" index="0">待我审批</a>
+					</div>
+					<div class="pnl-menu-box">
+						<a href="javascript:;" index="1">我已审批</a>
+					</div>
+					<div class="pnl-menu-box pnl-menu-box-share">
+						<a href="javascript:;" index="2">我发起的审批</a>
+					</div>
+					<div class="pnl-menu-box">
+						<a href="javascript:;" index="3">下属发起的审批</a>
+					</div>
+				</div>
+				<div class="main-wrap">
+					<div class="tab-doc tab-apv-wait">
+						<div class="search">
+
+						</div>
+						<div class="role-list">
+							<table id="grid-table-apv-wait" class="grid-module">
+							</table>
+							<div id="grid-pager-apv-wait">
+							</div>
+						</div>
+					</div>
+					<div class="tab-doc tab-approved hide">
+						<div class="search">
+
+						</div>
+						<div class="role-list">
+							<table id="grid-table-approved" class="grid-module">
+							</table>
+							<div id="grid-pager-approved">
+							</div>
+						</div>
+					</div>
+					<div class="tab-doc tab-apv-my hide">
+						<div class="search">
+
+						</div>
+						<div class="role-list">
+							<table id="grid-table-apv-my" class="grid-module">
+							</table>
+							<div id="grid-pager-apv-my">
+							</div>
+						</div>
+					</div>
+					<div class="tab-doc tab-apv-sub hide">
+						<div class="search">
+
+						</div>
+						<div class="role-list">
+							<table id="grid-table-apv-sub" class="grid-module">
+							</table>
+							<div id="grid-pager-apv-sub">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="grid-footer-container-doc-my" class="hide">
+
+		</div>
+		<div id="grid-footer-container-doc-share" class="hide">
+
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			//APIS
+			var baseApiUrl = BSAPIURL + "/approvals";
+			var APPROVALAPIS = {
+				base: baseApiUrl,
+				//待我审批
+				waitHandle: baseApiUrl + "/wait_handle",
+				//已审批
+				hasHandled: baseApiUrl + "/has_handled",
+				//我发起的审批
+				my: baseApiUrl + "/my",
+				//下属部门审批
+				myDeptHandle: baseApiUrl + "/my_department",
+				//审批事项
+				routine: BSAPIURL + "/approval_plans/routines"
+			};
+			//待我审批 
+			var gridOfWaitApv;
+			var gridSelectorOfWaitApv = "#grid-table-apv-wait";
+			var pagerSelectorOfWaitApv = "#grid-pager-apv-wait";
+			var isFirstLoadGridOfWaitApv = true;
+			//我已审批
+			var gridOfApproved;
+			var gridSelectorOfApproved = "#grid-table-approved";
+			var pagerSelectorOfApproved = "#grid-pager-approved";
+			var isFirstLoadGridOfApproved = true;
+			//我发起的审批
+			var gridOfMy;
+			var gridSelectorOfMy = "#grid-table-apv-my";
+			var pagerSelectorOfMy = "#grid-pager-apv-my";
+			var isFirstLoadGridOfMy = true;
+			//下属部门的审批
+			var gridOfSubApv;
+			var gridSelectorOfSubApv = "#grid-table-apv-sub";
+			var pagerSelectorOfSubApv = "#grid-pager-apv-sub";
+			var isFirstLoadGridOfSubApv = true;
+			var approvalTypeJSON4Search;
+			//查询条件
+			var searchConditionGroups = [],searchData=[];
+			$(".page-approval .content .left-menu").css("height",$(window).height()+"px").css("max-height",$(window).height()+"px");
+			//加载审批类型
+			$.ajaxGet(APPROVALAPIS.routine, function(response) {
+				if(response.code == 0) {
+					approvalTypeJSON4Search = [];
+					approvalTypeJSON4Search.push({
+						key: "全部",
+						value: ""
+					});
+					for(var i in response.data.rows) {
+						var routineData = response.data.rows[i];
+						approvalTypeJSON4Search.push({
+							key: routineData.routine_name,
+							value: routineData.routine_id
+						});
+					}
+					searchConditionGroups = [{
+						name: "routine",
+						text: "审批事项",
+						items: approvalTypeJSON4Search
+					}];
+					searchData = [{
+						name: "status",
+						text: "审批状态",
+						items: [{
+							key: "全部",
+							value: "0"
+						}, {
+							key: "审批中",
+							value: "1"
+						}, {
+							key: "审批通过",
+							value: "2"
+						}, {
+							key: "审批未通过",
+							value: "3"
+						},{
+							key: "已撤销",
+							value: "4"
+						}]
+					}, {
+						type: "date",
+						text: "发起日期",
+						items: [{
+							name: "publish_start_time",
+							placeholder: "开始日期"
+						}, {
+							type: "text",
+							value: "至"
+						}, {
+							name: "publish_end_time",
+							placeholder: "结束日期"
+						}]
+					}]
+					onApprovalTypeLoaded();
+				} else {
+					$.showErrorGritter("加载审批事项失败：" + response.msg);
+				}
+			});
+			//加载待我审批列表
+			function loadApvOfWait() {
+				if(!isFirstLoadGridOfWaitApv) {
+					$(gridOfWaitApv).reloadGrid();
+					return false;
+				}
+				//search
+				$.initSearchControls4TagMode({
+					auto: true,
+					url: APPROVALAPIS.waitHandle,
+					grid: gridSelectorOfWaitApv,
+					container: ".tab-apv-wait .search",
+					keyName: "key",
+					keyPlaceholder: "输入发起人姓名、审批编号查找",
+					onChange: function(selectTags) {},
+					groups: searchConditionGroups
+				});
+				//grid
+				//122 = pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".remark").outerHeight(true) - $(".tab-apv-wait .search").outerHeight(true) - 125;
+				//alert($(".remark").height());
+				var colNames = ['', '审批事项', '审批流程', '审批编号', '发起人', '发起时间'];
+				var colModel = [{
+					name: 'id',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.session_id;
+					}
+				}, {
+					name: '__name',
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"parent.openTab('审批内容','views/apv-approval-detail.html?action=apv&apvId=" + rowObject.session_id + "');\">" + rowObject.routine_cn + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'plan_cn',
+					sortable: false
+				}, {
+					name: 'session_number'
+				}, {
+					name: 'employee_name'
+				}, {
+					name: 'session_start_time',
+					sortable: true
+				}];
+				gridOfWaitApv = $(gridSelectorOfWaitApv).initJqGrid({
+					pager: pagerSelectorOfWaitApv,
+					footerBtnContainer: "#grid-footer-container-doc-my",
+					url: APPROVALAPIS.waitHandle,
+					colNames: colNames,
+					multiselect: false,
+					colModel: colModel,
+					height: gridHeight,
+					sortorder: "desc"
+				});
+				isFirstLoadGridOfWaitApv = false;
+			}
+			//加载我已审批列表
+			function loadApprovedApv() {
+				if(!isFirstLoadGridOfApproved) {
+					$(gridOfApproved).reloadGrid();
+					return false;
+				}
+				//search
+				$.initSearchControls4TagMode({
+					auto: true,
+					url: APPROVALAPIS.hasHandled,
+					grid: gridSelectorOfApproved,
+					container: ".tab-approved .search",
+					keyName: "key",
+					keyPlaceholder: "输入发起人姓名、审批编号查找",
+					onChange: function(selectTags) {},
+					groups: searchConditionGroups
+				});
+				//grid
+				//122 = pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".remark").outerHeight(true) - $(".tab-approved .search").outerHeight(true) - 125;
+				//alert($(".remark").height());
+				var colNames = ['', '审批事项', '审批流程', '审批编号', '审批状态', '发起人', '发起时间', '完成时间'];
+				var colModel = [{
+					name: 'id',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.session_id;
+					}
+				}, {
+					name: '__name',
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"parent.openTab('审批内容','views/apv-approval-detail.html?apvId=" + rowObject.session_id + "');\">" + rowObject.routine_cn + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'plan_cn',
+					sortable: false
+				}, {
+					name: 'session_number'
+				}, {
+					name: 'apv_sessions_status_cn'
+				}, {
+					name: 'employee_name'
+				}, {
+					name: 'session_start_time'
+				}, {
+					name: 'session_end_time'
+				}];
+				gridOfApproved = $(gridSelectorOfApproved).initJqGrid({
+					pager: pagerSelectorOfApproved,
+					url: APPROVALAPIS.hasHandled,
+					colNames: colNames,
+					colModel: colModel,
+					multiselect: false,
+					height: gridHeight,
+					sortorder: "desc"
+				});
+				isFirstLoadGridOfApproved = false;
+			}
+			//加载我发起的审批
+			function loadApvOfMy() {
+				if(!isFirstLoadGridOfMy) {
+					$(gridOfMy).reloadGrid();
+					return false;
+				}
+				//search
+				$.initSearchControls4TagMode({
+					auto: true,
+					url: APPROVALAPIS.my,
+					grid: gridSelectorOfMy,
+					container: ".tab-apv-my .search",
+					keyName: "key",
+					keyPlaceholder: "输入审批编号查找",
+					beforeReloadGrid: function(selectTags) {},
+					onChange: function(selectTags) {},
+					groups: searchConditionGroups
+				});
+				//grid
+				//122 = pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".remark").outerHeight(true) - $(".tab-apv-my .search").outerHeight(true) - 125;
+				//alert($(".remark").height());
+				var colNames = ['', '审批事项', '审批流程', '审批编号', '审批状态', '发起时间', '完成时间'];
+				var colModel = [{
+					name: 'id',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.session_id;
+					}
+				}, {
+					name: '__name',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"parent.openTab('审批内容','views/apv-approval-detail.html?action=my&apvId=" + rowObject.session_id + "');\">" + rowObject.routine_cn + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'plan_cn',
+					sortable: false
+				}, {
+					name: 'session_number'
+				}, {
+					name: 'apv_sessions_status_cn'
+				}, {
+					name: 'session_start_time'
+				}, {
+					name: 'session_end_time'
+				}];
+				gridOfMy = $(gridSelectorOfMy).initJqGrid({
+					pager: pagerSelectorOfMy,
+					footerBtnContainer: "#grid-footer-container-doc-share",
+					url: APPROVALAPIS.my,
+					colNames: colNames,
+					colModel: colModel,
+					multiselect: false,
+					height: gridHeight,
+					sortorder: "desc"
+				});
+				isFirstLoadGridOfMy = false;
+			}
+			//加载下属部门的审批
+			function loadSubDeptApv() {
+				if(!isFirstLoadGridOfSubApv) {
+					$(gridOfSubApv).reloadGrid();
+					return false;
+				}
+				//search
+				$.initSearchControls4TagMode({
+					auto: true,
+					url: APPROVALAPIS.myDeptHandle,
+					grid: gridSelectorOfSubApv,
+					container: ".tab-apv-sub .search",
+					keyName: "key",
+					keyPlaceholder: "输入发起人姓名、审批编号查找",
+					beforeReloadGrid: function(selectTags) {},
+					onChange: function(selectTags) {},
+					groups: searchConditionGroups
+				});
+				//grid
+				//122 = pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".remark").outerHeight(true) - $(".tab-apv-sub .search").outerHeight(true) - 125;
+				//alert($(".remark").height());
+				var colNames = ['', '审批事项', '审批流程', '审批编号', '审批状态', '发起人', '发起时间', '完成时间'];
+				var colModel = [{
+					name: 'id',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.session_id;
+					}
+				}, {
+					name: '__name',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"parent.openTab('审批内容','views/apv-approval-detail.html?apvId=" + rowObject.session_id + "');\">" + rowObject.routine_cn + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'plan_cn',
+					sortable: false
+				}, {
+					name: 'session_number'
+				}, {
+					name: 'apv_sessions_status_cn'
+				}, {
+					name: 'employee_name'
+				}, {
+					name: 'session_start_time'
+				}, {
+					name: 'session_end_time'
+				}];
+				gridOfSubApv = $(gridSelectorOfSubApv).initJqGrid({
+					pager: pagerSelectorOfSubApv,
+					footerBtnContainer: "#grid-footer-container-doc-share",
+					url: APPROVALAPIS.myDeptHandle,
+					colNames: colNames,
+					colModel: colModel,
+					multiselect: false,
+					height: gridHeight,
+					sortorder: "desc"
+				});
+				isFirstLoadGridOfSubApv = false;
+			}
+
+			function onApprovalTypeLoaded() {
+				//left group link
+				$(".pnl-menu-box a").click(function() {
+					$(".pnl-menu-box a").removeClass("active");
+					$(this).addClass("active");
+					var index = $(this).attr("index");
+					$(".tab-doc").addClass("hide");
+					$(".tab-doc").eq(index).removeClass("hide");
+					if(searchConditionGroups.length<3)
+					searchConditionGroups=searchConditionGroups.concat(searchData);
+					if(index == 0) {
+						loadApvOfWait();
+					} else if(index == 1) {
+						loadApprovedApv();
+					} else if(index == 2) {
+						loadApvOfMy();
+					} else if(index == 3) {
+						loadSubDeptApv();
+					}
+				});
+				//my doc
+				loadApvOfWait();
+			}
+			$(document).ready(function() {
+				//------------消息队列相关-----------------------
+				var subscriber = parent.HHMQ.createSubscriber('审批管理', 'approval,welcome', function(flag, msgData) {
+					if(flag == "welcome") {
+						$.showSuccessGritter(JSON.stringify(msgData), {
+							clear: false
+						});
+					}
+					//收到审批处理消息
+					if(msgData.action == "revocation") {
+						//撤销
+						$(gridOfMy).reloadGrid();
+					} else if(msgData.action == "apv") {
+						//审批完成
+						$(gridOfWaitApv).reloadGrid();
+					}
+				});
+				//页面关闭事件
+				context.onPageClose = function() {
+					subscriber.dispose();
+				};
+				//------------消息队列相关 end -------------------
+
+				$(".main-wrap").width($(document).width() - $(".left-menu").outerWidth(true) - 30);
+				//token
+				$.token();
+			});
+		</script>
+	</body>
+
+</html>

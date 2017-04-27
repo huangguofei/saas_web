@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>工作周计划、总结</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<link rel="stylesheet" href="../resources/css/hgf.css" />
+		<style>
+			body,
+			textarea {
+				color: #666;
+			}
+			
+			body {
+				background-color: #f1f1f1;
+			}
+			
+			img {
+				margin-top: -3px;
+			}
+			
+			.page-container {
+				padding: 20px 0 0 14px;
+			}
+			
+			.work-plan-left-menu {
+				width: 180px;
+			}
+			
+			.left-plan-title {
+				margin-bottom: 0px;
+				height: 80px;
+				line-height: 25px;
+				position: relative;
+			}
+			
+			.right-container-title {
+				margin-bottom: 9px;
+				height: 25px;
+				line-height: 25px;
+				position: relative;
+			}
+			
+			.left-plan-title .this-plan-status {
+				margin-top: 7px;
+				height: 40px;
+				line-height: 40px;
+				background-color: #CA192B;
+				color: #fff;
+				font-size: 18px;
+				text-align: center;
+			}
+			
+			.left-plan-title .this-plan-status.plan-passed {
+				background-color: #21b5a9;
+			}
+			
+			.right-container-title .add-plan-item {
+				position: absolute;
+				right: 37%;
+				top: 5px;
+			}
+			
+			.left-plan-title .week-num,
+			.right-container-title .week-date {
+				font-size: 18px;
+				color: #333;
+			}
+			
+			.left-plan-body {
+				/*border: 1px solid #ddd;*/
+				background-color: #fff;
+				position: relative;
+			}
+			
+			.week-date-list .week-date {
+				height: 50px;
+				/*line-height: 50px;*/
+				padding-left: 19px;
+				cursor: pointer;
+			}
+			
+			.week-date-list .week-date .week-date-content {
+				height: 50px;
+				line-height: 50px;
+				padding-right: 19px;
+				border-bottom: 1px solid #eee;
+				cursor: pointer;
+			}
+			
+			.week-date-list .week-date.active {
+				border-bottom: 1px solid #eee;
+				border-left: 4px solid #009ed8;
+				background-color: #e5f5fb;
+			}
+			
+			.week-date-list .week-date.active .week-date-content {
+				border: 0;
+			}
+			
+			.week-date-num {
+				font-size: 14px;
+				color: #333;
+			}
+			
+			.week-date-num.not-workday {
+				color: #CA192B;
+			}
+			
+			.item-num {
+				background-color: #009ED8;
+				padding: 0 5px;
+				text-align: center;
+				display: inline-block;
+				height: 15px;
+				font-size: 12px;
+				color: #fff;
+				line-height: 15px;
+				border-radius: 7px;
+				margin: 17px 0;
+			}
+			
+			.item-num.no-item {
+				background-color: transparent;
+				color: #999;
+				font-size: 35px;
+				line-height: 8px;
+				margin-top: 7px;
+			}
+			
+			.footer-btns-container {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				text-align: center;
+				width: 100%;
+			}
+			
+			.footer-btns-container .btn {
+				width: 124px;
+				border-radius: 2px;
+				-webkit-border-radius: 2px;
+				-moz-border-radius: 2px;
+				height: 30px;
+				padding: 0;
+				text-align: center;
+				line-height: 27px;
+				margin-bottom: 14px;
+			}
+			
+			.footer-btns-container .btn:last-child {
+				margin-bottom: 20px;
+			}
+			
+			.week-plan-right-container {
+				margin-left: 20px;
+			}
+			
+			.right-container-body {
+				overflow-y: auto;
+				/*width:  100%;*/
+			}
+			
+			.one-item {
+				height: auto;
+				margin-bottom: 60px;
+				position: relative;
+			}
+			
+			.one-item:before {
+				content: "";
+				display: block;
+				position: absolute;
+				clear: both;
+				bottom: -30px;
+				left: 0;
+				right: 1%;
+				border-top: 1px solid #ddd;
+			}
+			
+			.item-detail {
+				min-height: 340px;
+				height: 100%;
+				background-color: #fff;
+				padding: 19px 0 0 16px;
+				border: 1px solid #f1f1f1;
+			}
+			
+			.item-detail:hover {
+				border: 1px solid #ddd;
+			}
+			
+			.item-plan {
+				width: 63%;
+				position: relative;
+			}
+			
+			.item-halfday-type {
+				position: absolute;
+				right: -2px;
+				top: 0;
+				display: inline-block;
+				width: 40px;
+				text-align: center;
+				height: 40px;
+				line-height: 40px;
+				color: #fff;
+				font-size: 12px;
+			}
+			
+			.halfday-am {
+				background: url("../resources/images/halfday-am-icon.png") no-repeat;
+			}
+			
+			.halfday-pm {
+				background: url("../resources/images/halfday-pm-icon.png") no-repeat;
+			}
+			
+			.halfday-am-span {
+				background-color: #66b5ed;
+				display: inline-block;
+				width: 37px;
+				height: 37px;
+				margin-top: 3px;
+			}
+			
+			.halfday-pm-span {
+				background-color: #fa7a71;
+				display: inline-block;
+				width: 39px;
+				height: 37;
+				margin-top: 3px;
+			}
+			
+			.item-summer {
+				margin-left: 10px;
+				width: 35%;
+				position: relative;
+			}
+			
+			.item-plan-head {
+				margin-bottom: 28px;
+				/*min-height: 41px;*/
+			}
+			
+			.item-plan-work-type {
+				display: inline-block;
+				min-width: 42px;
+				padding: 0 5px;
+				height: 16px;
+				line-height: 16px;
+				font-family: "宋体";
+				text-shadow: 1px 1px 1px rgba(0,0,0,.15);
+				color: #fff;
+				font-size: 12px;
+				background-color: #3db4ba;
+				text-align: center;
+				border-radius: 8px;
+				margin-top: 2px;
+			}
+			
+			.item-plan-work-type.work-type-meeting {
+				background-color: #3db4ba;
+			}
+			
+			.item-plan-work-type.work-type-visit {
+				background-color: #64c08f;
+			}
+			
+			.item-plan-work-type.work-type-dayly {
+				background-color: #fa7a71;
+			}
+			
+			.item-plan-work-type.work-type-other {
+				background-color: #ccc;
+			}
+			
+			
+			.item-plan-work-purpose {
+				display: inline-block;
+				font-size: 16px;
+				color: #333;
+				line-height: 20px;
+				font-weight: bold;
+				margin-left: 7px;
+				max-width: 85%;
+			}
+			
+			hr {
+				margin: 8px 0;
+			}
+			
+			.item-plan-body {
+				min-height: 113px;
+			}
+			
+			.item-plan-body>div>label {
+				display: inline-block;
+				width: 80px;
+				position: absolute;
+				left: 0;
+				top: 0;
+				color: #333;
+				font-size: 14px;
+			}
+			
+			label {
+				margin-bottom: 0;
+			}
+			
+			.item-plan-footer {
+				margin-top: 20px;
+			}
+			
+			.item-plan-body>div {
+				position: relative;
+				min-height: 20px;
+				margin-bottom: 6px;
+				padding-right: 28px;
+			}
+			
+			.item-plan-body>div>div {
+				margin-left: 80px;
+			}
+			
+			.item-plan-work-content {
+				min-height: 100px;
+				padding-right: 28px;
+				padding-bottom: 10px;
+			}
+			
+			.item-summer-head {
+				min-height: 41px;
+				padding-right: 25px;
+				margin-bottom: 9px;
+			}
+			
+			.aready-complete {
+				color: #3db4ba;
+			}
+			
+			.item-summer-detail {
+				min-height: 132px;
+			}
+			
+			.item-detail:hover .fotter-edit-btn-container {
+				display: block;
+			}
+			
+			.fotter-edit-btn-container {
+				display: none;
+				position: absolute;
+				height: 20px;
+				right: 0;
+				bottom: -20px;
+			}
+			
+			.fotter-edit-btn-container a {
+				display: inline-block;
+				margin-left: 5px;
+				width: 60px;
+				line-height: 20px;
+				text-align: center;
+				background-color: #ddd;
+				color: #CA192B;
+				font-size: 12px;
+				cursor: pointer;
+			}
+			
+			.item-plan-work-content,
+			.item-summer-text,
+			.item-summer-follow-text {
+				color: #333;
+				word-break: break-all;
+				word-wrap: break-word;
+			}
+			
+			.disabled-plan div {
+				background-color: #fafafa;
+			}
+			
+			.item-summer-text.note-font-type,
+			.item-summer-follow-text.note-font-type {
+				color: #999;
+			}
+			
+			.form-of-add-item .day-of-week {
+				width: 120px;
+			}
+			
+			.form-inline>label {
+				text-align: right;
+			}
+			
+			.select-tip {
+				color: #999;
+			}
+			
+			.outer-plan-tip {
+				background-color: #fff9e0;
+				color: #88744f;
+				font-size: 12px;
+				height: 26px;
+				line-height: 26px;
+				padding-left: 14px;
+				margin-bottom: 20px;
+			}
+			
+			.outer-plan-tip.no-tip {
+				background-color: #fff;
+				height: 0;
+			}
+			
+			.form-of-add-item>div {
+				padding-left: 30px;
+			}
+			
+			.form-of-add-item .form-group-time {
+				width: 60px;
+				min-width: 60px;
+			}
+			
+			select[name='work-type'] option:first-child {
+				color: #999;
+			}
+			
+			.sel-client-ul>li li {
+				display: none;
+			}
+			
+			.sel-client-ul li {
+				margin-left: 15px;
+			}
+			
+			.sel-client-ul li img {
+				margin-right: 5px;
+			}
+			
+			.form-clients-container,
+			.form-products-container,
+			.form-helpers-container {
+				padding: 14px 5px;
+				height: auto;
+			}
+			
+			.form-select-container .selected-person {
+				padding: 5px  20px;
+				border: 1px solid #eee;
+				cursor: pointer;
+				display: inline-block;
+				margin-right: 5px;
+			}
+			
+			.form-select-container .selected-person .close-icon {
+				right: 2px;
+				top: 14px;
+			}
+			
+			.vertical-align-top {
+				vertical-align: top;
+			}
+			
+			option[disabled] {
+				background-color: #ddd;
+			}
+			
+			.complete-status {
+				cursor: pointer;
+				font-size: 16px;
+				color: #333;
+			}
+			
+			.aggrement-panel textarea {
+				border: 1px solid #e3e3e3;
+			}
+			
+			.item-plan-visit-location {
+				position: relative;
+				width: 20px;
+				height: 20px;
+			}
+			
+			.item-plan-visit-location .location-addr-container {
+				position: absolute;
+				right: 10px;
+				top: 24px;
+				background-color: #fff;
+				color: #999;
+				font-size: 14px;
+				border: 1px solid #fff;
+				border-radius: 4px;
+				box-shadow: 0px 0px 8px rgba(0,0,0,.1);
+				display: none;
+				padding: 0 20px;
+			}
+			
+			.item-plan-visit-location:hover .location-addr-container {
+				display: inline-block;
+			}
+			
+			.item-plan-visit-location .location-addr-container .one-records {
+				display: inline-block;
+				width: 400px;
+				padding: 10px 0;
+				border-bottom: 1px dashed #eee;
+			}
+			
+			.item-plan-visit-location .location-addr-container .one-records:last-child {
+				border-bottom: 0;
+			}
+			
+			.non-rule-note {
+				font-size: 12px;
+				color: #ca192b;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container at">
+			<!--左侧天数列表和操作按钮-->
+			<div class="work-plan-left-menu lt">
+				<!--title-->
+				<div class="left-plan-title">
+					<span class="week-num">
+						第12周
+					</span>
+					<span class="note-font-type week-date-during">
+						(3月12日-3月19日)
+					</span>
+					<div class="">
+						<span></span>
+					</div>
+				</div>
+				<div class="left-plan-body">
+					<!--天数列表-->
+					<div class="week-date-list">
+						
+					</div>
+					<!--底部按钮-->
+					<div class="footer-btns-container">
+						<a class="btn btn-danger def-btn-danger btn-submit-plan hide" onclick="submitOneWeekPlan(this);" group="own">提交周计划</a>
+						<a class="btn btn-danger def-btn-danger btn-submit-summer hide" onclick="submitOneWeekSummer(this);" group="own">提交周总结</a>
+						<a class="btn btn-info def-btn-info btn-approval-aggrement hide" onclick="thisPlanHasUpdate(aggrementThisPlan,this);" group="leader">同意</a>
+						<a class="btn btn-danger def-btn-danger btn-approval-disaggrement hide" onclick="thisPlanHasUpdate(disaggrementThisPlan,this);" group="leader">拒绝</a>
+						<a class="btn btn-danger def-btn-danger btn-confirm-read hide" onclick="confirmReadSummer(this);" group="leader">确认阅读总结</a>
+					</div>
+				</div>
+				
+			</div>
+			<!--周块部分-->
+			<div class="week-plan-right-container lt">
+				<!--右侧标题-->
+				<div class="right-container-title">
+					<span class="week-date">星期</span>
+					<a class="add-plan-item btn-a-default" index="inner">
+						<img src="../resources/images/add-item.png" alt="" />
+						添加事项
+					</a>
+				</div>
+				<!--右侧内容-->
+				<div class="right-container-body">
+					
+				</div>
+			</div>
+		</div>
+		<div class="add-item-container hide">
+			<form class="form-horizontal form-of-add-item">
+				<p class="outer-plan-tip no-tip" bind="work_schedule_item_type_note"></p>
+				<div class="hide" bind="work_schedule_item_id"></div>
+				<div class="form-group form-inline">
+					<label class="input-flag">执行时间：</label>
+					<select name="" id="" class="form-control day-of-week" nulltip="执行时间" bind="work_schedule_item_day_of_week">
+						<option value="1">星期一</option>
+						<option value="2">星期二</option>
+						<option value="3">星期三</option>
+						<option value="4">星期四</option>
+						<option value="5">星期五</option>
+						<option value="6">星期六</option>
+						<option value="7">星期日</option>
+					</select>
+					<label class="form-group-time">
+						<input checked="checked" nulltip="执行上下午" type="radio" name="halfday-type" value="1" bind="work_schedule_item_am_or_pm" />
+						<span>上午</span>
+					</label>
+					<label class="form-group-time">
+						<input type="radio" nulltip="执行上下午" name="halfday-type" value="2" bind="work_schedule_item_am_or_pm" />
+						<span>下午</span>
+					</label>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">工作类型：</label>
+					<select class="form-control" nulltip="工作类型" name="work-type" bind="work_schedule_item_work_type">
+						<option value="0">请选择工作类型</option>
+					</select>
+				</div>
+				<div class="form-group form-inline">
+					<label>客户：</label>
+					<span class="select-tip form-control">请选择客户</span>
+					<span class="form-control form-select-container form-clients-container hide"></span>
+					<a class="btn-a-default btn-add-btns btn-select-clients">选择客户</a>
+				</div>
+				<div class="form-group form-inline">
+					<label>产品：</label>
+					<span class="select-tip form-control">请选择产品</span>
+					<span class="form-control form-select-container form-products-container hide"></span>
+					<a class="btn-a-default btn-add-btns btn-select-products">选择产品</a>
+				</div>
+				<div class="form-group form-inline">
+					<label>协助人：</label>
+					<span class="select-tip form-control">请选择协助人</span>
+					<span class="form-control form-select-container form-helpers-container hide"></span>
+					<a class="btn-a-default btn-add-btns btn-select-helpers">选择协助人</a>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">工作目的：</label>
+					<input type="text" onkeydown="if(event.keyCode==13)return false;" nulltip="工作目的" class="form-control" placeholder="请输入工作目的" bind="work_schedule_item_purpose" />
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag vertical-align-top">工作内容：</label>
+					<textarea nulltip="工作内容" class="form-control work-content" bind="work_schedule_item_content" rows="5" cols="80" placeholder="请输入工作内容"></textarea>
+				</div>
+			</form>
+		</div>
+		<!--选择客户-->
+		<div class="sel-client-panel hide">
+			<span style="color: #333;">请选择客户：</span>
+			<div class="sel-client-panel-main">
+				<input type="search" placeholder="请输入关键字进行查找" style="width: 200px;position: relative;" />
+				<!--<i class="fa  fa-search fa-x" style="position: absolute;top:40px;right:15px;"></i>-->
+				<ul class="sel-client-ul"></ul>
+			</div>
+		</div>
+		<!--填写总结弹窗-->
+		<div class="add-summer-container hide">
+			<form class="form-of-add-summer form-horizontal" onkeydown="if(event.keyCode==13)return false;">
+				<div class="form-group form-inline form-complete-status">
+					<label class="input-flag">完成状态：</label>
+					<span class="complete-status has-complete" data-select="false" data-value="2">
+						<img src="../resources/images/plan-unselect-icon.png" data-trans-src="../resources/images/plan-complete-icon.png" alt="" />
+						<span>已完成</span>
+					</span>
+					<span class="complete-status not-complete" data-select="false" data-value="1">
+						<img src="../resources/images/plan-unselect-icon.png" data-trans-src="../resources/images/plan-uncomplete-icon.png" alt="" />
+						<span>未进行</span>
+					</span>
+					<span class="complete-status change-date-complete" data-select="false" data-value="3">
+						<img src="../resources/images/plan-unselect-icon.png" data-trans-src="../resources/images/plan-uncomplete-icon.png" alt="" />
+						<span>已改期</span>
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag vertical-align-top">总结：</label>
+					<textarea nulltip="工作总结" bind="work_schedule_item_summary_content" name="summer" class="form-control" rows="5" cols="80" placeholder="请填写工作总结"></textarea>
+				</div>
+				<div class="form-group form-inline">
+					<label class="vertical-align-top">跟踪事项：</label>
+					<textarea name="follow-up" bind="work_schedule_item_follow_up_content" class="form-control" rows="5" cols="80" placeholder="请填写跟踪事项"></textarea>
+				</div>
+			</form>
+		</div>
+		<!--同意周计划-->
+		<div class="aggrement-emp-week-plan hide">
+			<div class="aggrement-panel">
+				<span style="display:block;margin:0 20px 0 100px;">确认同意该工作周计划？</span>
+				<span>批示：</span>
+				<textarea maxlength="150" name="" placeholder="请输入批示" rows="4" cols="60"></textarea>
+			</div>
+		</div>
+		<!--拒绝周计划-->
+		<div class="disaggrement-emp-week-plan hide">
+			<div class="disaggrement-panel">
+				<span style="display:block;0 20px 0 100px;">确认拒绝该工作周计划？</span>
+				<span>批示：</span>
+				<textarea maxlength="150" style="border:1px solid #ccc;" name="" placeholder="请输入批示" rows="4" cols="60"></textarea>
+			</div>
+		</div>
+		<!--下属周计划改变-->
+		<div class="work-schedule-updated hide">
+			<div class="work-schedule-updated-confirm">
+				<p style="margin: 0 auto;width: 280px;"></p>
+			</div>
+		</div>
+		<div class="submit-week-plan hide">
+			<span>工作日每半天至少填写一条，您的计划尚不完整，是否继续提交？</span>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hgf.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/IM.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/jquery.dotdotdot.min.js"></script>
+		<script type="text/javascript">
+			//------------消息队列相关   订阅者-----------------------
+			var subscriber = parent.HHMQ.createSubscriber('工作计划详情', 'main', function(flag, msgData) {
+				if(flag == "welcome") {
+					$.showSuccessGritter(JSON.stringify(msgData), {
+						clear: false
+					});
+				}
+				//收到审批处理消息
+				if(msgData.action == "refresh-plan") {
+					//认证通过
+					console.log(msgData);
+					getAPlanLeftList(thisPlanWeekNum, thisPlanYear);
+				}
+				if(msgData.action == "planDetails") {
+					//收打开
+					console.log(msgData.msg);
+					var msgData = msgData.msg;
+					isLeader = msgData.message.employee_id ? true : false;
+					thisPlanYear = msgData.message.work_schedule_year;
+					thisPlanWeekNum = msgData.message.work_schedule_week_number;
+					thisPlanEmployeeId = msgData.message.employee_id;
+					is_next_week = msgData.message.is_next_week == "true";
+					is_curr_week = msgData.message.is_current_week == "true";
+					console.log("二次刷新是否是审批"+isLeader);
+					getAPlanLeftList(thisPlanWeekNum, thisPlanYear);
+				}
+			});
+			//----------发布者  为了通知列表页面刷新
+			var publisher = parent.HHMQ.createPublisher('工作计划详情', 'plan-detail');
+			//页面关闭事件
+			context.onPageClose = function() {
+				subscriber.dispose();
+			};
+			//------------消息队列相关   订阅者end -------------------
+			//1-待提交, 2-待审核, 3-审核通过, 4-审核拒绝, 5-待复审, 6-未审核, 7-已丢弃, 8-未提交
+			var planStatus = {
+				WAIT_SUBMIT: 1,
+				WAIT_APPROVAL: 2,
+				APPROVAL_PASS: 3,
+				APPROVAL_REFUSED: 4,
+				WAIT_REAPPROVAL: 5,
+				UNAPPROVAL: 6,
+				UPDATED: 7,
+				UNSUBMIT: 8
+			};
+			//1-未提交, 2-已提交
+			var planSummerStatus = {
+				UNSUBMIT: 1,
+				SUBMITED: 2
+			};
+			//1-上午  2-下午
+			var amOrPm ={
+				AM: 1,
+				PM: 2
+			}
+			//是否为工作日     0-非工作, 1-工作
+			var isWorkday = {
+				YES: 1,
+				NO: 0
+			};
+			//完成状态1-未进行, 2-已完成, 3-已改期
+			var completeStatus={
+				UN_START:1,
+				AREADY_COMPLETE:2,
+				AREADY_CHANGE_DATE:3
+			}
+			//拜访状态, 1-未开始, 2-进行中, 3-已结束
+			var visitStatus={
+				UN_START: 1,
+				DOING: 2,
+				AREADY_END: 3
+			}
+			//单条计划类型
+			var planItemType={
+				OUTERE_PLAN: 2,
+				INNER_PLAN: 1
+			}
+			
+			//上级审核拒绝或者同意
+			var leaderApproval={
+				AGGREMENT: 3,
+				DISAGGREMENT: 4
+			}
+			
+			//上级是否已经阅读总结
+			var leaderIsReadSummer={
+				READ: 2,
+				UNREAD:1
+			}
+			
+			//工作类型code
+			var workTypeCode= {
+				VISIT:"102140103",
+				MEETING:"102140102",
+				DAYLY: "102140104"
+			}
+			
+			var VISIT_WORK_TYPE_CODE="102140103";
+			var CAN_ADD_INNER_PLAN=true;
+			var CAN_ADD_OUTER_PLAN=true;
+			var workTypeOptions="";
+			var queryObj=$.getQueryObject();
+			var isLeader=queryObj.employee_id?true:false;
+			console.log("第一次打开时是否是审批："+isLeader)
+			var thisPlanYear=queryObj.schdule_year,
+				thisPlanWeekNum=queryObj.schedule_week_num,
+				thisPlanEmployeeId=queryObj.employee_id;
+				is_next_week=queryObj.is_next_week=="true",
+				is_curr_week=queryObj.is_curr_week=="true";
+			var hasOverPlanSubmitTime,hasOverSummerSubmitTime,
+			isOverApprovelTime,thisPlanStatus,isReadedSummer,thisPlanSummerStatus,
+			thisPlanHasRule,thisPlanId,thisPlanLastUpdateTime,restore_notify,needRefreshAllPage;
+			var weekdayOfToday=new Date().getDay();
+			var defaultCheckedDay="";
+			var unhasOverSubmitTimeText="请您在当天计划开始之后再来填写工作总结";
+			thisPlanHasRule=queryObj.hasRule=="true";
+			$(".work-plan-left-menu").css("height",$(window).height()-25+"px");
+			$(".left-plan-body").css("height",$(window).height()-45-$(".left-plan-title").outerHeight(true)+"px");
+			$(".right-container-body").css("height",$(window).height()-$(".left-plan-title").outerHeight(true)+"px");
+			$(".week-plan-right-container").css("width",$(window).width()-$(".work-plan-left-menu").outerWidth(true)-60+"px");
+			//企业代码   获取工作类型
+			$.loadBasicDatasByClassId(102140, function(resp) {
+				workTypeOptions = 
+					"<option value=''>请选择工作类型</option>";
+				for(var i in resp) {
+					workTypeOptions += "<option value='" + resp[i].code_tree + "'>" + resp[i].code_name + "</option>";
+				}
+			});
+			//获取某一个计划的详情左侧列表
+			function getAPlanLeftList(weekNum,year){
+				if(!weekNum||!year) {
+					$.showErrorGritter("参数错误，请返回刷新页面后重新打开此页！");
+					return false;
+				}
+				$.ajaxGet(BSAPIURL+"/weekly_schedule/days?week_num="+weekNum+"&year="+year+(thisPlanEmployeeId?"&employee_id="+thisPlanEmployeeId:""),function(resp){
+					if(!resp.code==0){
+						$.showErrorGritter("获取计划详情失败："+resp.msg);
+						return false;
+					}
+					onPlanLeftListGeted(resp.data);
+				});
+			}
+			getAPlanLeftList(thisPlanWeekNum,thisPlanYear);
+			//计划详情获取到
+			function onPlanLeftListGeted(data){
+				thisPlanStatus=data.work_schedule_status;
+				thisPlanSummerStatus=data.work_summary_submit_status;
+				thisPlanId=data.work_schedule_id;
+				thisPlanLastUpdateTime=data.work_schedule_last_update_time;
+				restore_notify=data.restore_notify;
+				isReadedSummer=data.work_summer_is_read==leaderIsReadSummer.READ?true:false;
+				if(thisPlanStatus==planStatus.UPDATED) {
+					$.showErrorGritter("您的上级已经审核了该计划，请返回刷新页面后重新打开此周计划！");
+					return false;
+				}
+				hasOverPlanSubmitTime=(data.work_schedule_is_overtime&&data.work_schedule_is_overtime.schedule_submit)?true:false;
+				hasOverSummerSubmitTime=(data.work_schedule_is_overtime&&data.work_schedule_is_overtime.report_submit)?true:false;
+				isOverApprovelTime=data.work_schedule_is_overtime&&data.work_schedule_is_overtime.schedule_approval;
+				if(!is_curr_week&&!is_next_week) {
+					$(".add-plan-item").remove();
+				}
+				//完成左侧天数列表
+				$(".left-plan-title>div").addClass("this-plan-status");
+				$(".left-plan-title .this-plan-status span").text(data.work_schedule_status_cn);
+				data.work_schedule_status==planStatus.APPROVAL_PASS&&$(".left-plan-title .this-plan-status").addClass("plan-passed");
+				$(".left-plan-title .week-num").text("第"+data.work_schedule_week_number+"周").attr("index",data.work_schedule_week_number);
+				$(".left-plan-title .week-date-during").text("("+getPlanDateDuring(data.work_schedule_start_date,data.work_schedule_end_date)+")");
+				$(".week-date-list").empty();
+				for(var i in data.work_schedule_days){
+					var oneWeekday=data.work_schedule_days[i];
+					var listOfOneDayHtml=
+						"<div class=\"week-date at"+(i==0?" active":"")+"\">"
+						+"		<div class=\"week-date-content\">"
+						+"			<span class=\"lt week-date-num "+((oneWeekday.work_status.am==isWorkday.YES||oneWeekday.work_status.pm==isWorkday.YES)?"":"not-workday")+"\" index=\""+oneWeekday.day_of_week+"\">"+oneWeekday.day_of_week_cn+"</span>"
+						+"			<span class=\"rt item-num "+(oneWeekday.schedule_items_num?"":"no-item")+"\">"+(oneWeekday.schedule_items_num||".")+"</span>"
+						+"		</div>"
+						+"	</div>";
+					$(".week-date-list").append(listOfOneDayHtml);
+				}
+				$(".week-date-list .week-date").click(function(){
+					$(".week-date-list .week-date").removeClass("active");
+					$(this).addClass("active");
+					var weekdayNum=$(this).find(".week-date-num").attr("index");
+					defaultCheckedDay=weekdayNum;
+					getOneDayPlanDetail(thisPlanYear,thisPlanWeekNum,weekdayNum);
+				});
+				publisher.publisheMsg({
+					action: "refresh-plan",
+					msg: "刷新计划列表。"
+				});
+				console.log(defaultCheckedDay)
+				if(defaultCheckedDay){
+					$(".week-date-list .week-date .week-date-num[index='"+defaultCheckedDay+"']").parents(".week-date").trigger("click");
+					//defaultCheckedDay="";
+				}else{
+					$(".week-date-list .week-date.active").trigger("click");
+				}
+				//按钮控制
+				controlBtn();
+			}
+			//控制显示隐藏哪些按钮，控制禁用按钮
+			function controlBtn(option){
+				/*option
+				 is_leader: 是否领导
+				 plan_status: 计划状态
+				 is_over_plan_submit_time: 是否超过提交截止 时间
+				 is_arrive_summer_submit_time: 是否到达总结提交时间
+				 * */
+				$(".footer-btns-container a").addClass("hide").removeAttr("disabled");
+				if(isLeader){//上级
+					$(".add-plan-item").remove();
+					$(".fotter-edit-btn-container").remove();
+					$(".footer-btns-container a[group='own']").remove();
+					if(!isOverApprovelTime){
+						$(".footer-btns-container .btn-approval-aggrement,.footer-btns-container .btn-approval-disaggrement").removeClass("hide");
+						if(thisPlanStatus!=planStatus.WAIT_APPROVAL&&thisPlanStatus!=planStatus.WAIT_REAPPROVAL){
+							$(".footer-btns-container .btn-approval-aggrement,.footer-btns-container .btn-approval-disaggrement").attr("disabled","disabled");
+						}else {
+							$(".footer-btns-container .btn-approval-aggrement,.footer-btns-container .btn-approval-disaggrement").removeAttr("disabled");
+						}
+					}else{
+						//isOverApprovelTime
+						$(".footer-btns-container .btn-approval-aggrement,.footer-btns-container .btn-approval-disaggrement").remove();
+						$(".footer-btns-container .btn-confirm-read").removeClass("hide");
+						if(thisPlanStatus!=planStatus.APPROVAL_REFUSED&&thisPlanStatus!=planStatus.APPROVAL_PASS&&thisPlanStatus!=planStatus.UNSUBMIT||isReadedSummer) {
+							$(".footer-btns-container .btn-confirm-read").attr("disabled","disabled");
+						}
+					}
+				}else {//本人
+					$(".footer-btns-container a[group='leader']").remove();
+					if(is_curr_week){
+						$(".footer-btns-container .btn-submit-plan").remove();
+						$(".footer-btns-container .btn-submit-summer").removeClass('hide');
+					}
+					if(is_next_week) {
+						$(".footer-btns-container .btn-submit-summer").remove();
+						$(".footer-btns-container .btn-submit-plan").removeClass("hide");
+						if(hasOverPlanSubmitTime){
+							$(".footer-btns-container .btn-submit-plan").attr('disabled',"disabled");
+						}
+						if(thisPlanStatus!=planStatus.WAIT_SUBMIT){
+							$(".footer-btns-container .btn-submit-plan").attr('disabled',"disabled");
+						}
+					}
+					if(thisPlanSummerStatus!=planSummerStatus.UNSUBMIT) {
+						$(".footer-btns-container .btn-submit-summer").attr("disabled","disabled");
+					}
+					if(!is_curr_week&&!is_next_week){
+						$(".footer-btns-container .btn-submit-summer").removeClass("hide");
+					}
+				}
+				if(!thisPlanHasRule) {
+					$(".footer-btns-container a").attr("disabled","disabled");
+					$(".add-plan-item").remove();
+				}
+			}
+			//获取某一天的计划详情
+			function getOneDayPlanDetail(year,weekNum,weekDate){
+				if(!weekDate) {
+					$.showErrorGritter("请先选择需要查看的日期！");
+					return false;
+				}
+				if(!weekNum||!year) {
+					$.showErrorGritter("参数错误，请返回刷新页面后重新打开此页！");
+					return false;
+				}
+				$.ajaxGet(BSAPIURL+"/weekly_schedule/days/"+weekDate+"?year="+year+"&week_num="+weekNum+(thisPlanEmployeeId?"&employee_id="+thisPlanEmployeeId:""),function(resp){
+					if(!resp.code==0){
+						$.showErrorGritter("计划详情获取失败："+resp.msg);
+						return false;
+					}
+					onOneDayPlanDetailGeted(resp.data,weekDate);
+				});
+			}
+			//获取到某一天的计划详情
+			function onOneDayPlanDetailGeted(data,weekDate){
+				var weekDateTxt=$.transNumberToChinese(weekDate);
+				$(".right-container-title .week-date").html("星期"+(weekDateTxt=="七"?"日":weekDateTxt)+(!thisPlanHasRule?"<span class='non-rule-note'>（"+(isLeader?"该员工":"您")+"当前没有计划规则，只能对计划进行查看）</span>":""));
+				$(".right-container-body").empty();
+				for(var i in data){
+					appendOneItemPlanHtml(data[i]);
+				}
+				if($(".right-container-body .one-item").length<1) {
+					if(!isLeader) $(".right-container-body").html("星期"+(weekDateTxt=="七"?"日":weekDateTxt)+"计划为空，您可以点击添加事项按钮添加计划！");
+					else $(".right-container-body").html("该员工星期"+(weekDateTxt=="七"?"日":weekDateTxt)+"计划为空！");
+				}
+				//控制计划块和总结块高度一样
+				$(".one-item").each(function(){
+					$(this).find(">div").css("height",$(this).outerHeight(true)-30+"px");
+				});
+				//点击修改或者添加一个计划事项
+				$(".add-plan-item,.item-plan .fotter-edit-btn-container .edit").unbind("click").click(function(){
+					if(thisPlanSummerStatus==planSummerStatus.SUBMITED) {
+						$.showErrorGritter("您的计划总结已经提交，不能再添加事项。")
+						return false;
+					}
+					var action="";
+					var data={};
+					if($(this).hasClass("add-plan-item")) {
+						action="add";
+					} else{
+						action="update";
+						data=$(this).parents(".one-item").data("item-info");
+					}
+					editOnePlanItem(action,data);
+				});
+				//点击修改或者添加一个计划事项的总结
+				$(".item-summer .fotter-edit-btn-container .edit").click(function(){
+					var data={};
+					data=$(this).parents(".one-item").data("item-info");
+					editOnePlanItemSummer(data);
+				});
+				//删除一条计划
+				$(".item-plan .fotter-edit-btn-container .delete").click(function(){
+					var data={};
+					data=$(this).parents(".one-item").data("item-info");
+					deleteOnePlanItem(data);
+				});
+			}
+			//添加一个条目的计划
+			function appendOneItemPlanHtml(data){
+				if(isLeader&&thisPlanStatus==planStatus.UNSUBMIT&&!data.work_schedule_item_is_by_helper) {
+					console.log("上级看未提交的计划清空计划内")
+					if(data.work_schedule_item_type==planItemType.INNER_PLAN) return false;
+				}
+				var canEditThisItem,canDeleteThisItem;
+				canEditThisItem=((!hasOverPlanSubmitTime
+							&&data.work_schedule_item_type==planItemType.INNER_PLAN)
+							&&!data.work_schedule_item_is_by_helper)?true:false;
+				canDeleteThisItem=canEditThisItem;
+				var oneItemHtml=
+					"<div class=\"one-item at"+(thisPlanStatus!=planStatus.APPROVAL_PASS&&hasOverPlanSubmitTime&&data.work_schedule_item_type==planItemType.INNER_PLAN&&data.relations.by_helper.length<1?" disabled-plan":"")+"\" data-item-id="+data.work_schedule_item_id+">"
+					+"	<div class=\"item-plan item-detail lt\">"
+							//<!--半天类型-->
+					+"		<div class=\"item-halfday-type "+(data.work_schedule_item_am_or_pm==amOrPm.AM?"halfday-am":"halfday-pm")+"\">"
+					+"			<span class='"+(data.work_schedule_item_am_or_pm==amOrPm.AM?"halfday-am-span":"halfday-pm-span")+"'>"+data.work_schedule_item_am_or_pm_cn+"</span>"
+					+"		</div>"
+					+"		<div class=\"item-plan-head at\">"
+					+"			<span class=\"item-plan-work-type "+(data.work_schedule_item_work_type==workTypeCode.VISIT?"work-type-visit":data.work_schedule_item_work_type==workTypeCode.DAYLY?"work-type-dayly":data.work_schedule_item_work_type==workTypeCode.MEETING?"work-type-meeting":"work-type-other")+" lt\">"+data.work_schedule_item_work_type_cn+"</span>"
+					+"			<span class=\"item-plan-work-purpose\">"
+					+				data.work_schedule_item_purpose+getItemTypeNoteHtml(data)
+					+"			</span>"
+					+"		</div>"
+					+"		<div class=\"item-plan-body at\">"
+					+"			<label class=\"note-font-type\">工作信息</label>"
+					+"			<hr />"
+					+"			<div class=\"clients-container at\">"
+					+"				<label>"
+					+"					<img src=\"../resources/images/plan-clients-icon.png\" alt=\"\" />"
+					+"					<span>客户</span>"
+					+"				</label>"
+					+"				<div class=\"clients\">"
+					+					getClientHtml(data.relations&&data.relations.crm_contact)
+					+"				</div>"
+					+"			</div>"
+					+"			<div class=\"product-container at\">"
+					+"				<label>"
+					+"					<img src=\"../resources/images/plan-products-icon.png\" alt=\"\" />"
+					+"					<span>产品</span>"
+					+"				</label>"
+					+"				<div class=\"products\">"
+					//+					getProducts(data.)
+					+"				</div>"
+					+"			</div>"
+					+"			<div class=\"help-me helper-container at\">"
+					+"				<label>"
+					+"					<img src=\"../resources/images/plan-helper-icon.png\" alt=\"\" />"
+					+"					<span>"+(data.relations.by_helper.length>0?"协助":"协助人")+"</span>"
+					+"				</label>"
+					+"				<div class=\"helpers\">"
+					+					(getHelperHtml(data.relations.helper)||getByHelperHtml(data.relations.by_helper)||"--")
+					+"				</div>"
+					+"			</div>"
+					+"		</div>"
+					+"		<div class=\"item-plan-footer at\">"
+					+"			<label class=\"note-font-type\">工作内容</label>"
+					+"			<hr />"
+					+"			<div class=\"item-plan-work-content\">"
+					+				data.work_schedule_item_content
+					+"			</div>"
+					+"		</div>"
+					+(!isLeader&&thisPlanHasRule?(
+							//<!--底部编辑、删除按钮-->
+					"		<div class=\"fotter-edit-btn-container\">"
+					+(!canEditThisItem?""
+					:"			<a class=\"fotter-btn edit\">"
+					+"				<img src=\"../resources/images/plan-edit-icon.png\" alt=\"\" />"
+					+"				编辑"
+					+"			</a>")
+					+(!canDeleteThisItem?""
+					:"			<a class=\"fotter-btn delete\">"
+					+"				<img src=\"../resources/images/plan-delete-icon.png\" alt=\"\" />"
+					+"				删除"
+					+"			</a>")
+					+"		</div>"):"")
+					+"	</div>"
+					+"</div>";
+				$(".right-container-body").append(oneItemHtml);
+				$(".one-item[data-item-id='"+data.work_schedule_item_id+"']").data("item-info",data);
+				appendOneItemSummerHtml(data,".one-item[data-item-id='"+data.work_schedule_item_id+"']");
+			}
+			//添加一个条目的总结
+			function appendOneItemSummerHtml(data,container){
+				var canEditSummer=true;
+					canEditSummer=(data.work_schedule_item_type==planItemType.INNER_PLAN
+					&&thisPlanStatus!=planStatus.APPROVAL_PASS)?false:
+					(weekdayOfToday<data.work_schedule_item_day_of_week)?false:
+					is_next_week?false:true;
+					var hasFilledSummer=false;
+					hasFilledSummer=Boolean(data.work_schedule_item_completion_status);
+				var oneItemSummerHtml=
+				"<div class=\"item-summer item-detail lt\">"
+				+"	<div class=\"item-summer-head at\">"
+				+"		<span class=\"item-plan-summer-status lt "+(hasFilledSummer?"":"hide")+"\">"
+				+"			<span>完成状态：</span>"
+				+"			<span class=\"plan-complete-status "+(data.work_schedule_item_completion_status==completeStatus.AREADY_COMPLETE?"aready-complete":"")+"\">"+data.work_schedule_item_completion_status_cn+"</span>"
+				+"		</span>"
+				+"		<span class=\"item-plan-visit-location rt "+(is_next_week?"":data.work_schedule_item_work_type==workTypeCode.VISIT?"":"hide")+"\">"
+				+"			<img src=\"../resources/images/"+(data.visit_records.length>0?"visit-location-has.png":"visit-location-non.png")+"\" alt=\"\" />"
+				+"			"+getVisitRecordHtml(data.visit_records)
+				+"		</span>"
+				+"	</div>"
+				+"	<div class=\"item-summer-detail\">"
+				+"		<label class=\"note-font-type\">总结</label>"
+				+"		<hr />"
+				+"		<span class=\"item-summer-text "+(is_next_week?"note-font-type":"")+"\">"+(is_next_week?unhasOverSubmitTimeText:data.work_schedule_item_summary_content)+"</span>"
+				+"	</div>"
+				+"	<div class=\"item-summer-follow\">"
+				+"		<label class=\"note-font-type\">跟踪事项</label>"
+				+"		<hr />"
+				+"		<span class=\"item-summer-follow-text "+(is_next_week?"note-font-type":"")+"\">"+(is_next_week?unhasOverSubmitTimeText:data.work_schedule_item_follow_up_content)+"</span>"
+				+"	</div>"
+				//	<!--底部编辑、删除按钮-->
+				+(!isLeader&&thisPlanHasRule?(
+				"	<div class=\"fotter-edit-btn-container\">"
+				+(!canEditSummer?""
+				:"		<a class=\"fotter-btn edit\">"
+				+"			<img src=\"../resources/images/plan-edit-icon.png\" alt=\"\" />"
+				+"			编辑"
+				+"		</a>")
+				+"	</div>"):"")
+				+"</div>";
+				$(container).append(oneItemSummerHtml);
+			}
+			
+			//
+			function getItemTypeNoteHtml(data){
+				var itemTypeNoteTextArr=[];
+				if(data.work_schedule_item_type==planItemType.OUTERE_PLAN){
+					itemTypeNoteTextArr.push("计划外");
+				}
+				if(data.work_schedule_item_is_by_helper){
+					itemTypeNoteTextArr.push("协同");
+				}
+				if(itemTypeNoteTextArr.length>0){
+					return "<span class='note-font-type'>("+itemTypeNoteTextArr.join("、")+")</span>";
+				}
+				return "";
+			}
+			//处理客户成对应的HTML
+			function getClientHtml(data) {
+				var clientSpanDom = "";
+				var contactGroup = {};
+				for(var i in data) {
+					if(contactGroup[data[i].client_id]) {
+						if(contactGroup[data[i].client_id][data[i].depa_id]) {
+							contactGroup[data[i].client_id][data[i].depa_id].client_id = data[i].client_id;
+							contactGroup[data[i].client_id][data[i].depa_id].client_full_name = data[i].client_full_name;
+							contactGroup[data[i].client_id][data[i].depa_id].depa_id = data[i].depa_id;
+							contactGroup[data[i].client_id][data[i].depa_id].depa_name = data[i].depa_name;
+							contactGroup[data[i].client_id][data[i].depa_id].contacts.push({
+								contact_id: data[i].contact_id,
+								contact_name: data[i].contact_name
+							});
+						} else {
+							contactGroup[data[i].client_id][data[i].depa_id] = {};
+							contactGroup[data[i].client_id][data[i].depa_id].contacts = [];
+							contactGroup[data[i].client_id][data[i].depa_id].client_id = data[i].client_id;
+							contactGroup[data[i].client_id][data[i].depa_id].client_full_name = data[i].client_full_name;
+							contactGroup[data[i].client_id][data[i].depa_id].depa_id = data[i].depa_id;
+							contactGroup[data[i].client_id][data[i].depa_id].depa_name = data[i].depa_name;
+							contactGroup[data[i].client_id][data[i].depa_id].contacts.push({
+								contact_id: data[i].contact_id,
+								contact_name: data[i].contact_name
+							});
+						}
+					} else {
+						contactGroup[data[i].client_id] = {};
+						contactGroup[data[i].client_id][data[i].depa_id] = {};
+						contactGroup[data[i].client_id][data[i].depa_id].contacts = [];
+						contactGroup[data[i].client_id][data[i].depa_id].client_id = data[i].client_id;
+						contactGroup[data[i].client_id][data[i].depa_id].client_full_name = data[i].client_full_name;
+						contactGroup[data[i].client_id][data[i].depa_id].depa_id = data[i].depa_id;
+						contactGroup[data[i].client_id][data[i].depa_id].depa_name = data[i].depa_name;
+						contactGroup[data[i].client_id][data[i].depa_id].contacts.push({
+							contact_id: data[i].contact_id,
+							contact_name: data[i].contact_name
+						});
+					}
+				}
+				for(var z in contactGroup) {
+					for(var x in contactGroup[z]) {
+						var aCompanyAdepaContactIds = [];
+						var aCompanyAdepaContactNames = [];
+						for(var y in contactGroup[z][x]) {
+							if(y != "contacts") continue;
+							for(var p in contactGroup[z][x].contacts) {
+								aCompanyAdepaContactIds.push(contactGroup[z][x].contacts[p].contact_id);
+								aCompanyAdepaContactNames.push(contactGroup[z][x].contacts[p].contact_name);
+							}
+							clientSpanDom += "<span class='seled-client' data-contact-id='" + aCompanyAdepaContactIds.join(",") + "'>" + contactGroup[z][x].client_full_name + ">" + contactGroup[z][x].depa_name + ">" + aCompanyAdepaContactNames.join("、") + "</span><br/>";
+						}
+					}
+				}
+				return (clientSpanDom||"--");
+			}
+			////处理协助人成对应HTML
+			function getHelperHtml(data) {
+				var helperDomArr = [];
+				for(var i in data) {
+					helperDomArr.push("<span class='seled-assist-people' data-employee-id='" + data[i].employee_id + "'>" + data[i].employee_name + "</span>");
+				}
+				return helperDomArr.join("、");
+			}
+			//处理被协助人成对应HTML   别人的计划需要自己协助的才有
+			function getByHelperHtml(data) {
+				var byHelperDomArr = [];
+				for(var i in data) {
+					if(data[i].employee_name) byHelperDomArr.push("<span class='seled-assist-people' data-employee-id='" + data[i].employee_id + "'>" + data[i].employee_name + "</span>");
+				}
+				return byHelperDomArr.join("、");
+			}
+			//处理知会对象成对应HTML
+			function getNotifierHtml(data, index) {
+				var notifierDomArr = [];
+				if(data.length > 0 && data[index].relations.notifier && data[index].relations.notifier.length > 0) {
+					for(var q in data[index].relations.notifier) {
+						notifierDomArr.push("<span class='seled-assist-people' data-employee-id='" + data[index].relations.notifier[q].employee_id + "'>" + data[index].relations.notifier[q].employee_name + "</span>");
+					}
+				}
+				return notifierDomArr.join("、");
+			}
+			//处理拜访定位成对应的HTML
+			function getVisitRecordHtml(data) {
+				/*data=[
+					{
+						visit_start_map_location_cn: "什么鬼医院",
+						visit_start_time: "10:10",
+						visit_stop_time: "12:12",
+						visit_duration_time: "2小时"
+					},{
+						visit_start_map_location_cn: "这是啥子烂医院哦",
+						visit_start_time: "08:00",
+						visit_stop_time: "12:00",
+						visit_duration_time: "4小时"
+					},{
+						visit_start_map_location_cn: "这个医院还看得过去",
+						visit_start_time: "08:00",
+						visit_stop_time: "18:00",
+						visit_duration_time: "10小时"
+					}
+				]*/
+				if(data.length<1) return "";
+				var locationDom="<span class='location-addr-container'>";
+				for(var i in data) {
+					var thisMapLocationCn=data[i].visit_mode==1?data[i].visit_client_name:data[i].visit_mode==2?(data[i].visit_depa_name+"（"+data[i].visit_client_name+"）"):data[i].visit_mode==3?(data[i].visit_contact_name+"（"+data[i].visit_depa_name+"，"+data[i].visit_client_name+"）"):"";
+					var oneRecordsDom=
+						"<span class='one-records css-overhidden' title='"+((thisMapLocationCn||"")+" "+(data[i].visit_start_time||"")+"-"+(data[i].visit_stop_time||"")+"（"+(data[i].visit_duration_time||"")+"）")+"'>"
+						+"	<span class='location-addr'>"+(thisMapLocationCn||"")+"</span>"
+						+"	<span class='location-time'>"+((data[i].visit_start_time||"")+"-"+(data[i].visit_stop_time||""))+"</span>"
+						+"	<span class='location-time-total'>（"+(data[i].visit_duration_time||"")+"）</span>"
+						+"</span>";
+					locationDom+=oneRecordsDom;	
+				}
+				locationDom+="</span>";
+				return locationDom;
+			}
+			
+			//添加或者修改一条计划
+			function editOnePlanItem(action,data){
+				var actionText=action=="add"?"添加":"修改";
+				var modalId=$.modal({
+					height: $(window).height()-200,
+					okButtonText: thisPlanStatus!=planStatus.WAIT_SUBMIT?"保存并提交":"保存"
+				}).show(actionText+"计划",".add-item-container",function(modal){
+					if(!inputValidateForGritter(formContainer)){
+						return false;
+					};
+					$(formContainer+" .form-group-time input").trigger("change");
+					var itemPutData=controller.getJSON();
+					itemPutData.am_or_pm=$(formContainer+" .form-group-time input:checked").val();
+					itemPutData.content=itemPutData.work_schedule_item_content;
+					itemPutData.purpose=itemPutData.work_schedule_item_purpose;
+					itemPutData.work_type=itemPutData.work_schedule_item_work_type;
+					itemPutData.crm_contact_ids=getSelectedClientIdsArr($(formContainer));
+					if(itemPutData.work_schedule_item_work_type==VISIT_WORK_TYPE_CODE&&itemPutData.crm_contact_ids.length<1) {
+						$.showErrorGritter("工作类型为拜访，请选择一位客户");
+						return false;
+					}
+					
+					if(itemPutData.work_schedule_item_work_type==VISIT_WORK_TYPE_CODE&&itemPutData.crm_contact_ids.length>1) {
+						$.showErrorGritter("工作类型为拜访，只能选择一位客户。");
+						return false;
+					}
+					itemPutData.product_ids=["sdafsadfasdkjfhklasdfhlk"];
+					itemPutData.helper_employee_ids=getSelectedHelperIdsArr($(formContainer));
+					$.ajaxByAction(action,BSAPIURL+"/week_schedule_items/"+thisPlanYear+"/"+thisPlanWeekNum+"/"+itemPutData.work_schedule_item_day_of_week+(action=="add"?"":"/"+itemPutData.work_schedule_item_id),itemPutData,function(resp){
+						if(resp.code!=0) {
+							$.showErrorGritter(actionText+"计划失败："+resp.msg);
+							return false;
+						}
+						$.showSuccessGritter(actionText+"计划成功！");
+						$("#"+modalId).modal('hide');
+						getAPlanLeftList(thisPlanWeekNum,thisPlanYear);
+					});
+				});
+				$("#"+modalId+" .modal-body").css("padding",0);
+				var formContainer="#"+modalId+" .form-of-add-item";
+				//控制星期X是否可以选
+				if(is_curr_week){
+					$(formContainer+" .day-of-week option").each(function(index){
+						if(parseInt(weekdayOfToday)>parseInt($(this).val())){
+							$(this).attr("disabled","disabled");
+						}
+					});
+					$(formContainer+" .day-of-week option").each(function(index){
+						if(!$(this).attr("disabled")){
+							$(this).attr("selected","selected");
+							return false;
+						}
+					});
+				}
+				var defaultSelectDay=$(".week-date.active .week-date-num").attr("index");
+				if(!$(formContainer+" .day-of-week option[value='"+defaultSelectDay+"']").attr("disabled")) {
+					$(formContainer+" .day-of-week option[value='"+defaultSelectDay+"']").attr("selected","selected");
+				}
+				var controller=new Controller(formContainer);
+				$(formContainer+" select[name='work-type']").html(workTypeOptions);
+				if(action=="add") data={};
+				if(is_curr_week||hasOverPlanSubmitTime) {
+					$(formContainer+" .outer-plan-tip").removeClass("no-tip");
+					data.work_schedule_item_type_note="*此次添加事项为计划外事项";
+				}
+				if(data) controller.set(data);
+				if(data.relations&&data.relations.crm_client) {
+					setAddPlanItemPopSelectedPerson($(formContainer+" .form-clients-container").parent(),data.relations.crm_contact);
+				}
+				$(formContainer+" .btn-select-clients").click(function(){
+					var workType=$(formContainer+" select[name='work-type'] option:selected").val();
+					if(!workType) {
+						$.showErrorGritter("请先选择工作类型！");
+						return false;
+					}
+					var selectedClientIds=[];
+					$(formContainer+" .form-clients-container .selected-person").each(function(){
+						selectedClientIds.push($(this).attr("data-client-id"));
+					});
+					var _self=$(this);
+					selClientPop({
+						single: workType==VISIT_WORK_TYPE_CODE,
+						selectedClientIds:selectedClientIds,
+						callback: function(data){
+							setAddPlanItemPopSelectedPerson(_self.parent(),data);
+						}
+					});
+				});
+				if(data.relations&&data.relations.product) {
+					setAddPlanItemPopSelectedPerson($(formContainer+" .form-products-container").parent(),data.relations.product);
+				}
+				$(formContainer+" .btn-select-products").click(function(){
+					//暂留空
+				});
+				if(data.relations&&data.relations.helper) {
+					setAddPlanItemPopSelectedPerson($(formContainer+" .form-helpers-container").parent(),data.relations.helper);
+				}
+				$(formContainer+" .btn-select-helpers").click(function(){
+					var selectedHelperIds=[];
+					$(formContainer+" .form-helpers-container .selected-person").each(function(){
+						selectedHelperIds.push($(this).attr("data-client-id"));
+					});
+					var _self=$(this);
+					assistPeople({
+						selectedHelperIds:selectedHelperIds,
+						callback: function(data){
+							setAddPlanItemPopSelectedPerson(_self.parent(),data);
+						}
+					});
+				});
+			}
+			
+			//获取选择到的客户ID数组
+			function getSelectedClientIdsArr(container){
+				var selectedClientIdsArr=[];
+				$(container).find(".form-clients-container span").each(function(){
+					selectedClientIdsArr.push($(this).attr("data-client-id"));
+				});
+				return selectedClientIdsArr;
+			}
+			
+			//获取选择到的协助人ID数组
+			function getSelectedHelperIdsArr(container){
+				var selectedHelperIdsArr=[];
+				$(container).find(".form-helpers-container span").each(function(){
+					selectedHelperIdsArr.push($(this).attr("data-client-id"));
+				});
+				return selectedHelperIdsArr;
+			}
+			
+			//修改时设置已经选择的人
+			function setAddPlanItemPopSelectedPerson(container,data){
+				if(data.length>0) {
+					$(container).find(".select-tip").addClass("hide");
+					$(container).find(".form-select-container").removeClass("hide");
+					var tmpClietsHtml="<span class='selected-person close-icon-container' data-client-id='{ID}'>{NAME}<img class='close-icon' onclick='onCloseIconClick(this)' src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' /></span>"
+					$(container).find(".form-select-container").empty();
+					for(var i in data) {
+						data[i].id=data[i].contact_id||data[i].employee_id||data[i].product_id||data[i].client_id;
+						data[i].name=data[i].employee_name||data[i].contact_name||data[i].product_name||data[i].client_full_name;
+						if(data[i].name) $(container).find(".form-select-container").append(tmpClietsHtml.replace("{ID}",data[i].id).replace("{NAME}",data[i].name||""));
+					}
+					$(container).find(".form-select-container .selected-person").mouseover(function(){
+						transImgSrc($(this).find("img"));
+					}).mouseout(function(){
+						transImgSrc($(this).find("img"));
+					});
+				}
+			}
+			
+			//添加或者修改一条计划的总结
+			function editOnePlanItemSummer(data){
+				if(thisPlanSummerStatus==planSummerStatus.SUBMITED) {
+					$.showErrorGritter("您的总结已经提交，不能再进行此操作。");
+					return false;
+				}
+				var modalId=$.modal({
+					okButtonText: "保存"
+				}).show("工作总结",".add-summer-container",function(){
+					if(!inputValidateForGritter(formContainer)) return false;
+					var allData=controller.getJSON();
+					var postSummerData={};
+					postSummerData.content=allData.work_schedule_item_summary_content;
+					postSummerData.follow_content=allData.work_schedule_item_follow_up_content;
+					postSummerData.completion_status=$(formContainer+" .complete-status[data-select='true']").attr("data-value");
+					if(!postSummerData.completion_status) {
+						$.showErrorGritter("完成状态不能为空，请选择！");
+					}
+					$.ajaxPut(BSAPIURL+"/week_schedule_items/"+thisPlanYear+"/"+thisPlanWeekNum+"/"+allData.work_schedule_item_day_of_week+"/"+allData.work_schedule_item_id+"/report",postSummerData,function(resp){
+						if(resp.code!=0) {
+							$.showErrorGritter("保存总结失败："+resp.msg);
+							return false;
+						}
+						$.showSuccessGritter("保存总结成功！");
+						$("#"+modalId).modal("hide");
+						getAPlanLeftList(thisPlanWeekNum,thisPlanYear);
+					});
+				});
+				var formContainer="#"+modalId+" .form-of-add-summer";
+				var controller=new Controller(formContainer);
+				if(data) controller.set(data);
+				$(formContainer+" .complete-status[data-value='"+data.work_schedule_item_completion_status+"']").attr("data-select",true);
+				transImgSrc($(formContainer+" .complete-status[data-value='"+data.work_schedule_item_completion_status+"'] img"));
+				$(formContainer+ " .form-complete-status .complete-status").unbind("click").click(function(){
+					transImgSrc($(formContainer+" .complete-status[data-select='true'] img"));
+					$(formContainer+" .complete-status[data-select='true']").attr("data-select",false);
+					if($(this).attr("data-select")=="false"){
+						$(this).attr("data-select",true);
+					}else{
+						$(this).attr("data-select",false);
+					}
+					transImgSrc($(this).find("img"));
+				});
+			}
+			
+			//删除一条计划
+			function deleteOnePlanItem(data){
+				$.modal().confirm("删除后不可恢复，确认删除？",function(){
+					$.ajaxDelete(BSAPIURL+"/week_schedule_items/"+thisPlanYear+"/"+thisPlanWeekNum+"/"+data.work_schedule_item_day_of_week+"/"+data.work_schedule_item_id,{},function(resp){
+						if(resp.code!=0) {
+							$.showErrorGritter("删除计划失败："+resp.msg);
+							return false;
+						}
+						$.showSuccessGritter("删除计划成功！");
+						getAPlanLeftList(thisPlanWeekNum,thisPlanYear);
+					});
+				});
+			}
+			
+			//选择客户、产品、协助人删除图标点击事件
+			function onCloseIconClick(obj){
+				$(obj).parent().remove();
+				var len=$(obj).parent().parent().find("span").length;
+				if(len<1) {
+					$(obj).parents(".form-inline").find(".select-tip").removeClass("hide");
+					$(obj).parents(".form-inline").find(".form-select-container").addClass("hide");
+				}
+			}
+			
+			//提交一周的周计划
+			function submitOneWeekPlan(obj){
+				if($(obj).attr("disabled")) return false;
+				var isEveryWorkdayHasPlan=true;
+				$(".week-date-content").each(function(){
+					if(!$(this).find(".week-date-num").hasClass("not-workday")){
+						if($(this).find(".item-num.no-item").length>0){
+							isEveryWorkdayHasPlan=false;
+							return false;
+						}
+					}
+				});
+				if(!isEveryWorkdayHasPlan) {
+					var modalId=$.modal().show("系统提示",".submit-week-plan",function(modal){
+						$.ajaxPut(BSAPIURL+"/work_schedule/"+thisPlanId+"/submit",{},function(resp){
+							if(!resp.code==0) {
+								$.showErrorGritter("周计划提交失败："+resp.msg);
+								return false;
+							}
+							$.showSuccessGritter("周计划提交成功，请等待上级审核！");
+							$("#"+modalId).modal('hide');
+							getAPlanLeftList(thisPlanWeekNum,thisPlanYear);
+						});
+					});
+				}else {
+					$.ajaxPut(BSAPIURL+"/work_schedule/"+thisPlanId+"/submit",{},function(resp){
+						if(!resp.code==0) {
+							$.showErrorGritter("周计划提交失败："+resp.msg);
+							return false;
+						}
+						$.showSuccessGritter("周计划提交成功，请等待上级审核！");
+						getAPlanLeftList(thisPlanWeekNum,thisPlanYear);
+					});
+				}
+			}
+			
+			//提交一周的总结
+			function submitOneWeekSummer(obj){
+				if($(obj).attr("disabled")) return false;
+				$.ajaxPut(BSAPIURL+"/work_report/"+thisPlanId+"/submit",{},function(resp){
+					if(!resp.code==0) {
+						$.showErrorGritter("周总结提交失败："+resp.msg);
+						return false;
+					}
+					$.showSuccessGritter("周总结提交成功！");
+					getAPlanLeftList(thisPlanWeekNum,thisPlanYear);
+				});
+			}
+			
+			//审核期间下属计划有改变，在上级点击按钮时进行判断和提示，并且刷新页面
+			function thisPlanHasUpdate(callback,obj) {
+				if($(obj).attr("disabled")) return false;
+				//获取该表数据
+				var thisPlanData={};
+				thisPlanData.work_schedule_last_update_time=thisPlanLastUpdateTime
+				thisPlanData.schedule_week_num=thisPlanWeekNum;
+				thisPlanData.schedule_year=thisPlanYear;
+				thisPlanData.employee_id=thisPlanEmployeeId;
+				$.ajaxGet(BSAPIURL + "/weekly_schedules/last_update_time" + $.toQueryString(thisPlanData, true), function(resp) {
+					if(resp.code == 0) {
+						if(resp.data.work_schedule_last_update_time != thisPlanData.work_schedule_last_update_time) {
+							var modalId = $.modal({
+								showCancelButton: false
+							}).show("提示：", ".work-schedule-updated", function(modal) {
+								document.location.reload();
+								$("#" + modalId).modal('hide');
+							});
+							$("#" + modalId + " .work-schedule-updated-confirm p").text("该员工计划已经更新，点击确认重新加载...");
+						} else {
+							callback();
+						}
+					} else {
+						$.showErrorGritter("服务器返回失败：" + resp.msg);
+					}
+				});
+			}
+			
+			//同意周计划
+			function aggrementThisPlan(){
+				var isPost=false;
+				if($("#"+aggrementModalId+" .modal-footer").attr("data-saveing")) return false;
+				var aggrementModalId = $.modal({
+					width: 500
+				}).show("提示", ".aggrement-emp-week-plan", function(modal) {
+					if(isPost) return false;
+					isPost=true;
+					var notes = $("#" + aggrementModalId + " textarea").val();
+					$.ajaxPut(BSAPIURL+"/work_schedule/"+thisPlanId+"/handle/approval", {
+						approval_remark: notes,
+						approval_status: leaderApproval.AGGREMENT
+					}, function(resp) {
+						if(resp.code == 0) {
+							$.showSuccessGritter("您的同意周计划操作成功！");
+							$("#"+aggrementModalId+" .modal-footer").removeAttr("data-saveing");
+							$("#" + aggrementModalId).modal('hide');
+							getAPlanLeftList(thisPlanWeekNum,thisPlanYear);
+						} else {
+							isPost=false;
+							$.showErrorGritter("您的同意周计划操作失败：" + resp.msg);
+						}
+					});
+				});
+				$(".approval-week-plan-summer-container .btn-approval-aggrement,.btn-approval-disaggrement").removeAttr("disabled");
+				$("#"+aggrementModalId+" .modal-footer").attr("data-saveing",true);
+			}
+			
+			//拒绝周计划
+			function disaggrementThisPlan(){
+				var isPost=false;
+				var disaggrementModalId = $.modal().show("提示", ".disaggrement-emp-week-plan", function(modal) {
+					if(isPost) return false;
+					isPost=true;
+					var notes = $("#" + disaggrementModalId + " textarea").val();
+					$.ajaxPut(BSAPIURL + "/work_schedule/" + thisPlanId + "/handle/approval", {
+						approval_remark: notes,
+						approval_status: leaderApproval.DISAGGREMENT
+					}, function(resp) {
+						if(resp.code == 0) {
+							$.showSuccessGritter("您的拒绝周计划操作成功！");
+							$("#"+disaggrementModalId+" .modal-footer").removeAttr("data-saveing");
+							$("#" + disaggrementModalId).modal('hide');
+							getAPlanLeftList(thisPlanWeekNum,thisPlanYear);
+						} else {
+							isPost=false;
+							$.showErrorGritter("您的拒绝周计划操作失败：" + resp.msg);
+						}
+					});
+				});
+				$(".approval-week-plan-summer-container .btn-approval-aggrement,.btn-approval-disaggrement").removeAttr("disabled");
+				$("#"+disaggrementModalId+" .modal-footer").attr("data-saveing",true);
+				if(thisPlanStatus==planStatus.WAIT_REAPPROVAL) {
+					$("#" + disaggrementModalId + " .disaggrement-panel>span:first-child").text("当前周计划状态为待复审，拒绝之后会恢复为最近一次已通过的计划！");
+				}
+			}
+			
+			//确认阅读总结
+			function confirmReadSummer(obj){
+				if($(obj).attr("disabled")) return false;
+				$.ajaxPut(BSAPIURL+"/work_report/"+thisPlanId+"/handle/read",{},function(resp){
+					if(!resp.code==0) {
+						$.showErrorGritter("确认阅读总结失败："+resp.msg);
+						return false;
+					}
+					$.showSuccessGritter("确认阅读总结成功！");
+					getAPlanLeftList(thisPlanWeekNum,thisPlanYear);
+				});
+			}
+			
+			var selectedClient = []; ////保存选择的客户
+			/////选择客户公共方法
+			function selClientPop(option) {
+//				single: workType==VISIT_WORK_TYPE_CODE,
+//						selectedClientIds:selectedClientIds,
+//						callback: function(data){
+//							
+//						}
+				$.showContactsSelectPop({
+					url: BSAPIURL + "/work_schedule/my_contacts?filter_status=1",
+					title: "选择客户",
+					subTitle: "选择客户：",
+					depa_mode: "",
+					right_title: "已选择：",
+					onlySingle: option.single,
+					selectedClientIds: option.selectedClientIds,
+					okCallback: option.callback
+				});
+				//showLinkmansEmployeeSelectPop(option);
+//				var selectedClientsData=[];
+//				var selClientModal = $.modal().show("选择客户", ".sel-client-panel", function(modal) {
+//					$("#" + selClientModal + " .sel-client-ul input:checked").each(function(i) {
+//						var contactId=$(this).attr("data-employee-id");
+//						var contactName=$(this).attr("data-name");
+//						selectedClientsData.push({
+//							contact_id:contactId,
+//							contact_name:contactName
+//						});
+//					})
+//					if(option.callback) option.callback(selectedClientsData);
+//					$("#" + selClientModal).modal('hide');
+//				});
+//				var keyword;
+//				$("#" + selClientModal + " input[type='search']").keydown(function(e) {
+//					keyword = $(this).val();
+//					e.keyCode == 13 && keyword != undefined && initClient(option);
+//				});
+//				initClient(option,keyword,selClientModal);
+			}
+			//初始化客户显示
+			function initClient(option,keyword,selClientModal) {
+				$.ajaxGet(BSAPIURL + "/work_schedule/my_contacts?key=" + (keyword || "")+"&filter_status=1", function(resp) {
+					var selectedClientIdsObj={};
+					for(var i in option.selectedClientIds) {
+						selectedClientIdsObj[option.selectedClientIds[i]]=option.selectedClientIds[i];
+					}
+					$("#" + selClientModal + " .sel-client-ul").empty();
+					var inputType = (option.single ? "radio" : "checkbox");
+					
+					$.each(resp.data, function(index, item) {
+						var clientLi = "<li data-parent-depa-id='" + item.client_id + "' data-client-id='" + item.client_id + "'>" +
+							"<img src='../resources/images/plus-o-icon.png' area-hidden='true' data-trans-src='../resources/images/minus-o-icon.png' class=\"icon-collapse\"/>" +
+							"<span>" + item.client_name + "</span>" +
+							//"<ul data-parent-depa-id='" + item.client_id + "'></ul>" +
+							"</li>";
+						$("#" + selClientModal + " .sel-client-ul").append(clientLi);
+						////如果有   添加子部门
+						if(item.departments && item.departments.length > 0) {
+							appendChildDepa(selClientModal, inputType, item.client_id, item.departments, selectedClientIdsObj);
+						} else if(item.employees && item.employees.length > 0) {
+							////否则如果有员工  添加员工
+							appendChildEmployees(selClientModal, inputType, item.client_id, item.employees, selectedClientIdsObj);
+						}
+					});
+					////选择客户之动效控制
+					$("#" + selClientModal + " .sel-client-ul ul").css("display", "none");
+					$("#" + selClientModal + " .sel-client-ul>li:first-child ul").css("display", "block");
+					$("#" + selClientModal + " .sel-client-ul>li:first-child i").removeClass("fa-plus-square-o").addClass("fa-minus-square-o");
+					////选择客户里面input点击事件
+					$("#" + selClientModal + " .sel-client-ul>li input").click(function(e) {
+						if($(this).prop("checked")=="checked") {
+							$(this).removeProp("checked");
+						}else {
+							var can_save_schedule=$(this).parent().parent().data("can_save_schedule")
+							if(!can_save_schedule.result) {
+								$.showErrorGritter("该联系人处于"+can_save_schedule.reason+",不能选择！");
+								$(this).removeProp("checked");
+								return;
+							}else {
+								$(this).prop("checked","checked");
+							}
+						}
+					});
+					////选择客户里面i标签点击事件
+					$("#" + selClientModal + " .sel-client-ul>li img").click(function() {
+						transImgSrc($(this));
+						if($(this).attr("area-hidden")=="true") {
+							$(this).attr("area-hidden",false);
+							////如果点击前是关闭状态
+							$(this).parent().find(">li").slideDown();
+						}else{
+							$(this).attr("area-hidden",true);
+							////点击前处于打开状态
+							$(this).parent().find(">li").slideUp();
+						}
+					});
+				});
+			}
+			////选择客户之添加子部门
+			function appendChildDepa(selClientModal, inputType, parentId, depaList, selectedClientIds) {
+				$.each(depaList, function(index, item) {
+					var depaLi = "<li data-parent-depa-id='" + item.department_id + "' data-paret-id='" + parentId + "' data-depa-id='" + item.department_id + "'>" +
+						"<img src='../resources/images/plus-o-icon.png' area-hidden='true' data-trans-src='../resources/images/minus-o-icon.png' class=\"icon-collapse\"/>" +
+						"<span>" + item.department_name + "</span>" +
+						//"<ul data-parent-depa-id='" + item.department_id + "'></ul>" +
+						"</li>";
+					$("#" + selClientModal + " .sel-client-ul").find("li[data-parent-depa-id='" + parentId + "']").append(depaLi);
+					////如果有   添加子部门
+					if(item.departments && item.departments.length > 0) {
+						appendChildDepa(selClientModal, item.department_id, item.departments, selectedClientIds);
+					} else if(item.contacts && item.contacts.length > 0) {
+						////否则如果有员工  添加员工
+						appendChildEmployees(selClientModal, inputType, item.department_id, item.contacts, selectedClientIds);
+					}
+				});
+			}
+			//选择客户之添加员工
+			function appendChildEmployees(selClientModal, inputType, parentId, empList, selectedClientIds) {
+				$.each(empList, function(index, item) {
+					var $empLi = $("<li><label>" +
+						"<input type='" + inputType + "'"+(selectedClientIds[item.contact_id]?" checked='checked'":"")+" name='contact' data-name='" + item.contact_name + "' data-employee-id='" + item.contact_id + "' " + (selectedClientIds[item.contact_id] ? "checked=checked" : "") + "/>" +
+						"<span data-employee-id='" + item.contact_id + "'>" + item.contact_name + "</span></label>" +
+						"</li>");
+					$empLi.data("can_save_schedule",item.can_save_schedule);	
+					$("#" + selClientModal + " .sel-client-ul").find("li[data-parent-depa-id='" + parentId + "']").append($empLi);
+				});
+			}
+			//选择人员
+			var tempHtml4EmployeeSelect = "<span class='seled-assist-people' data-employee-id='{ID}'>{N}</span>";
+			//协助者公共方法
+			function assistPeople(option) {
+				//selectedHelperIds = [];
+				//$(selector).find(".seled-assist-people").each(function() {
+				//	selectedHelperIds.push($(this).attr("data-employee-id"));
+				//});
+				$.modal().confirm("请与协助人沟通",function(modal){
+					$.showShareEmployeeSelectPop({
+						title: "选择协助者",
+						subTitle: "请选择协助者：",
+						depa_mode: "",
+						check_schedule_rule: 1,
+						right_title: "协助者：",
+						selectedEmployeeIds: option.selectedHelperIds,
+						type: 1,
+						onlyOpenedAccount: true,
+						okCallback: function(employeesData) {
+							var seledEmpDom = [];
+							var selectedHelperIds = [];
+							for(var i in employeesData) {
+								var empData = employeesData[i];
+								selectedHelperIds.push({
+									employee_id:empData.employee_id,
+									employee_name:empData.employee_name
+								});
+								//seledEmpDom.push(tempHtml4EmployeeSelect.replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+							}
+							if(option.callback) option.callback(selectedHelperIds);
+							//var str = seledEmpDom.join("、");
+							//if(!str) str = "+请选择协助者";
+							//selector.find(".has-data").css("display", "");
+							//selector.find(".no-data").css("display", "none");
+							//selector.find(".has-data").html(str);
+						}
+					});
+				});
+			}
+			//选择知会对象公共方法
+			function selTelllPeople(selector) {
+				selectedNotiferIds = [];
+				$(selector).find(".seled-assist-people").each(function() {
+					selectedNotiferIds.push($(this).attr("data-employee-id"));
+				});
+				$.showShareEmployeeSelectPop({
+					title: "选择需知会对象",
+					subTitle: "请选择需知会对象：",
+					right_title: "知会对象：",
+					depa_mode: "",
+					selectedEmployeeIds: selectedNotiferIds,
+					type: 1,
+					okCallback: function(employeesData) {
+						var seledEmpDom = [];
+						selectedNotiferIds = [];
+						for(var i in employeesData) {
+							var empData = employeesData[i];
+							selectedNotiferIds.push(empData.employee_id);
+							seledEmpDom.push(tempHtml4EmployeeSelect.replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+						}
+						var str = seledEmpDom.join("、");
+						if(!str) str = "+请选择知会对象";
+						selector.find(".has-data").css("display", "");
+						selector.find(".no-data").css("display", "none");
+						selector.find(".has-data").html(str);
+					}
+				});
+			}
+			//获取周开始时间和结束时间  X月X日-X月X日
+			function getPlanDateDuring(start,end){
+				start=new Date(start.replace(/-/g,"/"));
+				start=start.getMonth()+1+"月"+start.getDate()+"日";
+				end=new Date(end.replace(/-/g,"/"));
+				end=end.getMonth()+1+"月"+end.getDate()+"日";
+				return start+"-"+end;
+			}
+		</script>
+	</body>
+
+</html>

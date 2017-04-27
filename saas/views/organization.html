@@ -1,0 +1,2595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>部门与员工</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-datetimepicker.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+		<style>
+			.tree-zhan-wei {
+				margin-right: 0;
+			}
+			
+			.icon-collapse {
+				/*padding: 5px 0;*/
+				cursor: pointer;
+				font-size: 12px;
+				/*color: #bbb;*/
+				display: inline-block;
+				/*width: 20px;*/
+				/*height: 10px;*/
+				position: relative;
+				z-index: 9;
+			}
+			
+			.page-container,
+			.page-container .content {
+				padding: 0;
+			}
+			
+			.page-container .content .left-menu {
+				width: 260px;
+				border: 1px solid #e3e3e3;
+				border-width: 0 1px 1px 0;
+			}
+			
+			.page-container .content .main-wrap {
+				padding-top: 14px;
+				margin-left: 270px;
+			}
+			
+			.page-container .content .left-menu .tree {
+				font-size: 12px;
+				font-weight: normal;
+			}
+			
+			.modal-normal .row .col-xs-6 .form-inline .form-control {
+				width: 230px;
+			}
+			
+			.modal-normal .row .col-xs-12 .form-inline .form-control {
+				width: 630px;
+			}
+			
+			.page-container .content .left-menu-bottom-btn-basicdata {
+				width: 260px;
+				border: 1px solid #e3e3e3;
+				border-width: 0 1px 0 0;
+			}
+			
+			.account-num-box {
+				width: 90px;
+				height: 120px;
+				margin-left: 60px;
+			}
+			
+			.account-num-box span {
+				font-size: 16px;
+				font-weight: bold;
+			}
+			
+			.box-round {
+				border: 1px solid #CCCCCC;
+				width: 100%;
+				height: 90px;
+				border-radius: 45px;
+				-webkit-border-radius: 45px;
+				-moz-border-radius: 45px;
+			}
+			
+			.box-numtext {
+				color: #fff;
+				font-size: 30px;
+				text-align: center;
+				line-height: 90px;
+			}
+			
+			.model-account-info .form-inline-title {
+				margin-bottom: 10px;
+			}
+			
+			.model-account-info .form-inline-title-set {
+				margin-bottom: 10px;
+				display: inline-block;
+			}
+			
+			.form-inline .set-new-accout-pwd {
+				margin-bottom: 4px;
+			}
+			
+			.form-inline .set-new-accout-pwd span {
+				color: #999;
+			}
+			
+			.model-account-info input[type="password"] {
+				background-color: #fff;
+				margin-top: 10px;
+				margin-left: 10px;
+			}
+			
+			.select-name-span {
+				border: 1px solid #e3e3e3;
+				width: 100%;
+				height: 100px;
+				padding: 10px;
+				background: #fafafa;
+				margin-bottom: 20px;
+				border-radius: 2px;
+			}
+			
+			.tree-dept-menu li>label {
+				/*margin-left: 14px;*/
+			}
+			
+			.name-sex .form-group:first-child label {
+				margin-right: 15px;
+			}
+			
+			.name-sex .form-inline {
+				display: inline-block;
+				padding: 0!important;
+			}
+			
+			.form-control-sex {
+				min-width: 50px!important;
+				/*height: 20px!important;*/
+				text-align: left!important;
+				margin-top: 5px;
+			}
+			
+			.form-control-sex input {
+				width: 15px!important;
+				height: 15px!important;
+				margin-top: -1px;
+			}
+			
+			.model-employee-import-1 h4 {
+				font-weight: bold;
+			}
+			
+			.model-employee-import-1>div {
+				font-size: 14px;
+				margin: 10px;
+			}
+			
+			.table-employee-import td {
+				border: 1px solid #fff;
+			}
+			
+			.table-employee-import thead tr {
+				background-color: #919fac;
+			}
+			
+			.table-employee-import tbody tr:nth-child(odd) {
+				background-color: #fafafa;
+			}
+			
+			.table-employee-import tbody tr:nth-child(even) {
+				background-color: #eef3f9;
+			}
+			
+			.employee-name-container {
+				width: auto!important;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				vertical-align: middle;
+				margin-right: 10px;
+			}
+			
+			.tree-dept-menu>li li {
+				margin-left: 10px;
+			}
+			
+			.tree {
+				/*height: 720px;*/
+			}
+			
+			.tree li>p>label .css-overflow-hidden {
+				max-width: 72px;
+			}
+			
+			.tree li {
+				margin-left: 12px;
+			}
+			
+			.tree .top-line:before {
+				/*width: 17px!important;*/
+			}
+			
+			.tree-dept-menu img {
+				/*width: 20px;*/
+			}
+			
+			.modal-titles {
+				text-align: center;
+				background: #F99100;
+				color: #fff;
+				line-height: 30px;
+				margin: -15px -15px 20px;
+			}
+			
+			.tree li>p>label .css-overflow-hidden {
+				max-width: 80px;
+			}
+			
+			.treeview>div:first-child .css-overflow-hidden {
+				display: inline-block;
+				max-width: 100px;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				vertical-align: middle;
+			}
+			
+			.tree li {
+				/*position: relative;*/
+				z-index: 1;
+				/*background-color: #fff;*/
+			}
+			
+			.tree li {
+				margin-left: 12px;
+				color: #666;
+			}
+			
+			.tree>li {
+				margin-left: 0;
+			}
+			
+			.tree li:before {
+				z-index: -1111;
+			}
+			
+			.tree li,
+			.treeview>div:first-child {
+				font-size: 13px;
+			}
+			
+			.btn-large {
+				width: 80%;
+				height: 30px;
+				margin: 15px 9%;
+			}
+			
+			.nav-tabs li.active {
+				border-bottom: 2px solid #ddd;
+			}
+			
+			.form-group-info-btns .modal-btnOk-container,
+			.form-group-contact-btns .modal-btnOk-container {
+				margin-left: 0;
+			}
+			
+			.form-group-info-btns .modal-btnCancel-container,
+			.form-group-contact-btns .modal-btnCancel-container {
+				margin-left: 0;
+			}
+			
+			.form-inline>label {
+				min-width: 90px;
+			}
+			
+			.nav-tabs>li>a,
+			.nav-tabs>li>a:hover,
+			.nav-tabs>li>a:focus {
+				color: #666;
+				background-color: #fff;
+			}
+			
+			.nav-tabs>li.active>a,
+			.nav-tabs>li.active>a:hover,
+			.nav-tabs>li.active>a:focus {
+				color: #009ED8;
+				background-color: #fff;
+			}
+			
+			.nav-tabs li.active {
+				border-bottom: 2px solid #009ED8;
+			}
+			
+			.model-employee-view-info .tab-content .tab-pane .edit .btn {
+				padding: 4px 10px;
+				font-size: 13px;
+			}
+			
+			.model-employee-info .form-inline label {
+				width: 100px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-organization">
+			<!--<div class="remark">
+				<img src="../resources/images/depa-icon.png" alt="" /><span>*企业部门及员工添加</span>
+			</div>-->
+			<div class="content">
+				<div class="left-menu left-menu-basicdata">
+					<div class="treeview" style="margin-top: 10px;">
+						<!--<div>
+							<img src="../resources/images/cmp-icon.png" alt="" />
+							<span>gsi</span>
+						</div>-->
+						<ul class="tree tree-dept-menu">
+							<!--<form class="form-horizontal model-changedept-info">
+								<div class="color-999">*请选择调入部门</div>
+								<ul class="tree">
+									<li>
+										<label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="19ce2ca4-1218-45de-982d-3b88b704fe52"> 飒飒飒飒飒飒 </label>
+										<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="4e9a1b98-7768-4c3b-9a44-8b82b725167f"> 财务部 </label></li>
+										<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="f3aa55cb-ba45-4012-99d2-7cffbcb8c872"> 行政部 </label></li>
+										<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="52970ec5-641e-418f-8daf-3a0e05a56369"> 技术部 </label></li>
+										<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="baa42296-ce5e-49a0-a092-fcdfe160fa1d"> 123部 </label></li>
+										<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="623999B2-A284-6505-AAA3-89C7A958FF86"> 市场部 </label></li>
+										<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="0937ea6d-2db2-4bfd-897b-27972158b29e"> 董事会 </label></li>
+										<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="b85f3ac3-cdd4-4cd8-9155-f089ce49ca3a"> 未分配部门2 </label></li>
+										<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="9FDC2F76-2B0F-DF75-E9D1-2AE8F2714E47"> 市场部2 </label></li>
+									</li>
+								</ul>
+								<ul class="tree">
+									<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="19ce2ca4-1218-45de-982d-3b88b704fe52"> 飒飒飒飒飒飒 </label></li>
+									<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="4e9a1b98-7768-4c3b-9a44-8b82b725167f"> 财务部 </label></li>
+									<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="f3aa55cb-ba45-4012-99d2-7cffbcb8c872"> 行政部 </label></li>
+									<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="52970ec5-641e-418f-8daf-3a0e05a56369"> 技术部 </label></li>
+									<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="baa42296-ce5e-49a0-a092-fcdfe160fa1d"> 123部 </label></li>
+									<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="623999B2-A284-6505-AAA3-89C7A958FF86"> 市场部 </label></li>
+									<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="0937ea6d-2db2-4bfd-897b-27972158b29e"> 董事会 </label></li>
+									<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="b85f3ac3-cdd4-4cd8-9155-f089ce49ca3a"> 未分配部门2 </label></li>
+									<li><label> <input type="radio" class="form-control-radio" name="rdChangeToDept" value="9FDC2F76-2B0F-DF75-E9D1-2AE8F2714E47"> 市场部2 </label></li>
+								</ul>
+							</form>-->
+						</ul>
+					</div>
+				</div>
+				<div class="left-menu-bottom-btn-basicdata">
+					<a class="btn btn-large btn-info def-btn-info" onclick="openSetDeptInfoPop('add');" role-auth="saas/companies/0/departments/new_department|post"><i class="fa fa-plus"></i> 添加部门</a>
+				</div>
+				<div class="main-wrap main-wrap-basicdata">
+					<div class="search">
+
+					</div>
+					<table id="grid-table" class="grid-module">
+					</table>
+					<div id="grid-pager">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-dept-info hide">
+			<form class="form-horizontal model-dept-info">
+				<p class="modal-titles">创建部门后将不可删除，只可进行修改操作</p>
+				<div class="form-group form-inline parent-depa-name hide" style="color:#999;">
+					<label class="">上级部门:</label>
+					<span bind="parent_depa_name"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">部门名称：</label>
+					<input type="text" class="form-control" placeholder="部门名称" bind="depa_name" nulltip="部门名称">
+				</div>
+			</form>
+		</div>
+		<div class="pnl-leader-info hide">
+			<form class="form-horizontal model-leader-info">
+				<div class="wrap wrap-source">
+					<label>部门名称：<span class="lable-dept-name">财务部</span></label>
+					<div class="box">
+						<div class="py">
+							<input type="search" class="searchs" placeholder="可输入“ZS”或“张三”查找" style="width: 100%;" />
+							<p>
+								<a class="active">A</a>
+							</p>
+						</div>
+						<ul class="list-emp">
+							<!--<li><label><input type="checkbox" > <span>A同事</span><span>行政部</span><span>行政专员</span></label></li>-->
+						</ul>
+					</div>
+				</div>
+				<!--<div class="wrap seg">
+					<div class="box">
+						<p>
+							<a href="javascript:;" class="btn-add"><i class="fa fa-arrow-right"></i></a>
+						</p>
+						<br>
+						<p>
+							<a href="javascript:;" class="btn-remove"><i class="fa fa-arrow-left"></i></a>
+						</p>
+					</div>
+				</div>-->
+				<!--<div class="wrap wrap-new">
+					<label>负责人：</label>
+					<div class="box">
+						<ul class="list-emp">
+
+						</ul>
+					</div>
+				</div>-->
+			</form>
+		</div>
+
+		<div class="pnl-employee-import hide">
+			<form class="form-horizontal model-employee-import hdie">
+				<div class="form-group form-group-line form-inline">
+					<div class="model-employee-import-1">
+						<h4>操作说明</h4>
+						<div>
+							<span>1、下载《员工批量导入模板》 </span>
+							<a href="javascript:;" onclick='downloadImportModel();'>立即下载《员工批量导入模板》</a>
+						</div>
+						<div>
+							<span>2、在模板填写对应信息，为保障信息能有效导入，请使用纯文本或数字，请勿增加、删除或修改表头。</span>
+						</div>
+						<div>
+							<span>3、上传填写完毕后的模板</span>
+							<a id="btnUploadExcel" href="javascript:;">上传模板</a>
+							<div class="upload"></div>
+						</div>
+					</div>
+					<!--<label>请先上传员工Excel表格</label>-->
+					<!--<button type="button" class="btn btn-default btn-sm" id="btnUploadExcel" style="margin-left: 50px;"><i class="fa fa-cloud-upload"></i> 上传Excel</button>-->
+					<!--<p class="upload" style="margin-left: 0; width: 100%;"></p>-->
+				</div>
+				<table class="table table-employee-import">
+					<caption class="hide">请设置数据对应关系</caption>
+					<thead>
+
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+			</form>
+		</div>
+		<div class="pnl-employee-info hide">
+			<form class="form-horizontal model-employee-info">
+				<div class="form-group-line">
+					<label>基本信息</label>
+					<hr>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label class="input-flag">工号：</label>
+							<input type="text" class="form-control" placeholder="工号" bind="employee_code" nulltip="工号" maxlength="20">
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label class="input-flag">姓名：</label>
+							<input type="text" class="form-control" placeholder="姓名" bind="employee_name" nulltip="姓名" maxlength="20" style="width: 130px;">
+							<label style="width: 60px; min-width: 60px;"><input type="radio" name="employee_sex" bind="employee_sex" class="form-control-radio" checked="checked" value="男" /> 男</label>
+							<label style="width: 60px; min-width: 60px;"><input type="radio" name="employee_sex" bind="employee_sex" class="form-control-radio" value="女" /> 女</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label class="input-flag">身份证号：</label>
+							<input type="text" class="form-control employee-id-card" placeholder="身份证号" bind="employee_id_card" nulltip="身份证号" maxlength="18">
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label class="input-flag">出生日期：</label>
+							<input type="text" class="form-control employee-birth-date date-picker" placeholder="出生日期" bind="employee_birth_date" nulltip="出生日期" disabled="disabled">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label class="input-flag">入职时间：</label>
+							<input type="text" class="form-control date-picker" placeholder="入职时间" bind="employee_entry" nulltip="入职时间">
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label class="input-flag">职位级别：</label>
+							<select class="form-control form-control-post_level" bind="employee_level">
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label class="input-flag">部门：</label>
+							<span type="text" class="form-control form-control-dept-name" bind="dept_name"></span>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label class="input-flag">职务：</label>
+							<select class="form-control form-control-employee-posts" style="height: 36px;">
+							</select>
+							<input type="text" class="form-control" placeholder="职务" bind="post_name" nulltip="职务" maxlength="10" style="position: absolute; margin-left: -229px; width: 200px; border: 0; margin-top:1px;outline: none;">
+						</div>
+					</div>
+				</div>
+				<div class="form-group-line">
+					<label>联系信息</label>
+					<hr>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label class="input-flag">办公电话：</label>
+							<input type="text" class="form-control" placeholder="办公电话" bind="employee_office_phone" nulltip="办公电话" maxlength="12">
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label class="input-flag">手机(主)：</label>
+							<input type="text" class="form-control" placeholder="手机号" bind="employee_primary_mobile" nulltip="手机号" maxlength="11" valitype="mobile">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label>手机(次)：</label>
+							<input type="text" class="form-control" placeholder="备用手机" bind="employee_secondary_mobile" maxlength="11">
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label class="input-flag">邮箱：</label>
+							<input type="text" class="form-control" placeholder="邮箱" bind="employee_email" nulltip="邮箱" maxlength="50" valitype="email">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label>QQ：</label>
+							<input type="text" class="form-control" placeholder="QQ号码" bind="employee_qq" maxlength="20">
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group form-inline">
+							<label>微信：</label>
+							<input type="text" class="form-control" placeholder="微信" bind="employee_wechat" maxlength="20">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group form-inline">
+							<label class="input-flag">家庭住址：</label>
+							<input type="text" class="form-control" placeholder="家庭住址" bind="employee_home_address" nulltip="家庭住址" maxlength="50">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group form-inline">
+							<label class="input-flag">现住址：</label>
+							<input type="text" class="form-control" placeholder="现住址" bind="employee_now_address" nulltip="现住址" maxlength="50">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group form-inline">
+							<label style="width: 100px; padding-right: 0; margin: 0 10px 0 -10px;">现住址位置：</label>
+							<span class="form-control form-control-now-address"></span>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="location-employee-addr hide">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="form-group form-inline">
+						<div class="location-search">
+							<input type="text" placeholder="请输入地址查询" style="width: 300px;" />
+							<a href="javascript:;" class="btn btn-default btn-sm">查询</a>
+						</div>
+						<div class="form-control" id="pnlLocation" style="height: 600px;width: 100%;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-employee-view-info hide">
+			<form class="form-horizontal model-employee-view-info">
+				<div class="header">
+					<p>工号：<span bind="employee_code"></span></p>
+					<p class="info">
+						<label class="name" bind="employee_name"></label>&nbsp;&nbsp;
+						<span bind="employee_sex"></span>&nbsp;&nbsp;
+						<span bind="employee_age"></span>
+					</p>
+					<p class="info">
+						<span bind="employee_status_cn"></span>&nbsp;&nbsp;
+						<span bind="depa_name"></span>&nbsp;&nbsp;
+						<span bind="employee_post_cn"></span>
+					</p>
+				</div>
+				<div class="tabbable tabs-left">
+					<ul class="nav nav-tabs" role="tablist">
+						<li>
+							<a class="pref"></a>
+						</li>
+						<li role="presentation" class="active">
+							<a href="#tab-info" aria-controls="tab-info" role="tab" data-toggle="tab">基础档案</a>
+						</li>
+						<li role="presentation">
+							<a href="#tab-status" aria-controls="tab-status" role="tab" data-toggle="tab">档案状态</a>
+						</li>
+						<li role="presentation">
+							<a href="#tab-contact" aria-controls="tab-contact" role="tab" data-toggle="tab">联系方式</a>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane active" id="tab-info" group="info">
+							<div class="edit text-align-right">
+								<a class="btn btn-danger def-btn-danger btn-edit" group="info">
+									<img src="../resources/images/btn-edit.png" alt="" />修改
+								</a>
+							</div>
+							<div class="row">
+								<div class="col-xs-6">
+									<div class="form-group form-inline">
+										<label>工号：</label>
+										<input type="text" class="form-control hide" placeholder="工号" bind="employee_code" nulltip="工号" maxlength="20">
+										<span class="form-control form-control-noborder" bind="employee_code"></span>
+									</div>
+								</div>
+								<div class="col-xs-6 name-sex">
+									<div class="row">
+										<div class="col-xs-7 form-group form-inline">
+											<label style=" width: 105px; margin-right: 0;">姓名：</label>
+											<input type="text" style="width: 95px;" class="form-control form-control-employee-name hide" placeholder="姓名" bind="employee_name" nulltip="姓名" maxlength="20">
+											<span class="form-control form-control-noborder employee-name-container" bind="employee_name"></span>
+											<span class="form-control form-control-noborder" style="width: 20px;" bind="employee_sex"></span>
+										</div>
+										<div class="col-xs-5 form-group form-inline">
+											<!--<label>性别</label>-->
+											<label class="form-control-sex hide" style="width: auto;">
+												<input type="radio" class="form-control hide" name="sex" placeholder="性别" bind="employee_sex" value="男" nulltip="性别"> 男
+											</label>
+											<label class="form-control-sex hide" style="width: auto;">
+												<input type="radio" class="form-control hide" name="sex" placeholder="性别" bind="employee_sex" value="女" nulltip="性别"> 女
+											</label>
+										</div>
+									</div>
+								</div>
+								<!--<div class="col-xs-3">
+								</div>-->
+							</div>
+							<div class="row">
+								<div class="col-xs-6">
+									<div class="form-group form-inline">
+										<label>职位级别：</label>
+										<select class="form-control form-control-post_level hide" bind="employee_level">
+										</select>
+										<span class="form-control form-control-noborder" bind="employee_level_cn"></span>
+									</div>
+								</div>
+								<div class="col-xs-6">
+									<div class="form-group form-inline">
+										<label>入职日期：</label>
+										<input type="text" class="form-control date-picker hide" placeholder="入职日期" bind="employee_entry" nulltip="入职日期" maxlength="20">
+										<span class="form-control form-control-noborder" bind="employee_entry"></span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-6">
+									<div class="form-group form-inline">
+										<label>身份证号：</label>
+										<input type="text" class="form-control employee-id-card hide" placeholder="身份证号" bind="employee_id_card" nulltip="身份证号" maxlength="18">
+										<span class="form-control form-control-noborder" bind="employee_id_card"></span>
+									</div>
+								</div>
+								<div class="col-xs-6">
+									<div class="form-group form-inline">
+										<label>出生日期：</label>
+										<input type="text" class="form-control date-picker employee-birth-date hide" placeholder="出生日期" bind="employee_birth_date" nulltip="出生日期" maxlength="20" disabled="disabled">
+										<span class="form-control form-control-noborder" bind="employee_birth_date"></span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="form-group form-inline">
+										<label>职务：</label>
+										<input type="text" class="form-control hide" placeholder="职务" bind="post_name" nulltip="职务" maxlength="20">
+										<span class="form-control form-control-noborder" bind="post_name"></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group form-group-info-btns form-inline hide">
+								<label>&nbsp;</label>
+								<a class="btn btn-info btn-post-info def-btn-info modal-btnOk-container">
+									<img src="../resources/images/btn-save.png" alt="" />保 存
+								</a>
+								<a class="btn btn-danger btn-cancel def-btn-danger modal-btnCancel-container" onclick="initFormToShowMode('info',true);">
+									<img src="../resources/images/btn-cancel.png" alt="" />取 消
+								</a>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="tab-status">
+							<div class="edit text-align-right">
+								<a class="btn btn-danger def-btn-danger btn-status-add">
+									<img src="../resources/images/btn-edit.png" alt="" />更改员工状态
+								</a>
+							</div>
+							<table class="table table-status">
+								<thead>
+									<tr>
+										<th>状态名称</th>
+										<th>变更日期</th>
+										<th>变更原因</th>
+										<th>变更人</th>
+									</tr>
+								</thead>
+								<tbody>
+
+								</tbody>
+							</table>
+						</div>
+						<div role="tabpanel" class="tab-pane tab-contact" id="tab-contact" group="contact">
+							<div class="edit text-align-right">
+								<a class="btn btn-danger def-btn-danger btn-edit" group="contact">
+									<img src="../resources/images/btn-edit.png" alt="" />修改
+								</a>
+							</div>
+							<div class="row">
+								<div class="col-xs-6">
+									<div class="form-group form-inline">
+										<label>办公电话：</label>
+										<input type="text" class="form-control hide" placeholder="办公电话" bind="employee_office_phone" valitype="tel" nulltip="办公电话" maxlength="12">
+										<span class="form-control form-control-noborder" bind="employee_office_phone"></span>
+									</div>
+								</div>
+								<div class="col-xs-6">
+									<div class="form-group form-inline">
+										<label>手机(主)：</label>
+										<input type="text" class="form-control hide" placeholder="手机号" bind="employee_primary_mobile" valitype="mobile" nulltip="手机号" maxlength="11">
+										<span class="form-control form-control-noborder" bind="employee_primary_mobile"></span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-6">
+									<div class="form-group form-inline">
+										<label>手机(次)：</label>
+										<input type="text" class="form-control hide" placeholder="备用手机" bind="employee_secondary_mobile" valitype="mobile" maxlength="11">
+										<span class="form-control form-control-noborder" bind="employee_secondary_mobile"></span>
+									</div>
+								</div>
+								<div class="col-xs-6">
+									<div class="form-group form-inline">
+										<label>邮箱：</label>
+										<input type="text" class="form-control hide" placeholder="邮箱" bind="employee_email" valitype="email" nulltip="邮箱" maxlength="50">
+										<span class="form-control form-control-noborder" bind="employee_email"></span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-6">
+									<div class="form-group form-inline">
+										<label>QQ：</label>
+										<input type="text" class="form-control hide" placeholder="QQ" bind="employee_qq" maxlength="20">
+										<span class="form-control form-control-noborder" bind="employee_qq"></span>
+									</div>
+								</div>
+								<div class="col-xs-6">
+									<div class="form-group form-inline">
+										<label>微信：</label>
+										<input type="text" class="form-control hide" placeholder="微信" bind="employee_wechat" maxlength="20">
+										<span class="form-control form-control-noborder" bind="employee_wechat"></span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="form-group form-inline">
+										<label>家庭住址：</label>
+										<input type="text" class="form-control hide" placeholder="家庭住址" bind="employee_home_address" nulltip="家庭住址" maxlength="30">
+										<span class="form-control form-control-noborder" bind="employee_home_address"></span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="form-group form-inline">
+										<label>现住址：</label>
+										<input type="text" class="form-control hide" placeholder="现住址" bind="employee_now_address" nulltip="现住址" maxlength="30">
+										<span class="form-control form-control-noborder" bind="employee_now_address"></span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="form-group form-inline">
+										<label style="width: 110px; margin-left: -20px;">现住址位置：</label>
+										<input type="text" class="form-control form-control-now-address hide" bind="employee_location_cn">
+										<span class="form-control form-control-now-address form-control-noborder" bind="employee_location_cn"></span>
+									</div>
+								</div>
+							</div>
+							<!--<div class="row">
+								<div class="col-xs-12">
+									<div class="form-group form-inline">
+										<label>&nbsp;</label>
+										<div class="form-control" id="pnlLocation" style="height: 200px;"></div>
+									</div>
+								</div>
+							</div>-->
+							<div class="form-group form-group-contact-btns form-inline hide">
+								<label>&nbsp;</label>
+								<a class="btn btn-info def-btn-info btn-post-contact modal-btnOk-container">
+									<img src="../resources/images/btn-save.png" alt="" />保 存
+								</a>
+								<a class="btn btn-danger btn-cancel def-btn-danger modal-btnCancel-container" onclick="initFormToShowMode('contact',true);">
+									<img src="../resources/images/btn-cancel.png" alt="" />取 消
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-status-info hide">
+			<form class="form-horizontal model-status-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">员工状态：</label>
+					<select class="form-control" bind="employee_status">
+						<option value="1">试用期</option>
+						<option value="3">已转正</option>
+						<option value="7">已离职</option>
+					</select>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">变更原因：</label>
+					<textarea class="form-control" bind="change_cause" nulltip="变更原因"></textarea>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">变更日期：</label>
+					<input type="text" class="form-control date-picker" bind="change_date" nulltip="变更日期" />
+				</div>
+				<div class="form-group form-inline hide">
+					<label class="input-flag">变更人：</label>
+					<span class="form-control form-control-noborder form-control-oper">-</span>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-account-info hide">
+			<form class="form-horizontal model-account-info">
+				<div class="form-group form-inline text-align-center" style="overflow: auto; text-align: center;padding-left: 90px;">
+					<div class="account-num-box pull-left">
+						<div class="box-round" style="background: #D54C48;">
+							<p class="box-numtext box-shop-num">555</p>
+						</div>
+						<span>已购买</span>
+					</div>
+					<div class="account-num-box pull-left">
+						<div class="box-round" style="background: #306302;">
+							<p class="box-numtext box-ydredge-num">666</p>
+						</div>
+						<span>已开通</span>
+					</div>
+					<div class="account-num-box pull-left">
+						<div class="box-round" style="background: #ccc;">
+							<p class="box-numtext box-ndredge-num">777</p>
+						</div>
+						<span>未开通</span>
+					</div>
+					<!--<span class="num-box label-total-count">0</span>，<br> 已使用 
+						<span class="label-used-count">0</span>，未使用 
+						<span class="label-nouse-count">0</span>-->
+				</div>
+				<div class="form-group form-inline form-inline-title">
+					您将为以下 <span class="label-select-count">20</span> 名员工开通账户：
+				</div>
+				<p class="select-name-span">张三、李四、王五</p>
+				<div class="form-group form-inline">
+					<span class="form-inline-title-set">
+						请给新开通的账户设置初始密码：
+					</span>
+					<br />
+					<label class="set-new-accout-pwd">
+						<input type="radio" class="form-control-radio" name="rdPwd" value="2" checked="checked" />
+						<span>默认为手机后六位</span>
+					</label>
+					<br />
+					<label class="set-new-accout-pwd">
+						<input type="radio" class="form-control-radio" name="rdPwd" value="1" /><span>手动设置密码 &nbsp; </span>
+						<br />
+						<input type="password" class="form-control form-acc-pwd hide" placeholder="请输入初始密码" style="width: 180px;" />
+					</label>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-changedept-info hide">
+			<form class="form-horizontal model-changedept-info">
+				<div class="color-999">*请选择调入部门</div>
+				<ul class="tree">
+					<li>
+						<p class="fa fa-chevron-down">
+							<label>艾视医药有限公司 </label></p>
+						<ul class="items">
+							<li>
+								<label><input type="radio" name="rdChangeToDept" /> 销售部</label>
+								<ul class="items">
+									<li>
+										<label><input type="radio" name="rdChangeToDept" /> 重庆办事处</label>
+									</li>
+									<li>
+										<label><input type="radio" name="rdChangeToDept" /> 四川办事处</label>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<label><input type="radio" name="rdChangeToDept" /> 财务部</label>
+								<ul class="items">
+									<li>
+										<label><input type="radio" name="rdChangeToDept" /> 总监</label>
+									</li>
+									<li>
+										<label><input type="radio" name="rdChangeToDept" /> 会计</label>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<label><input type="radio" name="rdChangeToDept" /> 审计部</label>
+							</li>
+						</ul>
+						<li>
+							<label><input type="radio" name="rdChangeToDept" /> 未分配部门 (20)</label>
+						</li>
+					</li>
+				</ul>
+			</form>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openAddEmployeePop();" role-auth="saas/companies/0/employees/new_employee|post"><i class="fa fa-plus-square-o"></i> 添加员工</a>
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openEmployeeImportPop();" role-auth="saas/companies/0/employees/xls|post"><i class="fa fa-file-excel-o"></i> 导入员工</a>
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openEmployeeDownloadPop();" role-auth="saas/companies/0/employees/xls|post"><i class="fa fa-download"></i> 导出员工</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" onclick="openEmployeeInfoPop();" role-auth="saas/companies/0/employees/new_employee|post" enable-on="singleselect"><i class="fa fa-file-text-o"></i> 员工档案</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" onclick="openAddAccountPop();" role-auth="saas/companies/0/employees/accounts|post" enable-on1="multiselect"><i class="fa fa-user-plus"></i> 开通账户</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" onclick="openChangeDeptPop();" role-auth="saas/companies/0/department/0/employees|patch" enable-on1="multiselect"><i class="fa fa-exchange"></i> 调换部门</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.nestable.min.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datetimepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datetimepicker.zh-CN.js"></script>
+		<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=534a6946f3345a0d3cc18a544ccaa8cb"></script>-->
+		<script type="text/javascript" src="../resources/js/customize/hgf.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			var grid_selector = "#grid-table";
+			var pager_selector = "#grid-pager";
+			var grid = "";
+			//选择的部门/职位ID
+			var selectDeptId, selectRealDeptId, selectDeptName, selectRealDeptName;
+			var selectDeptIsTopest = false;
+			//临时参数
+			var tmpSelectTags = {};
+			//部门数据
+			var deptsJSON = [];
+			var singlerEmployeesData = "";
+			var mod = "",
+				mod1 = "",
+				mod2 = "";
+			//companyStr = "<i class=\"fa fa-university\" aria-hidden=\"true\"></i>"
+			//deparStr = "<i class=\"fa fa-sitemap\" aria-hidden=\"true\"></i>";
+			//			var companyStr = "<img class=\"\" src=\"../resources/images/company.png\">",
+			//				deparStr = "<img class=\"\" src=\"../resources/images/depar.png\">",
+			//				jobStr="<img class=\"\" src=\"../resources/images/job.png\">";
+			//jobStr="<i class=\"fa fa-bookmark\" aria-hidden=\"true\"></i>";
+			var companyStr = "<i class=\"fa fa-university\" aria-hidden=\"true\"></i>",
+				deparStr = "<i class=\"fa fa-sitemap\" aria-hidden=\"true\"></i>",
+				jobStr = "<i class=\"fa fa-bookmark\" aria-hidden=\"true\"></i>";
+			window.onload = function() {
+				var script = document.createElement("script");
+				script.src = "http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG&callback=doApi";
+				$("body").append(script);
+			};
+			$(document).ready(function() {
+				$(".left-menu").css("height", $(window).height() - 60 + "px").css("max-height", $(window).height() - 60 + "px");
+				$(".left-menu .treeview").css("height", $(".left-menu").outerHeight() - 11 + "px").css("max-height", $(".left-menu").outerHeight() - 11 + "px");
+				$.showLoadingPop("正在加载部门数据，请稍候...");
+				//search
+				$.initSearchControls4TagMode({
+					auto: false,
+					url: SAASAPIS.BS.company.employees,
+					grid: "#grid-table",
+					container: ".search",
+					key_name: "key",
+					key_placeholder: "请输入员工工号、姓名或手机号码进行查询",
+					onChange: function(selectTags) {
+						tmpSelectTags = selectTags;
+						reloadEmployees();
+					},
+					groups: [{
+						name: "employee_status",
+						text: "状态",
+						items: [{
+							key: "全部",
+							value: ""
+						}, {
+							key: "试用期",
+							value: "1"
+						}, {
+							key: "已转正",
+							value: "3"
+						}, {
+							key: "已离职",
+							value: "7"
+						}]
+					}, {
+						name: "employee_has_account",
+						text: "是否开通帐号",
+						items: [{
+							key: "全部",
+							value: ""
+						}, {
+							key: "是",
+							value: "1"
+						}, {
+							key: "否",
+							value: "0"
+						}]
+					}]
+				});
+				//token
+				$.token();
+				//$(".module-tree").css("top", ($(".remark").height() + 41) + "px");
+				//grid
+				//122 = pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".search").outerHeight(true) - 140;
+				//alert($(".remark").height());
+				var colNames = ['', '', '工号', '姓名', '性别', '年龄', '部门职务', '办公电话', '手机号', '邮箱', '状态', '开通账户', '建档日期'];
+				var colModel = [{
+					name: 'employee_id',
+					hidden: true
+				}, {
+					name: 'employee',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return JSON.stringify(rowObject);
+					}
+				}, {
+					name: 'employee_code',
+					sortable: true,
+					width: 40
+				}, {
+					name: '__employee_name',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"openEmployeeInfoPop('" + rowObject.employee_id + "');\" role-auth=\"saas/companies/0/employees/new_employee|post\" role-auth-tip=\"你无权限修改员工信息。\">" + rowObject.employee_name + "</a>";
+						} catch(e) {
+							return '';
+						}
+					},
+					width: 70
+				}, {
+					name: 'employee_sex',
+					sortable: true,
+					width: 35
+				}, {
+					name: 'employee_age',
+					index: "employee_birth_date",
+					sortable: true,
+					width: 35
+				}, {
+					name: 'employee_post_cn',
+					index: "depa_id",
+					//					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"openEmployeeInfoPop('" + rowObject.employee_id + "');\" role-auth=\"saas/companies/0/employees/new_employee|post\" role-auth-tip=\"你无权限修改员工信息。\">" + rowObject.depa_name + "," + rowObject.employee_post_cn + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'employee_office_phone',
+					sortable: true,
+					width: 90
+				}, {
+					name: 'employee_primary_mobile',
+					sortable: true,
+					width: 90
+				}, {
+					name: 'employee_email',
+					sortable: true
+				}, {
+					name: 'employee_status_cn',
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.employee_status_cn + "，" + rowObject.employee_status_time_cn;
+					},
+					width: 130
+				}, {
+					name: 'employee_has_account_cn',
+					width: 80
+				}, {
+					name: 'employee_profile_created_date_cn',
+					width: 130
+				}];
+				grid = $(grid_selector).initJqGrid({
+					datatype: "local",
+					grid_selector: grid_selector,
+					pager: pager_selector,
+					storeRowDataInCache: true,
+					url: SAASAPIS.BS.company.employees,
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight,
+					//sortname: "employee_profile_created_date",
+					sortorder: "asc"
+				});
+				//部门树
+				loadDeptTree();
+				$(".form-control-search").change(function() {
+					tmpSelectTags.key = $(this).val();
+				});
+			});
+			//重新加载人员信息
+			var reloadEmployees = function(params) {
+				if(selectDeptId)
+					tmpSelectTags.depa_id = selectDeptId;
+				var options = {
+					page: 1,
+					datatype: "json",
+					url: SAASAPIS.BS.company.employees + $.toQueryString(tmpSelectTags, true)
+				};
+				if(params) options.sortname = "elevel";
+				if(params && params.export) {
+					$.downloadFile(options.url + "&export=1");
+					return;
+				}
+				$(grid).jqGrid('setGridParam', options).trigger("reloadGrid", {});
+			};
+			//加载部门树
+			var loadDeptTree = function() {
+				loadDashedDeptTree({
+					container: $(".tree-dept-menu"),
+					url: SAASAPIS.BS.company.departments.replace("{id}", $.uuid()) + "?is_tree=1&show_def_depa=1",
+					showIcon: true,
+					showRespPerson: true,
+					showDeptChildCount: true,
+					showBtns: true,
+					removeHeightForTree: $(".left-menu-bottom-btn-basicdata").outerHeight(true),
+					loadComplete: function() {
+						$(".tree-dept-menu li label,.treeview>div:first-child label").click(function(e) {
+							$(".tree-dept-menu li label").removeClass("active");
+							$(this).addClass("active");
+							var selectDeptData;
+							if($(this).parent().is("p")) {
+								selectDeptData = $(this).parent().parent().data("dept");
+							} else {
+								selectDeptData = $(this).parent().data("dept");
+							}
+							if(selectDeptData) {
+								selectDeptIsTopest = $(this).data("istop");
+								selectDeptId = selectDeptData.depa_id;
+								selectRealDeptId = selectDeptId;
+								selectDeptName = selectDeptData.depa_name;
+								selectRealDeptName = selectDeptName;
+								//如果选择的是职务
+								if(selectDeptData.depa_type == 1) {
+									selectRealDeptId = selectDeptData.parent_depa_tree_code;
+									selectRealDeptName = $(this).parents("li:first").parents("li:first").data("dept").depa_name;
+								}
+								//tmpSelectTags.sidx="elevel";
+								reloadEmployees({
+									sidx: "elevel",
+									sortname: "sidx",
+									page: "1"
+								});
+							}
+						});
+						$(".tree-dept-menu>li>p>label").trigger("click");
+						// 说明：获取鼠标位置
+						// 整理：http://www.codebit.cn
+						// 来源：http://www.webreference.com
+						function mousePosition(ev) {
+							if(ev.pageX || ev.pageY) {
+								return {
+									x: ev.pageX,
+									y: ev.pageY
+								};
+							}
+							return {
+								x: ev.clientX + document.body.scrollLeft - document.body.clientLeft,
+								y: ev.clientY + document.body.scrollTop - document.body.clientTop
+							};
+						}
+						$(".tree-dept-menu li label,.treeview>div:first-child label").mouseenter(function(event) {
+							//if($(this).find(".btns").length < 1) return;
+							addLocalhostHandle(this);
+							$(this).parent().addClass("hover");
+							var e = event || window.event;
+							var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+							var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+							var x = e.pageX || e.clientX + scrollX;
+							var y = e.pageY || e.clientY + scrollY;
+							var spanTop = y;
+							var spanLeft = parseInt($(this).css("width"));
+							$(this).find(".btns").css("top", spanTop+"px");
+							if(spanLeft < 20) spanLeft = 20;
+							$(this).find(".btns").css("left", spanLeft + 40+"px");
+						}).mouseleave(function(e) {
+							$(this).parent().removeClass("hover");
+						});
+						$(".tree-dept-menu li .icon-collapse").unbind("click").click(function(e) {
+							//alert(getComputedStyle(document.getElementsByClassName("left-menu")[0]).width)
+							//							$(this).css({
+							//								width: $(this).parent().scrollWidth()+"px"
+							//							});
+							transImgSrc($(this));
+							$(this).parent().parent().find(">ul").toggleClass("hide");
+						});
+						$(".tree-dept-menu li label[code='" + selectDeptId + "']").click();
+						$(".tree-dept-menu>li>ul>li>p>img").trigger("click");
+					}
+				});
+			};
+			//根据位置添加上移下移
+			function addLocalhostHandle(obj) {
+				var parentChildLength = 0,
+					parentDom = "";
+				if($(obj).parent().is("p")) {
+					parentDom = $(obj).parent().parent();
+				} else {
+					parentDom = $(obj).parent();
+				}
+				parentChildLength = parentDom.siblings("li").length + 1;
+				$(obj).find(".btn-dept-move-up").remove();
+				$(obj).find(".btn-dept-move-down").remove();
+				if(!parentDom.hasClass("left-line")) {
+					if($(obj).find(".btns").length < 1) $(obj).append("<span class='btns'></span>");
+					if(parentDom.index() + 1 == parentChildLength) { //最后一个
+						$(obj).find(".btns").append("<a href=\"javascript:;\" class='btn-dept-move btn-dept-move-up' onclick=\"changePostsSortNum(1,this);\">上移</a>");
+
+					} else if(parentDom.index() == 0) { //第一个
+						$(obj).find(".btns").append("<a href=\"javascript:;\" class='btn-dept-move btn-dept-move-down' onclick=\"changePostsSortNum(-1,this);\">下移</a>");
+					} else {
+						$(obj).find(".btns").append("<a href=\"javascript:;\" class='btn-dept-move btn-dept-move-up' onclick=\"changePostsSortNum(1,this);\">上移</a>" +
+							"<a href=\"javascript:;\" class='btn-dept-move btn-dept-move-down' onclick=\"changePostsSortNum(-1,this);\">下移</a>");
+					}
+				}
+			}
+			//部门树
+			var appendDeptTreeNode = function(deptList, parentId, treeDom, istopst) {
+				//var topMove = "<a href=\"javascript:;\" class='btn-dept-move btn-dept-move-up' onclick=\"changePostsSortNum(1,this);\">上移</a>";
+				//var bottomMove = "<a href=\"javascript:;\" class='btn-dept-move btn-dept-move-down' onclick=\"changePostsSortNum(-1,this);\">下移</a>";
+				for(var i in deptList) {
+					var deptData = deptList[i];
+					var existingNum = $(treeDom).children("li").length;
+					if(deptData.depa_parent_id == parentId) {
+						var liDom = $("<li></li>");
+						if(istopst) { //最外层
+							liDom.addClass("left-line")
+							//if(deptData.depa_type == 0)liDom.addClass("left-line");//有子部门或职务
+							//else liDom.addClass("left-line").addClass("top-line");//没有子部门
+						} else {
+							if(deptData.depas && deptData.depas.length > 0 && deptData.depa_type == 0) liDom.addClass("right-line").addClass("top-line");
+							else liDom.addClass("top-line");
+						}
+						liDom.data("dept", deptData);
+						var tmpLeader = deptData.master_leader_name ? deptData.master_leader_name : "";
+						if(tmpLeader) {
+							tmpLeader = "，" + tmpLeader;
+						}
+						if(deptData.depa_type == 0) {
+							if(deptData.depas && deptData.depas.length > 0) {
+								liDom.append("<p><img src='../resources/images/minus-o-icon.png' data-trans-src='../resources/images/plus-o-icon.png' class=\"icon-collapse\"/>" /*+ deparStr*/ + "<label code='" + deptData.depa_id + "' data-istop='true' title='" + deptData.depa_name + " (" + deptData.depa_count + ") " + tmpLeader + "'>" + "<span class='css-overflow-hidden depa-name'>" + deptData.depa_name + "</span>" + " (" + deptData.depa_count + ") <span class='css-overflow-hidden'>" + tmpLeader + "</span></label></p>");
+							} else {
+								liDom.append( /*deparStr + */ "<i class='icon-collapse'></i><label title='" + deptData.depa_name + " (" + deptData.depa_count + ") " + tmpLeader + "' code='" + deptData.depa_id + "' data-istop='true'>" + "<span class='css-overflow-hidden depa-name'>" + deptData.depa_name + "</span>" + " (" + deptData.depa_count + ") <span class='css-overflow-hidden'>" + tmpLeader + "</span></label>");
+							}
+							//							if(deptData.depa_count > 0 || deptData.depa_name.indexOf("未分配部门") >= 0) {
+							//								$(liDom).find("label").append("&nbsp;&nbsp;<span class=\"btns\"><a class='' href=\"javascript:;\" onclick=\"openSetDeptLeader(this);\">设置负责人</a>" + "<a href=\"javascript:;\" class='btn-dept-move btn-dept-move-up' onclick=\"changePostsSortNum(1,this);\">上移</a>" +
+							//									" <a href=\"javascript:;\" class='btn-dept-move btn-dept-move-down' onclick=\"changePostsSortNum(-1,this);\">下移</a>" + "</span>");
+							//							} else if(deptData.depa_count == 0) {
+							//								$(liDom).find("label").append("&nbsp;&nbsp;<span class=\"btns\"><a class='' href=\"javascript:;\" onclick=\"openSetDeptLeader(this);\">设置负责人</a><a href=\"javascript:;\" class='btn-dept-delete' onclick=\"openDeleteDeptPop(this);\">删除</a>" + "<a href=\"javascript:;\" class='btn-dept-move btn-dept-move-up' onclick=\"changePostsSortNum(1,this);\">上移</a>" +
+							//									" <a href=\"javascript:;\" class='btn-dept-move btn-dept-move-down' onclick=\"changePostsSortNum(-1,this);\">下移</a>" + "</span>");
+							//							}
+
+							if(deptData.depa_name.indexOf("未分配部门") < 0) {
+								var deparCount = 0;
+								if(deptData.depas)
+									for(var t in deptData.depas) {
+										if(deptData.depas[t].depa_type == 0)
+											deparCount++;
+									}
+								//<a href=\"javascript:;\" class='btn-dept-delete' onclick=\"openDeleteDeptPop(this,'"+deparCount+"','" + deptData.employee_count + "');\">删除</a>"
+								//								$(liDom).find("label").append("&nbsp;&nbsp;<span class=\"btns\"><a class='' href=\"javascript:;\" onclick=\"openSetDeptLeader(this);\">设置负责人</a><a href=\"javascript:;\" class='btn-dept-delete' onclick=\"amendDeparName(this);\">修改名称</a>" +
+								//									(existingNum == 0 ? bottomMove : existingNum == (deptList.length - 1) ? topMove : topMove + bottomMove) + "</span>");
+								$(liDom).find("label").append("&nbsp;&nbsp;<span class=\"btns\"><a class='' href=\"javascript:;\" onclick=\"openSetDeptLeader(this);\">设置负责人</a><a href=\"javascript:;\" class='btn-dept-delete' onclick=\"amendDeparName(this);\">修改名称</a></span>");
+							}
+						} else if(deptData.depa_type == 1) {
+							var str = "";
+							if(deptData.employee_count == 0) {
+								liDom.addClass("");
+								str = "<a href=\"javascript:;\" class='btn-dept-delete' onclick=\"openDeletePostPop(this);\">删除</a>";
+							} else {
+								liDom.addClass("");
+							}
+							liDom.append( /*jobStr +*/ "<i class='icon-collapse'></i><label code='" + deptData.depa_id + "' data-istop='true'><span class='depa-name'>" + deptData.depa_name + "</span> (" + deptData.depa_count + ") <span class='css-overflow-hidden'>" + tmpLeader + "</span></label>");
+							//$(liDom).find("label").append("&nbsp;&nbsp;<span class=\"btns\">" + str + (existingNum == 0 ? bottomMove : existingNum == (deptList.length - 1) ? topMove : topMove + bottomMove) + "</span>");
+							liDom.find("label").append("&nbsp;&nbsp;<span class=\"btns\">" + str + "</span>");
+
+						}
+						if(deptData.depas && deptData.depas.length > 0) liDom.append("<ul class='left-line'></ul>");
+						$(treeDom).append(liDom);
+						//						liDom.parent().find("li[dept-type=1] .btn-dept-move").show();
+						//						liDom.parent().find("li[dept-type=1]:first .btn-dept-move-up").hide();
+						//						liDom.parent().find("li[dept-type=1]:last .btn-dept-move-down").hide();
+						//$(liDom).find("label").append("&nbsp;&nbsp;<span class=\"btns\"></span>");
+						if(deptData.depas && deptData.depas.length > 0) {
+							appendDeptTreeNode(deptData.depas, deptData.depa_id, liDom.find(">ul"), false);
+						}
+					}
+				}
+			};
+			var appendDeptTreeNode4ChangeDept = function(deptList, parentId, treeDom) {
+				console.log($(treeDom).html());
+				for(var i in deptList) {
+					var deptData = deptList[i];
+					if(deptData.depa_type != 0) continue;
+					if(deptData.depa_parent_id == parentId) {
+						//if (deptData.depa_name == "未分配部门")
+						//	continue;
+						var childDepts = deptData.depas && deptData.depas.length > 0;
+						var liDom = $("<li></li>");
+						liDom.data("dept", deptData);
+						liDom.append("<i class='icon-collapse'></i><label> <input type=\"radio\" class='form-control-radio' name=\"rdChangeToDept\" value='" + deptData.depa_id + "'> " + deptData.depa_name + " </label>");
+						if(childDepts) {
+							appendDeptTreeNode4ChangeDept(deptData.depas, deptData.depa_id, liDom);
+						}
+						$(treeDom).append(liDom);
+					}
+				}
+			};
+			//添加、修改部门
+			function openSetDeptInfoPop(action, obj) {
+				var isAdd = action == "add";
+				var selectDepaData = $("label.active").parents("li").data("dept");
+				console.log(selectDepaData)
+				if(selectDepaData.depa_type != 0) {
+					$.showErrorGritter("您选择的节点为职位，不能进行该操作，请选择部门！");
+					return false;
+				}
+				if(isAdd && !selectRealDeptId) {
+					$.showErrorGritter("请先选择部门，<br>选择后将添加新部门到该部门。", {
+						clear: true
+					});
+					return false;
+				}
+				var actionText = (isAdd ? "添加" : "修改") + "部门";
+				var modalId = $.modal().showOfMini(actionText, ".pnl-dept-info",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var deptModel = deptController.getJSON();
+						var apiUrl = SAASAPIS.BS.company.departments.replace("{id}", 0) + "/" + deptModel.depa_tree_code;
+						if(isAdd) {
+							apiUrl = SAASAPIS.BS.company.department.new_department.replace("{id}", 0);
+							deptModel.depa_parent_id = selectRealDeptId;
+						}
+						$.ajaxByAction(action, apiUrl, deptModel,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "成功。", {
+										clear: true
+									});
+									modal.modal('hide');
+									if(!isAdd) {
+										$(obj).parents("li:first").find("label:first").text(deptModel.depa_name);
+									} else {
+										loadDeptTree();
+									}
+								} else {
+									$.showErrorGritter(actionText + "失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-dept-info";
+				var deptController = new Controller(formContainer);
+				if(isAdd) {
+					$(".parent-depa-name").removeClass("hide");
+					selectDepaData.parent_depa_name = selectDepaData.depa_name;
+					//selectDepaData.depa_name = "";
+					deptController.set(selectDepaData);
+				}
+			}
+			//设置部门负责人
+			function openSetDeptLeader(obj) {
+				var actionText = "设置部门负责人";
+				var modalId = $.modal().showOfMini(actionText, ".pnl-leader-info",
+					function(modal) {
+						var leaders = [];
+						/*$(formContainer + " .wrap-source .list-emp input[type=radio]").each(function() {
+							leaders.push({
+								employee_id: $(this).val(),
+								leader_type: 1
+							});
+						});*/
+						var mainLeader = $(formContainer + " .wrap-source .list-emp input[type=radio]:checked").val();
+						/*for(var i in leaders) {
+							if(leaders[i].employee_id == mainLeader) {
+								leaders[i].leader_type = 0;
+							}
+						}*/
+						if(mainLeader) {
+							leaders.push({
+								employee_id: mainLeader,
+								leader_type: 0
+							});
+						}
+
+						/*if(leaders.length == 0) {
+							$.showErrorGritter("请先选择设置的负责人。");
+							return false;
+						}*/
+						$.ajaxPut(SAASAPIS.BS.company.department.managers.replace("{id}", deptData.depa_id), {
+								leaders: leaders
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "成功。");
+									modal.modal('hide');
+									loadDeptTree();
+								} else {
+									$.showErrorGritter(actionText + "失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-leader-info";
+				//dept model
+				var depa_id = $(obj).parent().parent().attr("code");
+				var deptData = $(obj).parent().parent().parent().parent().data("dept");
+				console.log(deptData)
+				var defaultDom = "";
+				//				//主负责人
+				//				if(deptData.master_leader_id) {
+				//					defaultDom +=
+				//						"<li>" +
+				//						"<label>" +
+				//						"<input type=\"radio\" name='rd-leader' value=\"" + deptData.master_leader_id + "\"> " +
+				//						"<span style=\"width: 70px;\">" + deptData.master_leader_name + "</span>" +
+				//						"<span>" + deptData.depa_name + "</span><span>" + deptData.master_leader_post_cn + "</span>" +
+				//						"</label>" +
+				//						"<label>" +
+				//						"<input type=\"radio\" name=\"rd-leader\" value=\"" + deptData.master_leader_id + "\" checked=\"checked \">" +
+				//						"<span style=\"width: auto;\">主负责人</span>" +
+				//						"</label>" +
+				//						"</li>";
+				//				}
+				//副负责人
+				/*$.each(deptData.slave_leaders, function(index, item) {
+					defaultDom +=
+						"<li>" +
+						"<label>" +
+						"<input type=\"checkbox\" value=\"" + item.employee_id + "\"> " +
+						"<span style=\"width: 70px;\">" + item.employee_name + "</span>" +
+						"<span>" + item.employee_depa_name + "</span><span>" + item.employee_post_cn + "</span>" +
+						"</label>" +
+						"<label>" +
+						"<input type=\"radio\" name=\"rd-leader\" value=\"" + item.employee_id + "\">" +
+						"<span style=\"width: auto;\">设为主负责人</span>" +
+						"</label>" +
+						"</li>";
+				});*/
+				console.log(defaultDom)
+				$(formContainer + " .wrap-new .list-emp").append(defaultDom);
+				$(formContainer + " .wrap-new .list-emp input[type=radio]").unbind("click").click(function() {
+					$(formContainer + " .wrap-new .list-emp input[type=radio]+span").text("设为主负责人");
+					$(this).next().text("主负责人");
+				});
+				$(formContainer + " .lable-dept-name").text(deptData.depa_name);
+				//deptController.set();
+				$(formContainer + " .btn-add").click(function() {
+					$(formContainer + " .wrap-source .list-emp input:checked").each(function() {
+						var me = this;
+						var thisHasAppended = false;
+						$(formContainer + " .wrap-new .list-emp input").each(function() {
+							if($(this).val() == $(me).val()) {
+								thisHasAppended = true;
+								return false;
+							}
+						});
+						var selDom = $(this).parent().parent();
+						var selCopyDom = selDom.clone(false);
+						selCopyDom.find("input").removeAttr("checked");
+						if(thisHasAppended) return true;
+						selCopyDom.find("span:first").css("width", "70px");
+						selCopyDom.append("<label><input type='radio' name='rd-leader' value='" + $(this).val() + "'><span style='width: auto;'>设为主负责人</span></label>");
+						$(formContainer + " .wrap-new .list-emp").append(selCopyDom);
+					});
+					if($(formContainer + " .wrap-new .list-emp input[type=radio]:checked").length == 0) {
+						$(formContainer + " .wrap-new .list-emp input[type=radio]:first").attr("checked", "checked");
+						$(formContainer + " .wrap-new .list-emp input[type=radio]:first+span").text("主负责人");
+					}
+					$(formContainer + " .wrap-new .list-emp input[type=radio]").unbind("click").click(function() {
+						$(formContainer + " .wrap-new .list-emp input[type=radio]+span").text("设为主负责人");
+						$(this).next().text("主负责人");
+					});
+				});
+				$(formContainer + " .btn-remove").click(function() {
+					$(formContainer + " .wrap-new .list-emp input[type=checkbox]:checked").each(function() {
+						var selDom = $(this).parent().parent();
+						selDom.find("input").removeAttr("checked");
+						selDom.remove();
+						//$(formContainer + " .wrap-source .list-emp").append(selDom);
+					});
+				});
+				var url = SAASAPIS.BS.company.employees_simple + "?depa_mode=10&depa_id=" + depa_id;
+				//加载员工列表
+				$.ajaxGet(url, function(response) {
+					if(response.code == 0) {
+						//success
+						var employeeList = response.data.rows;
+						var employeesGroupByPY = {};
+						var pyArr = [];
+						for(var i in employeeList) {
+							var employeeData = employeeList[i];
+							//拼音首字母
+							var firstPY = (employeeData.employee_name_first_en || "#").substring(0, 1).toUpperCase();
+							if(!employeesGroupByPY[firstPY]) {
+								employeesGroupByPY[firstPY] = [];
+							}
+							employeesGroupByPY[firstPY].push(employeeData);
+							if(pyArr.indexOf(firstPY) == -1)
+								pyArr.push(firstPY);
+						}
+						pyArr = pyArr.sort();
+						//load py
+						$(formContainer + " .wrap-source .py p").empty();
+						for(var p in pyArr) {
+							if(pyArr[p] == "#") {
+								continue;
+							}
+							$(formContainer + " .wrap-source .py p").append("<a>" + pyArr[p] + "</a>");
+						}
+						$(formContainer + " .wrap-source .py p").append("<a>#</a>");
+						//click event
+						$(formContainer + " .wrap-source .py p a").click(function() {
+							$(formContainer + " .wrap-source .py p a").removeClass("active");
+							$(this).addClass("active");
+							initEmployees4SetDeptLeader(employeesGroupByPY[$(this).text()]);
+						});
+						//关键字搜索
+						$(formContainer + " .wrap-source .py .searchs").keydown(function() {
+							if(event.keyCode == 13) {
+								var sKey = $(this).val();
+								$.ajaxGet(url + "&key=" + sKey, function(resp) {
+									if(response.code == 0) {
+										initEmployees4SetDeptLeader(resp.data.rows);
+									}
+								});
+								return false;
+							}
+						});
+						//first load employee
+						initEmployees4SetDeptLeader(employeeList);
+					} else {
+						$.showErrorGritter("加载员工列表失败：" + response.msg);
+					}
+				});
+				var initEmployees4SetDeptLeader = function(employees) {
+					$(formContainer + " .wrap-source .list-emp").empty();
+					for(var i in employees) {
+						var employeeData = employees[i];
+						var liDom = $("<li></li>");
+						liDom.append("<label><input type='radio' " + (deptData.master_leader_id == employeeData.employee_id ? "checked='checked'" : "") + " name=\"rd-leader\" value=\"" + employeeData.employee_id + "\"> <span>" +
+							employeeData.employee_name + "</span><span>" +
+							employeeData.depa_name + "</span><span>" + employeeData.employee_post_cn + "</span></label>");
+						$(formContainer + " .wrap-source .list-emp").append(liDom);
+					}
+				};
+			}
+			//修改部门名称
+			function amendDeparName(obj) {
+				if($("body .amend-depar-name-page").length == 0)
+					$("body").append("<div class=\"amend-depar-name-page hide\"><label>部门名称：<input type=\"text\" class=\"depar-name\" maxlength=\"10\"></tbody></label></div>")
+				var modalId = $.modal().show("修改部门名称", ".amend-depar-name-page", function() {
+					var deparName = $("#" + modalId + " .depar-name").val();
+					if(!deparName) {
+						$.showErrorGritter("部门名称不能为空！");
+						return false;
+					}
+					$.ajaxPut(SAASAPIS.BS.company.department.edit_name.replace("{id}", deptId), {
+						"depa_name": deparName
+					}, function(response) {
+						if(response.code == 0) {
+							$.showSuccessGritter("修改成功！");
+							$(obj).parent().parent().find('span.depa-name').text(deparName);
+							$(obj).parent().parent().attr("title", $(obj).parent().parent().attr("title").replace(/^.*\(/, deparName));
+							$("#" + modalId).modal("hide");
+						} else {
+							$.showErrorGritter("修改失败：" + response.msg);
+						}
+					});
+				});
+				var deptId = $(obj).parent().parent().attr("code");
+				console.log($(obj).parent().parent().find('span.depa-name').text())
+				$("#" + modalId + " .depar-name").val($(obj).parent().parent().find('span.depa-name').text());
+
+			}
+			//删除部门
+			function openDeleteDeptPop(obj, deparCount, empCount) {
+				var str = "";
+				if(deparCount != 0) {
+					str = "部门中存在子部门，请先删除子部门后再删除部门";
+				} else if(empCount != 0) {
+					str = "部门中的员工将归入未分配部门中，确认删除部门？";
+				} else {
+					str = "确认删除部门？";
+				}
+				$.modal().confirm(str, function() {
+					if(deparCount != 0) return false;
+					$.ajaxDelete(SAASAPIS.BS.company.departments.replace("{id}", 0) + "/" + deptId, {},
+						function(response) {
+							if(response.code == 0) {
+								//success
+								selectRealDeptId = "";
+								$.showSuccessGritter("删除部门成功。", {
+									clear: true
+								});
+								$(obj).parent().parent().parent().remove();
+							} else {
+								$.showErrorGritter("删除部门失败：" + response.msg);
+							}
+						});
+				});
+				var deptId = $(obj).parent().parent().attr("code");
+			}
+			//删除职务
+			function openDeletePostPop(obj) {
+				$.modal().confirm("你将删除选择的职务，删除后不能恢复，确认删除吗？", function() {
+					$.ajaxDelete(SAASAPIS.BS.company.departments.replace("{id}", 0) + "/" + deptId, {},
+						function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter("删除职务成功。", {
+									clear: true
+								});
+								$(obj).parent().parent().parent().remove();
+								//移除原始数据
+								//removeArrayByField(deptsJSON, "depa_tree_code", deptData.depa_tree_code);
+							} else {
+								$.showErrorGritter("删除职务失败：" + response.msg);
+							}
+						});
+				});
+				var deptId = $(obj).parent().parent().attr("code");
+			}
+			//隐藏每个层级的第一个的上移和最后一个的下移
+			function hideUpDown() {
+				$(".btn-dept-move-up,.btn-dept-move-down").removeClass("hide");
+				$(".tree-dept-menu li").each(function() {
+					$(this).find(">li:first>p>label .btn-dept-move-up").addClass("hide");
+					$(this).find(">li:last>p>label .btn-dept-move-down").addClass("hide");
+					$(this).find(">li:first>label .btn-dept-move-up").addClass("hide");
+					$(this).find(">li:last>label .btn-dept-move-down").addClass("hide");
+				});
+				//如果该层级没有可操作的按钮   移除btns的容器
+				$(".tree-dept-menu li .btns").each(function() {
+					var canRemoveThis = true;
+					$(this).find("a").each(function() {
+						if(!$(this).hasClass("hide")) {
+							canRemoveThis = false;
+							return false;
+						}
+					});
+					if(canRemoveThis) $(this).remove();
+				});
+			}
+			//职务排序
+			function changePostsSortNum(flag, obj) {
+				//var deptData = $(obj).parents("li:first").data("dept");
+				if($(obj).parent().parent().parent().is("p")) {
+					var liDom = $(obj).parent().parent().parent().parent();
+				} else {
+					var liDom = $(obj).parent().parent().parent();
+				}
+
+				if(flag == 1) {
+					liDom.prev().before(liDom);
+				}
+				if(flag == -1) {
+					liDom.next().after(liDom);
+				}
+				//				var num = 0;
+				//				if($(obj).parent().parent().parent().is("p")) {
+				//					num = $(obj).parent().parent().parent().parent().siblings().length;
+				//				} else {
+				//					num = $(obj).parent().parent().parent().siblings().length;
+				//				}
+				//				if($(obj).parent().parent().parent().index() == 0) {
+				//					$(obj).remove();
+				//				} else if($(obj).parent().parent().parent().index() == num) {
+				//					$(obj).remove();
+				//				} else {
+				//					if(!$(obj).parent().children().is(".btn-dept-move-up"))
+				//						$(obj).parent().append("<a href=\"javascript:;\" class='btn-dept-move btn-dept-move-up' onclick=\"changePostsSortNum(1,this);\">上移</a>");
+				//					if(!$(obj).parent().children().is(".btn-dept-move-down"))
+				//						$(obj).parent().append("<a href=\"javascript:;\" class='btn-dept-move btn-dept-move-down' onclick=\"changePostsSortNum(-1,this);\">下移</a>");
+				//
+				//				}
+				var putData = {};
+				putData.depa_ids = [];
+				$(liDom).parent().find(">li").each(function() {
+					putData.depa_ids.push($(this).find("label").attr("code"));
+				});
+				//putData.depa_id = liDom
+				//putData.flag = flag == 1 ? 2 : 1;
+				$.ajaxPut(BSAPIURL + "/companies/01E3D2AF-CA22-3320-73F7-9FBAEC75F018/departments/new_index", putData, function(resp) {
+					if(resp.code != 0) {
+						$.showErrorGritter("排序失败：" + resp.msg);
+						return false;
+					} else {
+						hideUpDown();
+					}
+				});
+				liDom.parent().find("li[dept-type=1] .btn-dept-move").show();
+				liDom.parent().find("li[dept-type=1]:first .btn-dept-move-up").hide();
+				liDom.parent().find("li[dept-type=1]:last .btn-dept-move-down").hide();
+			}
+			//下载导入员工模板
+			function downloadImportModel() {
+				var url = "../resources/annx/tpl_employee.xlsx";
+				$.downloadFile(url);
+			}
+			//员工导入
+			function openEmployeeImportPop() {
+				var actionText = "导入员工";
+				var depa_id = $("label.active").attr("code");
+				var modalId = $.modal({
+					//					width: "80%",
+					shownCallback: function(modalId) {},
+					okButtonText: "开始导入"
+				}).showOfLarge(actionText, ".pnl-employee-import",
+					function(modal) {
+						if(!excelIsUploaded) {
+							$.showErrorGritter("请先点击“上传模板”按钮上传导入的员工数据。");
+							return false;
+						}
+						var colObj = {};
+						var cancelFlag = false,
+							isSetColum = false;
+						$(formContainer + " .table-employee-import thead tr[sel] th").each(function() {
+							var colVal = $(this).children("select").val();
+							if(colObj[colVal] >= 0) {
+								$.showErrorGritter("对应列名有重复，请检查修改。");
+								cancelFlag = true;
+								return false;
+							}
+							if(colVal) {
+								colObj[colVal] = $(this).index();
+								isSetColum = true;
+							}
+						});
+						if(cancelFlag) {
+							return false;
+						}
+						//						if(!isSetColum) {
+						//							$.showErrorGritter("请先设置数据对应关系。");
+						//							return false;
+						//						}
+						//alert(JSON.stringify(colObj));
+						//return false;
+						if(!depa_id) {
+							$.showErrorGritter("请先选择需要导入的部门");
+							return false;
+						} else {
+							colObj.depa_id = depa_id;
+						}
+						//+"?depa_id=" + depa_id
+						//console.log(colObj);
+						//return;
+						$.ajaxPost(SAASAPIS.BS.company.employee.import, colObj,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "成功。");
+									modal.modal('hide');
+									loadDeptTree();
+									//reloadEmployees();
+								} else {
+									$.showErrorGritter(actionText + "失败：" + response.msg);
+								}
+							});
+					}
+				);
+				$("#" + modalId + " .modal-dialog.modal-large").css("width", "80%");
+				//model pop id
+				var formContainer = "#" + modalId + " .model-employee-import";
+				//var employeeController = new Controller(formContainer);
+				var excelIsUploaded = false;
+				$(formContainer + " #btnUploadExcel").attr("id", "btnUploadExcelHAHA");
+				$("#btnUploadExcelHAHA").initUploader({
+					fileName: "employees_file",
+					url: SAASAPIS.BS.company.employee.upload,
+					up_container: formContainer + " .upload",
+					FilesAdded: function(up, files) {
+						return true;
+					},
+					FileUploaded: function(up, file, response) {
+						try {
+							var resp = JSON.parse(response.response);
+							if(resp.code == 0) {
+								excelIsUploaded = true;
+								//success
+								var employeeList = resp.data.employees_data;
+								/*for(var i=0;i<employeeList.length;i++){
+									var thisRowsAllNull=true;
+									var thisColsAllNul=true;
+									for(var j=0;j<employeeList[i].length;j++){
+										if(employeeList[i][j]) thisRowsAllNull=false;
+										for(var k=0;k<employeeList.length;k++){
+											if(employeeList[k][j]) thisColsAllNul=false;
+										}
+										if(thisColsAllNul){
+											for(var m=0;m<employeeList.length;m++){
+												delete employeeList[m][j];
+											}
+										}
+									}
+									if(thisRowsAllNull){
+										delete employeeList[i];
+									}
+								}*/
+								//console.log(employeeList)
+								$(formContainer + " .table-employee-import caption").text("共 " + (employeeList.length - 1) + " 条记录");
+								$(formContainer + " .table-employee-import caption").removeClass("hide");
+								$(formContainer + " .table-employee-import thead").empty();
+								$(formContainer + " .table-employee-import tbody").empty();
+								for(var i in employeeList) {
+									var employeeData = employeeList[i];
+									var tdName = (i == 0 ? "th" : "td");
+									var trDom = $("<tr></tr>");
+									for(var j in employeeData) {
+										trDom.append("<TD>V</TD>".replace(/TD/g, tdName).replace(/V/g, employeeData[j]));
+									}
+									if(i == 0) {
+										var selTrDom = $("<tr sel></tr>");
+										for(var j in employeeData) {
+											//											selTrDom.append("<th>" + selectDom + "</th>");
+										}
+										$(formContainer + " .table-employee-import thead").append(selTrDom);
+									}
+									$(formContainer + " .table-employee-import " + (i == 0 ? "thead" : "tbody")).append(trDom);
+								}
+							} else {
+								$.showErrorGritter("上传Excel失败：" + resp.msg);
+							}
+						} catch(e) {
+							if(e.code == "-601")
+								$.showErrorGritter("请选择excel格式的文件!");
+						}
+					}
+				});
+				/*var selectDom = "<select>" +
+					"<option value=\"\">无</option>" +
+					"<option value=\"depa_name_col\">所属部门</option>" +
+					"<option value=\"employee_post_col\">职位</option>" +
+					"<option value=\"employee_code_col\">工号</option>" +
+					"<option value=\"employee_name_col\">姓名</option>" +
+					"<option value=\"employee_sex_col\">姓别</option>" +
+					"<option value=\"employee_id_card_col\">身份证</option>" +
+					"<option value=\"employee_primary_mobile_col\">手机号码</option>" +
+					"<option value=\"employee_office_phone_col\">办公电话</option>" +
+					"<option value=\"employee_secondary_mobile_col\">备用电话</option>" +
+					"<option value=\"employee_email_col\">邮箱</option>" +
+					"<option value=\"employee_home_address_col\">家庭地址</option>" +
+					"<option value=\"employee_now_address_col\">现地址</option>" +
+					"<option value=\"employee_post_col\">职位</option>" +
+					"<option value=\"employee_qq_col\">QQ号</option>" +
+					"<option value=\"employee_wechat_col\">微信号</option>" +
+					" < /select>";*/
+			}
+			//导出员工
+			function openEmployeeDownloadPop() {
+				reloadEmployees({
+					"export": 1
+				});
+			}
+
+			function convertToDepaListFormTree(deptsJSON) {
+				var tmpDepas = [];
+				var getSubDepas = function(depa, retDepas) {
+					if(depa.depas) {
+						for(var i in depa.depas) {
+							retDepas.push(depa.depas[i]);
+							retDepas = getSubDepas(depa.depas[i], retDepas);
+						}
+					}
+
+					return retDepas;
+				};
+				tmpDepas = getSubDepas(deptsJSON[0], tmpDepas);
+
+				return tmpDepas;
+			}
+
+			//添加员工
+			function openAddEmployeePop() {
+				if(!selectRealDeptId) {
+					$.showErrorGritter("请先选择部门，<br>选择后将添加新员工到该部门。", {
+						clear: true
+					});
+					return false;
+				}
+				/*if(selectDeptIsTopest) {
+					$.showErrorGritter("公司节点下不能添加员工，<br>请先完善部门结构。");
+					return false;
+				}*/
+
+				var actionText = "添加员工";
+				var modalId = $.modal({
+					shownCallback: function(modalId) {},
+					width: 800
+				}).show(actionText, ".pnl-employee-info",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var employeeModel = employeeController.getJSON();
+						//部门
+						employeeModel.employee_location_cn = $(formContainer + " .form-control-now-address").text();
+						employeeModel.depa_id = selectRealDeptId;
+						//定位
+						employeeModel.employee_location_lat = myLocationPoint.employee_location_lat;
+						employeeModel.employee_location_lon = myLocationPoint.employee_location_lon;
+						//性别
+						employeeModel.employee_sex = $(formContainer + " input[type='radio']:checked").attr("value");
+						//生日
+						employeeModel.employee_birth_date = $(formContainer + " .employee-birth-date").val();
+						$.ajaxPost(SAASAPIS.BS.company.employee.new_employee, employeeModel,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "成功。");
+									modal.modal('hide');
+									loadDeptTree();
+									//reloadEmployees();
+								} else {
+									$.showErrorGritter(actionText + "失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-employee-info";
+				//日期
+				$(formContainer + " .date-picker").val($.timeNow().Format("yyyy-MM-dd"));
+				$(formContainer + " .date-picker").datetimepicker({
+					startView: '2',
+					minView: '2',
+					viewSelect: 'decade',
+					language: 'zh-CN', //汉化 
+					autoclose: true, //选择日期后自动关闭 
+					format: "yyyy-mm-dd"
+				});
+				$(formContainer + " .form-control-now-address").click(function() {
+					locationEmployeeAddr(formContainer, $(this).text(), true);
+				});
+				var employeeController = new Controller(formContainer);
+				//身份证号输入后自动显示出生日期
+				$(formContainer + " .employee-id-card").blur(function() {
+					var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+					if(reg.test($(this).val()) === false) {
+						$.showErrorGritter("身份证号码不合法，请检查！")
+						return false;
+					}
+
+					//获取出生日期
+					var birth = $(this).val().substring(6, 10) + "-" + $(this).val().substring(10, 12) + "-" + $(this).val().substring(12, 14);
+					$(formContainer + " .employee-birth-date").val(birth);
+				});
+				employeeController.set({
+					dept_name: selectRealDeptName
+				});
+				//部门下所有职位
+				$(formContainer + " .form-control-employee-posts").empty();
+				$(formContainer + " .form-control-employee-posts").append("<option value=''></option>");
+
+				var tmpDepas = convertToDepaListFormTree(deptsJSON);
+				for(var i in tmpDepas) {
+					var deptData = tmpDepas[i];
+					if(deptData.depa_parent_id == selectRealDeptId &&
+						deptData.depa_type == 1) {
+						$(formContainer + " .form-control-employee-posts").append("<option value='" + deptData.depa_name + "'>" + deptData.depa_name + "</option>");
+					}
+				}
+				$(formContainer + " .form-control-employee-posts").change(function() {
+					$(formContainer + " .form-control-employee-posts").next().val($(this).val());
+					$(formContainer + " .form-control-employee-posts").next().trigger("change");
+				});
+				//职位级别
+				$.loadEmployeePostLevelData(function(levelDatas) {
+					for(var i in levelDatas) {
+						var levelData = levelDatas[i];
+						$(formContainer + " .form-control-post_level").append("<option value='" + levelData.code_tree + "'>" + levelData.code_name + "</option>");
+					}
+					$(formContainer + " .form-control-post_level").trigger("change");
+				});
+				//修改现住址
+				$(formContainer + " input[bind='employee_now_address']").change(function() {
+					var tmpAddr = $(this).val();
+					$(formContainer + " .form-control-now-address").text(tmpAddr);
+					//viewPointByKeyword(formContainer, tmpAddr);
+				});
+			}
+			var myLocationPoint = {},
+				tempLocationPoint = {},
+				locationAddrCn = "";
+
+			function locationEmployeeAddr(formContainer, cityName, canSearch) {
+				var windowWidth = $(document).outerWidth(true);
+				var modalIdOfLocation = $.modal({
+					width: parseInt(windowWidth) - 100,
+					shownCallback: function(modal) {
+						initMap(formContainer, mapFormContainer, cityName, canSearch)
+					}
+				}).showOfLarge("定位", ".location-employee-addr", function() {
+					if(canSearch) {
+						$(formContainer + " .form-control-now-address").val(locationAddrCn).text(locationAddrCn);
+					}
+					myLocationPoint = tempLocationPoint;
+					//myLocationPoint
+					$("#" + modalIdOfLocation).modal("hide");
+				});
+				var mapFormContainer = "#" + modalIdOfLocation;
+			}
+			var initMap = function(formContainer, mapFormContainer, cityName, canSearch) {
+				var tmpId = $.uuid();
+				mapFormContainer = mapFormContainer + " .modal-body";
+				$(mapFormContainer + " #pnlLocation").attr("id", tmpId);
+				//map
+				map = new BMap.Map(tmpId);
+				//default beijing
+				var point = new BMap.Point(116.331398, 39.897445);
+				map.centerAndZoom(point, 15);
+				map.enableScrollWheelZoom();
+				if(cityName) {
+					viewPointByKeyword(mapFormContainer, cityName, canSearch);
+					$(mapFormContainer + " .location-search input").attr("value", cityName);
+				} else {
+					var geolocation = new BMap.Geolocation();
+					geolocation.getCurrentPosition(function(r) {
+						if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+							if(myLocationPoint.employee_location_lat && myLocationPoint.employee_location_lon) {
+								point.lat = myLocationPoint.employee_location_lat;
+								point.lng = myLocationPoint.employee_location_lon;
+							} else {
+								point = r.point;
+								tempLocationPoint.employee_location_lat = point.lat;
+								tempLocationPoint.employee_location_lon = point.lng;
+							}
+							getAddressByPoint(point, (mapFormContainer), canSearch, setMapMarker);
+						} else {
+							//定位失败 定位到城市
+							//new BMap.LocalCity().get(function(result) {
+							//	map.setCenter(result.name);
+							//});
+							viewPointByKeyword(mapFormContainer, "北京", canSearch);
+						}
+					}, {
+						enableHighAccuracy: false
+					});
+				}
+				if(canSearch) {
+					$(mapFormContainer + " .location-search a.btn").click(function() {
+						var keyWord = $(this).prev().val();
+						viewPointByKeyword(mapFormContainer, keyWord, canSearch);
+					});
+				} else {
+					$(mapFormContainer + " .location-search").remove();
+				}
+			};
+			var getAddressByPoint = function(pt, showContainer, canSearch, callback) {
+				var gc = new BMap.Geocoder();
+				gc.getLocation(pt, function(rs) {
+					var addComp = rs.addressComponents;
+					var address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+					locationAddrCn = address;
+					$(showContainer + " .location-search input").text(address).val(address);
+					if(callback) callback(pt, showContainer, canSearch, locationAddrCn)
+				});
+			};
+			var viewPointByKeyword = function(mapFormContainer, keyword, canSearch) {
+				var localSearch = new BMap.LocalSearch(map);
+				localSearch.enableAutoViewport();
+				localSearch.setSearchCompleteCallback(function(searchResult) {
+					map.clearOverlays();
+					var poi = searchResult.getPoi(0);
+					if(!poi) {
+						$.showErrorGritter("该地址定位失败，请检查");
+						return false;
+					}
+					var pt = poi.point;
+					//保存位置信息
+					tempLocationPoint.employee_location_lat = pt.lat
+					tempLocationPoint.employee_location_lon = pt.lng;
+					getAddressByPoint(pt, (mapFormContainer), canSearch, setMapMarker);
+					//poi.point
+					//setMapMarker(pt, mapFormContainer,canSearch,locationedAddr);
+				});
+				localSearch.search(keyword);
+			};
+			var setMapMarker = function(point, mapFormContainer, canSearch, locationedAddr) {
+				var marker = new BMap.Marker(point);
+				//getAddressByPoint(point, mapFormContainer,canSearch,setMapMarker);
+				var addrs = "";
+				if(canSearch) {
+					marker.enableDragging();
+					marker.addEventListener("dragend", function(e) {
+						var pt = e.point;
+						tempLocationPoint.employee_location_lat = pt.lat
+						tempLocationPoint.employee_location_lon = pt.lng;
+						getAddressByPoint(pt, (mapFormContainer), canSearch, setMapMarker);
+					})
+					//					var label = new BMap.Label("拖动图标可以定位", {
+					//						offset: new BMap.Size(20, -10)
+					//					});
+				}
+				map.clearOverlays();
+				if(!addrs) addrs = locationedAddr;
+				if(canSearch) {
+					var label = new BMap.Label(addrs + "<br>(拖动图标可以定位)", {
+						offset: new BMap.Size(20, -10)
+					});
+				} else {
+					var label = new BMap.Label(addrs, {
+						offset: new BMap.Size(20, -10)
+					});
+				}
+				marker.setLabel(label);
+				map.addOverlay(marker);
+				$(mapFormContainer + " .form-inline .BMap_Marker").css("min-width", "300px");
+				map.panTo(point);
+			};
+			//查看员工
+			function openEmployeeInfoPop(id) {
+				if((!$(grid).isSelectedRowForjqGrid() && !id)) {
+					$.showErrorGritter("请先选择要查看的员工。");
+					return false;
+				}
+				var rowIndex = $(grid).getJqGridRowIndexByField("employee_id", id) || $(grid).jqGrid('getGridParam', 'selrow');
+				if(!rowIndex) {
+					return false;
+				}
+				var changeContactFlag = false,
+					changePostFlag = false;
+				var tmpEmployeeData = JSON.parse($(grid).jqGrid('getRowData', rowIndex).employee);
+				//$.fillObjectEmptyField(tmpEmployeeData);
+				var actionText = "员工档案";
+				var modalId = $.modal({
+					width: 800,
+					showFooter: false,
+					shownCallback: function(modalId) {},
+					closeCallback: function() {
+						if(changePostFlag)
+							loadDeptTree();
+						if(changeContactFlag)
+							reloadEmployees();
+					}
+				}).show(actionText, ".pnl-employee-view-info",
+					function(modal) {
+
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-employee-view-info";
+				$(formContainer + " .employee-name-container").attr("title", tmpEmployeeData.employee_name)
+				//日期
+				$(formContainer + " .date-picker").datepicker({
+					language: "zh-CN",
+					autoclose: true,
+					format: "yyyy-mm-dd"
+				});
+				var employeeController = new Controller(formContainer);
+				employeeController.set(tmpEmployeeData);
+				mod = employeeController;
+				singlerEmployeesData = tmpEmployeeData;
+				//writeData(formContainer);
+				//职务列表
+				var postArr = [];
+				for(var i in deptsJSON) {
+					var deptData = deptsJSON[i];
+					if(deptData.parent_depa_tree_code == tmpEmployeeData.depa_id &&
+						deptData.depa_type == 1) {
+						postArr.push(deptData.depa_name);
+					}
+				}
+				$(formContainer + " input[bind='post_name']").attr("data-datasource", postArr.join(","));
+				initTextboxHasDataSource(function(val) {});
+				//职位级别
+				$.loadEmployeePostLevelData(function(levelDatas) {
+					for(var i in levelDatas) {
+						var levelData = levelDatas[i];
+						$(formContainer + " .form-control-post_level").append("<option value='" + levelData.code_tree + "'>" + levelData.code_name + "</option>");
+					}
+					$(formContainer + " .form-control-post_level").val(tmpEmployeeData.employee_level);
+					$(formContainer + " .form-control-post_level").trigger("change");
+				});
+				var mapIsInit = false;
+				$(formContainer + " .tab-pane").removeClass("active").first().addClass("active");
+				if($("#" + modalId + " ul[role='tablist']").length > 0) {
+					$("#" + modalId + " ul[role='tablist'] a[role='tab']").click(function() {
+						$("#" + modalId + " div[role='tabpanel']").removeClass("active");
+						$("#" + modalId + " div[role='tabpanel']#" + $(this).attr("aria-controls")).addClass("active");
+						if(!mapIsInit && $(this).attr("aria-controls") == "tab-contact") {
+							myLocationPoint.employee_location_lat = tmpEmployeeData.employee_location_lat;
+							myLocationPoint.employee_location_lon = tmpEmployeeData.employee_location_lon;
+							mapIsInit = true;
+						}
+					});
+				}
+				$(formContainer + " span.form-control-now-address").click(function() {
+					locationEmployeeAddr(formContainer, $(this).text(), false);
+				});
+				//员工状态
+				$.ajaxGet(SAASAPIS.BS.company.employee.status.replace("{id}", tmpEmployeeData.employee_id), function(response) {
+					if(response.code == 0) {
+						//success
+						$(formContainer + " .table-status tbody").empty();
+						var employeeStatusList = response.data.rows;
+						for(var i in employeeStatusList) {
+							var employeeStatusData = employeeStatusList[i];
+							var status_cn = "";
+							if(employeeStatusData.employee_status == 1) {
+								status_cn = "试用";
+							}
+							if(employeeStatusData.employee_status == 3) {
+								status_cn = "转正";
+							}
+							if(employeeStatusData.employee_status == 7) {
+								status_cn = "离职";
+							}
+							$(formContainer + " .table-status tbody").append("<tr><td>" + status_cn + "</td><td>" +
+								$.convertToDate4Unix(employeeStatusData.change_date).Format("yyyy-MM-dd") +
+								"</td><td>" + employeeStatusData.change_cause + "</td><td>" + employeeStatusData.change_handler_name + "</td></tr>");
+						}
+					} else {
+						$.showErrorGritter("加载员工状态失败：" + response.msg);
+					}
+				});
+				$(formContainer + " a[group]").click(function() {
+					var group = $(this).attr("group");
+					var idCardStr = $(formContainer + " .employee-id-card").next().text();
+					var birthDayStr = idCardStr.substring(6, 10) + "-" + idCardStr.substring(10, 12) + "-" + idCardStr.substring(12, 14);
+					$(formContainer + " .employee-birth-date").text(birthDayStr);
+					$(formContainer + " .employee-birth-date").val();
+					$(formContainer + " input.form-control-now-address").unbind("click").click(function() {
+						var locationText = $(this).text();
+						if(!locationText)
+							locationText = $(formContainer + " input[bind=employee_now_address]").val();
+						locationEmployeeAddr(formContainer, locationText, true);
+					});
+					initFormToEditMode(formContainer, group);
+				});
+				$(formContainer + " .btn-status-add").click(function() {
+					openStatusPop(formContainer, tmpEmployeeData.employee_id);
+				});
+				//身份证号码输入框失焦事件  如果出生日期为空则自动填写出生日期
+				$(formContainer + " .employee-id-card").blur(function() {
+					//if(!$(formContainer + " .employee-birth-date").val()) {
+					var birth = $(this).val().substring(6, 10) + "-" + $(this).val().substring(10, 12) + "-" + $(this).val().substring(12, 14);
+					$(formContainer + " .employee-birth-date").val(birth);
+					//}
+				});
+				//修改基础档案
+				$(formContainer + " .btn-post-info").click(function() {
+					if(!inputValidateForGritter(formContainer + " #tab-info")) {
+						return false;
+					}
+					var empInfoData = employeeController.getJSON();
+					//empInfoData.employee_entry = $.convertToDate(empInfoData.employee_entry).getTimestamp();
+					empInfoData.employee_birth_date = $(formContainer + " .employee-birth-date").val();
+					empInfoData.employee_post = empInfoData.post_name;
+					empInfoData.employee_level_cn = $(formContainer + " .form-control-post_level option[value='" + empInfoData.employee_level + "']").text();
+					$.ajaxPut(SAASAPIS.BS.company.employee.profile_base.replace("{id}", tmpEmployeeData.employee_id), empInfoData,
+						function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter("基础档案保存成功。");
+								singlerEmployeesData = empInfoData;
+								employeeController.set(empInfoData);
+								initFormToShowMode('info');
+								changePostFlag = empInfoData.employee_post != tmpEmployeeData.employee_post;
+								changeContactFlag = true;
+								if($.cookie("_u_id") == empInfoData.employee_account_id) {
+									$.removeCookie("_u_name", {
+										path: "/"
+									});
+									$.cookie("_u_name", empInfoData.employee_name, {
+										path: "/"
+									});
+								}
+							} else {
+								$.showErrorGritter("基础档案保存失败：" + response.msg);
+							}
+						});
+				});
+				//修改联系方式
+				$(formContainer + " .btn-post-contact").click(function() {
+					if(!inputValidateForGritter(formContainer + " .tab-contact")) {
+						return false;
+					}
+					var empInfoData = employeeController.getJSON();
+					//定位
+					empInfoData.employee_location_cn = $(formContainer + " input[bind='employee_location_cn']").val();
+					empInfoData.employee_location_lat = myLocationPoint.employee_location_lat;
+					empInfoData.employee_location_lon = myLocationPoint.employee_location_lon;
+					console.log(empInfoData)
+					$.ajaxPut(SAASAPIS.BS.company.employee.profile_contact.replace("{id}", tmpEmployeeData.employee_id), empInfoData,
+						function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter("联系方式保存成功。");
+								console.log(empInfoData)
+								singlerEmployeesData = empInfoData;
+								employeeController.set(empInfoData);
+								initFormToShowMode('info');
+								changeContactFlag = true;
+								myLocationPoint = {};
+							} else {
+								$.showErrorGritter("联系方式保存失败：" + response.msg);
+							}
+						});
+				});
+				//修改现住址位置
+				$(formContainer + " input[bind='employee_location_cn']").change(function() {
+					var tmpAddr = $(this).val();
+					viewPointByKeyword(formContainer, tmpAddr);
+				});
+			}
+			//写入数据
+			function writeData() {
+				console.log(singlerEmployeesData)
+				mod.set(singlerEmployeesData);
+			}
+			//信息可编辑状态
+			function initFormToEditMode(formContainer, group) {
+				var groupSelector = formContainer + " div[group='" + group + "']";
+				$(groupSelector + " input.form-control," + groupSelector + " select.form-control").removeClass("hide");
+				$(groupSelector + " span.form-control").addClass("hide");
+				if(group == "info") {
+					$(groupSelector + " .form-group-info-btns").removeClass("hide");
+					$(groupSelector + " .form-control-sex").removeClass("hide");
+				} else if(group == "contact") {
+					$(groupSelector + " .form-group-contact-btns").removeClass("hide");
+				}
+				$(formContainer + " .date-picker").each(function() {
+					var dateStr = $(this).val();
+					if(dateStr.indexOf("0000-00-00") >= 0) $(this).val("");
+				});
+
+			}
+			//信息展示状态
+			function initFormToShowMode(group, type) {
+				var groupSelector = ".model-employee-view-info";
+				if(type) {
+					writeData();
+				}
+				$(groupSelector + " input.form-control," + groupSelector + " select.form-control").addClass("hide");
+				$(groupSelector + " span.form-control").addClass("hide");
+				$(groupSelector + " .form-control-sex").addClass("hide");
+				$(groupSelector + " span.form-control").removeClass("hide");
+				$(groupSelector + " .form-group-info-btns").addClass("hide");
+				$(groupSelector + " .form-group-contact-btns").addClass("hide");
+			}
+			//添加员工状态
+			function openStatusPop(parentFormContainer, employee_id) {
+				var actionText = "更改员工状态";
+				var uName = $.cookie("_u_name") != "null" ? $.cookie("_u_name") : "管理员";
+				var modalId = $.modal().showOfMini(actionText, ".pnl-status-info",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var statusModel = statusController.getJSON();
+						if(daysBetween(new Date(statusModel.change_date).format("yyyy-MM-dd"), (new Date()).format("yyyy-MM-dd"), true) > 0) {
+							$.showErrorGritter("变更日期不能超过今天！");
+							return false;
+						}
+						statusModel.employee_id = employee_id;
+						statusModel.change_date = $.convertToDate(statusModel.change_date).getTimestamp();
+						$.ajaxPost(SAASAPIS.BS.company.employee.new_status.replace("{id}", employee_id), statusModel,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									var status_cn = "";
+									if(statusModel.employee_status == 1) {
+										status_cn = "试用";
+									}
+									if(statusModel.employee_status == 3) {
+										status_cn = "转正";
+									}
+									if(statusModel.employee_status == 7) {
+										status_cn = "离职";
+									}
+									$(parentFormContainer + " .table-status tbody").append("<tr><td>" + status_cn + "</td><td>" +
+										$.convertToDate4Unix(statusModel.change_date).Format("yyyy-MM-dd") + "</td><td>" + statusModel.change_cause + "</td><td>" + uName + "</td></tr>");
+									$(parentFormContainer + " .header span[bind='employee_status_cn']").text(status_cn);
+									$.showSuccessGritter(actionText + "成功。", {
+										clear: true
+									});
+									modal.modal('hide');
+								} else {
+									$.showErrorGritter(actionText + "失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-status-info";
+				//日期
+				$(formContainer + " .date-picker").datepicker({
+					clearBtn: true,
+					todayHighlight: true,
+					language: "zh-CN",
+					autoclose: true,
+					format: "yyyy-mm-dd"
+				});
+				var statusController = new Controller(formContainer);
+				$(formContainer + " .form-control-oper").text(uName);
+			}
+			//开通帐号
+			function openAddAccountPop() {
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择员工后再开通帐号。");
+					return false;
+				}
+				var actionText = "开通账户";
+				var modalId = $.modal({
+					width: 700
+				}).show(actionText, ".pnl-account-info",
+					function(modal) {
+						if(surplusCount < 0) {
+							$.showErrorGritter("账户可用数量不足，重新选择。");
+							return false;
+						}
+						var selPwdType = $(formContainer + " .form-control-radio:checked").val();
+						var pwd = $(formContainer + " .form-acc-pwd").val();
+						if(selPwdType == 1 && (!pwd || pwd.length < 6)) {
+							$.showErrorGritter("请录入密码，密码长度至少6位。");
+							$(formContainer + " .form-acc-pwd").focus();
+							return false;
+						}
+						$.ajaxPost(SAASAPIS.BS.company.employee.accounts, {
+								employee_ids: selectEmployeeIds,
+								password: pwd,
+								password_type: selPwdType
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "成功。");
+									modal.modal('hide');
+									reloadEmployees();
+								} else {
+									$.showErrorGritter(actionText + "失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-account-info";
+				var statusController = new Controller(formContainer);
+				$(formContainer + " .form-control-radio").change(function() {
+					var selVal = $(formContainer + " input[name='rdPwd']:checked").val();
+					if(selVal == 1) { //手动
+						$(formContainer + " .form-acc-pwd").removeClass("hide");
+					} else { //默认
+						$(formContainer + " .form-acc-pwd").addClass("hide");
+					}
+				});
+				var surplusCount = -1;
+				var selectEmployeeIds = $(grid).getSelectRowIdsForjqGrid("employee_id");
+				$(formContainer + " .label-select-count").text(selectEmployeeIds.length);
+				$.ajaxGet(SAASAPIS.BS.company.static_count, function(response) {
+					if(response.code == 0) {
+						//success
+						$(formContainer + " .box-shop-num").text(response.data.all_account_count);
+						$(formContainer + " .box-ydredge-num").text(response.data.used_account_count);
+						$(formContainer + " .box-ndredge-num").text(response.data.not_used_account_count);
+						surplusCount = response.data.not_used_account_count - selectEmployeeIds.length;
+					} else {
+						$.showErrorGritter("查询企业账户数量失败：" + response.msg);
+					}
+				});
+				var selectNameStr = "";
+				for(var i in selectEmployeeIds) {
+					if(i != selectEmployeeIds.length - 1) {
+						selectNameStr += $(grid).getRowData4JqGrid("employee_id", selectEmployeeIds[i]).employee_name + "，";
+					} else {
+						selectNameStr += $(grid).getRowData4JqGrid("employee_id", selectEmployeeIds[i]).employee_name;
+					}
+				}
+				$(formContainer + " .select-name-span").text(selectNameStr);
+			}
+			//调换部门
+			function openChangeDeptPop(parentFormContainer) {
+				console.log($(".pnl-changedept-info").html());
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择员工后再调换部门。");
+					return false;
+				}
+				var actionText = "调换部门";
+				var modalId = $.modal({
+					height: $(window).height() - 200
+				}).show(actionText, ".pnl-changedept-info",
+					function(modal) {
+						var tmpSelectDeptId = $(formContainer + " .tree input[type=radio]:checked").val();
+						if(!tmpSelectDeptId) {
+							$.showErrorGritter("请先选择调换的新部门。");
+							return false;
+						}
+						$.ajaxPatch(SAASAPIS.BS.company.employee.change_dept.replace("{id}", tmpSelectDeptId), {
+								employee_ids: $(grid).getSelectRowIdsForjqGrid("employee_id")
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "成功。");
+									modal.modal('hide');
+									loadDeptTree();
+									reloadEmployees();
+								} else {
+									$.showErrorGritter(actionText + "失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-changedept-info";
+				var deptList = deptsJSON;
+				var liDom = $("<li></li>");
+				var deptData = deptList[0];
+				liDom.data("dept", deptData);
+				if(deptList[0].depas.length > 0)
+					liDom.append("<p><i class=\"fa fa-minus-square-o icon-collapse\"></i><label code='" + deptData.depa_tree_code + "' data-istop='true' title='" + deptData.depa_name + " (" + deptData.depa_count + ") " + (deptData.master_leader_name ? "," + deptData.master_leader_name : deptData.master_leader_name) + "'>" + "<span class='css-overflow-hidden depa-name'>" + deptData.depa_name + "</span>" + " (" + deptData.depa_count + ") <span class='css-overflow-hidden'>" + (deptData.master_leader_name ? "," + deptData.master_leader_name : deptData.master_leader_name) + "</span></label></p>");
+				else
+					liDom.append("<label code='" + deptData.depa_tree_code + "' data-istop='true'><span class='depa-name'>" + deptData.depa_name + "</span> (" + deptData.depa_count + ") <span class='css-overflow-hidden'>" + deptData.master_leader_name ? "," + deptData.master_leader_name : deptData.master_leader_name + "</span></label>");
+				$(liDom).find("label").append("&nbsp;&nbsp;<span class=\"btns\"><a class='' href=\"javascript:;\" onclick=\"openSetDeptLeader(this);\">设置负责人</a>" +
+					"</span>");
+				appendDeptTreeNode(deptList[0].depas, deptData.depa_tree_code, liDom);
+				//tree for change dept
+				var treeDom4ChangeDept = formContainer + " .tree";
+				var liDomOfChange = $("<li></li>");
+				liDomOfChange.data("dept", deptData);
+				liDomOfChange.append("<label> <input type=\"radio\" class='form-control-radio' name=\"rdChangeToDept\" value='" + deptData.depa_tree_code + "'> " + deptData.depa_name + " </label>");
+				$(treeDom4ChangeDept).append(liDomOfChange);
+				appendDeptTreeNode4ChangeDept(deptList[0].depas, deptData.depa_tree_code, liDomOfChange);
+			}
+		</script>
+	</body>
+
+</html>

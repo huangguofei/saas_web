@@ -1,0 +1,2162 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>客服</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.left-menu {
+				border-right: 1px solid #ccc;
+				border-bottom: 1px solid #ccc;
+				top: 59px;
+				bottom: 0;
+			}
+			
+			.main-wrap {
+				height: 100%;
+			}
+			
+			.search-input {
+				padding-left: 15px;
+				position: relative;
+			}
+			
+			.left-menu .fa-search {
+				position: absolute;
+				top: 5px;
+				right: 15px;
+			}
+			
+			.people-list-container .whick-people {
+				width: 96%;
+				padding: 3px 5px;
+				position: relative;
+			}
+			
+			.people-list-container .whick-people .dialog-right-mouse-operator {
+				position: absolute;
+				background-color: #fff;
+				top: 20px;
+				right: 20px;
+				width: 50%;
+				box-shadow: 0px 6px 12px #f2f2f2;
+				z-index: 100;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+			}
+			
+			.people-list-container .whick-people .dialog-right-mouse-operator span {
+				display: block;
+				padding: 10px;
+			}
+			
+			.people-list-container .whick-people img {
+				float: left;
+				vertical-align: top;
+				width: 20%;
+				height: 46px;
+			}
+			
+			.people-list-container .whick-people .text-message span {
+				padding: 0 5px;
+			}
+			
+			.people-list-container .whick-people .text-message {
+				position: relative;
+			}
+			
+			.people-list-container .whick-people .text-message .latest-message-time {
+				position: absolute;
+				right: -15px;
+				top: 0px;
+			}
+			
+			.people-list-container .whick-people .text-message .unread-count {
+				position: absolute;
+				right: 8px;
+				top: 23px;
+			}
+			
+			.css-overhidden {
+				padding: 0;
+				display: inline-block;
+				max-width: 90px;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				vertical-align: middle;
+				min-height: 20px;
+				min-width: 51px;
+			}
+			
+			.people-list-container .whick-people .text-message i {
+				float: right;
+				width: 80%;
+				margin-top: 6px;
+				border-bottom: 1px solid #F2F2F2;
+				display: inline-block;
+			}
+			
+			.select-talk-object {
+				width: 100%;
+				padding: 5px;
+				border-bottom: 1px solid #ccc;
+				border-top: 1px solid #ccc;
+			}
+			
+			.select-talk-object i:first-child {
+				display: inline-block;
+				margin: 0 40% 0 50px;
+			}
+			
+			.company-list-container {}
+			
+			div:after {
+				content: "";
+				clear: both;
+				display: block;
+			}
+			
+			.which-company-name {
+				padding: 10px 5px;
+			}
+			
+			.which-company .which-company-name span {
+				display: inline-block;
+				width: 80%;
+			}
+			
+			.which-company .which-company-leader img {
+				float: left;
+				vertical-align: top;
+				width: 20%;
+				height: 46px;
+			}
+			
+			.which-company .which-company-leader span {
+				line-height: 46px;
+				padding-left: 5px;
+			}
+			
+			.which-company-leader i {
+				float: right;
+				margin-right: 10%;
+				width: 70%;
+				margin-top: 6px;
+				border-bottom: 1px solid #F2F2F2;
+				display: inline-block;
+			}
+			
+			.unread-count {
+				border-radius: 50%;
+				border: 1px solid #D00;
+				background-color: #D00;
+				color: #fff;
+				display: inline-block;
+				width: 18px;
+				line-height: 16px;
+				text-align: center;
+				margin-left: 15px;
+			}
+			
+			.which-company-leader .people-company {
+				display: inline-block;
+				width: 80%;
+			}
+			
+			.which-company-leader .css-overhidden {
+				padding: 0 5px;
+				max-width: 95px;
+			}
+			
+			.englnish-case {
+				width: 5px;
+				position: fixed;
+				left: 13%;
+				top: 140px;
+			}
+			
+			.company-list-container {
+				position: relative;
+			}
+			
+			.englnish-case a,
+			.englnish-case a:hover,
+			.englnish-case a:focus {
+				color: #D1D1D1;
+				display: inline-block;
+				margin-bottom: 5px;
+				font-weight: bold;
+				padding: 3px;
+			}
+			
+			.talk-people-container {
+				min-height: 807px;
+				max-height: 807px;
+				overflow-y: scroll;
+			}
+			
+			.which-people-chart-dialog-container {
+				position: relative;
+				height: 100%;
+			}
+			
+			.which-people-chart-dialog {
+				height: 98%;
+			}
+			
+			.which-people-chart-dialog .chart-dialog-header {
+				border-bottom: 1px solid #ccc;
+				height: 10%;
+			}
+			
+			.which-people-chart-dialog .chart-dialog-header .chart-dialog-header-left {
+				float: left;
+				width: 20%;
+				margin-left: 20px;
+			}
+			
+			.which-people-chart-dialog .chart-dialog-header .chart-dialog-header-left img {
+				width: 50px;
+				height: 50px;
+				vertical-align: top;
+				float: left;
+			}
+			
+			.which-people-chart-dialog .chart-dialog-header .chart-dialog-header-left .chart-dialog-header-left-detail .chart-to-people-name {
+				padding: 10px;
+				font-weight: bold;
+				font-size: 15px;
+			}
+			
+			.which-people-chart-dialog .chart-dialog-header .chart-dialog-header-left .chart-dialog-header-left-detail .chart-to-people-company {
+				display: block;
+				margin-top: -5px;
+				margin-left: 50px;
+				padding: 10px;
+				color: #999;
+				font-size: 15px;
+			}
+			
+			.which-people-chart-dialog .chart-dialog-header .chart-dialog-header-right {
+				float: right;
+				margin-right: 30px;
+			}
+			
+			.which-people-chart-dialog .chart-dialog-header .chart-dialog-header-right a {
+				display: inline-block;
+				width: 45px;
+				height: 54px;
+			}
+			
+			.which-people-chart-dialog .chart-dialog-header .chart-dialog-header-right a.focus {
+				border-bottom: 3px solid #169BD5;
+			}
+			
+			.which-company-leader:hover,
+			.which-company-leader.focus,
+			.whick-people:hover,
+			.whick-people.focus {
+				background-color: #f2f2f2;
+				cursor: default;
+			}
+			
+			.receive-one-message>img {
+				float: left;
+				width: 50px;
+				height: 50px;
+			}
+			
+			.receive-one-message .message-main {
+				margin-left: 70px;
+				position: relative;
+				margin-right: 50px;
+			}
+			
+			.receive-one-message .message-main i {
+				position: absolute;
+				left: -9px;
+				top: -3px;
+				background-color: #fff;
+				color: #ccc;
+				height: 20px;
+			}
+			
+			.receive-one-message .message-main .message-detail {
+				display: inline-block;
+				border: 1px solid #ccc;
+				min-height: 50px;
+				border-radius: 5px;
+				padding: 10px 0 10px 10px;
+			}
+			
+			.chart-dialog-message {
+				position: relative;
+				padding-top: 30px;
+				height: 600px;
+				overflow-y: scroll;
+				border-bottom: 1px solid #ccc;
+			}
+			
+			.dialog-this-day-time {
+				position: fixed;
+				top: 130px;
+				text-align: center;
+				width: 100%;
+			}
+			
+			.dialog-this-day-time span {
+				display: block;
+				margin: 0 auto;
+			}
+			
+			.receive-one-message-container,
+			.send-one-message-container {
+				margin: 30px 0;
+			}
+			
+			.send-one-message-container>div {
+				float: right;
+			}
+			
+			.send-one-message {
+				max-width: 97%;
+			}
+			
+			.send-one-message .message-detail,
+			.receive-one-message .message-detail {
+				background-color: #F0F9FF;
+			}
+			
+			.send-one-message>img {
+				float: right;
+				width: 50px;
+				height: 50px;
+			}
+			
+			.send-one-message .message-main {
+				/*margin-right: 70px;*/
+				position: relative;
+				margin-right: 70px;
+				margin-left: 10px;
+			}
+			
+			.send-one-message-container .send-message-status {
+				margin-left: 16px;
+				margin-top: 10px;
+			}
+			
+			.send-one-message .message-main>i {
+				position: absolute;
+				right: -9px;
+				top: -1px;
+				background-color: #fff;
+				color: #ccc;
+				height: 20px;
+			}
+			
+			.send-one-message .message-main .message-detail {
+				float: right;
+				display: inline-block;
+				border: 1px solid #ccc;
+				min-height: 50px;
+				border-radius: 5px;
+				padding: 10px 5px 10px 10px;
+			}
+			
+			.chart-bottom-input-header {
+				margin-top: 15px;
+				height: 25px;
+				position: relative;
+			}
+			
+			.chart-bottom-input-header .quick-input {
+				position: absolute;
+				top: -155px;
+				width: 300px;
+				border: 1px solid #ccc;
+				background-color: #fff;
+				left: 60px;
+				overflow-y: scroll;
+				display: none;
+			}
+			
+			.chart-bottom-input-header .quick-input span {
+				display: inline-block;
+				max-width: 250px;
+				margin: 5px;
+				cursor: pointer;
+			}
+			
+			.chart-bottom-input-header-left {
+				float: left;
+			}
+			
+			.chart-bottom-input-header-left>a,
+			.chart-bottom-input-header-left>i {
+				display: inline-block;
+				margin: 0 5px;
+			}
+			
+			.chart-bottom-input-header-right {
+				float: right;
+			}
+			
+			.chart-bottom-input-edit-area {
+				height: 130px;
+				outline: none;
+			}
+			
+			.btn-send-message {
+				float: right;
+			}
+			
+			.btn-send-message a,
+			.btn-send-message a:hover,
+			.btn-send-message a:focus {
+				display: inline-block;
+				width: 75px;
+				line-height: 36px;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				text-align: center;
+				color: #666;
+				text-decoration: none;
+			}
+			
+			.chart-dialog-file-header {
+				position: relative;
+			}
+			
+			.chart-dialog-file-header .chart-dialog-file-header-title {
+				display: inline-block;
+				width: 10%;
+				padding: 5px;
+				border-right: 1px solid #ccc;
+			}
+			
+			.chart-dialog-file-header .chart-dialog-file-header-count {
+				display: inline-block;
+				width: 10%;
+				padding: 5px;
+			}
+			
+			.chart-dialog-file-header input {
+				padding-left: 15px;
+				outline: none;
+			}
+			
+			.chart-dialog-file-header i {
+				position: absolute;
+				width: 5px;
+				top: 5px;
+				left: 20.5%;
+			}
+			
+			.file-num {
+				line-height: 50px;
+				margin-left: 10px;
+			}
+			
+			.file-search-text {
+				width: 250px;
+				float: right;
+				margin-top: 10px;
+				border-right: 0!important;
+				outline: none;
+			}
+			
+			.file-search-text:focus {
+				border: 1px solid #D5D5D5!important;
+				border-right: 0!important;
+			}
+			
+			.search-ico {
+				cursor: pointer;
+				font-size: 26px;
+				border: 1px solid #D5D5D5;
+				height: 28px;
+				margin-top: 10px;
+				border-left: 0;
+				background: #fff;
+				margin-left: 0px!important;
+				color: #C5C5C5;
+			}
+			
+			.file-content {
+				/*padding:0 10px;*/
+				max-height: 600px;
+				overflow-y: scroll;
+			}
+			
+			.file-nav {
+				zoom: 1;
+			}
+			
+			.file-nav:after {
+				content: ".";
+				height: 0;
+				clear: both;
+				display: block;
+				visibility: hidden;
+			}
+			
+			.file-nav li {
+				float: left;
+				line-height: 30px;
+				font-size: 16px;
+				border-left: 1px solid #ccc;
+				text-indent: 1rem;
+				color: #8C8C8C;
+			}
+			
+			.file-nav li:nth-child(2) {
+				cursor: pointer;
+			}
+			
+			.file-nav li:first-child {
+				border: 0;
+			}
+			
+			.file-nav li i {
+				margin-left: 30px;
+			}
+			
+			.file-nav li i.fa-sort-desc {
+				vertical-align: text-top;
+				margin-left: 30px;
+			}
+			
+			.file-nav li i.fa-sort-asc {
+				vertical-align: bottom;
+				margin-left: 30px;
+			}
+			
+			.file-list {
+				width: 100%;
+				margin-top: 10px;
+			}
+			
+			.file-list i {
+				font-size: 20px;
+				cursor: pointer;
+				margin-left: 5px;
+			}
+			
+			.file-list tr:hover {
+				background: #C6C9D0;
+			}
+			
+			.file-list td {
+				line-height: 50px;
+				text-indent: 1rem;
+				font-size: 16px;
+			}
+			
+			.file-list tr td:last-child {
+				text-indent: 0;
+			}
+			
+			.file-name {
+				display: inline-block;
+				width: 300px;
+				overflow: hidden;
+				/*自动隐藏文字*/
+				text-overflow: ellipsis;
+				/*文字隐藏后添加省略号*/
+				white-space: nowrap;
+			}
+			
+			.view-chart-history-container {
+				position: fixed;
+				bottom: 10px;
+				top: 58px;
+				right: -50%;
+				height: 100%;
+				width: 40%;
+				z-index: 100;
+				background-color: #fff;
+				border: 1px solid #ccc;
+				transition: all 0.5s linear;
+			}
+			
+			.fade-in {
+				right: 0;
+			}
+			
+			.view-chart-history-container .view-chart-history-content {
+				height: 100%;
+			}
+			
+			.view-chart-history-content-header {
+				padding: 5px 15px 5px 40%;
+				border-bottom: 1px solid #ccc;
+				height: 4%;
+			}
+			
+			.view-chart-history-content-header i {
+				float: right;
+			}
+			
+			.view-chart-history-content-body {
+				height: 86%;
+				max-width: 99%;
+				padding: 0 10px 20px 20px;
+				overflow-y: scroll;
+				position: relative;
+			}
+			
+			.key-word-search {
+				width: 97%;
+				height: 40px;
+				border: 1px solid #ccc;
+				position: absolute;
+				bottom: 95px;
+				left: 0;
+				padding: 5px 20px;
+				background-color: #fff;
+			}
+			
+			.key-word-search a,
+			.key-word-search a:hover,
+			.key-word-search a:focus {
+				display: inline-block;
+				width: 15%;
+				line-height: 30px;
+				text-align: center;
+				background-color: #fff;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				color: #333;
+				text-decoration: none;
+				margin-left: 20px;
+			}
+			
+			.this-chart-record-history-time span {
+				display: inline-block;
+				padding: 10px;
+			}
+			
+			.this-chart-record-history-time i {
+				display: inline-block;
+				border-bottom: 1px solid #ccc;
+				width: 43%;
+			}
+			
+			.view-chart-history-content-footer {
+				padding: 5px 0 5px 20px;
+				border-top: 1px solid #ccc;
+			}
+			
+			.view-chart-history-content-footer>div {
+				float: left;
+			}
+			
+			.comment {
+				width: 680px;
+				margin: 20px auto;
+				position: relative
+			}
+			
+			.comment h3 {
+				height: 28px;
+				line-height: 28px
+			}
+			
+			.com_form {
+				width: 100%;
+				position: relative
+			}
+			
+			.com_form p {
+				height: 28px;
+				line-height: 28px;
+				position: relative
+			}
+			
+			span.emotion {
+				width: 42px;
+				height: 20px;
+				background: url(icon.gif) no-repeat 2px 2px;
+				padding-left: 20px;
+				cursor: pointer
+			}
+			
+			span.emotion:hover {
+				background-position: 2px -28px
+			}
+			
+			.qqFace {
+				margin-top: 4px;
+				background: #fff;
+				padding: 2px;
+				border: 1px #dfe6f6 solid;
+			}
+			
+			.qqFace table td {
+				padding: 0px;
+			}
+			
+			.qqFace table td img {
+				cursor: pointer;
+				border: 1px #fff solid;
+			}
+			
+			.qqFace table td img:hover {
+				border: 1px #0066cc solid;
+			}
+			
+			#show {
+				width: 680px;
+				margin: 20px auto
+			}
+			
+			.view-chart-historyone-message {
+				margin-bottom: 10px;
+			}
+			
+			.view-chart-historyone-message span {
+				word-break: break-all;
+			}
+			
+			.view-chart-historyone-message .message-name {
+				display: inline-block;
+				margin-right: 10px;
+			}
+			
+			.datepicker-dropdown {
+				top: 70%!important;
+				left: 88%!important;
+			}
+			
+			.datepicker-dropdown:before {
+				content: '';
+				border-left: 7px solid transparent;
+				/*方框上部分背景颜色为透明*/
+				border-right: 7px solid transparent;
+				/*方框下部分背景为透明*/
+				border-top: 7px solid #C4C4C4;
+				/*箭头背景颜色*/
+				position: absolute;
+				/*绝对定位1*/
+				top: 248px;
+				/*距离顶部位置偏移量2*/
+				left: 40px;
+				/*距离左边位置偏移量3*/
+				/*123都是控制显示位置的*/
+				border-bottom: 0;
+			}
+			
+			.datepicker-dropdown:after {
+				content: '';
+				border-left: 6px solid transparent;
+				border-right: 6px solid transparent;
+				border-top: 6px solid #fff;
+				/*箭头背景颜色，覆盖前面的#eee颜色，使其颜色与整体颜色一致*/
+				position: absolute;
+				top: 248px;
+				left: 41px;
+				border-bottom: 0;
+			}
+			
+			.message-detail img {
+				width: auto;
+				height: auto;
+			}
+			
+			.uploaded-file-container {
+				position: relative;
+				padding-left: 0;
+			}
+			
+			.uploaded-file-operaters {
+				position: absolute;
+				display: inline-block;
+				top: 15px;
+				left: 55px;
+				min-width: 145px;
+			}
+			
+			.uploaded-file-container .uploaded-file-operaters a {
+				display: inline-block;
+				margin: 5px 5px 0 5px;
+				cursor: pointer;
+			}
+			
+			.history-message-detail {
+				margin: 5px 0 5px 20px;
+				display: inline-block;
+				max-width: 98%;
+				height: auto;
+				word-wrap: break-word;
+			}
+			
+			.history-message-detail-file {
+				border: 1px solid #ccc;
+				background-color: #fff;
+				padding: 10px 5px;
+				border-radius: 5px;
+				min-width: 200px;
+			}
+			
+			.history-message-detail-file img {
+				width: 40px!important;
+				height: 40px!important;
+			}
+			
+			.message-preview {
+				height: 20px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container">
+			<div class="remark">
+				<i class="fa fa-list-ol fa-2x"></i>
+				<span>*与企业会员沟通，为其服务</span>
+			</div>
+			<div class="content">
+				<div class="left-menu">
+					<!--搜索框-->
+					<div class="search-input" style="margin: 5px 0;">
+						<input type="text" style="width:96%" placeholder="搜索姓名、单位名称" />
+						<i class="fa fa-search fa-x"></i>
+					</div>
+					<!--选择按钮-->
+					<div class="select-talk-object">
+						<!--正在聊天的-->
+						<i class="fa fa-commenting-o fa-2x" index="people" style="color:#199ED8"></i>
+						<i class="fa fa-user fa-2x" index="company" style="color:#199ED8"></i>
+					</div>
+					<!--具体名单-->
+					<div class="talk-people-container">
+						<!--正在聊天的-->
+						<div index="people" style="height: 100%;" class="people-list-container">
+							<!--<div class="whick-people" data-id="">
+								<img src="" alt="头像" />
+								<div class="text-message">
+									<span class="people-company">张三(<span class="css-overhidden">重庆的方式噶速度发多少分撒旦法士大夫撒打发斯蒂芬艾视医药</span>)</span>
+									<span class="latest-message-time">13:00</span>
+									<span class="css-overhidden message-preview" style="max-width:150px;">好久开房间看撒地方能尽快撒的发南京凯撒的烦恼拉斯科技大富豪</span>
+									<span class="unread-count">2</span>
+									<i></i>
+								</div>
+								<div class="dialog-right-mouse-operator hide">
+									<span class="let-this-top">置顶会话</span>
+									<span class="delet-this">删除会话</span>
+								</div>
+							</div>
+							<div class="whick-people" data-id="">
+								<img src="" alt="头像" />
+								<div class="text-message">
+									<span class="people-company">张三(<span class="css-overhidden">重庆艾视医药</span>)</span>
+									<span class="latest-message-time">13:00</span>
+									<span class="css-overhidden message-preview" style="max-width:150px;">好久开房间看撒地方能尽快撒的发南京凯撒的烦恼拉斯科技大富豪</span>
+									<i></i>
+								</div>
+								<div class="dialog-right-mouse-operator hide">
+									<span class="let-this-top">置顶会话</span>
+									<span class="delet-this">删除会话</span>
+								</div>
+							</div>
+							<div class="whick-people" data-id="">
+								<img src="" alt="头像" />
+								<div class="text-message">
+									<span class="people-company">张三(<span class="css-overhidden">重庆艾视医药</span>)</span>
+									<span class="latest-message-time">13:00</span>
+									<span class="css-overhidden message-preview" style="max-width:150px;">好久开房间看撒地方能尽快撒的发南京凯撒的烦恼拉斯科技大富豪</span>
+									<i></i>
+								</div>
+								<div class="dialog-right-mouse-operator hide">
+									<span class="let-this-top">置顶会话</span>
+									<span class="delet-this">删除会话</span>
+								</div>
+							</div>
+							<div class="whick-people" data-id="">
+								<img src="" alt="头像" />
+								<div class="text-message">
+									<span class="people-company">张三(<span class="css-overhidden">重庆艾视医药</span>)</span>
+									<span class="latest-message-time">13:00</span>
+									<span class="css-overhidden message-preview" alt="好久开房间看撒地方能尽快撒的发南京凯撒的烦恼拉斯科技大富豪" style="max-width:150px;">好久开房间看撒地方能尽快撒的发南京凯撒的烦恼拉斯科技大富豪</span>
+									<i></i>
+								</div>
+								<div class="dialog-right-mouse-operator hide">
+									<span class="let-this-top">置顶会话</span>
+									<span class="delet-this">删除会话</span>
+								</div>
+							</div>-->
+						</div>
+						<!--企业名单-->
+						<div style="height: 100%;" index="company" class="company-list-container hide">
+							<!--<div class="which-company" id="caseA">
+								<div class="which-company-name">
+									<i class="fa fa-caret-right fa-2x" style="color:#199ED8;"></i>
+									<span style="border-bottom:1px solid #f2f2f2;">AA公司</span>
+								</div>
+								<div class="which-company-leader hide" data-company-id="1" data-emp-id="11" style="margin-top: 5px;">
+									<img src="" alt="头像" />
+									<span class="people-company">张三(<span class="css-overhidden">重庆艾视医药的说法是德国法撒旦法撒旦法士大夫阿斯蒂芬</span>)</span>
+									<i></i>
+								</div>
+							</div>-->
+							<!--字母索引-->
+							<div class="englnish-case">
+								<a href="#caseA">A</a>
+								<a href="#caseB">B</a>
+								<a href="#caseC">C</a>
+								<a href="#caseD">D</a>
+								<a href="#caseE">E</a>
+								<a href="#caseF">F</a>
+								<a href="#caseG">G</a>
+								<a href="#caseH">H</a>
+								<a href="#caseI">I</a>
+								<a href="#caseJ">J</a>
+								<a href="#caseK">K</a>
+								<a href="#caseL">L</a>
+								<a href="#caseM">M</a>
+								<a href="#caseN">N</a>
+								<a href="#caseO">O</a>
+								<a href="#caseP">P</a>
+								<a href="#caseQ">Q</a>
+								<a href="#caseR">R</a>
+								<a href="#caseS">S</a>
+								<a href="#caseT">T</a>
+								<a href="#caseU">U</a>
+								<a href="#caseV">V</a>
+								<a href="#caseW">W</a>
+								<a href="#caseX">X</a>
+								<a href="#caseY">Y</a>
+								<a href="#caseZ">Z</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="main-wrap">
+					<!--聊天对话窗口容器-->
+					<div id="model-of-dialog" class="which-people-chart-dialog-container hide">
+						<div class="which-people-chart-dialog" data-msg-session-id="1">
+							<!--头部-->
+							<div class="chart-dialog-header">
+								<!--头部左侧头像+姓名+公司+职位-->
+								<div class="chart-dialog-header-left">
+									<img src="../resources/images/box-5-bg.png" class="underline" alt="头像暂无" />
+									<div class="chart-dialog-header-left-detail">
+										<span class="chart-to-people-name">姓名</span>
+										<span class="chart-to-people-company">单位，职位</span>
+									</div>
+								</div>
+								<div class="chart-dialog-header-right">
+									<a href="javascript:;" class="to-chart-panel focus">
+										<i class="fa fa-comments-o fa-3x" style="color:#ABB9B9;"></i>
+									</a>
+									<a href="javascript:;" class="to-file-panel">
+										<i class="fa fa-folder-o fa-3x" style="color:#ABB9B9;"></i>
+									</a>
+
+								</div>
+							</div>
+							<!--消息-->
+							<div class="chart-dialog-message">
+								<div class="dialog-this-day-time">
+									<span>09-09</span>
+								</div>
+								<!--接收的一条消息-->
+								<!--<div class="receive-one-message-container">
+									<div class="receive-one-message">
+										<img src="" alt="头像暂无" />
+										<div class="message-main">
+											<i class="fa fa-angle-left fa-2x"></i>
+											<span class="message-detail">老师：“班长，现在讲课本第几页了？”班长：“嗯，35吧！”老师：“副班长你说呢？”副班长：“36。”老师：“学习委员。”学习委员：“34？”老师：“都不认真，我在讲试卷，你们翻书干嘛？滚出去。”老师：“班长，现在讲课本第几页了？”班长：“嗯，35吧！”老师：“副班长你说呢？”副班长：“36。”老师：“学习委员。”学习委员：“34？”老师：“都不认真，我在讲试卷，你们翻书干嘛？滚出去。”</span>
+										</div>
+									</div>
+								</div>-->
+								<!--发送一条消息-->
+								<!--<div class="send-one-message-container">
+									<div class="send-one-message">
+										<img src="" alt="头像暂无" />
+										<div class="message-main">
+											<i class="fa fa-angle-right fa-2x"></i>
+											<span class="message-detail">老师：“班长，现在讲课本第几页了？”班长：“嗯，35吧！”老师：“副班长你说呢？”副班长：“36。”老师：“学习委员。”学习委员：“34？”老师：“都不认真，我在讲试卷，你们翻书干嘛？滚出去。”老师：“班长，现在讲课本第几页了？”班长：“嗯，35吧！”老师：“副班长你说呢？”副班长：“36。”老师：“学习委员。”学习委员：“34？”老师：“都不认真，我在讲试卷，你们翻书干嘛？滚出去。”</span>
+										</div>
+									</div>
+								</div>-->
+							</div>
+							<!--文件-->
+							<div class="chart-dialog-file hide">
+								<div class="chart-dialog-file-header">
+									<span class="chart-dialog-file-header-title">聊天文件</span>
+									<span class="chart-dialog-file-header-count">共4个文件</span>
+									<input type="search" placeholder="输入文件名称进行查找" />
+									<i class="fa fa-search fa-x" style="color: #999;"></i>
+								</div>
+								<div class="chat-page-file">
+									<div class="file-content">
+										<ul class="file-nav">
+											<li style="width:30%">文件名</li>
+											<li style="width:20%" onclick="fileUploadingTimeRank(this)">发布时间<i class="fa fa-sort-desc" aria-hidden="true"></i></li>
+											<li style="width:10%">大小</li>
+											<li style="width:20%">发布人</li>
+											<li style="width:20%">操作</li>
+										</ul>
+										<table class="file-list">
+											<tbody>
+												<tr>
+													<td width="30%"><span class="file-name">这是文本文件</span></td>
+													<td width="20%">2016-08-30 16:03</td>
+													<td width="10%">1.5MB</td>
+													<td width="20%">徐娇</td>
+													<td width="20%">
+														<i class="fa fa-eye" aria-hidden="true" title="预览">预览</i>
+														<i class="fa fa-download" aria-hidden="true" title="下载">下载</i>
+													</td>
+												</tr>
+												<tr>
+													<td width="30%"><span class="file-name">这是图片文件</span></td>
+													<td width="20%">2016-08-30 16:03</td>
+													<td width="10%">1.5MB</td>
+													<td width="20%">徐娇</td>
+													<td width="20%">
+														<i class="fa fa-eye" aria-hidden="true" title="预览">预览</i>
+														<i class="fa fa-download" aria-hidden="true" title="下载">下载</i>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--聊天记录-->
+						<div class="view-chart-history-container">
+							<div class="view-chart-history-content">
+								<!--标题-->
+								<div class="view-chart-history-content-header">
+									<span>聊天记录</span>
+									<i class="fa fa-close fa-x"></i>
+								</div>
+								<!--内容-->
+								<div class="view-chart-history-content-body">
+									<!--时间-->
+									<!--<div class="this-chart-record-history-time">
+										<i></i>
+										<span>08-27 12:24</span>
+										<i></i>
+									</div>-->
+									<!--一条消息-->
+									<!--<div class="view-chart-historyone-message">
+										<span class="message-name">张三</span>
+										<span class="message-time">11:48:14</span><br />
+										<span class="message-detail">老师：“班长，现在讲课本第几页了？”班长：“嗯，35吧！”老师：“副班长你说呢？”副班长：“36。”师：“学习委员。”学习委员：“34？”老师：“都不认真，我在讲试卷，你们翻书干嘛？滚出去。”老师：“班长，现在讲课本第几页了？”班长：“嗯，35吧！”老师：“副班长你说呢？”副班长：“36。”老师：“学习委员。”学习委员：“34？”老师：“都不认真，我在讲试卷，你们翻书干嘛？滚出去。”</span>
+									</div>
+									<div class="view-chart-historyone-message">
+										<span class="message-name">张三</span>
+										<span class="message-time">11:48:14</span><br />
+										<span class="message-detail">老师：“班长，现在讲课本第几页了？”班长：“嗯，35吧！”老师：“副班长你说呢？”副班长：“36。”老师：“学习委员。”学习委员：“34？”老师：“都不认真，我在讲试卷，你们翻书干嘛？滚出去。”老师：“班长，现在讲课本第几页了？”班长：“嗯，35吧！”老师：“副班长你说呢？”副班长：“36。”老师：“学习委员。”学习委员：“34？”老师：“都不认真，我在讲试卷，你们翻书干嘛？滚出去。”</span>
+									</div>
+									<div class="view-chart-historyone-message">
+										<span class="message-name">张三</span>
+										<span class="message-time">11:48:14</span><br />
+										<span class="message-detail">老师：“班长，现在讲课本第几页了？”班长：“嗯，35吧！”老师：“副班长你说呢？”副班长：“36。”老师：“学习委员。”学习委员：“34？”老师：“都不认真，我在讲试卷，你们翻书干嘛？滚出去。”老师：“班长，现在讲课本第几页了？”班长：“嗯，35吧！”老师：“副班长你说呢？”副班长：“36。”老师：“学习委员。”学习委员：“34？”老师：“都不认真，我在讲试卷，你们翻书干嘛？滚出去。”</span>
+									</div>
+									<div class="view-chart-historyone-message">
+										<span class="message-name">张三</span>
+										<span class="message-time">11:48:14</span><br />
+										<span class="message-detail">老师：“班长，现在讲课本第几页了？”班长：“嗯，35吧！”老师：“副班长你说呢？”副班长：“36。”老师：“学习委员。”学习委员：“34？”老师：“都不认真，我在讲试卷，你们翻书干嘛？滚出去。”老师：“班长，现在讲课本第几页了？”班长：“嗯，35吧！”老师：“副班长你说呢？”副班长：“36。”老师：“学习委员。”学习委员：“34？”老师：“都不认真，我在讲试卷，你们翻书干嘛？滚出去。”</span>
+									</div>-->
+
+								</div>
+								<!--尾部-->
+								<div class="view-chart-history-content-footer">
+									<!--关键字查找-->
+									<div class="key-word-search hide">
+										<input type="text" placeholder="请输入关键字查找" style="width: 70%;" />
+										<a href="#" class="btn-key-word-search">确认</a>
+									</div>
+									<div class="view-chart-history-before" style="float:left;">
+										<i style="color: #999;display: inline-block;margin-right: 8px;" class="fa fa-fast-backward fa-x"></i>
+										<i style="color: #999;display: inline-block;margin-right: 4px;" class="fa fa-backward fa-x"></i>
+									</div>
+									<div style="border-left: 2px solid #ccc;border-right: 2px solid #ccc;padding: 0 5px;float:left;">
+										第
+										<span style="display: inline-block;width: 20px;line-height:20px;text-align:center;border: 1px solid #ccc;" class="history-curr-pager" contenteditable="true">1</span>/
+										<span class="history-total-pager">2</span>页，
+										<span class="history-total-record">40</span>条
+									</div>
+									<div class="view-chart-history-after" style="float:left;">
+										<i style="color: #999;display: inline-block;margin-left: 4px;" class="fa fa-forward fa-x"></i>
+										<i style="color: #999;display: inline-block;margin-left: 8px;" class="fa fa-fast-forward fa-x"></i>
+									</div>
+									<div class="view-chart-history-sel-time" style="float:right;margin-right: 20px;">
+										<i class="fa fa-search fa-x" style="color:#999;width: 18px;height:18px;"></i>
+										<input type="text" class="date-picker" placeholder="年/月/日" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--底部输入框-->
+						<div class="chart-bottom-input">
+							<!--头部图标+聊天记录-->
+							<div class="chart-bottom-input-header">
+								<div class="chart-bottom-input-header-left">
+									<a href="javascript:;" class="add-picture btn-upload-anx-file" id="addfile">
+										<i style="color:#999;" class="fa fa-folder-o fa-2x"></i>
+									</a>
+									<a href="javascript:;" class="add-picture btn-upload-anx-image" id="addPicture">
+										<i style="color:#999" class="fa fa-file-image-o fa-2x"></i>
+									</a>
+									<i style="color:#999;" class="fa fa-smile-o fa-2x"></i>
+									<i style="color:#999;" class="fa fa-credit-card fa-2x"></i>
+								</div>
+								<div class="quick-input">
+									<span class="css-overhidden" title="">1、快速找回密码，先这样，再那样！</span><br />
+									<span class="css-overhidden">2、快速找回密码，先这样，再那样！</span><br />
+									<span class="css-overhidden">3、快速找回密码，先这样，再那样！</span><br />
+									<span class="css-overhidden">4、快速找回密码，先这样，再那样！</span><br />
+									<span class="css-overhidden">5、快速找回密码，先这样，再那样！</span>
+								</div>
+								<div class="chart-bottom-input-header-right">
+									<i style="color:#999;" class="fa fa-clock-o fa-x"></i>
+									<span class="chart-record">聊天记录</span>
+								</div>
+							</div>
+							<!--输入框-->
+							<div id="saytext" style="margin-top: 10px;overflow-y: scroll;" name="saytext" class="input chart-bottom-input-edit-area" contenteditable="true">
+
+							</div>
+							<!--发送按钮-->
+							<div class="btn-send-message">
+								<a href="#">发送</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--点击图片查看大图-->
+		<div class="click-to-large-picture hide">
+			<div style="width: 100;text-align: center;">
+				<img src="" style="max-width:1000px;max-height: 800px;" alt="大图" />
+			</div>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.qqFace.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.mousewheel.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/websocket.js"></script>
+		<script type="text/javascript">
+			var keyWord, msgLimit = 50,
+				pageNum = 50;
+			//自己的头像、id等信息
+			var ownBaseData;
+			var FILE = 1,
+				IMAGE = 2,
+				STRING = 2,
+				RADIO = 3,
+				AUDIO = 4,
+				LATESTCHART = true;
+			var userAvatar = {};
+			var dialogContainer = ".which-people-chart-dialog-container";
+			$(document).ready(function() {
+				//左侧搜索框
+				$(".search-input input").keydown(function(e) {
+					if(e.keyCode == 13) {
+
+					}
+				});
+				//左侧聊天切换
+				$(".select-talk-object i").click(function() {
+					var index = $(this).attr("index");
+					$(".talk-people-container>div").addClass("hide");
+					$(".talk-people-container").find("div[index='" + index + "']").removeClass("hide");
+				});
+			});
+
+			//企业列表
+			function receiveCompanyList(data) {
+				//console.log(data);
+				var companyListContainer = ".talk-people-container .company-list-container";
+				$.each(data.data, function(index, item) {
+					userAvatar[item.user_id] = item;
+					//					var container = ".talk-people-container .people-list-container";
+					//					createLeftChart(container, item);
+					//console.log(item)
+					var isExitThisCompanyCase = $(companyListContainer).find("#case" + (item.user_company_en.substring(0, 1)).toUpperCase()).length > 0 ? true : false;
+					var isExitThisCompany = $(companyListContainer).find("div[data-company-name='" + item.user_company + "']").length > 0 ? true : false;
+					//var isExitThisEmp=$(companyListContainer).find(".which-company-leader[data-employee-id=]")
+					var oneCompanyDom =
+						(!isExitThisCompanyCase ? "<div class=\"which-company\" id=\"case" + (item.user_company_en.substring(0, 1)).toUpperCase() + "\">" : "") +
+						(!isExitThisCompany ? "<div data-company-name='" + item.user_company + "' class=\"which-company-name\">" +
+							"<i class=\"fa fa-caret-right fa-2x\" style=\"color:#199ED8;\"></i>" +
+							"<span style=\"border-bottom:1px solid #f2f2f2;\">" + item.user_company + "</span>" : "") +
+						"<div class=\"which-company-leader hide\" data-employee-id=\"" + item.user_id + "\" style=\"margin-top: 5px;\">" +
+						"<img src=\""+BASEAPIURL + item.user_avatar + "\" class='" + (item.is_online ? "" : "underline") + "' alt=\"头像暂无\">" +
+						"<span class=\"people-company\" data-user-name='" + item.user_name + "'>" + item.user_name + "(<span class=\"css-overhidden\" title='" + item.user_post_cn + "'>" + item.user_post_cn + "</span>)</span>" +
+						//"<i></i>" +
+						"</div>" +
+						(!isExitThisCompany ? "</div>" : "");
+					oneCompanyDom += (!isExitThisCompanyCase ? "</div>" : "");
+					(isExitThisCompanyCase && isExitThisCompany) ? $(companyListContainer).find("div[data-company-name='" + item.user_company + "']").append(oneCompanyDom): (isExitThisCompanyCase && (!isExitThisCompany)) ? $(companyListContainer).find("#case" + (item.user_company_en.substring(0, 1)).toUpperCase()).append(oneCompanyDom) :
+						$(companyListContainer).append(oneCompanyDom);
+					//console.log(isExitThisCompanyCase+"++"+isExitThisCompany)	
+					//console.log(oneCompanyDom)
+					//$(companyListContainer).append(oneCompanyDom);	
+				});
+				//点击单位名字，显示单位负责人
+				$(".which-company-name").click(function() {
+					alert(45456546546)
+					if($(this).find("i").hasClass("fa-caret-right")) {
+						$(this).find(">div").removeClass("hide");
+						$(this).find("i").removeClass("fa-caret-right").addClass("fa-caret-down");
+					} else {
+						$(this).find(">div").addClass("hide");
+						$(this).find("i").removeClass("fa-caret-down").addClass("fa-caret-right");
+					}
+				});
+				//点击单位里面负责人模块
+				$(".which-company-leader").click(function(e) {
+					e.stopPropagation();
+					var container = ".people-list-container";
+					var options = {};
+					options.userId = $(this).attr("data-employee-id");
+					options.user_id = $(this).attr("data-employee-id");
+					options.companyName = $(this).parent().attr("data-company-name");
+					options.user_company = $(this).parent().attr("data-company-name");
+					options.userPostCn = $(this).find(".css-overhidden").html();
+					options.user_post_cn = $(this).find(".css-overhidden").html();
+					options.userAvatar = $(this).find("img").attr("src");
+					options.user_avatar = $(this).find("img").attr("src");
+					options.userName = $(this).find(".people-company").attr("data-user-name");
+					options.user_name = $(this).find(".people-company").attr("data-user-name");
+					options.is_online = $(this).find("img").hasClass("underline") ? false : true;
+					createLeftChart(container, options);
+					createDialog(options);
+				});
+			}
+			//最近会话列表
+			function receiveLatestChartList(data) {
+				//console.log(data);
+				var container = ".people-list-container";
+				$.each(data.data, function(index, item) {
+					//console.log(item)
+					createLeftChart(container, item);
+				});
+
+				///
+				$("body").click(function() {
+					$(".whick-people").find(".dialog-right-mouse-operator").addClass("hide");
+				});
+				$(".which-company-leader").click(function() {
+					$(this).addClass("focus");
+					$(this).siblings().removeClass("focus");
+					$(this).parent().siblings().find(".which-company-leader").removeClass("focus");
+					//ws.send(85,{},receiveWitchPeopleLatestChart,);
+				});
+				var options = {};
+				options.userId = $(".people-list-container .whick-people:first-child").attr("data-user-id");
+				options.companyName = $(".people-list-container .whick-people:first-child").attr("data-company-name");
+				options.userPostCn = $(".people-list-container .whick-people:first-child").attr("data-user-post-cn");
+				options.userAvatar = $(".people-list-container .whick-people:first-child").find("img").attr("src");
+				options.userName = $(".people-list-container .whick-people:first-child").attr("data-user-name");
+				options.is_online = $(".people-list-container .whick-people:first-child img").hasClass("underline") ? false : true;
+				createDialog(options);
+
+			}
+			////创建一个左侧单对单聊天
+			function createLeftChart(container, data) {
+				////先查找是否已经添加
+				var len = $(container).find("div[data-user-id='" + data.user_id + "']").length;
+				if(len) {
+					$(container).find("div[data-user-id='" + data.user_id + "']").removeClass("hide")
+					return false;
+				}
+				var lastMessageContent = "";
+				if(data.last_message) {
+					if(data.last_message.message_type == FILE) {
+						lastMessageContent = JSON.parse(data.last_message.message_content.replace(/^\[file_([\s\S]*?)\]$/g, "$1")).name
+					} else if(data.last_message.message_type == STRING) {
+						lastMessageContent = data.last_message.message_content.replace(/\[img_([\s\S]*?)\]/g, '<img style="max-width: 20px;max-height:20px;" src="$1" border="0" />')
+							.replace(/\[em_([0-9]*)\]/g, '<img style="width: 20px;height:20px;" src="../resources/images/face/$1.gif" border="0" />')
+					}
+				}
+				console.log(lastMessageContent)
+					//处理时间显示的格式
+				var nowDate = new Date();
+				var latestMessageTime = data.last_message ? new Date(data.last_message.message_time) : "";
+				var increase = latestMessageTime != "" ? (nowDate.getTime() - latestMessageTime.getTime()) / (1000 * 60 * 60 * 24) : 0;
+				var viewTime = latestMessageTime != "" ?
+					(increase < 1 ? (latestMessageTime.getHours() + ":" + latestMessageTime.getMinutes() + ":" + latestMessageTime.getSeconds()) :
+						increase >= 1 && increase < 2 ? "昨天" :
+						increase > 365 ? latestMessageTime.getFullYear() + "-" + (latestMessageTime.getMonth() + 1) + "-" + latestMessageTime.getDate() :
+						(latestMessageTime.getMonth() + 1) + "-" + latestMessageTime.getDate()) : "";
+				var chartDom = "";
+				chartDom +=
+					"<div class=\"whick-people\" data-user-name='" + data.user_name + "' data-user-post-cn=" + data.user_post_cn + " data-company-name='" + data.user_company + "' data-user-id='" + data.user_id + "' >" +
+					"<img src=\""+BASEAPIURL + data.user_avatar + "\" class='" + (data.is_online ? "" : "underline") + "' alt=\"头像暂无\" />" +
+					"<div class=\"text-message\">" +
+					"<span class=\"people-company\">" + data.user_name + "(" +
+					"<span class=\"css-overhidden\" title='" + data.user_company + "，" + data.user_post_cn + "'>" + data.user_company + "，" + data.user_post_cn + "</span>" +
+					")</span>" +
+					"<span class=\"latest-message-time\">" + viewTime + "</span><br>" +
+					"<span class=\"css-overhidden message-preview\" style=\"max-width:150px;\" title='" + lastMessageContent + "'>" + lastMessageContent + "</span>" +
+					(data.unread_num ? "<span class=\"unread-count\">" + data.unread_num + "</span>" : "") +
+					"<i></i>" +
+					"</div>" +
+					"<div class=\"dialog-right-mouse-operator hide\">" +
+					"<span class=\"let-this-top\">置顶会话</span>" +
+					"<span class=\"delet-this\">删除会话</span>" +
+					"</div>" +
+					"</div>";
+				$(container).append(chartDom);
+				////对话人点击事件
+				//左键
+				$(".whick-people[data-user-id='" + data.user_id + "']").click(function() {
+					$(this).addClass("focus");
+					$(this).siblings().removeClass("focus");
+					var options = {};
+					options.userId = $(this).attr("data-user-id");
+					options.companyName = $(this).attr("data-company-name");
+					options.userPostCn = $(this).attr("data-user-post-cn");
+					options.userAvatar = $(this).find("img").attr("src");
+					options.userName = $(this).attr("data-user-name")
+					options.is_online = $(this).find("img").hasClass("underline") ? false : true;
+					createDialog(options);
+					////获取最近聊天记录
+					var toUserId = $(this).attr("data-user-id");
+					ws.onsend(85, {
+						to_user: toUserId
+					}, receiveWitchPeopleLatestChart, toUserId);
+					///未读
+					//$(this).find(".unread-count").hide().html("0");
+					//$(".whick-people").find(".dialog-right-mouse-operator").addClass("hide");
+				});
+				//右键
+				$(".whick-people[data-user-id='" + data.user_id + "']").contextmenu(function(e) {
+					e.preventDefault();
+					if(e.which == 3) {
+						var obj = $(this).find(".dialog-right-mouse-operator");
+						if(obj.hasClass("hide")) {
+							obj.removeClass("hide");
+							$(this).siblings().find(".dialog-right-mouse-operator").addClass("hide");
+						} else {
+							obj.addClass("hide");
+						}
+
+					}
+				});
+				//置顶会话或者删除会话
+				$(".whick-people[data-user-id='" + data.user_id + "']").find(".dialog-right-mouse-operator span").click(function() {
+					if($(this).hasClass("let-this-top")) {
+						$(this).parent().addClass("hide");
+						//console.log($(this).parent().parent())
+						$(this).parent().parent().parent().find(">div:first-child").before($(this).parent().parent().clone(true));
+						$(this).parent().parent().remove();
+					} else {
+						$(this).parent().parent().remove();
+					}
+				});
+			}
+			//创建一家公司和公司负责人
+			//			function createLeftCompany(data) {
+			//				var companyDom = "";
+			//				companyDom +=
+			//					+"<div class=\"which-company\">" +
+			//					"<div class=\"which-company-name\">" +
+			//					"<i class=\"fa fa-caret-right fa-2x\" style=\"color:#199ED8;\"></i>" +
+			//					"<span style=\"border-bottom:1px solid #f2f2f2;\">AA公司</span>" +
+			//					"</div>" +
+			//					"<div class=\"which-company-leader hide\" data-company-id=\"1\" data-emp-id=\"11\" style=\"margin-top: 5px;\">" +
+			//					"<img src=\"\" alt=\"头像暂无\" />" +
+			//					"<span class=\"people-company\">张三(<span class=\"css-overhidden\">重庆艾视医药的说法是德国法撒旦法撒旦法士大夫阿斯蒂芬</span>)</span>" +
+			//					"<i></i>" +
+			//					"</div>" +
+			//					"</div>";
+			//				$(".talk-people-container .company-list-container").append(companyDom);
+			//			}
+			////最近聊天记录
+			function receiveWitchPeopleLatestChart(toUserId, data) {
+				console.log(data)
+				if(data.data.length < 1) return false;
+				$.each(data.data, function(index, item) {
+					var msg = item.message_content;
+					console.log(msg)
+					if(msg) msg = msg.replace(/\[img_([\s\S]*?)\]/g, '<img class=\"clickToLargePicture\" style="max-width: 200px;max-height:200px;" src="$1" border="0" />')
+						.replace(/\[em_([0-9]*?)\]/g, '<img style="width: 20px;height:20px;" src="../resources/images/face/$1.gif" border="0" />');
+					if(item.message_type == FILE) {
+						var fileData = JSON.parse(msg.replace(/^\[file_([\s\S]*)\]$/g, "$1"));
+
+						msg = "<span class=\"uploaded-file-container\">" +
+							"<img style='width: 50px;height: 50px;' src='"+BASEAPIURL+"/icons/" + fileData.ext + ".png'>" +
+							"<span data-file-id=" + fileData.id + " data-path=\"" + fileData.path + "\">" + fileData.name + "</span><br>" +
+							"<span class=\"uploaded-file-operaters\">" +
+							"<a class=\"view-uploaded-file\" onclick=\"clickToLargePicture('file','" + fileData.path + "');\">查看</a>" +
+							"<a>|</a>" +
+							"<a class=\"download-uploaded-file\">下载</a>" +
+							"<a>|</a><a class=\"transfer-uploaded-file\">转发</a>" +
+							"<a></a></span><a><span></span></a></span>";
+					}
+					var sendMessageDom = "";
+					if(item.message_send_by_me) {
+						////自己发送的消息
+						console.log(msg);
+						sendMessageDom += "<div data-message-time='" + item.message_time + "' data-message-id='" + item.message_id + "' class=\"send-one-message-container\">" +
+							"<div class=\"send-one-message\">" +
+							"<img src=\"" + ((ownBaseData.user_avatar.indexOf("http://") >= 0) ? ownBaseData.user_avatar : (BASEAPIURL + ownBaseData.user_avatar)) + "\" alt=\"头像暂无\" />" +
+							"<div class=\"message-main\">" +
+							"<i class=\"fa fa-angle-right fa-2x\"></i>" +
+							"<span class=\"message-detail\" " + (item.message_type == FILE ? " style='min-width:210px;'" : "") + ">" + msg + "</span>" +
+							"</div>" +
+							"</div>" +
+							(item.message_is_readed ? "" : "<div class='message-not-read'><span>未读  </span></div>") +
+							"</div>";
+					} else {
+						console.log(item)
+							//对方发送的消息
+						sendMessageDom += "<div class=\"receive-one-message-container\" data-message-id='" + item.message_id + "' data-message-time='" + item.message_time + "'>" +
+							"<div class=\"receive-one-message\">" +
+							"<img src=\""+BASEAPIURL + userAvatar[item.message_send_by.user_id].user_avatar + "\" alt=\"头像暂无\">" +
+							"<div class=\"message-main\">" +
+							"<i class=\"fa fa-angle-left fa-2x\"></i>" +
+							"<span class=\"message-detail\"" + (item.message_type == FILE ? " style='min-width:210px;'" : "") + ">" + msg + "</span>" +
+							"</div>" +
+							"</div>" +
+							"</div>";
+					}
+					var container = $(".which-people-chart-dialog-container[data-user-id='" + toUserId + "']");
+					container.find(".chart-dialog-message").append(sendMessageDom);
+					container.find(".clickToLargePicture").each(function() {
+						var imgPath = $(this).attr("src");
+						$(this).attr("onclick", "clickToLargePicture('img'," + JSON.stringify(imgPath) + ")");
+					});
+				});
+			}
+			////收到一条消息
+			function receiveSingleChart(data) {
+				//console.log(data);
+				//$.each(data.data, function(item) {
+				var thisDialogContainer = $(".which-people-chart-dialog-container[data-user-id='" + data.data.message_send_by.user_id + "']"); //[data-msg-session-id='" + item.id + "']");
+				var thisLeftChart = $(".whick-people[data-user-id='" + data.data.from_user + "']");
+				if(thisLeftChart.length < 1) { //聊天列表没有
+					data.last_message = data;
+					data.is_online = true;
+					createLeftChart(".talk-people-container .company-list-container", data);
+					var options = {};
+					var thisUserContainer = $(".people-list-container .whick-people[data-user-id='" + data.from_user + "']");
+					options.userId = data.data.message_send_by.user_id;
+					options.companyName = thisUserContainer.attr("data-company-name");
+					options.userPostCn = thisUserContainer.attr("data-user-post-cn");
+					options.userAvatar = thisUserContainer.find("img").attr("src");
+					options.userName = thisUserContainer.attr("data-user-name");
+					options.is_online = true;
+					createDialog(options);
+				} else if(thisDialogContainer.length < 1) { //聊天列表有，没有对话框
+					var options = {};
+					var thisUserContainer = $(".people-list-container .whick-people[data-user-id='" + data.from_user + "']");
+					options.userId = data.data.message_send_by.user_id;
+					options.companyName = thisUserContainer.attr("data-company-name");
+					options.userPostCn = thisUserContainer.attr("data-user-post-cn");
+					options.userAvatar = thisUserContainer.find("img").attr("src");
+					options.userName = thisUserContainer.attr("data-user-name");
+					options.is_online = true;
+					createDialog(options);
+				}
+				if($(".which-people-chart-dialog-container[data-user-id='" + data.data.message_send_by.user_id + "']").find(".chart-dialog-message>div[data-msg-uid=" + data.data.id + "]").length > 0) {
+					//continue;$.each函数返回 'false' 将停止循环 (就像在普通的循环中使用 'break')。返回 'true' 跳至下一个循环(就像在普通的循环中使用'continue')。
+					return true;
+				} else {
+
+					//console.log(messageContent);
+					var receiveAMessageDom = "";
+					//console.log(messageContent)
+					console.log(userAvatar)
+					receiveAMessageDom +=
+						"<div data-msg-uid='" + data.data.message_send_by.user_id + "' class=\"receive-one-message-container\">" +
+						"<div class=\"receive-one-message\">" +
+						"<img src=\""+BASEAPIURL + userAvatar[data.data.message_send_by.user_id].user_avatar + "\" alt=\"头像暂无\">" +
+						"<div class=\"message-main\">" +
+						"<i class=\"fa fa-angle-left fa-2x\"></i>" +
+						"<span class=\"message-detail\" style='min-width:210px;'>" + dealMessage(data) + "</span>" +
+						"</div>" +
+						"</div>" +
+						"</div>";
+					$(".which-people-chart-dialog .chart-dialog-message").append(receiveAMessageDom);
+					$(".which-people-chart-dialog .chart-dialog-message div[data-msg-uid='" + data.data.message_send_by.user_id + "'] img").each(function() {
+						var imgPath = $(this).attr("src");
+						$(this).attr("onclick", "clickToLargePicture('img','" + imgPath + "')");
+					});
+				}
+				//});
+			}
+
+			////发送消息
+			////发送一条消息
+			function sendAmessage(type, sendData, container, msg) {
+				//type  string  file  image  latestChart
+				if(!$.trim(msg)) return false;
+				var sendMessageDom = "";
+				msg = msg.replace(/\[img_([\s\S]*?)\]/g, '<img class=\"clickToLargePicture\" style="max-width: 200px;max-height:200px;" src="$1" border="0" />')
+					.replace(/\[em_([0-9]*)\]/g, '<img style="width: 20px;height:20px;" src="../resources/images/face/$1.gif" border="0" />');
+				//console.log(msg)
+				sendMessageDom += "<div data-message-id='" + messageID + "' class=\"send-one-message-container\">" +
+					"<div class=\"send-one-message\">" +
+					"<img src=\"" + ownBaseData.user_avatar + "\" alt=\"头像暂无\" />" +
+					"<div class=\"message-main\">" +
+					"<i class=\"fa fa-angle-right fa-2x\"></i>" +
+					"<span class=\"message-detail\" " + (type == FILE ? " style='min-width:210px;'" : "") + ">" + msg + "</span>" +
+					"</div>" +
+					"</div>" +
+					"<div class='send-message-status'>" +
+					"<img src='../resources/images/loading.gif'>" +
+					"</div>" +
+					"</div>";
+				$(container).append(sendMessageDom);
+				$(container).find(".clickToLargePicture").each(function() {
+					var imgPath = $(this).attr("src");
+					$(this).attr("onclick", "clickToLargePicture('img'," + JSON.stringify(imgPath) + ")");
+				});
+
+				if(type != FILE) $(".chart-bottom-input-edit-area").html("");
+				////滚动到最底部
+				$(container).scrollTop($(container)[0].scrollHeight);
+				cmd = 82; //消息类型 单聊
+				//cmd=41;//消息类型  群聊
+				//cmd=3;//消息类型  登录，js文件里面已经 封装
+				//				sendData.to_employee = ""; //发送给谁
+				//				sendData.message_type = type; //消息类型
+				//				sendData.message = JSON.stringify(sendData); //具体发送内容
+				console.log(sendData)
+
+				var lastSendData;
+				lastSendData = type == STRING ? sendData.str : type == FILE ? "[file_" + JSON.stringify(sendData) + "]" : sendData.str;
+				//console.log(lastSendData)
+				ws.onsend(cmd, {
+					message: lastSendData,
+					message_type: type,
+					to_user: sendData.to_user,
+				}, function(messageID, data) {
+					if(data.msg_id == messageID) {
+						$("div[data-message-id='" + messageID + "'] .send-message-status").remove();
+					}
+				}, messageID);
+			}
+			////创建一个聊天对话框
+			//createDialog({userId:1,userAvatar:2,userName:3,userComppanyName:4,userPostCn:5});
+			function createDialog(options) {
+				console.log(options.is_online)
+				if($(".which-people-chart-dialog-container[data-user-id='" + options.userId + "']").length > 0) {
+					$(".which-people-chart-dialog-container[data-user-id='" + options.userId + "']").removeClass("hide");
+					$(".which-people-chart-dialog-container[data-user-id='" + options.userId + "']").siblings().addClass("hide");
+					$(".which-people-chart-dialog-container[data-user-id='" + options.userId + "']").find(".chart-dialog-header img").attr("class", options.is_online ? "" : "underline");
+					return false;
+				}
+				var dialogDom = $("#model-of-dialog").html();
+				dialogDom = "<div data-user-id=" + options.userId + " class='which-people-chart-dialog-container'>" + dialogDom + "</div>";
+				$(".main-wrap").append(dialogDom);
+				$(".which-people-chart-dialog-container[data-user-id='" + options.userId + "']").removeClass("hide");
+				$(".which-people-chart-dialog-container[data-user-id='" + options.userId + "']").siblings().addClass("hide");
+				var currDialogContainer = $(".which-people-chart-dialog-container[data-user-id='" + options.userId + "']");
+				currDialogContainer.find(".chart-dialog-header .chart-dialog-header-left img").attr("src", options.userAvatar);
+				currDialogContainer.find(".chart-dialog-header .chart-dialog-header-left img").attr("class", options.is_online ? "" : "underline");
+				currDialogContainer.find(".chart-dialog-header .chart-dialog-header-left .chart-to-people-name").html(options.userName);
+				currDialogContainer.find(".chart-dialog-header .chart-dialog-header-left .chart-to-people-company").html(options.companyName + "，" + options.userPostCn);
+				////点击切换聊天界面和文件界面
+				currDialogContainer.find(".chart-dialog-header-right a").click(function() {
+					$(this).addClass("focus").siblings().removeClass("focus");
+					if($(this).hasClass("to-chart-panel")) {
+						//到聊天
+						currDialogContainer.find(".chart-dialog-file").addClass("hide");
+						currDialogContainer.find(".chart-dialog-file").siblings().removeClass("hide");
+						currDialogContainer.find(".chart-dialog-file").parent().siblings().removeClass("hide");
+					} else {
+						//文件
+						currDialogContainer.find(".chart-dialog-file").removeClass("hide");
+						currDialogContainer.find(".chart-dialog-message").addClass("hide");
+						currDialogContainer.find(".chart-dialog-file").parent().parent().find(".chart-bottom-input").addClass("hide");
+						//会话id
+						var msg_session_id = "1";
+						var filePage = 1;
+						var file_keyword = $(this).parent().parent().parent().parent().parent().siblings(".chart-dialog-file").find(".chart-dialog-file-header input").val();
+						//					ws.onsend("45", {
+						//						"msg_session_id": msg_session_id,
+						//						msg_session_type: 1,
+						//						msg_type: FILE,
+						//						page: filePage,
+						//						page_num: pageNum
+						//					}, receiveFileCallback, msg_session_id)
+					}
+				});
+				////日期选择
+				currDialogContainer.find(".date-picker").datepicker({
+					autoclose: true,
+					clearBtn: true,
+					weekStart: "0",
+					format: "yyyy-mm-dd"
+				});
+				////聊天对话框鼠标滚动查看聊天记录
+				//监听鼠标滚轮事件
+				var isOneLoad = false;
+				currDialogContainer.find(".chart-dialog-message").mousewheel(function(event, dalta, daltaX, daltaY) {
+					if(!isOneLoad) {
+						if(dalta == 1) {
+							window.msgId = $(this).children("div").first().attr("id");
+							console.log("msgId:" + msgId);
+//							ws.onsend(44, {
+//								"base_msg_id": msgId,
+//								"msg_session_id": showChatId,
+//								"msg_session_type": (chatType == 2 ? 1 : 2)
+//							}, loadChatRecorded);
+						}
+						isOneLoad = true;
+					}
+
+				});
+				//点击查看聊天记录
+				currDialogContainer.find(".chart-record").click(function() {
+					var msgSeeionId = $(".view-chart-history-content").attr("data-msg-session-id");
+					var historyChartTime = $(".view-chart-history-sel-time .date-picker").val();
+					//				ws.onsend(43, {
+					//					msg_session_type: 1,
+					//					msg_limit: msgLimit,
+					//					msg_page: 1,
+					//					msg_session_id: msgSeeionId,
+					//					msg_begin_time: historyChartTime,
+					//					key_word: keyWord
+					//				});
+					//$(".view-chart-history-container").removeClass("hide").addClass("fade-in");
+					currDialogContainer.find(".view-chart-history-container").animate({
+						right: 0
+					}, "fast");
+					ws.onsend(86, {
+						to_user: options.userId,
+						msg_page: 1,
+						msg_limit: 50
+					}, receiveHistoryChart, options.userId);
+				});
+				////聊天记录关键字搜索
+				currDialogContainer.find(".view-chart-history-container .view-chart-history-sel-time .fa-search").click(function(e) {
+					console.log(currDialogContainer.find(".key-word-search").html())
+					if(currDialogContainer.find(".key-word-search").hasClass("hide")) {
+						currDialogContainer.find(".key-word-search").removeClass("hide");
+					} else {
+						currDialogContainer.find(".key-word-search").addClass("hide");
+						keyWord = "";
+					}
+				});
+				//聊天记录确认按钮
+				currDialogContainer.find(".key-word-search .btn-key-word-search").click(function() {
+					keyWord = $(this).prev().val();
+					var msgSeeionId = $(this).parent("").attr("data-msg-session-id");
+					var historyChartTime = currDialogContainer.find(".view-chart-history-sel-time .date-picker").val();
+					var currPage = currDialogContainer.find(".history-curr-pager").html();
+					ws.onsend(86, {
+						msg_limit: msgLimit,
+						msg_page: currPage,
+						to_user: options.userId,
+						msg_begin_time: historyChartTime,
+						msg_keyword: keyWord
+					}, receiveHistoryChart, options.userId);
+				});
+				//聊天记录底部筛选
+				//跳转到第n页
+				currDialogContainer.find(".view-chart-history-content-footer>div:lt(4) i").click(function() {
+					var currPage;
+					if($(this).hasClass("fa-fast-backward")) { //跳转到第一页
+						currPage = 1;
+					} else if($(this).hasClass("fa-backward")) { //跳转到前一页
+						if(parseInt(currDialogContainer.find(".history-curr-pager").html()) <= 1) {
+							$.showErrorGritter("当前页已经是第一页！");
+							return false;
+						}
+						currPage = parseInt(currDialogContainer.find(".history-curr-pager").html()) - 1;
+					} else if($(this).hasClass("fa-forward")) { //跳转到后一页
+						if(parseInt(currDialogContainer.find(".history-curr-pager").html()) >= parseInt(currDialogContainer.find(".history-total-pager").html())) {
+							$.showErrorGritter("当前页已经是最后一页！");
+							return false;
+						}
+						currPage = parseInt(currDialogContainer.find(".history-curr-pager").html()) + 1;
+					} else { //跳转到最后一页
+						currPage = currDialogContainer.find(".history-total-pager").html();
+					}
+					currDialogContainer.find(".history-curr-pager").html(currPage);
+					var messageSessionId = $(this).parent().parent().parent().attr("data-msg-session-id");
+					//$(".history-curr-pager").html()
+					var historyChartTime = currDialogContainer.find(".view-chart-history-sel-time .date-picker").val();
+					ws.onsend(86, {
+						msg_limit: msgLimit,
+						msg_page: currPage,
+						to_user: options.userId,
+						msg_begin_time: historyChartTime,
+						msg_keyword: keyWord
+					}, receiveHistoryChart, options.userId);
+				});
+				//手动输入页数查询
+				currDialogContainer.find(".view-chart-history-content-footer .history-curr-pager").keydown(function(e) {
+					if(e.keyCode == 13) {
+						e.preventDefault();
+						if(parseInt($(this).html()) < 1) {
+							$.showErrorGritter("页数不能小于1，请重新输入！");
+						} else if(parseInt($(this).html()) > parseInt($(".history-total-pager").html())) {
+							$.showErrorGritter("页数不能大于最大页数，请重新输入！");
+						} else {
+							var currPage = $(this).html();
+							var messageSessionId = $(this).parent().parent().parent().attr("data-message-session-id");
+							//$(".history-curr-pager").html()
+							var historyChartTime = currDialogContainer.find(".view-chart-history-sel-time .date-picker").val();
+							ws.onsend(86, {
+								msg_limit: msgLimit,
+								msg_page: currPage,
+								to_user: options.userId,
+								msg_begin_time: historyChartTime,
+								msg_keyword: keyWord
+							}, receiveHistoryChart, options.userId);
+						}
+					}
+				});
+				//选择日期查询聊天记录
+				currDialogContainer.find(".view-chart-history-sel-time .date-picker").change(function(e) {
+					//if(e.keyCode!==13) return false;
+					var currPageContainer = currDialogContainer.find(".view-chart-history-content-footer .history-curr-pager");
+					if(parseInt(currPageContainer.html()) < 1) {
+						$.showErrorGritter("页数不能小于1，请重新输入！");
+					} else if(parseInt(currPageContainer.html()) > parseInt($(".history-total-pager").html())) {
+						$.showErrorGritter("页数不能大于最大页数，请重新输入！");
+					} else {
+						var currPage = currPageContainer.html();
+						//$(".history-curr-pager").html()
+						var historyChartTime = $(this).val();
+						console.log(historyChartTime)
+						ws.onsend(86, {
+							msg_limit: msgLimit,
+							msg_page: currPage,
+							to_user: options.userId,
+							msg_begin_time: historyChartTime,
+							msg_keyword: keyWord
+						}, receiveHistoryChart, options.userId);
+					}
+				});
+				//关闭聊天记录
+				currDialogContainer.find(".view-chart-history-content-header .fa-close").click(function() {
+					keyWord = "";
+					currDialogContainer.find(".view-chart-history-container").animate({
+						right: "-50%"
+					}, "fast");
+				});
+				$(function() {
+					$('.fa-smile-o').qqFace({
+						assign: 'chart-bottom-input-edit-area', //给输入框赋值 
+						path: '../resources/images/face/' //表情图片存放的路径 
+					});
+				});
+				currDialogContainer.find(".btn-send-message").click(function() {
+					if($(".chart-bottom-input-edit-area img").length > 0) {
+						$(".chart-bottom-input-edit-area img").each(function() {
+							if($(this).attr("data-labface")) {
+								var emPath = $(this).attr("data-labface");
+								//console.log(emPath)
+								$(this).replaceWith(emPath);
+							} else {
+								var imgPath = $(this).attr("data-path");
+								imgPath = "[img_" + imgPath + "]";
+								$(this).replaceWith(imgPath);
+							}
+						});
+
+					}
+					var str = currDialogContainer.find(".chart-bottom-input-edit-area").html();
+					sendAmessage(STRING, {
+						"str": str,
+						to_user: options.userId
+					}, ".chart-dialog-message", str);
+					$(".chart-bottom-input-edit-area").focus();
+				});
+				currDialogContainer.find(".chart-bottom-input-edit-area").keydown(function(e) {
+					if(!e.shiftKey && e.keyCode == 13) { //发送
+						e.preventDefault();
+						if($(".chart-bottom-input-edit-area img").length > 0) {
+							$(".chart-bottom-input-edit-area img").each(function() {
+								if($(this).attr("data-labface")) {
+									var emPath = $(this).attr("data-labface");
+									//console.log(emPath)
+									$(this).replaceWith(emPath);
+								} else {
+									var imgPath = $(this).attr("data-path");
+									imgPath = "[img_" + imgPath + "]";
+									$(this).replaceWith(imgPath);
+								}
+							});
+						}
+						var str = $(this).html();
+						console.log(str)
+						sendAmessage(STRING, {
+							"str": str.trim(),
+							to_user: options.userId
+						}, ".chart-dialog-message", str);
+					}
+					if(e.shiftKey && e.keyCode == 13) { //换行
+						e.stopPropagation();
+						//var str = $("#saytext").html();
+					}
+					$(this).focus();
+				});
+
+				//			function replace_em(str) {
+				//				//str = str.replace(/\</g, '<br');
+				//				//str = str.replace(/\>/g, '>');
+				//				//str = str.replace(/\n/g, '<；br/>；');
+				//				str = str.replace(/\[em_([0-9]*)\]/g, '<img style="width: 20px;height:20px;" src="../resources/images/face/$1.gif" border="0" />');
+				//				return str;
+				//			}
+
+				currDialogContainer.find(".chart-bottom-input-header-left .fa-credit-card").click(function() {
+					var selector = $(this).parent().parent().find(".quick-input");
+					if(selector.css("display") == "none") {
+						$(this).parent().parent().find(".quick-input").css("display", "block");
+					} else {
+						$(this).parent().parent().find(".quick-input").css("display", "none");
+					}
+
+				});
+				currDialogContainer.find(".chart-bottom-input-header .quick-input span").click(function() {
+					var inputSelector = $(this).parent().parent().parent().find(".chart-bottom-input-edit-area");
+					inputSelector.html(inputSelector.html() + $(this).html());
+					inputSelector.focus();
+					$(".quick-input").css("display", "none");
+				});
+				//文件上传
+				var formContainer = ".which-people-chart-dialog-container[data-user-id='" + options.userId + "'] .chart-bottom-input-header-left";
+				var isUploadPicture = true;
+				$(formContainer + " .btn-upload-anx-file").attr("id", "btnUploadAnxFile" + options.userId);
+				$("#btnUploadAnxFile" + options.userId).initUploader({
+					url: SAASAPIS.BS.upload.osDocument,
+					up_container: formContainer + " .uploaded",
+					FilesAdded: function(up, files) {
+						return true;
+					},
+					FileUploaded: function(up, file, response) {
+						var resp = JSON.parse(response.response);
+						//console.log(resp)
+						if(resp.code == 0) {
+							var fileName = resp.data.name;
+							//success
+							/*"<a href='javascript:;' class='picture-container'><img src='../resources"+resp.data.path+"' alt='图片1' name='"+resp.data.name+"'/><i class='fa fa-times-circle fa-x' onclick='$(this).parent().remove();'></i></a>"*/
+							var pictureContainerDom = "";
+							pictureContainerDom +=
+								"<span class=\"uploaded-file-container\">" +
+								"<img style='width: 50px;height: 50px;' src='"+BASEAPIURL+"/icons/" + resp.data.ext + ".png'>" +
+								"<span data-file-id=" + resp.data.id + " data-path=\"" + resp.data.path + "\">" + resp.data.name + "</span><br>" +
+								"<span class=\"uploaded-file-operaters\">" +
+								"<a class=\"view-uploaded-file\" onclick=\"clickToLargePicture('file','" + resp.data.path + "');\">查看</a>" +
+								"<a>|</a>" +
+								"<a class=\"download-uploaded-file\">下载</a>" +
+								"<a>|</a><a class=\"transfer-uploaded-file\">转发</a>" +
+								"<a></a></span><a><span></span></a></span>";
+							resp.data.to_user = options.userId;
+							sendAmessage(FILE, resp.data, ".chart-dialog-message", pictureContainerDom);
+						} else {
+							$.showErrorGritter("上传失败：" + resp.msg);
+						}
+					}
+				});
+				////图片上传
+				//var formContainer = ".chart-bottom-input-header-left";
+				var isUploadPicture = true;
+				$(formContainer + " .btn-upload-anx-image").attr("id", "btnUploadAnxImage" + options.userId);
+				$("#btnUploadAnxImage" + options.userId).initUploader({
+					url: SAASAPIS.BS.upload.osImage,
+					up_container: formContainer + " .uploaded",
+					FilesAdded: function(up, files) {
+						return true;
+					},
+					FileUploaded: function(up, file, response) {
+						var resp = JSON.parse(response.response);
+						//console.log(resp)
+						if(resp.code == 0) {
+							var fileName = resp.data.name;
+							//success
+							/*"<a href='javascript:;' class='picture-container'><img src='../resources"+resp.data.path+"' alt='图片1' name='"+resp.data.name+"'/><i class='fa fa-times-circle fa-x' onclick='$(this).parent().remove();'></i></a>"*/
+							var pictureContainerDom = "<img data-path='" + resp.data.path + "' style='max-width:150px;max-height:150px;' onclick='clickToLargePicture(\"img\"," + JSON.stringify(resp.data.path) + ");' src='"+BASEAPIURL + resp.data.path + "' alt='图片1' name='" + resp.data.name + "'/>";
+							$(".chart-bottom-input-edit-area").append(pictureContainerDom);
+							//sendAmessage(IMAGE, resp.data, ".chart-dialog-message", pictureContainerDom);
+						} else {
+							$.showErrorGritter("上传失败：" + resp.msg);
+						}
+					}
+				});
+				////阅读消息事件
+				currDialogContainer.find(".chart-dialog-message").scroll(function() {
+					$(this).find(".message-not-read").each(function() {
+						var top = $(this).position().top //元素顶端到可见区域顶端的距离
+						var se = 600; //$(".main-wrap").oterHeight(true)*; //浏览器可见区域高度。
+						console.log(top + "++" + se);
+						if(top >= 0 && top <= se) {
+							var msgId = $(this).parent().attr("data-message-id");
+							ws.onsend(87, {
+								msg_id: msgId
+							})
+							console.log($(this).find("span").html("已读"));
+						}
+					});
+				});
+				//$(".main-wrap").find(".which-people-chart-dialog-container[data-user-id='" + options.userId + "']").siblings().addClass("hide");
+			}
+			//收到文件的回调
+			function receiveFileCallback(msg_session_id, data) {
+				var fileContainer = $("div.which-people-chart-dialog-container[data-msg-seesion-id]").find(".chart-dialog-file");
+				var fileListDom = "";
+				$.each(data.data, function(item) {
+					$.ajaxGet(BSAPIURL + "?id=" + item.message_content)
+					fileListDom += "<tr>" +
+						"<td width=\"30%\"><span class=\"file-name\">这是文本文件</span></td>" +
+						"<td width=\"20%\">2016-08-30 16:03</td>" +
+						"<td width=\"10%\">1.5MB</td>" +
+						"<td width=\"20%\">徐娇</td>" +
+						"<td width=\"20%\">" +
+						"<i class=\"fa fa-eye\" aria-hidden=\"true\" title=\"预览\">预览</i>" +
+						"<i class=\"fa fa-download\" aria-hidden=\"true\" title=\"下载\">下载</i>" +
+						"</td>" +
+						"</tr>";
+				});
+			}
+			//群聊天文件上传时间排序
+			function fileUploadingTimeRank(obj) {
+				//默认升序
+				if($(obj).children("i").hasClass("fa-sort-desc")) {
+					//倒叙
+					$(obj).children("i").removeClass("fa-sort-desc").addClass("fa-sort-asc");
+				} else {
+					$(obj).children("i").removeClass("fa-sort-asc").addClass("fa-sort-desc");
+				}
+
+			}
+
+			//处理收到的历史聊天记录信息
+			function receiveHistoryChart(userId, data) {
+				if(data.action == 200) return false;
+				console.log(userId)
+					//console.log(data.data.data);
+				data.data.data.length > 0 && data.data.data.reverse();
+				$(dialogContainer + "[data-user-id='" + userId + "']").find(".view-chart-history-content .history-total-record").html(data.data.total_num);
+				$(dialogContainer + "[data-user-id='" + userId + "']").find(".view-chart-history-content .history-total-pager").html(Math.ceil(data.data.total_num / msgLimit));
+				//console.log(data.data.data.length > 0 && data.data.data.reverse())
+				$(dialogContainer + "[data-user-id='" + userId + "']").find(".view-chart-history-content .view-chart-history-content-body").html("");
+				var allMessageDom = "";
+				$.each(data.data.data, function(i, item) {
+					//console.log(i);
+					//console.log(item)
+					var oneMessage = "";
+					//i > 0 && console.log($.getTwoDaysDistance(data.data.data[i - 1].message_time, item.message_time))
+					if(i == 0 || $.getTwoDaysDistance(data.data.data[i - 1].message_time, item.message_time) >= 1) {
+						oneMessage += //时间
+							"<div class=\"this-chart-record-history-time\">" +
+							"<i></i>" +
+							"<span style='color:#999;'>" + (new Date(item.message_time)).format("yyyy-MM-dd") + "</span>" +
+							"<i></i>" +
+							"</div>";
+						oneMessage += //消息
+							"<div class=\"view-chart-historyone-message\">" +
+							"<span class=\"message-name\" style='color:" + (item.message_send_by.user_id == ownBaseData.user_id ? "#42B475" : "#006EFE") + "'>" + item.message_send_by.user_name + "</span>" +
+							"<span class=\"message-time\" style='color:" + (item.message_send_by.user_id == ownBaseData.user_id ? "#42B475" : "#006EFE") + "'>" + item.message_time + "</span><br>" +
+							"<span style='' class=\"message-detail history-message-detail " + (item.message_type == FILE ? "history-message-detail-file" : "") + "\">" + dealMessage(item) + "</span>" +
+							"</div>";
+					} else if($.getTwoDaysDistance(data.data.data[i - 1].message_time, item.message_time) < 1) {
+						oneMessage += //消息
+							"<div class=\"view-chart-historyone-message\">" +
+							"<span class=\"message-name\" style='color:" + (item.message_send_by.user_id == ownBaseData.user_id ? "#42B475" : "#006EFE") + "'>" + item.message_send_by.user_name + "</span>" +
+							"<span class=\"message-time\" style='color:" + (item.message_send_by.user_id == ownBaseData.user_id ? "#42B475" : "#006EFE") + "'>" + item.message_time + "</span><br>" +
+							"<span style='' class=\"message-detail history-message-detail " + (item.message_type == FILE ? "history-message-detail-file" : "") + "\">" + dealMessage(item) + "</span>" +
+							"</div>";
+					}
+					allMessageDom += oneMessage;
+				});
+				if(!allMessageDom) {
+					allMessageDom = "没有该条件下的聊天记录信息！";
+				}
+				$(dialogContainer + "[data-user-id='" + userId + "']").find(".view-chart-history-content .view-chart-history-content-body").html(allMessageDom);
+			}
+
+			function writeChartHistory(options, data) {
+				console.log(arguments)
+			}
+
+			function dealMessage(data) {
+				var messageContent = "";
+				//console.log(data)
+				//console.log((data.data && data.data.type) || data.message_type || data.data.message_type)
+				if(((data.data && data.data.type) || data.message_type || data.data.message_type) == FILE) {
+					var messageContentData = ((data.data && data.data.content) || data.message_content || data.data.message_content).replace(/^\[file_([\s\S]*?)\]$/g, "$1");
+					//console.log(messageContentData)
+					messageContentData = JSON.parse(messageContentData);
+					//console.log(messageContentData);
+					///console.log(messageContentData.name)
+					//messageContent=messageContentData.name;
+					messageContent += "<span class=\"uploaded-file-container\">" +
+						"<img style='width: 50px;height: 50px;' src='"+BASEAPIURL+"/icons/" + messageContentData.ext + ".png'>" +
+						"<span data-file-id=" + messageContentData.id + " data-path=\"" + messageContentData.path + "\">" + messageContentData.name + "</span><br>" +
+						"<span class=\"uploaded-file-operaters\">" +
+						"<a class=\"view-uploaded-file\" onclick=\"clickToLargePicture('file'," + messageContentData.path + ");\">查看</a>" +
+						"<a>|</a>" +
+						"<a class=\"download-uploaded-file\">下载</a>" +
+						"<a>|</a><a class=\"transfer-uploaded-file\">转发</a>" +
+						"<a></a></span><a><span></span></a></span>";
+				} else if(((data.data && data.data.type) || data.message_type || data.data.message_type) == STRING) {
+					messageContent = (data.data && data.data.content) || data.message_content || data.data.message_content;
+					//console.log(messageContent)
+					messageContent = messageContent.replace(/\[img_([\s\S]*?)\]/g, '<img class=\"clickToLargePicture\" style="max-width: 200px;max-height:200px;" src="$1" border="0" />')
+						.replace(/\[em_([0-9]*)\]/g, '<img style="width: 20px;height:20px;" src="../resources/images/face/$1.gif" border="0" />');
+				} else if(((data.data && data.data.type) || data.message_type || data.data.message_type) == RADIO) {
+					messageContent = (data.data && data.data.content) || data.message_content || data.data.message_content;
+					messageContent = messageContent.replace(/^\[radio_([\s\S]*?)\]$/g, '<img class=\"clickToLargePicture\" style="max-width: 200px;max-height:200px;" src="$1" border="0" />')
+				} else if(((data.data && data.data.type) || data.message_type || data.data.message_type) == AUDIO) {
+					messageContent = (data.data && data.data.content) || data.message_content || data.data.message_content;
+					messageContent = messageContent.replace(/^\[audio_([\s\S]*?)\]$/g, '<img class=\"clickToLargePicture\" style="max-width: 200px;max-height:200px;" src="$1" border="0" />')
+					messageContent +=
+						"<audio src=\"" + messageContent + "\" controls=\"controls\">" +
+						"您的浏览器不支持音频播放!" +
+						"</audio>";
+				}
+				//console.log(messageContent)
+				return messageContent;
+			}
+
+			function receiveOnline(data) {
+				if(data.msg_id == 1) {
+					ownBaseData = data.data;
+				} else {
+					var userId = data.data.user_id;
+					if($(".people-list-container .whick-people[data-user-id='" + userId + "']").length > 0) $(".people-list-container .whick-people[data-user-id='" + userId + "']").find("img").removeClass("underline");
+					if($(".company-list-container .which-company .which-company-leader[data-user-id='" + userId + "']").length > 0) $(".company-list-container .which-company .which-company-leader[data-user-id='" + userId + "']").find("img").removeClass("underline");
+					if($(".which-people-chart-dialog-container[data-user-id='" + userId + "']").length > 0) $(".which-people-chart-dialog-container[data-user-id='" + userId + "'] .chart-dialog-header-left").find("img").removeClass("underline");
+				}
+			}
+			//点击查看大图
+			function clickToLargePicture(type, url) {
+				if(type == "img") {
+					if(url.indexOf(BASEAPIURL) < 0) {
+						url = BASEAPIURL + url;
+					}
+					var modalId = $.modal().showOfLarge("查看大图", ".click-to-large-picture", function(modal) {
+						$("#" + modalId).modal('hide');
+					});
+					$("#" + modalId + " img").attr("src", url);
+				} else {
+					//openDocObj = new ActiveXObject("SharePoint.OpenDocuments.1");
+					url = BASEAPIURL + url;
+					//openDocObj.ViewDocument(url);
+					$(".click-to-large-picture img").attr("src", url);
+					var modalId = $.modal().showOfLarge("文件预览", ".click-to-large-picture", function(modal) {
+						$("#" + modalId).modal('hide');
+					});
+					$("#" + modalId + " .click-to-large-picture div").filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = url;
+				}
+			}
+			var ws = $.webSoket({
+				wsServer: WSSERVER,
+				protocal: WSPORT,
+				isCustomerService: true,
+				onopenCallback: onopenCallback,
+				onmessageCallback: onmessageCallback,
+				onerrorCallback: onerrorCallback,
+				oncloseCallback: oncloseCallback
+			});
+			//webSocket打开时的回调
+			function onopenCallback(data) {
+				ws.onsend(80, {}, receiveCompanyList);
+				ws.onsend(84, {}, receiveLatestChartList);
+			}
+			////收到消息的回调
+			function onmessageCallback(data) {
+				//console.log(data)
+				switch(data.action) {
+					case ws.cmdTag.CONFIG:
+						//receiveConfig(data);
+						break; //1 - 配置信息（登录成功后，server发送配置信息到client，包含心跳频率及其他配置）
+					case ws.cmdTag.HEART:
+						//receiveHeartBeat(data);
+						break; //2 - 心跳包（client通过收到的发送频率主动发送心跳包到server）
+					case ws.cmdTag.CUSTOMERONLINE:
+						receiveOnline(data);
+						//ownBaseData = data.data;
+						//receiveLogin(data);
+						break; // 3 - 登录 （client主动发起）
+					case ws.cmdTag.EXIT:
+						//receiveExitByHand(data);
+						break; //  4 - 登出 （手动退出，或能捕获的异常退出时，client主动发起）
+					case ws.cmdTag.NEWUSERONLINE:
+						//receiveNewUserOnline(data);
+						break; // 5 - 新用户上线 （server主动推送到client）
+					case ws.cmdTag.USERUNDERLINE:
+						//receiveUserUnderline(data);
+						break; //6 - 用户下线 （server->client）
+					case ws.cmdTag.SESSIONEXPIRED:
+						//receiveClientSessionExpired(data);
+						break; // 7 - 客户端session过期 ，过期后将不能做任何业务操作，客户端收到该消息后退出IM（server->client）
+					case ws.cmdTag.ACK:
+						//receiveServerAck(data);
+						break;
+					case ws.cmdTag.FRIENDLIST:
+						//receiveFriendList(data);
+						break; //20 - 好友列表 （client发起，server再回发）
+					case ws.cmdTag.GROUPLIST:
+						break; //群组列表
+					case ws.cmdTag.LATESTCHARTLIST:
+						//receiveCompanyList(data);
+						break;
+					case ws.cmdTag.CREATEGROUP:
+						break; // 创建群组
+					case ws.cmdTag.REQUESTDROUPMEMBER:
+						break; //查询群成员
+					case ws.cmdTag.CREATEGROUPTOPIC:
+						break; //创建群话题
+					case ws.cmdTag.CLOSEGROUPTOPIC:
+						break; // 关闭群话题
+					case ws.cmdTag.OPENGROUPTOPIC:
+						break; // 打开群话题
+					case ws.cmdTag.REQUESTGROUPTOPICLIST:
+						break; // 获取群话题列表
+					case ws.cmdTag.CUSTOMERSINGLECHART:
+						receiveSingleChart(data);
+						break; //客服收到单人聊天消息
+					case ws.cmdTag.SIGNLECHART:
+						break; // 40 - 聊天 单聊（server<-->client ，server也会主动推送新消息到client）
+					case ws.cmdTag.GROUPCHART:
+						//receiveGroupChart(data);
+						break; // 41 - 聊天 群聊（server<-->client ，server也会主动推送新消息到client）
+					case ws.cmdTag.READMSG:
+						//receiveHistoryChart(data);
+						break; // 阅读消息
+					case ws.cmdTag.VIEWCHARTHISTORY:
+						break; //查看聊天记录
+					default:
+						console.log(data)
+							//ERROR:500// 错误，客户端发送消息错误时会收到此消息（协议错误、JSON错误...）
+				}
+			}
+			//发生错误时的回调
+			function onerrorCallback(data) {
+
+			}
+			//关闭时的回调
+			function oncloseCallback(data) {
+
+			}
+		</script>
+	</body>
+
+</html>

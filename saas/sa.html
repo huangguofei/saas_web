@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body style="margin: 0;">
+
+		<input type="text" bind="uname" />
+		<input type="text" bind="user.name" />
+		<input type="text" bind="user.age" />
+		<input type="text" bind="user.info.ss" />
+		<button id="btn1" type="button" onclick="f1();">sasa</button>
+		<p class="label-ret"></p>
+		<fieldset>
+			<legend>Websocket</legend>
+			<label>状态:<label class="label-status">断开</label></label>
+			<p>
+				<input type="text" class="txt-login" gp="login" style="width: 500px;" action="3" value='{"session_id":"123","client_type":9,"dev":"00"}' />
+				<button class="btn-login" type="button" gp="login">登录</button> </p>
+			<p>
+				<input type="text" class="txt-query-clients" gp="query-clients" style="width: 200px;" action="20" value='{"session_id":"123"}' />
+				<button class="btn-query-clients" type="button" gp="query-clients">好友列表</button>
+				<input type="text" class="txt-query-acks" gp="query-acks" style="width: 200px;" action="9003" value='{"session_id":"123"}' />
+				<button class="btn-query-acks" type="button" gp="query-acks">ACK列表</button>
+			</p>
+			<p>
+				<input type="text" class="txt-send-to-user" gp="send-to-user" style="width: 500px;" value='{"action":"send_to_user","data":{"session_id":"123","send_to_uid":"456","send_msg":"你好啊"}}' />
+				<button class="btn-send-to-user" type="button" gp="send-to-user">发送消息</button> </p>
+			<p>
+				<input type="text" class="txt-clear" gpd="test-cmd" style="width: 50px;" value='40' />
+				<input type="text" class="txt-clear" gpd="test-data" style="width: 500px;" value='{"session_id":"123","to_employee":"65822482-b50f-4b78-9f30-a888c6410a95","message":"%u4F60%u597D%u554A%uFF0C%u4F10%u6728%u5DE5...HAHA","message_type":1}' />
+				<button class="btn-clear" type="button" gpd="test">TEST</button> <button class="btn-clear-result" type="button">清空下面结果</button></p>
+			<textarea class="txt-ws-result" style="width: 100%; height: 400px;"></textarea>
+		</fieldset>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<script>
+			var pingTimer;
+
+			$(document).ready(function() {
+				//				var buf = new ArrayBuffer(4);
+				//				var view = new DataView(buf);
+				//				view.setInt32(0, 16581375);
+				//				var u8 = new Uint8Array(buf);
+				//				console.dir(u8);
+				//				console.dir(view.getInt32(0));
+
+				var msgCount = 0;
+				var socket = new WebSocket('ws://'+WSSERVER+WSPORT);
+				socket.binaryType = 'arraybuffer';
+				// 打开Socket 
+				socket.onopen = function(event) {
+					$(".label-status").text("连接成功");
+
+					// 监听消息
+					socket.onmessage = function(event) {
+						if(msgCount == 0) {
+							//socket.send(event.data);
+						}
+						msgCount++;
+						var buf = new Uint8Array(event.data);
+						console.dir(buf);
+
+						var buffer = event.data;
+						//解析
+						var offset = 0;
+
+						//包长
+						var pack_len = get_protocol_int32_value(buffer, offset, 4);
+						console.log(pack_len);
+						offset += 4;
+
+						//消息头长
+						var header_len = get_protocol_int16_value(buffer, offset, 2);
+						console.log(header_len);
+						offset += 2;
+
+						//消息协议
+						var protocol_ver = get_protocol_int16_value(buffer, offset, 2);
+						console.log(protocol_ver);
+						offset += 2;
+
+						//消息类型
+						var cmd = get_protocol_int32_value(buffer, offset, 4);
+						console.log(cmd);
+						offset += 4;
+
+						//消息ID
+						var msg_id = get_protocol_int32_value(buffer, offset, 4);
+						console.log(msg_id);
+						offset += 4;
+
+						var dataArr = [];
+						for(var i = offset; i < buf.byteLength; i++) {
+							dataArr.push(buf[i]);
+						}
+						var data_json = bin2String(dataArr);
+						console.dir(data_json);
+						var recvData = JSON.parse(data_json);
+						switch(cmd) {
+							case 1:
+								//收到配置信息
+								var pingInterval = recvData.client_ping_interval;
+								if(!pingInterval || pingInterval < 5000) {
+									break;
+								}
+
+								if(recvData.ack) {
+									//回执
+									send2Server(10, {
+										msg_id: msg_id,
+										session_id: $.cookie("session_id")
+									});
+								}
+
+								if(pingTimer) {
+									clearInterval(pingTimer);
+								}
+								pingTimer = setInterval(function() {
+									ping();
+								}, pingInterval);
+								//第一次ping
+								ping();
+								break;
+						}
+						log4ws('收到消息\n' + JSON.stringify({
+							action: cmd,
+							data: recvData
+						}, null, 4));
+					};
+
+					// 监听Socket的关闭
+					socket.onclose = function(event) {
+						$(".label-status").text("断开");
+						log4ws('服务器断开连接。');
+					};
+				};
+				var get_protocol_int16_value = function(buffer, startIndex, length) {
+					var view = new DataView(buffer.slice(startIndex, startIndex + length));
+					return view.getInt16(0);
+				};
+				var get_protocol_int32_value = function(buffer, startIndex, length) {
+					var view = new DataView(buffer.slice(startIndex, startIndex + length));
+					return view.getInt32(0);
+				};
+				var set_protocol_int16_value = function(buffer, data) {
+					var view = new DataView(buffer);
+					view.setInt16(0, data);
+				};
+				var set_protocol_int32_value = function(buffer, data) {
+					var view = new DataView(buffer);
+					view.setInt32(0, data);
+				};
+
+				var string2Bin = function(str) {
+					var result = [];
+					for(var i = 0; i < str.length; i++) {
+						result.push(str.charCodeAt(i));
+					}
+					return result;
+				};
+
+				var bin2String = function(dataArr) {
+					var res = "";
+					for(var i in dataArr) {
+						res += String.fromCharCode(dataArr[i]);
+					}
+					return res;
+					//return String.fromCharCode.apply(String, dataArr);
+				};
+				var ping = function() {
+					if(socket.readyState != socket.OPEN) {
+						//状态异常
+						clearInterval(pingTimer);
+						return false;
+					}
+					//设置session_id
+					send2Server(2, {
+						session_id: $.cookie("session_id")
+					});
+					//socket.send('36  101 2   9999{"session_id":"123"}');
+				};
+				//1-config;2-ping;3-login
+				var send2Server = function(action, data) {
+					//编码
+
+					if(typeof data == "object")
+						data = JSON.stringify(data);
+
+					//alert(data.message)
+
+					//消息协议
+					var u8_protocol_ver = new Uint8Array(2);
+					set_protocol_int16_value(u8_protocol_ver.buffer, 1);
+					var protocol_ver = u8_protocol_ver;
+					//console.dir(u8_protocol_ver);
+
+					//消息类型
+					var u8_cmd = new Uint8Array(4);
+					set_protocol_int32_value(u8_cmd.buffer, action);
+					var cmd = u8_cmd;
+
+					//消息ID
+					var u8_msg_id = new Uint8Array(4);
+					set_protocol_int32_value(u8_msg_id.buffer, 369258);
+					var msg_id = u8_msg_id;
+
+					//消息头长
+					var header = (protocol_ver.length + cmd.length + msg_id.length);
+					var u8_header_len = new Uint8Array(2);
+					set_protocol_int16_value(u8_header_len.buffer, header);
+					var header_len = u8_header_len;
+
+					//包长
+					var pack_len_val = header + data.length + 6;
+					var u8_pack_len = new Uint8Array(4);
+					set_protocol_int32_value(u8_pack_len.buffer, pack_len_val);
+					var pack_len = u8_pack_len;
+
+					data = string2Bin(data);
+					//console.dir(data);
+
+					var u8_pack = new Uint8Array(pack_len.length + header_len.length + protocol_ver.length + cmd.length + msg_id.length + data.length);
+					u8_pack.set(pack_len);
+					var pos = pack_len.length;
+					u8_pack.set(header_len, pos);
+					pos += header_len.length;
+					u8_pack.set(protocol_ver, pos);
+					pos += protocol_ver.length;
+					u8_pack.set(cmd, pos);
+					pos += cmd.length;
+					u8_pack.set(msg_id, pos);
+					pos += msg_id.length;
+					u8_pack.set(data, pos);
+
+					//console.dir(u8_pack);
+
+					socket.send(u8_pack.buffer);
+				};
+
+				$("button[gp]").click(function() {
+					var inputDom = $("input[gp=" + $(this).attr("gp") + "]");
+					var data = JSON.parse(inputDom.val());
+					//设置session_id
+					data["session_id"] = $.cookie("session_id");
+					send2Server(inputDom.attr("action"), data);
+				});
+				$("button[gpd]").click(function() {
+					var inputCmdDom = $("input[gpd=" + $(this).attr("gpd") + "-cmd]");
+					var inputDataDom = $("input[gpd=" + $(this).attr("gpd") + "-data]");
+					var data = JSON.parse(inputDataDom.val());
+					//设置session_id
+					data["session_id"] = $.cookie("session_id");
+					send2Server(inputCmdDom.val(), data);
+				});
+
+				$(".btn-clear-result").click(function() {
+					$(".txt-ws-result").val("");
+				});
+			});
+
+			function log4ws(msg) {
+				var oldVal = $(".txt-ws-result").val();
+				if(oldVal) {
+					oldVal += "\n";
+				}
+				//$.timeNow().format("hh:mm:ss") + "："
+				$(".txt-ws-result").val(oldVal + msg);
+			}
+		</script>
+		<script>
+			$(document).ready(function() {
+				var controller = new Controller();
+				controller.set({
+					uname: "哦哦哦",
+					user: {
+						name: "哈哈",
+						age: 18,
+						info: {
+							ss: 123
+						}
+					}
+				});
+
+				$("#btn1").click(function() {
+					alert(JSON.stringify(controller.getJSON()));
+				});
+			});
+
+			//			function getWeekCountOfMonth(year, month) {
+			//				var dt = new Date();
+			//				//设置第一天
+			//				dt.setFullYear(year, month - 1, 1);
+			//				//第一天星期
+			//				var firstDayWeek = dt.getDay();
+			//				if(firstDayWeek == 0) firstDayWeek = 7;
+			//				//设置最后一天
+			//				dt.setFullYear(year, month, 0);
+			//				//天数
+			//				var days = dt.getDate();
+			//				//本月周一与一号相差
+			//				var currMonthWeek1Ofset = 1;
+			//				if(firstDayWeek != 1)
+			//					currMonthWeek1Ofset = 7 - firstDayWeek + 2;
+			//				//周数
+			//				var weekCount = Math.ceil((days - currMonthWeek1Ofset + 1) / 7);
+			//				return weekCount;
+			//			}
+			//
+			//			function getWeeks(year, month) {
+			//				var weekIndex = 0;
+			//				if(month > 1) {
+			//					//计算之前周数
+			//					for(var i = 1; i < month; i++) {
+			//						weekIndex += getWeekCountOfMonth(year, i);
+			//					}
+			//				}
+			//				//当前周数
+			//				var weekCount = getWeekCountOfMonth(year, month);
+			//				var retWeeks = [];
+			//				for(var i = 1; i <= weekCount; i++) {
+			//					retWeeks.push(weekIndex + i);
+			//				}
+			//				return retWeeks;
+			//			}
+			//			//getWeeks(2016, 7);
+			//			//			var addTpl = "<b style='color:blue;'>{0}</b>"
+			//			//			var delTpl = "<del style='color:red;'>{0}</del>";
+			//			var addTpl = "┢"; //、增加
+			//			var delTpl = "┩"; //减少
+			//			var addArr = [];
+			//			var delArr = [];
+			//			var str1 = "我求两或二比较字符66处理"; //原始
+			//			var s1Length = str1.length;
+			//			var str2 = "求11两22或三个44比较字符串处理55"; //新的
+			//			var s2Length = str2.length;
+			//			var re = new RegExp("(?=.*?)[^" + str1 + "](?=.*?)|(?=.*?)[^" + str2 + "](?=.*?)", "g");
+			//			var arr;
+			//			document.write(str1 + "<br/>" + str2);
+			//			var changeArr = [];
+			//			while((arr = re.exec(str1 + str2)) != null) {
+			//				changeArr.push(arr);
+			//			}
+			//			if(changeArr.length > 0) {
+			//				//倒序
+			//				changeArr = changeArr.sort(function(a, b) {
+			//					return b.index - a.index;
+			//				});
+			//
+			//				var sourceStr = str1;
+			//				//过滤删除的字符
+			//				var deledArr = [];
+			//				console.log(changeArr)
+			//				for(var i in changeArr) {
+			//					var changeData = changeArr[i];
+			//					if(changeData.index <= s1Length) { ////被删除的
+			//						sourceStr = sourceStr.substring(0, changeData.index) + sourceStr.substring(changeData.index + 1, sourceStr.length);
+			//						deledArr.push(changeArr[i]);
+			//					}
+			//				}
+			//				var sourceLength = sourceStr.length;
+			//				//重新拼接
+			//				////先做删除
+			//				for(var i in deledArr) {
+			//					var changeData = deledArr[i];
+			//					var currIndex = changeData.index - (deledArr.length - i - 1);
+			//					if(i > 0 && (changeData["index"] + 1 == deledArr[i - 1]["index"])) {
+			//						currIndex++;
+			//					}
+			//					sourceStr = sourceStr.substring(0, currIndex) + $.format(delTpl, changeData["0"]) + sourceStr.substring(currIndex, sourceStr.length);
+			//					delArr.push(changeData["0"]);
+			//				}
+			//				//、、做增加
+			//				var m = 0;
+			//				for(var i = 0; i < changeArr.length - deledArr.length; i++) { //新增
+			//					var len = 0;
+			//					var changeData = changeArr[i];
+			//					if(changeData.index > s1Length) {
+			//						//len = addTpl.length - 2;
+			//						//var currIndex = changeData.index - s2Length + parseInt(i)+1;
+			//						for(var n in deledArr) {
+			//							if(deledArr[n]["index"] > changeData["index"] - s2Length) {
+			//								len += 1;
+			//							}
+			//						}
+			//						console.log(len)
+			//						var p = changeData["index"] - s1Length - (changeArr.length - deledArr.length - i);
+			//						console.log("index" + changeData["index"])
+			//						var currIndex = p + 6; //changeData["index"]-s1Length;;
+			//						if(i > 0 && (changeData["index"] + 1 == changeArr[i - 1]["index"])) {
+			//							currIndex += 1;
+			//						}
+			//						sourceStr = sourceStr.substring(0, currIndex) + $.format(addTpl, changeData["0"]) + sourceStr.substring(currIndex, sourceStr.length);
+			//						console.log(changeData.index)
+			//						console.log("增加：" + changeData["0"] + "下标：" + currIndex + "遍历：" + i);
+			//						console.log(sourceStr);
+			//						addArr.push(changeData["0"]);
+			//						//if(i>=1)break;
+			//
+			//						//m.push(currIndex + 5);
+			//					}
+			//				}
+			//				var handleSourceArr = sourceStr.split("");
+			//				for(var i = handleSourceArr.length; i >= 0; i--) {
+			//					if(handleSourceArr[i] == "┢") { //增加
+			//						handleSourceArr[i] = "<b style='color:blue;'>" + addArr.shift() + "</b>"
+			//					}
+			//					if(handleSourceArr[i] == "┩") { //减少
+			//						handleSourceArr[i] = "<del style='color:red;'>" + delArr.shift() + "</del>"
+			//					}
+			//				}
+			//				sourceStr = handleSourceArr.join("");
+			//				$(".label-ret").html(sourceStr);
+			//			}
+		</script>
+	</body>
+
+</html>

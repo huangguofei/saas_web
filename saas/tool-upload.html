@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>上传文件</title>
+		<link rel="stylesheet" href="resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="resources/css/datepicker.css" />
+		<link rel="stylesheet" href="resources/css/bootstrap-datetimepicker.min.css" />
+		<link rel="stylesheet" href="resources/css/main-page.css" />
+		<style>
+			body {
+				margin: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="sigin">
+			<h4>上传</h4>
+			<p>
+				API：<input type="text" id="txtApi" value="/mail/upload" style="width: 500px;" />
+				<button type="button" id="btnUp">上传图片</button>
+			</p>
+		</div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="resources/js/moment-with-locales.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap-datetimepicker.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap-datetimepicker.zh-CN.js"></script>
+		<script type="text/javascript" src="resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<script type="text/javascript" src="resources/js/sortable.js"></script>
+		<script type="text/javascript" src="resources/js/customize/approval.js"></script>
+		<script type="text/javascript" src="resources/js/customize/attendance.js"></script>
+		<script>
+			$(document).ready(function() {
+				$("#btnUp").initUploader({
+					url: BASEAPIURL + $("#txtApi").val(),
+					FilesAdded: function(up, files) {
+						return true;
+					},
+					FileUploaded: function(up, file, response) {
+						var resp = JSON.parse(response.response);
+						if(resp.code == 0) {
+							//success
+							$.showSuccessGritter(JSON.stringify(resp.data));
+						} else {
+							$.showErrorGritter("上传失败：" + resp.msg);
+						}
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html>

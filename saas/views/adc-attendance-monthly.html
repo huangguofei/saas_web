@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>员工月度考勤</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+			.page-container,
+			.page-container .content {
+				padding: 0;
+			}
+			
+			.page-container .content .left-menu {
+				overflow: hidden;
+			}
+			
+			.page-container .content .main-wrap {
+				padding-top: 14px;
+			}
+			
+			.tree {
+				overflow-y: auto;
+			}
+			
+			.tree>li {
+				margin-left: 0;
+			}
+			
+			.tree .top-line:before {
+				margin-top: 10px!important;
+			}
+			
+			.tree>li>ul>li:last-child:before {
+				margin-top: 13px!important;
+			}
+			
+			.page-container .content .left-menu>p {
+				line-height: 35px;
+				padding-left: 10px;
+				background-color: #f3f3f3;
+				font-size: 14px;
+				color: #666;
+				border-bottom: 1px solid #e3e3e3;
+			}
+			
+			.page-container .content .left-menu .treeview {
+				overflow: auto;
+			}
+			
+			.page-container .content .main-wrap {
+				margin-left: 230px;
+			}
+			
+			.page-container .content .left-menu {
+				width: 220px;
+			}
+			
+			.left-menu {
+				top: 59px!important;
+				bottom: 13px!important;
+				border: 1px solid #e3e3e3;
+				border-width: 0 1px 1px 0;
+			}
+			
+			.area-view {
+				border: 0;
+				cursor: pointer;
+				margin: 0;
+				position: relative;
+				width: 90%;
+				height: 27px;
+				float: inherit;
+				padding: 0 13px;
+			}
+			
+			.area-view p,
+			.area-view:last-child p {
+				width: auto;
+				line-height: 18px;
+			}
+			
+			.btn-container {
+				padding: 10px 10% 10px 50%;
+			}
+			
+			/*.tree-dept-menu li i {
+				width: 20px;
+			}*/
+			
+			.item,
+			.item img {
+				width: auto!important;
+				max-width: 550px;
+			}
+			
+			.sel-effective-area {
+				height: 120px;
+			}
+			
+			.sel-effective-area p {
+				font-size: 14px;
+				color: #666;
+				margin-bottom: 6px;
+			}
+			
+			.sel-effective-area span {
+				font-size: 12px;
+				color: #999;
+			}
+			
+			.sel-effective-area input {
+				vertical-align: text-top;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-attendance">
+			<!--<div class="remark">
+				<img src="../resources/images/adc-monthly-icon.png" alt="" /><span>*员工考勤汇总</span>
+			</div>-->
+			<div class="content">
+				<div class="left-menu">
+					<p>选择统计部门</p>
+					<div class="treeview">
+						<ul class="tree tree-dept-menu">
+
+						</ul>
+					</div>
+					<hr />
+					<div class="sel-effective-area">
+						<p style="margin-left: 15px;">请选择具体统计范围：</p>
+						<div class="area-view" data-area-name="with_lowers" data-area-value="2">
+							<label>
+								<input type="radio" name="with_lowers" checked="checked" value="2"/>
+								<span>所选部门</span>
+							</label>
+						</div>
+						<div class="area-view" data-area-name="with_lowers" data-area-value="1">
+							<label>
+								<input type="radio" name="with_lowers"  value="1"/>
+								<span>所选部门及其所有下属部门</span>
+							</label>
+						</div>
+					</div>
+					<!--<hr />
+					<div class="btn-container">
+						<a href="javascript:;" class="btn btn-default btn-sm btn-tj">统计</a>
+						<a href="javascript:;" class="btn btn-default btn-sm btn-cancel">重置</a>
+					</div>-->
+				</div>
+				<div class="main-wrap">
+					<div class="search">
+
+					</div>
+					<table id="grid-table" class="grid-module">
+					</table>
+					<div id="grid-pager">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-danger def-btn-danger" onclick="reloadAttendanceGrid('',true);"><img class='btn-export-img' src="../resources/images/export-icon.png" alt="" />导出</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.nestable.min.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/department.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/approval.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/attendance.js"></script>
+		<script type="text/javascript">
+			//APIS
+			var ATTENDANCEAPIS = {
+				//月度考勤
+				attendanceByMonth: BSAPIURL + "/manage_attendances/by_month",
+				//月度考勤
+				exportAttendanceByMonth: BSAPIURL + "/manage_attendances/by_month",
+				//考勤详情
+				attendanceDetail4Emp: BSAPIURL + "/manage_attendances/employee_attendance_by_month",
+				attendanceDetail4Dept: BSAPIURL + "/manage_attendances/department_attendance_by_month"
+			};
+			var depaUrl = SAASAPIS.BS.company.departments.replace("{id}", $.uuid())+"?is_tree=1";
+			var gridSelector = "#grid-table";
+			var pagerSelector = "#grid-pager";
+			//选择的部门/职位ID
+			var selectDeptId, selectRealDeptId, selectDeptName, selectRealDeptName;
+			var selectDeptIsTopest = false;
+			//临时参数
+			var tmpSelectTags = {};
+			//def month
+			function getPreMonth(date) {
+				var arr = date.split('-');
+				var year = arr[0]; //获取当前日期的年份
+				var month = arr[1]; //获取当前日期的月份
+				var day = arr[2]; //获取当前日期的日
+				var days = new Date(year, month, 0);
+				days = days.getDate(); //获取当前日期中月的天数
+				var year2 = year;
+				var month2 = parseInt(month) - 1;
+				if(month2 == 0) {
+					year2 = parseInt(year2) - 1;
+					month2 = 12;
+				}
+				var day2 = day;
+				var days2 = new Date(year2, month2, 0);
+				days2 = days2.getDate();
+				if(day2 > days2) {
+					day2 = days2;
+				}
+				if(month2 < 10) {
+					month2 = '0' + month2;
+				}
+				var t2 = year2 + '-' + month2;// + '-' + day2;
+				return t2;
+			}
+			var defMonth = getPreMonth((new Date()).Format("yyyy-MM")); // (new Date(GetDateStr(-30, new Date()))).Format("yyyy-mm");
+			var deptsJSON = [];
+			$(".left-menu").css("height",$(window).height()+"px").css("max-height",$(window).height()+"px");
+			$(".treeview").css("height",$(window).height()-165+"px").css("max-height",$(window).height()-165+"px");
+			$(".tree").css("height",$(window).height()-180+"px").css("max-height",$(window).height()-180+"px");
+			$(document).ready(function() {
+				$(".left-menu").css({
+					top: ($(".remark").height() + 41) + "px",
+					bottom: "50px"
+				});
+				$(".module-tree").css("top", ($(".remark").height() + 41) + "px");
+				//token
+				$.token();
+				//grid
+				initAttendanceGrid();
+			});
+			//初始化数据表格
+			function initAttendanceGrid() {
+				//search
+				$.initSearchControls4TagMode({
+					auto: false,
+					url: ATTENDANCEAPIS.attendanceByMonth,
+					grid: gridSelector,
+					container: ".search",
+					keyName: "key",
+					keyPlaceholder: "请输入员工姓名进行查询",
+					onChange: function(selectTags) {
+						tmpSelectTags = selectTags;
+						defMonth = tmpSelectTags.attendance_date;
+						reloadAttendanceGrid();
+					},
+					groups: [{
+						type: "date",
+						mode: "month",
+						text: "选择月份",
+						items: [{
+							name: "attendance_date",
+							placeholder: "选择月份",
+							value: defMonth
+						}]
+					}]
+				});
+				var colNames = ['', '日期', '工号', '姓名', '部门职务', '签到排名', '应出勤(天)', '实际出勤(天)', '请假(天)', '旷工半天(次)', '旷工一天(次)', '出差(天)', '正常签到(次)', '迟到(次)', '正常签退(次)', '早退(次)', '未签', '加班时长(小时)'];
+				var colModel = [{
+					name: 'attendance_id',
+					hidden: true
+				}, {
+					name: 'attendance_date',
+					formatter: function(cellvalue, options, rowObject) {
+						return tmpSelectTags.attendance_date || defMonth;
+					},
+					width: 60
+				}, {
+					name: 'employee_code',
+					sortable: true,
+					width: 40
+				}, {
+					name: 'employee_name',
+					sortable: true,
+					width: 70
+				}, {
+					name: 'depa_name',
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.department_name + "," + rowObject.post_name;
+					}
+				}, {
+					name: 'rank',
+					sortable: true,
+					width: 60
+				}, {
+					name: 'count_should',
+					sortable: true,
+					width: 70
+				}, {
+					name: 'count_work',
+					width: 85
+				}, {
+					name: '__leave',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var leaveCount = rowObject.count_leave;
+							if(leaveCount == 0&&!rowObject.has_leave) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openLeaveRecordsPop('1','" + (tmpSelectTags.attendance_date || defMonth) + "','" + rowObject.employee_id + "');\">" + leaveCount + "</a>";
+						} catch(e) {
+							return '';
+						}
+					},
+					width: 60
+				}, {
+					name: 'count_status_half',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(1, 1, '', rowObject.employee_id) + "',1);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					},
+					width: 85
+				}, {
+					name: 'count_status_full',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(1, 2, '', rowObject.employee_id) + "',2);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					},
+					width: 85
+				}, {
+					name: 'count_work_status_business_trip',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(1, 3, '', rowObject.employee_id) + "',3);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					},
+					width: 60
+				}, {
+					name: 'count_in_status_normal',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(1, 4, '', rowObject.employee_id) + "',4);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					},
+					width: 85
+				}, {
+					name: 'count_in_status_late',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(1, 5, '', rowObject.employee_id) + "',5);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					},
+					width: 60
+				}, {
+					name: 'count_out_status_normal',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(1, 6, '', rowObject.employee_id) + "',6);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					},
+					width: 85
+				}, {
+					name: 'count_out_status_early',
+					//width: 150,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(1, 7, '', rowObject.employee_id) + "',7);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					},
+					width: 60
+				}, {
+					name: 'count_status_not',
+					//width: 150,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(1, 8, '', rowObject.employee_id) + "',8);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					},
+					width: 40
+				}, {
+					name: 'count_overtime_limit',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == null) {
+								return 0;
+							} else {
+								return "<a href='javascript:;' onclick=\"openOvertimeRecordsPop('1','" + defMonth + "','" + rowObject.employee_id + "');\">" + rowObject.count_overtime_limit + "</a>";
+							}
+
+						} catch(e) {
+							return '';
+						}
+					},
+					width: 90
+				}];
+				grid = $(gridSelector).initJqGrid({
+					gridSelector: gridSelector,
+					pager: pagerSelector,
+					url: ATTENDANCEAPIS.attendanceByMonth + "?attendance_date=" + defMonth+"&with_lowers=2",
+					colNames: colNames,
+					colModel: colModel,
+					multiselect: false,
+
+					thDefaultWidth: 80
+				});
+			}
+			//获取考情详情URL地址 (1半天旷工,2旷工一天,3出差,4正常签到,5迟到,6正常签退,7早退,8未签)
+			//type:1-for employee 2-for dept
+			function getAttendanceDetailUrl(type, status, deptId, employeeId) {
+				var baseUrl = "";
+				if(type == 1) {
+					baseUrl = ATTENDANCEAPIS.attendanceDetail4Emp;
+				} else if(type == 2) {
+					baseUrl = ATTENDANCEAPIS.attendanceDetail4Dept;
+				}
+				var condition = {};
+				condition.attendance_begin_date = tmpSelectTags.attendance_date || defMonth;
+				condition.result_status = status;
+				//按部门时
+				condition.depa_tree_code = deptId;
+				//按员工时
+				condition.employee_id = employeeId;
+				condition.type = type;
+				return baseUrl + $.toQueryString(condition, true);
+			}
+			//加载部门树
+			loadDashedDeptTree({
+				container: $(".tree-dept-menu"),
+				showIcon: true,
+				url: depaUrl,
+				onlyShowDept: true,
+				showDeptChildCount: true,
+				removeHeightForTree: $(".treeview>p").outerHeight(true)+$(".sel-effective-area").outerHeight(true),
+				loadComplete: function(){
+					$(".tree-dept-menu li label").click(function(e) {
+						$(".tree-dept-menu li label").removeClass("active");
+						$(this).addClass("active");
+						var selectDeptData = $(this).parent().parent().data("dept")||$(this).parent().data("dept");
+						if(selectDeptData) {
+							var selectData = {};
+							selectData.isTopest = $(this).data("istop");
+							selectData.deptId = selectDeptData.depa_tree_code;
+							selectData.deptType = selectDeptData.depa_type;
+							selectData.realDeptId = selectDeptId;
+							selectData.deptName = selectDeptData.depa_name;
+							selectData.realDeptName = selectDeptName;
+							//如果选择的是职务
+							if(selectDeptData.depa_type == 1) {
+								selectData.realDeptId = selectDeptData.parent_depa_tree_code;
+								selectData.realDeptName = $(this).parents("li:first").parents("li:first").data("dept").depa_name;
+							}
+							reloadAttendanceGrid();
+						}
+					});
+					$(".tree-dept-menu>li>p>label").click();
+					$(".tree-dept-menu li img").click(function(e) {
+						$(this).parents("li:first").find(".items:first").toggleClass("hide");
+					});
+					$(".tree-dept-menu>li ul img").click();
+					$(".tree-dept-menu li label[code='" + selectDeptId + "']").click();
+				}
+			});
+			//重新加载统计数据
+			var reloadAttendanceGrid = function(id,isExport) {
+				selectDeptId = $(".tree-dept-menu .active").attr("code");
+				if(!selectDeptId) {
+					$.showErrorGritter("请先选择需要统计的部门");
+					return false;
+				}
+				if(!tmpSelectTags.with_lowers) {
+					$(".sel-effective-area").find(".area-view").each(function() {
+						if($(this).find("img")) {
+							tmpSelectTags.with_lowers = $(this).attr("data-area-value");
+						}
+					});
+				}
+				if(!tmpSelectTags.with_lowers) {
+					$.showErrorGritter("请先选择具体统计的范围");
+					return false;
+				}
+				if(selectDeptId)
+					tmpSelectTags.depa_tree_code_arr = selectDeptId;
+				//月份
+				tmpSelectTags.attendance_date = tmpSelectTags.attendance_date || defMonth;
+				if(isExport) {
+					console.log(ATTENDANCEAPIS.attendanceByMonth + $.toQueryString(tmpSelectTags, true)+"&export=1");
+					$.downloadFile(ATTENDANCEAPIS.attendanceByMonth + $.toQueryString(tmpSelectTags, true)+"&export=1");
+					return true;
+				}
+				$(grid).jqGrid('setGridParam', {
+					page: 1,
+					url: ATTENDANCEAPIS.attendanceByMonth + $.toQueryString(tmpSelectTags, true)
+				}).trigger("reloadGrid", {});
+			};
+			//选择范围
+			var isFirstClick = true;
+			$(".sel-effective-area .area-view input").unbind("click").click(function() {
+				tmpSelectTags.with_lowers = $(this).val();
+				if(!isFirstClick) reloadAttendanceGrid();
+				isFirstClick = false;
+			});
+			$(".sel-effective-area .area-view input[value='2']").click();
+		</script>
+	</body>
+
+</html>

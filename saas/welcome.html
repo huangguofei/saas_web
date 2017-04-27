@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>主页</title>
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.page-container,
+			.page-container .content {
+				padding: 0;
+				height: 100%;
+			}
+			
+			.top-container {
+				height: 216px;
+				position: relative;
+			}
+			
+			.top-banner {
+				height: 146px;
+				background: url(resources/images/wel-banner-icon.png) no-repeat;
+			}
+			
+			.own-head {
+				position: absolute;
+				border: 4px solid #fff;
+				bottom: 14px;
+				left: 40px;
+				width: 132px;
+				height: 132px;
+				box-sizing: content-box;
+			}
+			
+			.own-info {
+				height: 70px;
+				border-bottom: 1px solid #ddd;
+				padding-left: 180px;
+			}
+			
+			.own-info .work-info {
+				height: 40px;
+				border-right: 1px solid #eee;
+				width: 240px;
+				margin: 14px 0;
+				text-align: center;
+				font-size: 14px;
+				color: #999;
+			}
+			
+			.own-info .work-info.own-source-info {
+				text-align: left;
+				padding-left: 16px;
+			}
+			
+			.own-info .work-info.own-source-info .font-blod {
+				font-family: "宋体";
+			}
+			
+			.own-info .work-info .font-blod {
+				font-weight: bold;
+				font-size: 16px;
+				color: #333;
+				font-family: arial;
+			}
+			
+			.btn-to-user-center {
+				height: 27px;
+				width: 90px;
+				margin: 21px 20px;
+				line-height: 27px;
+				padding: 0;
+			}
+			
+			.ranking-container-all {
+				height: calc(100% - 216px);
+				background-color: #f3f3f3;
+				padding: 30px 0 0 40px;
+			}
+			
+			.ranking-container-all .ranking-detail {
+				width: 495px;
+				height: calc(100% - 35px);
+				margin-right: 40px;
+			}
+			
+			.ranking-container-all .ranking-detail:last-child {
+				margin-right: 0;
+			}
+			
+			.ranking-container-all .ranking-detail .ranking-top {
+				padding: 0 181px 0 46px;
+				position: relative;
+				height: 46px;
+				line-height: 46px;
+				margin-bottom: 10px;
+			}
+			
+			.ranking-container-all .ranking-detail .ranking-top .ranking-left-icon {
+				position: absolute;
+				left: 0;
+				bottom: 0;
+			}
+			
+			.ranking-container-all .ranking-detail .ranking-top .ranking-center-title {
+				position: absolute;
+				left: 46px;
+				right: 181px;
+				bottom: 3px;
+				background-color: #fa7a70;
+				height: 40px;
+				line-height: 40px;
+				color: #fff;
+				font-size: 16px;
+				padding-left: 10px;
+			}
+			
+			.ranking-container-all .ranking-detail .ranking-top .ranking-right-icon {
+				position: absolute;
+				right: 0;
+				bottom: 3px;
+			}
+			
+			.ranking-container-all .ranking-detail.ranking-visit .ranking-top .ranking-center-title {
+				background-color: #66b6ec;
+			}
+			
+			.ranking-container-all .ranking-detail.ranking-plan .ranking-top .ranking-center-title {
+				background-color: #64c18f;
+			}
+			
+			.nav-list {
+				height: 35px;
+				font-size: 14px;
+				border-bottom: 1px solid #e9e9e9;
+				line-height: 35px;
+			}
+			
+			.nav-list ul li {
+				width: 90px;
+				margin-right: 2px;
+				background-color: #e3e3e3;
+				color: #666;
+				height: 35px;
+				line-height: 35px;
+				text-align: center;
+				border: 1px solid #e9e9e9;
+				border-radius: 2px;
+				border-bottom: 0;
+				cursor: pointer;
+			}
+			
+			.nav-list ul li a {
+				color: #666;
+			}
+			
+			.nav-list ul li.active {
+				background-color: #fff;
+				color: #CA192B;
+			}
+			
+			.nav-list ul li.active a {
+				color: #CA192B;
+			}
+			
+			.nav-list .view-more {
+				color: #009fd6;
+				cursor: pointer;
+			}
+			
+			.nav-list .view-more img {
+				vertical-align: baseline;
+				margin-left: 5px;
+			}
+			
+			.ranking-container {
+				height: calc(100% - 56px);
+			}
+			
+			.ranking-list {
+				background-color: #fff;
+				height: calc(100% - 15px);
+				width: 100%;
+			}
+			
+			.ranking-bofore-3 {
+				height: 150px;
+				padding-top: 20px;
+			}
+			
+			.ranking-bofore-3 .ranking-before {
+				width: 70px;
+				text-align: center;
+			}
+			
+			.ranking-bofore-3 .ranking-before.ranking-1 {
+				margin-left: 60px;
+			}
+			
+			.ranking-bofore-3 .ranking-before.ranking-2 {
+				margin-left: 60px;
+			}
+			
+			.ranking-bofore-3 .ranking-before.ranking-3 {
+				margin-left: 90px;
+			}
+			
+			.ranking-bofore-3 .ranking-before .ranking-head-container {
+				border-radius: 34px;
+				border: 2px solid #cdcdcd;
+				width: 68px;
+				height: 68px;
+				overflow: visible;
+				background-color: #cdcdcd;
+				position: relative;
+			}
+			
+			.ranking-bofore-3 .ranking-before .ranking-head-container .ranking-head {
+				width: 70px;
+				height: 70px;
+				position: absolute;
+				top: -2px;
+				left: -2px;
+				border-radius: 35px;
+			}
+			
+			.ranking-bofore-3 .ranking-before .ranking-head-container.non,
+			.ranking-bofore-3 .ranking-before .ranking-head-container.non .ranking-head {
+				border: none!important;
+			}
+			
+			.ranking-bofore-3 .ranking-before .ranking-head-container.non .ranking-head {
+				top: 0;
+				left: 0;
+				width: 68px;
+				height: 68px;
+			}
+			
+			.ranking-bofore-3 .ranking-before .ranking-head-container.non .ranking-head-top{
+				top: -7px!important;
+				right: -8px!important;
+			}
+			
+			.ranking-bofore-3 .ranking-before .ranking-head-container .ranking-head-top{
+				position: absolute;
+				top: -10px;
+				right: -10px;
+			}
+			
+			.ranking-bofore-3 .ranking-before.ranking-1 .ranking-head-container {
+				background-color: #fce167;
+				border: 2px solid #fce167;
+			}
+			
+			.ranking-bofore-3 .ranking-before.ranking-2 .ranking-head-container {
+				background-color: #c2871c;
+				border: 2px solid #c2871c;
+			}
+			
+			.ranking-bofore-3 .ranking-before.ranking-1 .ranking-head-container .ranking-head-top{
+				position: absolute;
+				top: -12px;
+				right: -14px;
+			}
+			
+			.ranking-bofore-3 .ranking-before.ranking-1 .ranking-head-container .ranking-head {
+				border: 2px solid #fce167;
+			}
+			
+			.ranking-bofore-3 .ranking-before.ranking-2 .ranking-head-container .ranking-head {
+				border: 2px solid #c2871c;
+			}
+			
+			.ranking-bofore-3 .ranking-before.ranking-3 .ranking-head-container .ranking-head {
+				border: 2px solid #cdcdcd;
+			}
+			
+			.ranking-bofore-3 .ranking-before .ranking-name {
+				display: inline-block;
+				width: 100%;
+				margin-top: 8px;
+				color: #666;
+				font-size: 14px;
+				line-height: 14px;
+			}
+			
+			.ranking-bofore-3 .ranking-before .ranking-time {
+				display: inline-block;
+				width: 100%;
+				margin-top: 2px;
+				color: #999;
+				font-size: 12px;
+				line-height: 12px;
+			}
+			
+			.ranking-list-real {
+				padding: 0 16px;
+			}
+			
+			.ranking-list-real li {
+				height: 50px;
+				padding: 10px 0;
+				border: 1px dashed #eee;
+				border-width: 1px 0;
+			}
+			
+			.ranking-list-real li span {
+				height: 30px;
+				line-height: 30px;
+			}
+			
+			.ranking-list-real li .ranking-num {
+				width: 30px;
+				text-align: center;
+				font-size: 14px;
+				font-family: arial;
+				color: #666;
+			}
+			
+			.ranking-list-real li .employee-name {
+				font-size: 14px;
+				color: #666;
+			}
+			
+			.ranking-list-real li .employee-depa-name {
+				font-size: 14px;
+				color: #999;
+			}
+			
+			.ranking-list-real li .employee-time {
+				font-size: 12px;
+				color: #999;
+			}
+			
+			.ranking-list-real li.adc-own-li .ranking-num,
+			.ranking-list-real li.adc-own-li .employee-name,
+			.ranking-list-real li.adc-own-li .employee-depa-name,
+			.ranking-list-real li.adc-own-li .employee-time {
+				color: #fc7a71;
+			}
+			
+			.ranking-list-real li.visit-own-li .ranking-num,
+			.ranking-list-real li.visit-own-li .employee-name,
+			.ranking-list-real li.visit-own-li .employee-depa-name,
+			.ranking-list-real li.visit-own-li .employee-time {
+				color: #67b7ef;
+			}
+			
+			.ranking-list-real li.plan-own-li .ranking-num,
+			.ranking-list-real li.plan-own-li .employee-name,
+			.ranking-list-real li.plan-own-li .employee-depa-name,
+			.ranking-list-real li.plan-own-li .employee-time {
+				color: #65c290;
+			}
+			
+			.ranking-list-real li.non .head-container {
+				display: none;
+			}
+			
+			.ranking-list-real li .head-container {
+				width: 30px;
+				height: 30px;
+				text-align: center;
+				border-radius: 15px;
+				background-color: #cdcdcd;
+				margin-right: 10px;
+			}
+			
+			.ranking-list-real li .head-container img {
+				width: 30px;
+				height: 30px;
+				border-radius: 15px;
+			}
+			
+			.ranking-list-real li .employee-name,
+			.ranking-list-real li .employee-depa-name {
+				width: 140px;
+				padding: 0;
+				display: inline-block;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				vertical-align: middle;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-attendance">
+			<div class="content">
+				<div class="top-container">
+					<div class="top-banner">
+					
+					</div>
+					<img src="" alt="" class="own-head" />
+					<div class="own-info at">
+						<div class="work-info own-source-info lt">
+							<div class="own-name font-blod">
+								<span bind="employee_name"></span>
+							</div>
+							<div>
+								<span bind="depa_name"></span>
+								<span>-</span>
+								<span bind="employee_post_cn"></span>
+							</div>
+						</div>
+						<div class="work-info crm-client-info lt">
+							<div class="crm-client-count font-blod">
+								<span bind="client_count"></span>
+							</div>
+							<div>
+								<span>客户单位数量</span>
+							</div>
+						</div>
+						<div class="work-info crm-depa-info lt">
+							<div class="crm-depa-count font-blod">
+								<span bind="depa_count"></span>
+							</div>
+							<div>
+								<span>客户部门数量</span>
+							</div>
+						</div>
+						<div class="work-info crm-contacts-info lt">
+							<div class="crm-contact-count font-blod">
+								<span bind="contact_count">99999</span>
+							</div>
+							<div>
+								<span>客户联系人数量</span>
+							</div>
+						</div>
+						<!--<div class="btn-to-user-center-container rt">
+							<a class="btn btn-info def-btn-info btn-to-user-center" onclick="parent.openTab('个人中心','views/user-center.html')">个人中心</a>
+						</div>-->
+					</div>
+				</div>
+				<div class="ranking-container-all at">
+					<div class="ranking-detail ranking-adc lt">
+						<div class="ranking-top">
+							<img class="ranking-left-icon" src="resources/images/wel-adc-in-icon.png" alt="" />
+							<span class="ranking-center-title">签到排行</span>
+							<img class="ranking-right-icon" src="resources/images/wel-adc-in-rank-right-cion.png" alt="" />
+						</div>
+						<div class="ranking-container">
+							<div class="nav-list at">
+								<ul class="at lt">
+									<li class="lt active">
+										<a index="today" class="">今日签到</a>
+									</li>
+									<li class="lt">
+										<a index="month_asc">上月签到</a>
+									</li>
+									<li class="lt">
+										<a index="month_desc">上月倒数</a>
+									</li>
+								</ul>
+								<a class="view-more rt" onclick="parent.openTab('签到排名','views/adc-attendance-signin-ranking.html')">
+									查看更多<img src="resources/images/wel-view-more-icon.png" alt="" />
+								</a>
+							</div>
+							<!--今日签到排名-->
+							<div class="ranking-list today-ranking-list">
+								<div class="ranking-bofore-3 at">
+									<div class="ranking-before ranking-3 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-3-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+									<div class="ranking-before ranking-1 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-1-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+									<div class="ranking-before ranking-2 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-2-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+								</div>
+								<ul class="ranking-list-real">
+									
+								</ul>
+							</div>
+							<!--上月签到排名-->
+							<div class="ranking-list month_asc-ranking-list hide">
+								<div class="ranking-bofore-3 at">
+									<div class="ranking-before ranking-3 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-3-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+									<div class="ranking-before ranking-1 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-1-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+									<div class="ranking-before ranking-2 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-2-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+								</div>
+								<ul class="ranking-list-real">
+									
+								</ul>
+							</div>
+							<!--上月签到排名倒数-->
+							<div class="ranking-list month_desc-ranking-list hide">
+								<ul class="ranking-list-real">
+									
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="ranking-detail ranking-visit lt">
+						<div class="ranking-top">
+							<img class="ranking-left-icon" src="resources/images/wel-visit-rank-icon.png" alt="" />
+							<span class="ranking-center-title">拜访客户排行</span>
+							<img class="ranking-right-icon" src="resources/images/wel-visit-rank-right-cion.png" alt="" />
+						</div>
+						<div class="nav-list at">
+							<ul class="at lt">
+								<li class="lt active">
+									<a index="daily_average" class="">日均家次</a>
+								</li>
+								<li class="lt">
+									<a index="month_num">上月家次</a>
+								</li>
+								<li class="lt">
+									<a index="month_long">上月时长</a>
+								</li>
+								<li class="lt">
+									<a index="daily_average_desc">上月倒数</a>
+								</li>
+							</ul>
+							<a class="view-more rt" onclick="parent.openTab('拜访客户排名','views/crm-visiting-clients-ranking.html')">
+								查看更多<img src="resources/images/wel-view-more-icon.png" alt="" />
+							</a>
+						</div>
+						<div class="ranking-container">
+							<!--日均拜访家次-->
+							<div class="ranking-list daily_average-ranking-list">
+								<div class="ranking-bofore-3 at">
+									<div class="ranking-before ranking-3 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-3-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+									<div class="ranking-before ranking-1 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-1-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+									<div class="ranking-before ranking-2 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-2-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+								</div>
+								<ul class="ranking-list-real">
+									
+								</ul>
+							</div>
+							<!--上月拜访家次-->
+							<div class="ranking-list month_num-ranking-list hide">
+								<div class="ranking-bofore-3 at">
+									<div class="ranking-before ranking-3 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-3-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+									<div class="ranking-before ranking-1 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-1-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+									<div class="ranking-before ranking-2 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-2-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+								</div>
+								<ul class="ranking-list-real">
+									
+								</ul>
+							</div>
+							<!--上月拜访时长-->
+							<div class="ranking-list month_long-ranking-list hide">
+								<div class="ranking-bofore-3 at">
+									<div class="ranking-before ranking-3 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-3-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+									<div class="ranking-before ranking-1 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-1-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+									<div class="ranking-before ranking-2 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-2-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+								</div>
+								<ul class="ranking-list-real">
+									
+								</ul>
+							</div>
+							<!--日均家次倒数-->
+							<div class="ranking-list daily_average_desc-ranking-list hide">
+								<ul class="ranking-list-real">
+									
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="ranking-detail ranking-plan lt">
+						<div class="ranking-top">
+							<img class="ranking-left-icon" src="resources/images/wel-plan-rank-icon.png" alt="" />
+							<span class="ranking-center-title">工作计划排行</span>
+							<img class="ranking-right-icon" src="resources/images/wel-plan-rank-right-cion.png" alt="" />
+						</div>
+						<div class="nav-list at">
+							<ul class="at lt">
+								<li class="lt active">
+									<a index="month_asc" class="">上月执行率</a>
+								</li>
+								<li class="lt">
+									<a index="month_desc">上月倒数</a>
+								</li>
+							</ul>
+							<a class="view-more rt" onclick="parent.openTab('工作计划排名','views/work-plan-ranking.html')">
+								查看更多<img src="resources/images/wel-view-more-icon.png" alt="" />
+							</a>
+						</div>
+						<div class="ranking-container">
+							<!--上月执行率-->
+							<div class="ranking-list month_asc-ranking-list">
+								<div class="ranking-bofore-3 at">
+									<div class="ranking-before ranking-3 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-3-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+									<div class="ranking-before ranking-1 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-1-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+									<div class="ranking-before ranking-2 lt">
+										<div class="ranking-head-container non">
+											<img class="ranking-head" src="" alt="" />
+											<img class="ranking-head-top" src="resources/images/wel-rank-2-icon.png" alt="" />
+										</div>
+										<div class="ranking-name">
+											<span>-</span>
+										</div>
+										<div class="ranking-time">
+											
+										</div>
+									</div>
+								</div>
+								<ul class="ranking-list-real">
+									
+								</ul>
+							</div>
+							<!--上月倒数-->
+							<div class="ranking-list month_desc-ranking-list hide">
+								<ul class="ranking-list-real">
+									
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/approval.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/attendance.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.print.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				getIndexInfo();
+			});
+			//获取主页信息
+			function getIndexInfo(){
+				//标签页切换时间绑定
+				$(".nav-list li a").click(function(){
+					$(this).parent().parent().find("li").removeClass("active");
+					$(this).parent().addClass("active");
+					$(this).parents(".ranking-detail").find(".ranking-list").addClass("hide");
+					$(this).parents(".ranking-detail").find("."+$(this).attr("index")+"-ranking-list").removeClass("hide");
+				});
+				$.showLoadingPop("正在加载...");
+				$.ajaxGet(BSAPIURL+"/main/statis",function(resp){
+					$.hideLoadingPop();
+					if(resp.code!=0) {
+						$.showErrorGritter("获取信息失败："+resp.msg);
+						return false;
+					}
+					bindOwnInfo(resp.data);
+					bindAdcInfo(resp.data.rank_attendance,"today");
+					bindAdcInfo(resp.data.rank_attendance,"month_asc");
+					bindAdcInfo(resp.data.rank_attendance,"month_desc");
+					bindVisitInfo(resp.data.rank_visit,"daily_average");
+					bindVisitInfo(resp.data.rank_visit,"month_num");
+					bindVisitInfo(resp.data.rank_visit,"month_long");
+//					bindVisitInfo(resp.data.rank_visit,"daily_average_desc");
+					bindPlanInfo(resp.data.rank_plan,"month_asc");
+					bindPlanInfo(resp.data.rank_plan,"month_desc");
+				});
+			}
+			//设置自己相关信息
+			function bindOwnInfo(data){
+				var controllerOfOwn=new Controller(".own-info");
+				var ownData={};
+				ownData.employee_name=data.employee_name;
+				ownData.depa_name=data.employee_name;
+				ownData.employee_post_cn=data.employee_post_name;
+				ownData.client_count=data.crm_client_num;
+				ownData.depa_count=data.crm_office_num;
+				ownData.contact_count=data.crm_contact_num;
+				controllerOfOwn.set(ownData);
+				$(".own-head").attr("src",data.employee_avatar);
+			}
+			//设置签到相关信息
+			function bindAdcInfo(data,type){
+				if(type=="today"||type=="month_asc"){
+					if(data[type][0]){
+						$(".ranking-adc ."+type+"-ranking-list .ranking-bofore-3 .ranking-1 .ranking-head-container").removeClass("non");
+						$(".ranking-adc ."+type+"-ranking-list .ranking-bofore-3 .ranking-1 .ranking-head-container .ranking-head").attr("src",data[type][0].employee_avatar);
+						$(".ranking-adc ."+type+"-ranking-list .ranking-bofore-3 .ranking-1 .ranking-name span").text(data[type][0].employee_name);
+						$(".ranking-adc ."+type+"-ranking-list .ranking-bofore-3 .ranking-1 .ranking-time").text(data[type][0].attendance_in_time_cn);
+					}
+					
+					if(data[type][1]){
+						$(".ranking-adc ."+type+"-ranking-list .ranking-bofore-3 .ranking-2 .ranking-head-container").removeClass("non");
+						$(".ranking-adc ."+type+"-ranking-list .ranking-bofore-3 .ranking-2 .ranking-head-container .ranking-head").attr("src",data[type][1].employee_avatar);
+						$(".ranking-adc ."+type+"-ranking-list .ranking-bofore-3 .ranking-2 .ranking-name span").text(data[type][1].employee_name);
+						$(".ranking-adc ."+type+"-ranking-list .ranking-bofore-3 .ranking-2 .ranking-time").text(data[type][1].attendance_in_time_cn);
+					}
+					
+					if(data[type][2]){
+						$(".ranking-adc ."+type+"-ranking-list .ranking-bofore-3 .ranking-3 .ranking-head-container").removeClass("non");
+						$(".ranking-adc ."+type+"-ranking-list .ranking-bofore-3 .ranking-3 .ranking-head-container .ranking-head").attr("src",data[type][2].employee_avatar);
+						$(".ranking-adc ."+type+"-ranking-list .ranking-bofore-3 .ranking-3 .ranking-name span").text(data[type][2].employee_name);
+						$(".ranking-adc ."+type+"-ranking-list .ranking-bofore-3 .ranking-3 .ranking-time").text(data[type][2].attendance_in_time_cn);
+					}
+				}
+				var tempi=type=="month_desc"?0:3;
+				for(var i=tempi;i<9;i++) {
+					var liDom=
+						$("<li class=\"at non\">"
+						+"	<span class=\"ranking-num lt\">"+(i+1)+"</span>"
+						+"	<div class=\"head-container lt\">"
+						+"		<img src=\"\" alt=\"\" />"
+						+"	</div>"
+						+"	<span class=\"employee-name lt\">-</span>"
+						+"	<span class=\"employee-depa-name lt\"></span>"
+						+"	<span class=\"employee-time lt\"></span>"
+						+"</li>");
+					if(data[type][i]) {
+						liDom.removeClass("non");
+						liDom.find(".head-container img").attr("src",data[type][i].employee_avatar);
+						liDom.find(".employee-name").text(data[type][i].employee_name);
+						liDom.find(".employee-depa-name").text(data[type][i].depa_name);
+						liDom.find(".employee-time").text((type=="today"?"时间："+data[type][i].attendance_in_time_cn:""));
+					}
+					$(".ranking-adc ."+type+"-ranking-list .ranking-list-real").append(liDom);
+				}
+				var ownLiDom=
+						$("<li class=\"at adc-own-li\">"
+						+"	<span class=\"ranking-num lt\">"+(data[(type=="today"?"today":"month")+"_me"].rank||"-")+"</span>"
+						+"	<div class=\"head-container lt\">"
+						+"		<img src=\""+(data[(type=="today"?"today":"month")+"_me"].employee_avatar||"")+"\" alt=\"\" />"
+						+"	</div>"
+						+"	<span class=\"employee-name lt\">"+(data[(type=="today"?"today":"month")+"_me"].employee_name||"-")+"</span>"
+						+"	<span class=\"employee-depa-name lt\">"+(data[(type=="today"?"today":"month")+"_me"].depa_name||"-")+"</span>"
+						+"	<span class=\"employee-time lt\">时间："+(data[(type=="today"?"today":"month")+"_me"].attendance_in_time_cn||"-")+"</span>"
+						+"</li>");
+				$(".ranking-adc ."+type+"-ranking-list .ranking-list-real").append(ownLiDom);
+			}
+			
+			//设置拜访相关信息
+			function bindVisitInfo(data,type){
+				if(type!="daily_average_desc"){
+					if(data[type][0]){
+						$(".ranking-visit ."+type+"-ranking-list .ranking-bofore-3 .ranking-1 .ranking-head-container").removeClass("non");
+						$(".ranking-visit ."+type+"-ranking-list .ranking-bofore-3 .ranking-1 .ranking-head-container .ranking-head").attr("src",data[type][0].employee_avatar);
+						$(".ranking-visit ."+type+"-ranking-list .ranking-bofore-3 .ranking-1 .ranking-name span").text(data[type][0].employee_name);
+						$(".ranking-visit ."+type+"-ranking-list .ranking-bofore-3 .ranking-1 .ranking-time").text(data[type][0].rank_value);
+					}
+					
+					if(data[type][1]){
+						$(".ranking-visit ."+type+"-ranking-list .ranking-bofore-3 .ranking-2 .ranking-head-container").removeClass("non");
+						$(".ranking-visit ."+type+"-ranking-list .ranking-bofore-3 .ranking-2 .ranking-head-container .ranking-head").attr("src",data[type][1].employee_avatar);
+						$(".ranking-visit ."+type+"-ranking-list .ranking-bofore-3 .ranking-2 .ranking-name span").text(data[type][1].employee_name);
+						$(".ranking-visit ."+type+"-ranking-list .ranking-bofore-3 .ranking-2 .ranking-time").text(data[type][1].rank_value);
+					}
+					
+					if(data[type][2]){
+						$(".ranking-visit ."+type+"-ranking-list .ranking-bofore-3 .ranking-3 .ranking-head-container").removeClass("non");
+						$(".ranking-visit ."+type+"-ranking-list .ranking-bofore-3 .ranking-3 .ranking-head-container .ranking-head").attr("src",data[type][2].employee_avatar);
+						$(".ranking-visit ."+type+"-ranking-list .ranking-bofore-3 .ranking-3 .ranking-name span").text(data[type][2].employee_name);
+						$(".ranking-visit ."+type+"-ranking-list .ranking-bofore-3 .ranking-3 .ranking-time").text(data[type][2].rank_value);
+					}
+				}
+				var tempi=type=="daily_average_desc"?0:3;
+				for(var i=tempi;i<9;i++) {
+					var liDom=
+						$("<li class=\"at non\">"
+						+"	<span class=\"ranking-num lt\">"+(i+1)+"</span>"
+						+"	<div class=\"head-container lt\">"
+						+"		<img src=\"\" alt=\"\" />"
+						+"	</div>"
+						+"	<span class=\"employee-name lt\">-</span>"
+						+"	<span class=\"employee-depa-name lt\"></span>"
+						+"	<span class=\"employee-time lt\"></span>"
+						+"</li>");
+					if(data[type][i]) {
+						liDom.removeClass("non");
+						liDom.find(".head-container img").attr("src",data[type][i].employee_avatar);
+						liDom.find(".employee-name").text(data[type][i].employee_name);
+						liDom.find(".employee-depa-name").text(data[type][i].depa_name);
+						liDom.find(".employee-time").text("家次："+(data[type][i].rank_value||""));
+					}
+					$(".ranking-visit ."+type+"-ranking-list .ranking-list-real").append(liDom);
+				}
+				var ownLiDom=
+						$("<li class=\"at visit-own-li\">"
+						+"	<span class=\"ranking-num lt\">"+(data[type+"_me"].rank||"-")+"</span>"
+						+"	<div class=\"head-container lt\">"
+						+"		<img src=\""+(data[type+"_me"].employee_avatar||"")+"\" alt=\"\" />"
+						+"	</div>"
+						+"	<span class=\"employee-name lt\">"+(data[type+"_me"].employee_name||"-")+"</span>"
+						+"	<span class=\"employee-depa-name lt\">"+(data[type+"_me"].depa_name||"-")+"</span>"
+						+"	<span class=\"employee-time lt\">家次："+(data[type+"_me"].rank_value||"-")+"</span>"
+						+"</li>");
+				$(".ranking-visit ."+type+"-ranking-list .ranking-list-real").append(ownLiDom);
+			}
+			
+			//设置工作计划相关信息
+			function bindPlanInfo(data,type) {
+				if(type!="month_desc"){
+					if(data[type][0]){
+						$(".ranking-plan ."+type+"-ranking-list .ranking-bofore-3 .ranking-1 .ranking-head-container").removeClass("non");
+						$(".ranking-plan ."+type+"-ranking-list .ranking-bofore-3 .ranking-1 .ranking-head-container .ranking-head").attr("src",data[type][0].employee_avatar);
+						$(".ranking-plan ."+type+"-ranking-list .ranking-bofore-3 .ranking-1 .ranking-name span").text(data[type][0].employee_name);
+						$(".ranking-plan ."+type+"-ranking-list .ranking-bofore-3 .ranking-1 .ranking-time").text("执行率："+data[type][0].rank_value);
+					}
+					
+					if(data[type][1]){
+						$(".ranking-plan ."+type+"-ranking-list .ranking-bofore-3 .ranking-2 .ranking-head-container").removeClass("non");
+						$(".ranking-plan ."+type+"-ranking-list .ranking-bofore-3 .ranking-2 .ranking-head-container .ranking-head").attr("src",data[type][1].employee_avatar);
+						$(".ranking-plan ."+type+"-ranking-list .ranking-bofore-3 .ranking-2 .ranking-name span").text(data[type][1].employee_name);
+						$(".ranking-plan ."+type+"-ranking-list .ranking-bofore-3 .ranking-2 .ranking-time").text("执行率："+data[type][1].rank_value);
+					}
+					
+					if(data[type][2]){
+						$(".ranking-plan ."+type+"-ranking-list .ranking-bofore-3 .ranking-3 .ranking-head-container").removeClass("non");
+						$(".ranking-plan ."+type+"-ranking-list .ranking-bofore-3 .ranking-3 .ranking-head-container .ranking-head").attr("src",data[type][2].employee_avatar);
+						$(".ranking-plan ."+type+"-ranking-list .ranking-bofore-3 .ranking-3 .ranking-name span").text(data[type][2].employee_name);
+						$(".ranking-plan ."+type+"-ranking-list .ranking-bofore-3 .ranking-3 .ranking-time").text("执行率："+data[type][2].rank_value);
+					}
+				}
+				var tempi=type=="month_desc"?0:3;
+				for(var i=tempi;i<9;i++) {
+					var liDom=
+						$("<li class=\"at non\">"
+						+"	<span class=\"ranking-num lt\">"+(i+1)+"</span>"
+						+"	<div class=\"head-container lt\">"
+						+"		<img src=\"\" alt=\"\" />"
+						+"	</div>"
+						+"	<span class=\"employee-name lt\">-</span>"
+						+"	<span class=\"employee-depa-name lt\"></span>"
+						+"	<span class=\"employee-time lt\"></span>"
+						+"</li>");
+					if(data[type][i]) {
+						liDom.removeClass("non");
+						liDom.find(".head-container img").attr("src",data[type][i].employee_avatar);
+						liDom.find(".employee-name").text(data[type][i].employee_name);
+						liDom.find(".employee-depa-name").text(data[type][i].depa_name);
+						liDom.find(".employee-time").text("执行率："+(data[type][i].rank_value||""));
+					}
+					$(".ranking-plan ."+type+"-ranking-list .ranking-list-real").append(liDom);
+				}
+				var ownLiDom=
+						$("<li class=\"at plan-own-li\">"
+						+"	<span class=\"ranking-num lt\">"+(data["month_me"].rank||"-")+"</span>"
+						+"	<div class=\"head-container lt\">"
+						+"		<img src=\""+(data["month_me"].employee_avatar||"")+"\" alt=\"\" />"
+						+"	</div>"
+						+"	<span class=\"employee-name lt\">"+(data["month_me"].employee_name||"-")+"</span>"
+						+"	<span class=\"employee-depa-name lt\">"+(data["month_me"].depa_name||"-")+"</span>"
+						+"	<span class=\"employee-time lt\">执行率："+(data["month_me"].rank_value||"-")+"</span>"
+						+"</li>");
+				$(".ranking-plan ."+type+"-ranking-list .ranking-list-real").append(ownLiDom);
+			}
+		</script>
+	</body>
+
+</html>

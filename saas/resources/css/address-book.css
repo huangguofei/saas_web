@@ -1,0 +1,139 @@
+.address-book-page {
+	/*width: 0px;
+	height: 0px;*/
+	display: none;
+	box-shadow: 0px 0px 5px #CCCCCC;
+	-webkit-box-shadow: 0px 0px 5px #CCCCCC;
+	-moz-box-shadow: 0px 0px 5px #CCCCCC;
+	position: absolute;
+	right: 60px;
+	background: #F0F0F0;
+	padding: 10px 15px;
+	top: -400px;
+}
+
+.address-book-page .page-top {
+	font-size: 16px;
+	height: 30px;
+}
+
+.address-book-page .page-top span {
+	float: left;
+	font-weight: bold;
+	color: #666666;
+}
+
+.address-book-page .page-top i {
+	float: right;
+	cursor: pointer;
+}
+
+.address-book-page .page-search input {
+	border-color: #E3E3E3;
+	border-right: 0;
+	width: 305px;
+	background: #FAFAFA;
+	font-size: 12px;
+}
+
+.address-book-page .page-search i {
+	border: 1px solid #E3E3E3;
+	font-size: 18px;
+	width: 30px;
+	border-left: 0;
+	background: #FAFAFA;
+	vertical-align: bottom;
+	line-height: 24px;
+	cursor: pointer;
+}
+
+.address-book-page .page-content {
+	margin-top: 10px;
+}
+
+.address-book-page .page-content .page-nav {
+	overflow: auto;
+	line-height: 30px;
+}
+
+.page-nav li {
+	background: #CCCCCC;
+	color: #FFFFFF;
+	width: 120px;
+	text-align: center;
+}
+
+.page-nav li:first-child {
+	margin-right: 5px;
+}
+
+.page-nav li.select {
+	background: #fff;
+	color: #000;
+}
+
+.content-box {
+	text-align: left;
+	overflow: auto;
+	height: 430px;
+	position: relative;
+}
+.content-box li{
+	border-bottom: 1px solid #f8f8f8;
+}
+.content-box .conten-show {
+	background: #fff;
+	/*line-height: 50px;*/
+	padding: 15px 5px 15px 10px;
+	color: #333333;
+}
+
+.content-box .conten-show i {
+	float: right;
+	cursor: pointer;
+	color: #A7A7A7;
+}
+
+.content-box .conten-show>span {
+	width: 35%;
+	display: inline-block;
+	color: #666;
+}
+
+.content-box .conten-show>span:first-child {
+	width: 55%;
+}
+
+.content-box .conten-show .show-name {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	display: inline-block;
+	max-width: 90px;
+	vertical-align: bottom;
+}
+
+.content-box .conten-show .show-work {
+	color: #999;
+	font-size: 12px;
+}
+
+.content-box .conten-hide {
+	padding: 5px 10px;
+	display: none;
+	background: #f8f8f8;
+}
+
+.content-box .conten-hide span {
+	display: block;
+	line-height: 20px;
+	color: #A6A6A6;
+}
+
+.content-box .conten-hide span i,.content-box .conten-hide span img {
+	margin-right: 10px;
+}
+
+.content-box .mCSB_draggerContainer {
+	left: -20px!important;
+}

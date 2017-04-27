@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>SAAS运营</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="resources/css/main-index.css" />
+	</head>
+
+	<body>
+		<div class="left-menu nav-list">
+			<div class="header-wrap">
+				<img class="logo" src="resources/images/logo-footer.png" />
+			</div>
+			<div class="menu-body">
+				<div class="menu-bar">
+					<ul>
+						<li>
+							<a href="javascript:;"><i class="fa fa-commenting-o fa-2x"></i></a>
+						</li>
+						<li>
+							<a href="javascript:;"><i class="fa fa-pencil-square-o fa-2x"></i></a>
+						</li>
+						<li id="msg">
+							<a href="javascript:;"><i class="fa fa-envelope-o fa-2x"></i></a>
+						</li>
+						<li>
+							<a href="javascript:;"><i class="fa fa-bullhorn fa-2x"></i></a>
+						</li>
+						<li>
+							<a href="javascript:;"><i class="fa fa-calendar fa-2x"></i></a>
+						</li>
+					</ul>
+					<div class="bottom-menu">
+						<li>
+							<a href="javascript:;" class="link-service"><img src="resources/images/kefu.png">
+								<i class="fa fa-angle-right" style="position: absolute; margin-top: 5px; margin-left: 6px;"></i></a>
+							<p class="sub-menu sub-menu-service hide">
+								<a href="javascript:;"><i class="fa fa-qq"></i> 365652324</a>
+								<a href="javascript:;"><i class="fa fa-qq"></i> 365652324</a>
+								<a href="javascript:;"><i class="fa fa-qq"></i> 365652324</a>
+								<a href="javascript:;"><i class="fa fa-qq"></i> 365652324</a>
+								<a href="javascript:;"><i class="fa fa-qq"></i> 365652324</a>
+								<a href="javascript:;"><i class="fa fa-qq"></i> 365652324</a>
+								<a href="javascript:;"><i class="fa fa-qq"></i> 365652324</a>
+							</p>
+						</li>
+						<li>
+							<a href="javascript:;"><img src="resources/images/light.png"></a>
+						</li>
+					</div>
+				</div>
+				<div class="menu-group">
+					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+						<div class="panel">
+							<div class="panel-heading">
+								<h4 class="panel-title">
+						        <a role="button">
+						          <i class="fa fa-angle-right" g="icon-collapse"></i> 正在加载功能菜单...
+						        </a>
+						      </h4>
+							</div>
+						</div>
+						<!--<div class="panel">
+						<div class="panel-heading" role="tab" id="headingOne">
+							<h4 class="panel-title">
+						        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						          <i class="fa fa-angle-down" g="icon-collapse"></i> Head
+						        </a>
+						      </h4>
+						</div>
+						<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+							<div class="panel-body">
+								<a href="javascript:;" url="module.html"><i class="fa fa-comment-o"></i> Link</a>
+							</div>
+						</div>
+					</div>-->
+					</div>
+				</div>
+				<div class="clear"></div>
+				<a class="link-collapse" href="javascript:;" onclick="fold();" title="隐藏/展开菜单栏"><img src="resources/images/collapse-false.png" /></a>
+			</div>
+		</div>
+		<div class="right-container">
+			<div class="header-wrap">
+				<h3>重庆销秘运营系统</h3>
+				<div class="user btn-group">
+					<a href="javascript:;" data-toggle="dropdown" class="btn-user"><img src="resources/images/timo.jpg" class="head img-circle" /> <span id="lblRealName">name</span> <i class="fa fa-angle-down"></i></a>
+					<ul class="dropdown-menu">
+						<!--<li>
+							<a href="javascript:;" onclick="setTab('设置', 'setting.html');"><i class="fa fa-cog"></i> 设置</a>
+						</li>-->
+						<li>
+							<a href="javascript:;" onclick="setPwd();"><i class="fa fa-user"></i> 修改密码</a>
+						</li>
+						<li role="separator" class="divider"></li>
+						<li>
+							<a href="javascript:;" onclick="logout();"><i class="fa fa-power-off"></i> 注销</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="tabtable">
+				<ul class="nav nav-tabs" id="tab-menu">
+					<li>
+						<a class="pref"></a>
+					</li>
+					<li class="active" url="welcom.html">
+						<a data-toggle="tab" href="#welcome">控制台</a>
+					</li>
+					<li class="last-li" url="welcom.html">
+						<a data-toggle="tab" href="#welcome">控制台 <i class="fa fa-caret-down"></i></a>
+						<ul class="sub-nav">
+							<li url="welcom.html">
+								<a data-toggle="tab" href="#welcome">控制台</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<div class="tab-content" id="main-tab-content">
+					<div id="welcome" class="tab-pane in active">
+						<iframe src="welcom.html" width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			var tabPanelHeight = 0;
+			var uid = $.cookie("_u_id");
+			$(document).ready(function() {
+				setTimeout(function() {
+					$("#msg .fa").addClass("icon-animated-vertical");
+					$("#msg a").append("<span class=\"badge badge-danger icon-animated-bell\">8</span>");
+				}, 10000);
+				//user
+				$("#lblRealName").text($.cookie("_u_name"));
+				//token
+				$.token();
+				//init module data
+				$.ajaxGet(OSAPIURL + "/api_permission", function(response) {
+					if(response.code == 0) {
+						localStorage["_CURRAUTHS"] = JSON.stringify(response.data.method);
+						if(response.data.modules.length == 0) {
+							//time out or not longin
+							$.removeCookie("_u_id");
+							$.removeCookie("_u_name");
+							localStorage.removeItem("_CURRAUTHS");
+							$.processFailResponse({
+								code: (response.data.is_login ? 100000033 : 100000003)
+							});
+							return false;
+						}
+						initLeftMenu(response.data.modules);
+					} else {
+						//错误
+						$.showErrorGritter(response.msg, {
+							time: 5000
+						});
+					}
+				});
+				//cookie 4 fold
+				var tmpShr = $.cookie('_shr');
+				if(tmpShr === "true") {
+					isShr = tmpShr;
+					$(".left-menu").addClass("left-menu-fold");
+					$(".right-container").addClass("right-container-exp");
+					$(".menu-group").hide();
+					$(".left-menu .logo").css("margin-left", "10px");
+					$(".link-collapse").css("left", "54px");
+					$(".link-collapse img").attr("src", "resources/images/collapse-true.png");
+				}
+				//head-60;tabtable-margin:4;tab-nav:33px;tab-pane-padding:10;
+				tabPanelHeight = $(window).height() - 109;
+				$("#welcome").height(tabPanelHeight);
+				//left service menu
+				$(".link-service,.sub-menu-service").mouseenter(function() {
+					$(".sub-menu-service").toggleClass("hide");
+				}).mouseleave(function() {
+					$(".sub-menu-service").toggleClass("hide");
+				});
+				//tab event
+				initTabEvent();
+			});
+
+			function initTabEvent() {
+				//tab remove-icon
+				//$("#tab-menu li").hover(function() {
+				//	$(this).find(".icon-remove").css("display", "inline-block");
+				//}).mouseleave(function() {
+				//	$(this).find(".icon-remove").css("display", "none");
+				//});
+				//$("#tab-m-1").find("iframe")[0].contentWindow.location.href
+				$("#tab-menu li a i.icon-refresh").click(function() {
+					showLoading();
+					var url = $(this).parent().parent().attr("url");
+					var iframe = $("#main-tab-content .tab-pane iframe[url=' " + url + " ']");
+					iframe.attr("src", url);
+					iframe.load(function() {
+						hideLoading();
+					});
+					return false;
+				});
+				$("#tab-menu li a .icon-remove").click(function() {
+					if($(this).parent().parent().attr("url").indexOf("im-customer-service.html")>=0){
+						console.log($("iframe[name='views/im-customer-service.html?mid=124']")[0]);
+						console.log($("iframe[name='views/im-customer-service.html?mid=124']")[0].contentWindow);
+						console.log($("iframe[name='views/im-customer-service.html?mid=124']")[0].contentWindow.ws.manualLeave());
+						$("iframe[name='views/im-customer-service.html?mid=124']")[0].contentWindow.ws.manualLeave();
+					}
+					var liObj = $(this).parent().parent();
+					var url = liObj.attr("url");
+					var iframe = $("#main-tab-content .tab-pane iframe[url=' " + url + " ']");
+					iframe.parent().remove();
+					liObj.prev().find("a").click();
+					liObj.remove();
+					return false;
+				});
+			}
+
+			//关闭当前页
+			function closeCurrActiveTab(ws) {
+				$("#tab-menu li.active a .icon-remove").click();
+			}
+
+			//页面关闭事件
+			context.onPageClose = function(ws) {
+				//subscriber.dispose();
+			};
+			
+			function getChildMenus(menuJson, pid) {
+				var resMenus = [];
+				for(var i in menuJson) {
+					var cMenu = menuJson[i];
+					if(cMenu.pid == pid) {
+						resMenus.push(cMenu);
+					}
+				}
+				return resMenus;
+			}
+
+			function initLeftMenu(menuJson) {
+				var menuDescs = {};
+				var menuDom = $("#accordion");
+				menuDom.html("");
+				var index = 0;
+				for(var i in menuJson) {
+					var cMenu = menuJson[i];
+					if(cMenu.pid != 0) {
+						continue;
+					}
+					var pnlDom = $("<div class=\"panel\"></div>");
+					var titleDom = $("<div class=\"panel-heading\" role=\"tab\" id=\"heading" + cMenu.id + "\"><h4 class=\"panel-title\"><a role=\"button\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse" + cMenu.id + "\" aria-expanded=\"" + (index == 0 ? "true" : "false") + "\" aria-controls=\"collapse" + cMenu.id + "\"><i class=\"fa fa-angle-" + (index == 0 ? "down" : "right") + "\" g=\"icon-collapse\"></i> " + cMenu.name + "</a></h4></div>");
+					pnlDom.append(titleDom);
+					var childMenus = getChildMenus(menuJson, cMenu.id);
+					if(childMenus.length > 0) {
+						var bodyDom = $("<div id=\"collapse" + cMenu.id + "\" class=\"panel-collapse collapse " + (index == 0 ? "in" : "") + "\" role=\"tabpanel\" aria-labelledby=\"heading" + cMenu.id + "\"><div class=\"panel-body\"></div></div>");
+						for(var j in childMenus) {
+							var subMenu = childMenus[j];
+
+							var currUrl = subMenu.url;
+							if(currUrl!="#"){
+								if(currUrl.indexOf("?") > 0)
+									currUrl += "&";
+								else
+									currUrl += "?";
+
+								currUrl += "mid=" + subMenu.id;
+							}
+							//页面简介存本地
+							menuDescs[subMenu.id] = {
+								icon: subMenu.icon,
+								desc: subMenu.remark
+							};
+							bodyDom.find(".panel-body").append("<a href=\"javascript:;\" url=\"" + currUrl + "\"><i class=\"fa " + subMenu.icon + "\"></i> " + subMenu.name + "</a>");
+						}
+						pnlDom.append(bodyDom);
+					}
+					menuDom.append(pnlDom);
+					index++;
+				}
+				//页面简介存本地
+				localStorage["_PAGEDESC"] = JSON.stringify(menuDescs);
+				//collapse click
+				$("a[data-toggle='collapse']").click(function() {
+					$("i[g=icon-collapse]").removeClass("fa-angle-down").addClass("fa-angle-right");
+					var colPanel = $(this).parents(".panel").find(".panel-collapse");
+					if(!colPanel.hasClass("in")) {
+						colPanel.prev().find("i[g=icon-collapse]").removeClass("fa-angle-right").addClass("fa-angle-down");
+					}
+				});
+				//menu click
+				$(".menu-group a[url]").click(function() {
+					if($(this).attr("href") == "#") {
+						return true;
+					}
+					var url = $(this).attr("url");
+					var title = $(this).attr("title") || $(this).text();
+					if(url != undefined && url != "" && url != "#") {
+						//clear active
+						$(".menu-group a").removeClass("active");
+						//add active
+						$(this).addClass("active");
+						setTab(title, url);
+					}
+					return false;
+				});
+			}
+
+			function genSubMenuDoc(doc, jsonM) {
+				for(var j in jsonM.items) {
+					var subMenu = jsonM.items[j];
+					var notHasSubMenu = subMenu.items == undefined || subMenu.items == null || subMenu.items.length == 0;
+					var sbLi = $("<li><a href=\"" + subMenu.url + "\" " + (notHasSubMenu ? "" : "class='dropdown-toggle '") + "><i class=\"" + subMenu.icon + "\"></i> " + subMenu.title + "</a></li>");
+					$(sbLi).find("a").attr("tit", subMenu.title).attr("url", subMenu.url);
+					//submenu
+					if(!notHasSubMenu) {
+						$(sbLi).find("a").append("<b class=\"arrow icon-angle-down\"></b>");
+						var sbUL = $("<ul class=\"submenu\"></ul>");
+						sbUL = genSubMenuDoc(sbUL, subMenu);
+						$(sbLi).append(sbUL);
+						$(doc).append(sbLi);
+					} else {
+						$(doc).append(sbLi);
+					}
+				}
+				return $(doc);
+			}
+			var tabIndex = 0;
+
+			function setTab(title, url) {
+				var mTab = $("#tab-menu li[url='" + url + "']");
+				if($(mTab).html() == undefined) {
+					tabIndex++;
+					var onTab = $("#tab-menu li.active");
+					$(onTab).after("<li url=\"" + url + "\"><a data-toggle=\"tab\" href=\"#tab-m-" + tabIndex + "\">" + title +
+						" <i class=\"icon-remove fa fa-times\" title=\"关闭本页\"></i></a></li>");
+					//<i class=\"icon-refresh\" title=\"刷新本页\"></i>
+					showLoading();
+					var iframe = document.createElement("iframe");
+					iframe.src = url;
+					iframe.setAttribute("name", encodeURI(url));
+					iframe.setAttribute("url", url);
+					iframe.setAttribute("width", "100%");
+					iframe.setAttribute("height", "100%");
+					iframe.setAttribute("frameborder", 0);
+					iframe.setAttribute("scrolling", "auto");
+					if(iframe.attachEvent) {
+						iframe.attachEvent("onload", function() {
+							hideLoading();
+						});
+					} else {
+						iframe.onload = function() {
+							hideLoading();
+							//var height = iframe.ownerDocument.body.scrollHeight;
+							//iframe.setAttribute("height", height);
+						};
+					}
+					var divTab = $("<div id=\"tab-m-" + tabIndex + "\" class=\"tab-pane\"></div>").height(tabPanelHeight).append(iframe);
+					$("#main-tab-content").append(divTab);
+					$(onTab).next().find("a").click();
+				} else {
+					$(mTab).find("a").click();
+				}
+				initTabEvent();
+			}
+
+			function showLoading() {
+				$(".loadingPop").removeClass("hide");
+			}
+
+			function hideLoading() {
+				$(".loadingPop").addClass("hide");
+			}
+
+			function newMsg() {
+				$(".left-menu li:first a").append("<i class=\"fa fa-bell icon-animated-bell\"></i><span class=\"badge badge-danger\">8</span>");
+			}
+			var isShr = false;
+
+			function fold() {
+				if(isShr) {
+					$(".left-menu").removeClass("left-menu-fold");
+					//$(".right-container").removeClass("right-container-exp");
+					$(".right-container").animate({
+						marginLeft: "280px"
+					}, 300);
+					$(".menu-group").show();
+				} else {
+					$(".left-menu").addClass("left-menu-fold");
+					//$(".right-container").addClass("right-container-exp");
+					$(".right-container").animate({
+						marginLeft: "60px"
+					}, 0);
+					$(".menu-group").hide();
+				}
+				isShr = !isShr;
+				$(".link-collapse").css("left", isShr ? "54px" : "274px");
+				$(".left-menu .logo").css("margin-left", isShr ? "10px" : "auto");
+				$(".link-collapse img").attr("src", "resources/images/collapse-" + isShr.toString() + ".png");
+				$.cookie('_shr', isShr);
+			}
+
+			function logout(hideTip) {
+				$.ajaxDelete(OSAPIURL + "/passport", null,
+					function(response) {
+						if(response.code == 0) {
+							//success
+							if(!hideTip)
+								$.showSuccessGritter("注销成功，正在跳转...");
+							setTimeout(function() {
+								window.location = "login.html";
+							}, 1000);
+							localStorage.removeItem("_CURRAUTHS");
+						} else {
+							$.showErrorGritter("注销失败：" + response.msg);
+						}
+					});
+			}
+
+			function setPwd() {
+				var modalId = $.modal().show("修改密码", ".pnl-resetpwd",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var oldPwd = $(formContainer + " #txtOldPwd").val();
+						var pwd = $(formContainer + " #txtPwd").val();
+						var pwd1 = $(formContainer + " #txtPwd1").val();
+						if(pwd != pwd1) {
+							$.showErrorGritter("两次密码输入不一致，请重新输入。");
+							$(formContainer + " #txtPwd1").focus();
+							return false;
+						}
+						var pwdData = {
+							old_password: oldPwd,
+							new_password: pwd
+						};
+						$.ajaxPut(OSAPIURL + "/users/password", pwdData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("修改密码成功，返回重新登录。");
+									modal.modal('hide');
+									//注销
+									setTimeout(function() {
+										logout(true);
+									}, 2000);
+								} else {
+									$.showErrorGritter("修改密码失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-resetpwd";
+				//密码格式为：密码须为6-20位，英文字母和数字、符号组合（字母区分大小写）
+						var reg = /^(?![^A-Za-z]+$)(?![^0-9]+$)[\S]{6,20}$/g;
+						$(formContainer + " #txtPwd").blur(function() {
+							var testResult=reg.test($(this).val());
+							if(!testResult) {
+								$(formContainer + " #txtPwd").parent().find("span").length<1&&$(formContainer + " #txtPwd").parent().append("<br><span style='color:red;display: inline-block;margin-left: 85px;'>*密码须为6-20位，英文字母和数字、符号组合（字母区分大小写，不能包含空字符）*</span>");
+								return false;
+							} else {
+								$(formContainer + " #txtPwd").parent().find("span").remove();
+								$(formContainer + " #txtPwd").parent().find("br").remove();
+							}
+						});
+						$(formContainer + " #txtPwd1").blur(function() {
+							var testResult=reg.test($(this).val());
+							if(!testResult) {
+								$(formContainer + " #txtPwd1").parent().find("span").length<1&&$(formContainer + " #txtPwd1").parent().append("<br><span style='color:red;display: inline-block;margin-left: 85px;'>*密码须为6-20位，英文字母和数字、符号组合（字母区分大小写，不能包含空字符）*</span>");
+								return false;
+							} else {
+								$(formContainer + " #txtPwd1").parent().find("span").remove();
+								$(formContainer + " #txtPwd1").parent().find("br").remove();
+							}
+						})
+			}
+			window.onbeforeunload = function(event) {
+				localStorage.removeItem("_CURRAUTHS");
+			}
+		</script>
+		<div class="loadingPop border-radius-5 hide">
+			<i class="fa fa-refresh fa-spin" style="font-size: 20px; vertical-align: middle; margin-right: 5px;"></i> 正在加载页面，请稍后...
+		</div>
+		<div class="pnl-resetpwd hide">
+			<form class="form-horizontal model-resetpwd">
+				<div class="form-group form-inline">
+					<label class="input-flag">原密码</label>
+					<input id="txtOldPwd" type="password" class="form-control" placeholder="原密码" nulltip="原密码" maxlength="20">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">新密码</label>
+					<input id="txtPwd" type="password" class="form-control" placeholder="新密码" nulltip="新密码" maxlength="20" valitype="password" valirange="6-20" valitip="密码长度为 6-20 位。">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">确认密码</label>
+					<input id="txtPwd1" type="password" class="form-control" placeholder="确认密码" nulltip="确认密码" maxlength="20">
+				</div>
+			</form>
+		</div>
+	</body>
+
+</html>

@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>资讯中心</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+			.informage-popup {}
+			
+			.box-read {}
+			
+			.box-down {}
+			
+			.informage-main {
+				width: 100%;
+				margin: 0 auto;
+			}
+			
+			.informage-main-list {
+				padding-bottom: 10px;
+				padding-top: 10px;
+			}
+			
+			.informage-main-list:first-child {
+				border-bottom: 1px solid #E4E4E4;
+				padding-top: 0;
+			}
+			
+			.informage-down .box-main-list {
+				border: 0;
+			}
+			
+			.informage-main-list>span {
+				margin: 0 0 10px 0;
+				display: inline-block;
+			}
+			
+			.informage-main-list ul li {
+				float: left;
+				width: 65px;
+				margin-right: 7px;
+				position: relative;
+				text-align: center;
+			}
+			
+			.informage-main-list ul li img {
+				width: 50px;
+				height: 50px;
+				border: 1px solid #ccc;
+			}
+			
+			.right-top-sp2 {
+				font-weight: normal;
+			}
+			
+			.informage-main-list ul li i {
+				position: absolute;
+				top: 10px;
+				left: 18px;
+				font-size: 30px;
+			}
+			
+			.informage-main-list ul li p {
+				text-align: center;
+			}
+			
+			.informage-bottom {
+				width: 100%;
+				height: 50px;
+				line-height: 50px;
+				text-align: center;
+			}
+			
+			.informage-bottom input[type=button] {
+				margin-left: 20px;
+			}
+			
+			.informage-main-list ul {
+				zoom: 1;
+			}
+			
+			.informage-main-list ul:after {
+				clear: both;
+				content: '.';
+				display: block;
+				width: 0;
+				height: 0;
+				visibility: hidden;
+			}
+			
+			.particular-main .infomange-loadover {
+				text-align: center;
+				font-size: 20px;
+				color: #46A4FF;
+				font-weight: bold;
+			}
+			
+			.particular-main {
+				overflow: auto;
+			}
+			
+			.css-overhidden {
+				width: 50px;
+			}
+			
+			.page-container .content {
+				padding-top: 0;
+			}
+			
+			.informage-content-menu {
+				line-height: 45px;
+				background-color: #f3f3f3;
+				padding-left: 10px;
+				margin-bottom: 10px;
+			}
+			
+			.informage-content-menu a,
+			.informage-content-menu a:hover {
+				font-weight: normal;
+				height: 46px;
+				text-decoration: none;
+				display: inline-block;
+				cursor: pointer;
+				font-size: 14px;
+				padding: 0 10px;
+			}
+			
+			.informage-content-menu a.active {
+				border-bottom: 2px solid #009ed8;
+				color: #009ed8;
+			}
+			
+			.page-container {
+				padding: 0;
+			}
+			
+			.search {
+				margin-left: 10px;
+			}
+			
+			.particular-main-box {
+				height: 178px;
+			}
+			
+			.particular-main-box-left {
+				/*width: 157px!important;*/
+				/*height: 157px!important;*/
+				/*line-height: 157px!important;*/
+				height: 128px;
+			}
+			
+			.box-right-main,
+			.box-right-main:hover {
+				display: inline-block;
+				cursor: pointer;
+				color: #666;
+				text-decoration: none;
+			}
+			
+			.right-top-sp2:hover {
+				text-decoration: underline;
+			}
+			/*.right-top-sp1 {
+				display: inline-block;
+				padding: 5px;
+				background-color: #f37298;
+				color: #fff;
+				border: 1px solid #f37298;
+				border-radius: 10%;
+			}*/
+			
+			.comment-sp-collect.active {
+				color: orange
+			}
+			
+			.particular-main-box-left img {
+				cursor: pointer;
+			}
+			
+			.list-employee .item-employee {
+				margin: 0 17px 5px 17px;
+				width: 50px;
+				height: 70px;
+				display: inline-block;
+				overflow: hidden;
+				text-align: center;
+				border: 1px solid transparent;
+				position: relative;
+				color: #999;
+			}
+			
+			.list-employee a {
+				color: #999;
+			}
+			
+			.list-employee .item-employee.active img {
+				border-color: #009ed8;
+			}
+			
+			.list-employee .item-employee.active:before {
+				position: absolute;
+				top: 0;
+				right: 0;
+				display: inline-block;
+				width: 10px;
+				height: 9px;
+				box-sizing: border-box;
+				content: "";
+				background-image: url(../resources/images/read-status-icon.png);
+			}
+			
+			.list-employee .item-employee .head {
+				width: 48px;
+				height: 48px;
+				border: 1px solid #e3e3e3;
+			}
+			
+			.form-group-has-read {
+				margin: 20px 0 10px 0;
+				border-bottom: 1px solid #eee;
+			}
+			
+			.comment-sp-read {
+				text-decoration: none;
+			}
+			
+			.comment-sp-read:hover {
+				text-decoration: underline;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-informage" style="height: auto;">
+			<div class="content">
+				<!--<div class="remark hide">
+					<img src="../resources/images/information-icon.png" alt="" /><span>*资讯查看及收藏</span>
+				</div>-->
+				<div class="informage-content-menu">
+					<a class="InformationCenter active" onclick="infoManagementexChange(0,this)">所有资讯</a>
+					<a class="MyCollection" onclick="infoManagementexChange(1,this)">我收藏的资讯</a>
+				</div>
+				<div class="search">
+
+				</div>
+
+			</div>
+		</div>
+		<div class="particular-main">
+
+		</div>
+		<!--确认已阅读弹框-->
+		<div class="informage-popup hide">
+			确认已阅读？
+		</div>
+		<!--已读未读弹窗-->
+		<div class="informage-popup informage-read hide">
+			<div class="informage-main">
+				<div class="informage-main-list">
+					<span class="informage-main-list-top">未读<span class="informage-main-list-top-sp"></span>人</span>
+					<ul class="list-employee">
+						<!--<div class="clear"></div>-->
+					</ul>
+				</div>
+				<div class="informage-main-list">
+					<span class="informage-main-list-top form-group-has-read">已读<span class="informage-main-list-top-sp"></span>人</span>
+					<ul class="list-employee">
+						<!--<li>
+							<a href="#">
+								<img src="../resources/images/case-4.png" alt="" />
+								<p>吴芳</p>
+							</a>
+						</li>-->
+						<div class="clear"></div>
+					</ul>
+				</div>
+			</div>
+			<div class="informage-bottom">
+				<label><input type="checkbox" class="informage-bottom-selectall" />未读同事</label><input type="button" value="提醒阅读" class="btn btn-info def-btn-info btn-sm comment-btn btn-remind" />
+				<button type="button" class="btn btn-primary def-btn-primary btn-sm" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/jquery.dotdotdot.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript">
+			var grid_selector = "#grid-table";
+			var pager_selector = "#grid-pager";
+			var modulesJSON = [];
+			var infoCenterListUrl = BSAPIURL + "/companies/" + COMPANYID + "/informations";
+			var infoUrlForAdd = BSAPIURL + "/companies/" + COMPANYID + "/manage_informations";
+			var infoUrlForRedman;
+			var infoUrlForCollection;
+			var infoMangelistNumber, deptList, infoMangenListId, deptListNumber;
+			var listNumber = 3;
+			var infoMangeListPage = 1;
+			var infoMangeListPages;
+			var isFirst = true;
+			var index = 0;
+			var infomangeSearchDate = "";
+			var isCollecting = false;
+			$(function() {
+				requestLoad(index, 1, "0");
+			});
+			$(function() {
+				//资讯中心默认选中样式
+				$(".informage-read .informage-main-list:first-child li:nth-child(10n)").css("margin-right", "0");
+				$(".informage-read .informage-main-list:nth-child(2) li:nth-child(10n)").css("margin-right", "0");
+				$(".informage-down .informage-main-list:first-child li:nth-child(10n)").css("margin-right", "0");
+				//search
+				//加载资讯类型列表
+				$.loadZXLXData(function(zxlxData) {
+					var infomationTypeJSON4Search = [];
+					InformationType = zxlxData;
+					infomationTypeJSON4Search.push({
+						key: "全部",
+						value: ""
+					});
+					for(var s in InformationType) {
+						//var typeData = response.data[i];
+						infomationTypeJSON4Search.push({
+							key: InformationType[s].code_name,
+							value: InformationType[s].code_tree
+						});
+					}
+					$.initSearchControls4TagMode({
+						auto: false,
+						container: ".search",
+						key_name: "key",
+						key_placeholder: "请输入资讯标题进行查找",
+						onChange: function(selectTags) {
+							allLoaded = false;
+							infoMangeListPage = 1;
+							isFirst = true;
+							infomangeSearchDate = selectTags;
+							console.log(selectTags);
+							requestLoad(index, 1, selectTags);
+
+						},
+						groups: [{
+							name: "information_type_arr",
+							text: "资讯类型",
+							items: infomationTypeJSON4Search
+						}]
+					});
+				});
+				//				
+				//token
+				$.token();
+			});
+
+			function anewChangeHeight() {
+				$(".particular-main").css("height", ($(window).height() - $(".page-informage").outerHeight() - 16) + "px");
+			}
+			window.onresize = function() {
+				anewChangeHeight()
+			}
+			$(document).ready(function() {
+				anewChangeHeight();
+				//------------消息队列相关-----------------------
+				var subscriber = parent.HHMQ.createSubscriber('资讯中心', 'information,welcome', function(flag, msgData) {
+					if(flag == "welcome") {
+						$.showSuccessGritter(JSON.stringify(msgData), {
+							clear: false
+						});
+					}
+					//收到处理消息
+					if(msgData.action == "read") {
+						var readSelector = $(".particular-main-box[id='" + msgData.infoMangenListId + "'] .sp-read-read");
+						var unreadSelector = $(".particular-main-box[id='" + msgData.infoMangenListId + "'] .sp-read-noread");
+						readSelector.html(parseInt(readSelector.html()) + 1);
+						unreadSelector.html(parseInt(unreadSelector.html()) == 0 ? 0 : (parseInt(unreadSelector.html()) - 1));
+						$(".particular-main-box[id='" + msgData.infoMangenListId + "'] .btn-read").unbind("click").attr("disabled", "disabled")
+					} else if(msgData.action == "collect") {
+						var starSelector = $(".particular-main-box[id='" + msgData.infoMangenListId + "'] .collect-number");
+						if(msgData.msg == "收藏") {
+							starSelector.html(parseInt(starSelector.html()) + 1);
+						} else {
+							starSelector.html(parseInt(starSelector.html()) == 0 ? 0 : (parseInt(starSelector.html()) - 1));
+						}
+					}
+				});
+				//页面关闭事件
+				context.onPageClose = function() {
+					subscriber.dispose();
+				};
+				//------------消息队列相关 end -------------------
+			});
+			//请求加载
+			function requestLoad(index, pages, infoData) {
+				var inforKey = (infoData.key ? infoData.key : "");
+				if(!inforKey) {
+					inforKey = "";
+				}
+				var strs = "?my_favorite=" + index + "&page=" + pages + "&search_key=" + inforKey + "&information_type_arr=";
+				var informationTypeArr = (infoData.information_type_arr ? infoData.information_type_arr : "");
+				for(var i in informationTypeArr) {
+					if(i == informationTypeArr.length - 1) {
+						strs += informationTypeArr[i];
+					} else {
+						strs += informationTypeArr[i] + ",";
+					}
+				}
+				if(index == 0) {
+					$.ajaxGet(infoCenterListUrl + strs, function(response) {
+						if(response.code == 0) {
+							deptList = response.data.rows;
+							deptListNumber = deptList.length;
+							infoMangeListPages = response.data.page;
+							if(deptListNumber == 0) {
+								if(infoMangeListPage == 1) {
+									$(".particular-main>div,.particular-main>p").remove();
+								} else {
+									infomangementLoadOver();
+								}
+							} else {
+								if(infoMangeListPage == 1) {
+									//$(".particular-main>div").remove(".particular-main-box");
+									$(".particular-main>div,.particular-main>p").remove();
+								}
+								for(var i = 0; i < deptListNumber; i++) {
+									infoManagementLoad(i, deptList);
+								}
+							}
+						}
+					});
+				} else {
+					$.ajaxGet(infoCenterListUrl + strs, function(response) {
+						if(response.code == 0) {
+							deptList = response.data.rows;
+							deptListNumber = deptList.length;
+							infoMangeListPages = response.data.page;
+							if(deptListNumber == 0) {
+								//infomangementLoadOver();
+								if(infoMangeListPage == 1) {
+									$(".particular-main>div,.particular-main>p").remove();
+								} else {
+									infomangementLoadOver();
+								}
+							} else {
+								if(infoMangeListPage == 1) {
+									//$(".particular-main>div").remove(".particular-main-box");
+
+									$(".particular-main>div,.particular-main>p").remove();
+								}
+								for(var i = 0; i < deptListNumber; i++) {
+									infoManagementLoad(i, deptList);
+								}
+							}
+						}
+					});
+				}
+			}
+			//加载完毕框
+			function infomangementLoadOver() {}
+			//加载
+			function infoManagementLoad(x, infomangedeptLists) {
+				var information_id = infomangedeptLists[x].information_id;
+				var information_title = infomangedeptLists[x].information_title;
+				var information_type = infomangedeptLists[x].information_type;
+				var information_content_html = infomangedeptLists[x].information_content_str;
+				var information_publish_time_cn = infomangedeptLists[x].information_publish_time_cn;
+				var reader_num = infomangedeptLists[x].reader_num;
+				var not_reader_num = infomangedeptLists[x].not_reader_num;
+				var favorite_num = infomangedeptLists[x].favorite_num;
+				var information_is_favorite = infomangedeptLists[x].information_is_favorite;
+				var information_is_publisher = infomangedeptLists[x].is_self;
+				//alert(information_is_favorite);
+				var read = '';
+				if(infomangedeptLists[x].information_is_read == 1) {
+					read = '<input type="button" value="已阅读" class="btn btn-default btn-sm comment-btn float-right btn-read" disabled/>';
+				} else {
+					read = '<input type="button" onclick="sureread(this)" value="确认已阅读" class="btn btn-default btn-sm comment-btn float-right btn-read"/>';
+				}
+				var favorite = "";
+				if(infomangedeptLists[x].information_is_favorite == 1) {
+					favorite = 'active';
+				}
+				var styleStr = "",
+					strs = "";
+				//if(infomangedeptLists[x].information_cover != "") {
+				strs += '<div class="particular-main-box-left float-left">';
+				strs += '<img onclick="skipdetails(\'' + information_id + '\',true);" src="' + (infomangedeptLists[x].information_cover || "../resources/images/non-img-icon.png") + '" alt="图片">';
+				strs += '</div>';
+				styleStr = "style=\"width:83%;\"";
+				//}
+				var str =
+					'<div class="particular-main-box" id=' + information_id + '>' + strs +
+					'	<div class="particular-mian-box-right float-left" ' + styleStr + '>' +
+					'		<div class="box-right-top">' +
+					'			<span class="right-top-sp2" style="cursor:pointer;" onclick="skipdetails(\'' + information_id + '\',' + information_is_publisher + ')" title=' + information_title + '>' + information_title + '</span>' +
+					'			<span class="right-top-sp1">' + information_type + '</span>' +
+					'		</div>' +
+					'		<a onclick="skipdetails(\'' + information_id + '\',' + information_is_publisher + ')" class="box-right-main">' +
+					information_content_html + '</a>' +
+					'		<div class="box-right-comment">' +
+					'			<span class="comment-sp-time">' + information_publish_time_cn + '</span>' +
+					'			<span class="comment-sp-read" onclick="openreadman(this,' + information_is_publisher + ')">已读 <span class="sp-read-read">' + reader_num +
+					'			</span>人 未读 <span class="sp-read-noread">' + not_reader_num + '</span>人</span>' +
+					'			<span class="comment-sp-collect ' + favorite + '" onclick="collect(this)"><i class="fa fa-star-o" aria-hidden="true"></i>(<span class="collect-number">' + favorite_num + '</span>)</span>' + //+read + 
+					'		</div>' +
+					'	</div>' +
+					'	<div class="clear"></div>' +
+					'</div>';
+				$('.particular-main').append(str);
+				$.zoom({
+					container: $("#" + information_id + " .box-right-main"),
+					showText: "off，open",
+					firstState: 0,
+					height: 50,
+					changeCallback: function(state) {
+
+					}
+				});
+				//				$("#" + information_id + " .particular-main-box-left").css({
+				//					"height": $("#" + information_id).outerHeight(true) + "px",
+				//					"line-height": $("#" + information_id).outerHeight(true) + "px"
+				//				});
+			}
+			//资讯中心、我的收藏切换
+			function infoManagementexChange(x, obj) {
+				$(obj).addClass("active").siblings().removeClass("active");
+				infoMangeListPage = 1;
+				isFirst = true;
+				infomangeSearchDate = "";
+				$(".breadcrumb input").prop({
+					"checked": false
+				});
+				if(parseInt(x) == 0) {
+					index = 0;
+					requestLoad(index, 1, "");
+				} else {
+					index = 1;
+					requestLoad(index, 1, "");
+				}
+			}
+			//新标签打开页面
+			function skipdetails(id, information_is_publisher) {
+				parent.openTab("资讯详情", "views/information-details.html?id=" + id + "&information_is_publisher=" + information_is_publisher + "&");
+			};
+			//确认已阅读
+			function sureread(obj) {
+				infoMangenListId = GetId(obj);
+				var modalId = $.modal().show("提示", ".informage-popup",
+					function(modal) {
+						infoUrlForRedman = BSAPIURL + "/companies/" + COMPANYID + "/informations/" + infoMangenListId + "/reader";
+						$.ajaxPut(infoUrlForRedman, '', function(response) {
+							if(response.code == 0) {
+								modal.modal('hide');
+								//$.modal().alert("阅读成功");
+								$.showSuccessGritter("阅读成功");
+								//location.reload();
+								$(obj).val("已阅读").text("已阅读").attr("disabled", "disabled").unbind("click");
+								$(obj).parent().find(".sp-read-read").html(response.data.count_readed);
+								$(obj).parent().find(".sp-read-noread").html(response.data.count_not_read);
+							} else {
+								$.showErrorGritter("已阅读失败：" + response.msg);
+							}
+						});
+					}
+				);
+			};
+			//获取ID
+			function GetId(obj) {
+				return $(obj).parents('.particular-main-box').attr("id");
+			}
+			//阅读人数弹窗
+			function openreadman(obj, information_is_publisher) {
+				infoMangenListId = GetId(obj);
+				var deptListNoRead, deptListRead;
+				var infoRemindList = [];
+				var modalId = $.modal({
+					showFooter: false
+				}).show("阅读状态", ".informage-read",
+					function(modal) {}
+				);
+				if(!information_is_publisher) {
+					$("#" + modalId + " .informage-bottom input").remove();
+					$("#" + modalId + " .informage-bottom label").remove();
+				}
+				var formContainer = "#" + modalId;
+				infoUrlForRedman = BSAPIURL + "/companies/" + COMPANYID + "/informations/" + infoMangenListId + "/reader/employees";
+				$.ajaxGet(infoUrlForRedman, function(response) {
+					if(response.code == 0) {
+						deptListNoRead = response.data.not_read_list;
+						deptListRead = response.data.read_list;
+						$(formContainer + " .informage-main-list:first-child .informage-main-list-top-sp").html(deptListNoRead.length);
+						$(formContainer + " .informage-main-list:nth-child(2) .informage-main-list-top-sp").html(deptListRead.length);
+
+						for(var i = 0; i < deptListNoRead.length; i++) {
+							var Strs = '<li class="item-employee" onclick="SingleSelection(this,' + information_is_publisher + ')" id="' + deptListNoRead[i].employee_id + '">';
+							//Strs += '<a href="#">';
+							Strs += '<img class="head" src="' + deptListNoRead[i].employee_avatar + '" alt="" />';
+							Strs += '<p title="' + deptListNoRead[i].employee_name + '" class="css-overhidden">' + deptListNoRead[i].employee_name + '</p>';
+							//Strs += '</a>';
+							Strs += '</li>';
+							$(formContainer + " .informage-main-list:first-child ul").append(Strs);
+
+						}
+						for(var i = 0; i < deptListRead.length; i++) {
+							var Strs = '<li class="item-employee">';
+							//Strs += '<a href="#">';
+							Strs += '<img class="head" src="' + deptListRead[i].employee_avatar + '" alt="" />';
+							Strs += '<p class="css-overhidden" title="' + deptListRead[i].employee_name + '">' + deptListRead[i].employee_name + '</p>';
+							//Strs += '</a>';
+							Strs += '</li>';
+							$(formContainer + " .informage-main-list:nth-child(2) ul").append(Strs);
+						}
+					}
+				})
+				//全部选中
+				$(formContainer + " .informage-bottom-selectall").change(function() {
+					var isSelect = $(this).is(":checked");
+					if(isSelect) {
+						$(this).parents(".modal-content").find(".list-employee").eq(0).find("li").addClass("active");
+					} else {
+						$(this).parents(".modal-content").find(".list-employee").eq(0).find("li").removeClass("active");
+					}
+				});
+
+				//提醒阅读点击事件
+				$(formContainer + " .btn-remind").click(function() {
+					$(formContainer + " .informage-main-list:first-child li.active").each(function(index) {
+							infoRemindList.push($(this).attr("id"));
+					});
+					if(infoRemindList.length == 0) {
+						$.showErrorGritter("提醒人员不能为空！");
+						return false;
+					}
+					var infoData = {};
+					infoData.business_type = 30;
+					infoData.data_id = infoMangenListId;
+					infoData.employee_id = infoRemindList.join(',');
+					infoData.message = {};
+					infoData.message.msg_content = "资讯提醒阅读";
+					infoData.message.msg_type = 4;
+					infoData.business_type_cn="M一下：资讯";
+					sendMtaMessage(infoData,modalId);
+				});
+
+			};
+			//单个选中
+			function SingleSelection(obj, isSelf) {
+				if(!isSelf) return false;
+				$(obj).toggleClass("active");
+				//				
+			};
+			//点击小星星收藏============
+			function collect(obj) {
+				if(isCollecting) {
+					$.showSuccessGritter("操作频繁！");
+					return;
+				};
+				isCollecting = true;
+				//var infoMangenListId=$(obj).parents('.particular-main-box').attr("id");
+				infoMangenListId = GetId(obj);
+				//alert(infoMangenListId);
+				infoUrlForCollection = BSAPIURL + "/companies/" + COMPANYID + "/informations/" + infoMangenListId + "/favorite";
+				if(!$(obj).hasClass("active")) {
+					$.ajaxPut(infoUrlForCollection, "",
+						function(response) {
+							if(response.code == 0) {
+								//success
+								//var munber = parseInt($("#" + infoMangenListId + " .comment-sp-collect").find("span").html()) + 1;
+								$("#" + infoMangenListId + " .comment-sp-collect").find("span").html(response.data.count_favorite);
+								$(obj).addClass("active");
+								$.showSuccessGritter("收藏成功");
+							} else {
+								$.showErrorGritter("收藏失败：" + response.msg);
+							}
+							isCollecting = false;
+						});
+				} else {
+					$.ajaxDelete(infoUrlForCollection, "", function(response) {
+						if(response.code == 0) {
+							//success
+							//var munber = parseInt($("#" + infoMangenListId + " .comment-sp-collect").find("span").html()) - 1;
+							$("#" + infoMangenListId + " .comment-sp-collect").find("span").html(response.data.count_favorite);
+							$(obj).removeClass("active");
+							$.showSuccessGritter("取消收藏成功");
+							if($(".informage-content-menu .move").text() == "我的收藏")
+								$("#" + infoMangenListId).remove();
+						} else {
+							$.showErrorGritter("取消收藏失败：" + response.msg);
+						}
+						isCollecting = false;
+					});
+					$(obj).find("i").replaceWith("<i class='fa fa-star-o' aria-hidden='true'></i>");
+				}
+			};
+			//滚动加载
+			$(".particular-main").scroll(function() {
+				var nScrollHight = $(this)[0].scrollHeight;
+				var nScrollTop = $(this)[0].scrollTop;
+				var nDivHight = $(this).height();
+				if(nScrollTop + nDivHight >= nScrollHight) {
+					infoMangeListPage++;
+					if(infomangeSearchDate == "") {
+						requestLoad(index, infoMangeListPage, "");
+					} else {
+						requestLoad(index, infoMangeListPage, infomangeSearchDate);
+					}
+
+				}
+			});
+		</script>
+	</body>
+
+</html>

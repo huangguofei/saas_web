@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>企业认证</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/city-picker.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			button[disabled],
+			a[disabled] {
+				cursor: not-allowed!important;
+				/*background-color: #999!important;*/
+				color: #91a1b3!important;
+				text-decoration: none!important;
+			}
+			
+			button {
+				outline: none;
+				border: none;
+				background-color: #fff;
+				color: #337ab7;
+			}
+			
+			.form-group-line-auth label {
+				color: #666;
+				font-size: 14px;
+			}
+			
+			.label-success {
+				background-color: #21b5a9;
+			}
+			
+			.label-warning {
+				background-color: #ca192b;
+			}
+			
+			.note-text {
+				color: #999;
+				font-size: 12px;
+				padding: 8px 12px;
+			}
+			
+			.page-company .list-company-auth .form-inline label {
+				color: #666;
+			}
+			
+			.status {
+				color: #333;
+			}
+			
+			.page-company .form-control,
+			.page-company select {
+				color: #999;
+				font-size: 12px;
+			}
+			
+			.form-group-line-auth .label {
+				font-weight: normal;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-company">
+			<div class="remark">
+				<i class="fa fa-list-ol fa-2x"></i><span>*企业信息填写、认证资料提交</span>
+			</div>
+			<div class="content">
+				<div class="form-horizontal form-company-auth">
+					<div class="form-group-line form-group-line-auth">
+						<label>认证状态：</label><label class="label label-success hide">已完成</label><label class="label label-warning hide">未完成</label>
+						<hr>
+					</div>
+				</div>
+				<div class="list-company-auth">
+					<ul>
+						<li class="form-group form-group-mobile form-inline">
+							<label>联系人手机号</label>
+							<span class="form-control note-text form-control-noborder">手机号是平台联系企业的重要方式</span>
+							<span class="status"><img src="../resources/images/unpass-icon.png" data-trans-src="../resources/images/pass-icon.png" /> 未验证</span>
+							<span class="form-control form-control-noborder" bind="_mobile"></span>
+							<span class="link"><button style="border: none;outline: none;" class="test-info btn-phone-status-control" href="javascript:;" onclick="openAuthPop(1);">验证</button></span>
+						</li>
+						<li class="form-group form-group-email form-inline">
+							<label>联系人邮箱</label>
+							<span class="form-control note-text form-control-noborder">获取最新资讯和账户信息通知</span>
+							<span class="status"><img src="../resources/images/unpass-icon.png" data-trans-src="../resources/images/pass-icon.png" /> 未验证</span>
+							<span class="form-control form-control-noborder" bind="_email"></span>
+							<span class="link"><button style="border: none;outline: none;" class="test-info btn-email-status-control" href="javascript:;" onclick="openAuthPop(2);">验证</button></span>
+						</li>
+						<li class="form-group form-group-info form-inline">
+							<label>企业信息</label>
+							<span class="form-control note-text form-control-noborder">为了保障企业的权益，只有完成企业认证后才能进行版本的使用</span>
+							<span class="status"><img src="../resources/images/unpass-icon.png" data-trans-src="../resources/images/pass-icon.png" /> 未通过</span>
+							<span class="form-control form-control-noborder refuse-note" bind="_remark"></span>
+							<span class="link"><button class="btn-info-status-control" onclick="postAuth(this);">提交认证</button></span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-auth-info hide">
+			<form class="form-horizontal model-info company-auth-info">
+				<div class="form-group form-inline">
+					<label class="form-label-type"></label>
+					<span class="form-control" bind="number"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label>图像验证</label>
+					<input type="text" class="form-control form-control-imgcode" placeholder="输入右侧验证码" bind="imgcode" maxlength="6"><img class="img-code" src="../resources/images/code.jpg" title="点击更换验证码" onclick="initVerifyCode();" />
+				</div>
+				<div class="form-group form-inline">
+					<label class="form-label-type-code">验证码</label>
+					<input type="text" class="form-control form-control-code" bind="code" nulltip="验证码" style="width: 170px; margin-right: 4px;" maxlength="6">
+					<a href="javascript:;" class="btn btn-success btn-sendcode" enb="1">发送验证码</a>
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.data.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			//------------消息通知相关-----------------------
+			var publisher = parent.HHMQ.createPublisher('企业认证', 'company-auth,welcome');
+			//页面关闭事件
+			context.onPageClose = function() {
+				publisher.dispose();
+			};
+			var CODETYPE = "auth";
+			var formContainer = "model-info";
+			var comController = new Controller(".list-company-auth");
+			var mobile = "13323348997";
+			var email = "4454545@qq.com";
+			var authNumber;
+			$(document).ready(function() {
+				//loading
+				$.showLoadingPop("正在加载企业信息，请稍后...");
+				//token
+				$.token();
+				//加载企业状态
+				//load companyinfo 
+				$.ajaxGet(SAASAPIS.BS.company.status, function(response) {
+					if(response.code != 0) {
+						$.showErrorGritter("加载企业信息失败：" + response.msg);
+						//hide
+						$.hideLoadingPop();
+						return false;
+					}
+					if(response.data.info.status == 1) {
+						$(".test-info").attr("disabled", "disabled");
+						var modalId = $.modal().confirm("您的企业信息未填写完整，不能认证，请先完善企业信息", function(modal) {
+							parent.closeCurrActiveTab();
+							parent.openTab("企业信息", "views/company-info.html?mid=3b279719-6031-4800-a149-7a4243b567c7");
+							modal.modal("hide");
+						});
+					} else {
+						$(".test-info").css("color", "#009ed8").css("background-color", "#fff");
+					}
+					var verData = response.data;
+					mobile = verData._mobile = verData.mobile.number ? verData.mobile.number : "";
+					email = verData._email = verData.email.number ? verData.email.number : "";
+					verData._remark = verData.info.remark || "";
+					console.log(verData)
+					if(verData.info.status == 4) {
+						$(".refuse-note").css("color", "#ca192b");
+					}
+
+					//show
+					comController.set(verData);
+					var infoStatus = verData.info.status;
+					localStorage["_cmp_info_status"] = infoStatus;
+					var statusStr = "";
+					if(infoStatus == 3 || infoStatus == 6) {
+						statusStr = "<img src=\"../resources/images/unpass-icon.png\"> ";
+					}
+					$(".form-group-info .link .btn-info-status-control").attr("data-info-status", infoStatus);
+					if(infoStatus == 5) {
+						//已完成
+						$(".form-group-line-auth .label-success").removeClass("hide");
+						$(".form-group-info .status").html("<i class=\"fa fa-check text-success\"></i> " + verData.info.status_cn);
+						$(".form-group-info .link .btn-info-status-control").attr("disabled", "disabled");
+					} else {
+						$(".form-group-line-auth .label-warning").removeClass("hide");
+						$(".form-group-info .status").html((statusStr?statusStr:"<img src='../resources/images/unpass-icon.png' /> ") +verData.info.status_cn);
+						if(infoStatus == 2 || infoStatus == 1) {
+							//待提交
+							$(".form-group-info .link .btn-info-status-control").removeAttr("disabled", "disabled");
+						} else if(infoStatus == 6 || infoStatus == 3 || infoStatus == 4) {
+
+							$(".form-group-info .link .btn-info-status-control").attr("disabled", "disabled");
+						}
+					}
+					if(infoStatus == 5 || infoStatus == 6 || infoStatus == 4) {
+						//消息推送
+						publisher.publisheMsg({
+							action: "authPass",
+							msg: infoStatus
+						}, "company-auth");
+					}
+					var noVer = "<img src='../resources/images/unpass-icon.png'> 未验证";
+					var vered = "<img src='../resources/images/pass-icon.png'> 已验证";
+					$(".form-group-mobile  .status").html(verData.mobile.status == 1 ? noVer : vered);
+					if(verData.mobile.status == 2) {
+						$(".form-group-mobile .link .btn-phone-status-control").attr("disabled", "disabled");
+					} else {
+						$(".form-group-mobile .link .btn-phone-status-control").removeAttr("disabled");
+					}
+					$(".form-group-email  .status").html(verData.email.status == 1 ? noVer : vered);
+					if(verData.email.status == 2) {
+						$(".form-group-email .link .btn-email-status-control").attr("disabled", "disabled");
+					} else {
+						$(".form-group-email .link .btn-email-status-control").removeAttr("disabled");
+					}
+					//hide
+					$.hideLoadingPop();
+				});
+			});
+
+			function openAuthPop(type) {
+				var isMobile = type == 1;
+				var typeText = (isMobile ? "手机号码" : "邮箱");
+
+				authNumber = (isMobile ? mobile : email);
+				if(!authNumber) {
+					$.showErrorGritter("您的联系人" + (isMobile ? "手机" : "邮箱") + "号码尚未填写，不能进行验证");
+					return false;
+				}
+				$(".form-label-type").text(typeText);
+				$(".form-label-type-code").text((isMobile ? "手机" : "邮箱") + "验证码");
+				var modalId = $.modal().showOfMini("验证" + typeText, ".pnl-auth-info",
+					function(modal) {
+						//to save
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var authData = authController.getJSON();
+						var postData = {
+							mobile: mobile,
+							email: email,
+							sms_code: authData.code,
+							sms_type: CODETYPE
+						};
+						//alert(JSON.stringify(modelData));
+						$.ajaxPost((isMobile ? SAASAPIS.BS.company.verify.mobile : SAASAPIS.BS.company.verify.email), postData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("验证成功");
+									modal.modal('hide');
+									reloadPage();
+								} else {
+									$.showErrorGritter("验证失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-info";
+				var rowData = {
+					number: authNumber
+				};
+				var authController = new Controller(formContainer);
+				authController.set(rowData);
+				//code
+				$(formContainer + " .btn-sendcode").click(function() {
+					var captcha_code = $(formContainer + " .form-control-imgcode").val();
+					if(!captcha_code) {
+						$.clearGritter();
+						$.showErrorGritter("请输入右侧的图像验证码。");
+						$(formContainer + " .form-control-imgcode").focus();
+						return false;
+					}
+					//authNumber
+					var linkSendCode = $(this);
+					$.ajaxGet((isMobile ? SAASAPIS.BASE.code.sms : SAASAPIS.BASE.code.email) + $.toQueryString({
+						type: CODETYPE,
+						mobile: authNumber,
+						email: authNumber,
+						captcha_type: CODETYPE,
+						captcha_code: captcha_code
+					}, true), function(response) {
+						if(response.code != 0) {
+							$.showErrorGritter("获取" + (isMobile ? "手机" : "邮件") + "验证码失败：" + response.msg, {
+								time: 3000
+							});
+						} else {
+							if(linkSendCode.attr("enb") != "1") {
+								return;
+							}
+							linkSendCode.removeClass("act").attr("enb", "0").attr("disabled", "disabled");
+							var ss = 60;
+							var stob = setInterval(function() {
+								if(ss > 0) {
+									ss--;
+									linkSendCode.text("获取(" + ss + "s)");
+								} else {
+									linkSendCode.removeAttr("disabled");
+									linkSendCode.addClass("act").attr("enb", "1").text("发送验证码");
+									clearInterval(stob);
+								}
+							}, 1000);
+						}
+					});
+				});
+				//img code
+				initVerifyCode();
+			}
+
+			function postAuth(obj) {
+				console.log($(obj))
+				if($(obj).attr("data-info-status") == 4) {
+					$.showErrorGritter("您的企业信息认证失败，请先到”企业信息管理“页面修改！");
+					return false;
+				}
+				if($(obj).attr("data-info-status") == 1) {
+					$.showErrorGritter("您的企业信息尚未填写，请先到”企业信息管理“页面修改！");
+					return false;
+				}
+				$.modal().confirm("你将提交企业认证，确认提交吗？", function() {
+					$.ajaxPost(SAASAPIS.BS.company.verify.info, null,
+						function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter("企业认证已提交到客服审核。");
+								reloadPage();
+								//消息推送
+								publisher.publisheMsg({
+									action: "posed",
+									msg: "企业信息已提交认证。"
+								}, "company-auth");
+							} else {
+								$.showErrorGritter("提交企业认证失败：" + response.msg);
+							}
+						});
+				});
+			}
+
+			function initVerifyCode() {
+				$(".img-code").attr("src", SAASAPIS.BASE.captcha + "?height=32&width=110&type=" + CODETYPE + "&t=" + new Date().getTime());
+				$(".form-control-imgcode").val("");
+			}
+
+			function reloadPage() {
+				setTimeout(function() {
+					window.location = window.location;
+				}, 500);
+			}
+		</script>
+	</body>
+
+</html>

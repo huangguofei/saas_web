@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>企业注册</title>
+		<link rel="stylesheet" href="resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="resources/css/city-picker.css" />
+		<link rel="stylesheet" href="resources/css/index.css" />
+		<link rel="stylesheet" href="resources/css/login.css" />
+	</head>
+
+	<body class="reg">
+		<div class="login-container reg-container">
+			<div class="header">
+				<img src="resources/images/logo-black.png" />
+				<p>一体化办公解决方案提供商</p>
+			</div>
+			<div class="content">
+				<div class="box">
+					<h3 class="text-align-center">注册</h3>
+					<div class="step step1">
+						<p class="c1"></p>
+						<p class="c2"></p>
+						<p class="c3"></p>
+						<p class="proc"></p>
+						<p class="clear"></p>
+						<p class="t1">提交企业信息</p>
+						<p class="t2">填写管理员信息</p>
+						<p class="t3">注册成功</p>
+					</div>
+					<div class="clear step-con step-con1">
+						<input type="text" class="form-control form-control-company_name" placeholder="请输入企业真实名称" bind="company_name" nulltip="企业名称" maxlength="50">
+
+						<p class="form-group-city">
+							<input type="text" class="form-control form-control-city" placeholder="选择所在城市" nulltip="企业所在城市" readonly="readonly" data-toggle="city-picker">
+						</p>
+						<input type="text" class="form-control" placeholder="销售人员人数" nulltip="销售人员人数" maxlength="4" data-type="int" bind="sales_num">
+						<button class="form-button btn btn-danger" g="gostep" step="2">下一步 <i class="fa fa-angle-right"></i></button>
+					</div>
+					<div class="clear step-con step-con2 form-controls hide">
+						<p>此帐号为管理员帐号，请妥善保管！</p>
+						<input type="text" class="form-control form-control-mobile" placeholder="请输入手机号码" nulltip="手机号码" valitype="mobile" maxlength="11" bind="admin_mobile">
+						<input type="text" class="form-control form-control-imgcode" placeholder="请输入验证码" maxlength="6" nulltip="图形验证码" bind="captcha_code" /><img class="img-code" src="resources/images/code.jpg" title="点击更换验证码" />
+						<input type="text" class="form-control form-control-smscode" placeholder="请输入手机验证码" maxlength="6" nulltip="验证码" bind="mobile_code">
+						<a href="javascript:;" style="top: 34.7%;" class="btn btn-success btn-sendcode" enb="1">发送验证码</a>
+						<input type="password" class="form-control" placeholder="请输入密码" nulltip="密码" maxlength="20" bind="password">
+						<p class="tip">密码为6-12位，字母、数字和符号的组合。</p>
+						<input type="password" class="form-control" placeholder="再次确认密码" nulltip="密码" maxlength="20" bind="password1">
+						<button class="form-button btn step-prev" g="gostep" step="1"><i class="fa fa-angle-left" style="margin: 0 10px 0 0;"></i>上一步 </button>
+						<button class="form-button btn btn-danger" g="gostep" step="3"> 确 定 </button>
+					</div>
+					<div class="clear step-con step-con3 hide">
+						<p class="note">
+							<i class="fa fa-check-circle fa-3x text-success"></i><br /><br /> 注册成功！
+						</p>
+						<a href="login.html" class="form-button btn btn-danger">登 录</a>
+					</div>
+				</div>
+			</div>
+			<div class="footer">
+				<div class="copyright">
+					<span>Copyright 2001-2016 Weaver Network All Rights Reserved. 渝ICP备XXXXXXX号</span>
+					<span class="footer-link"><a href="index.html">返回首页</a></span>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="resources/js/city-picker.data.js"></script>
+		<script type="text/javascript" src="resources/js/city-picker.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<!--[if IE]>
+			<script type="text/javascript" src="resources/js/placeholder.js"></script>
+			<script type="text/javascript">
+				$("input[placeholder]").each(function() {
+					$(this).placeholder({
+						word: $(this).attr("placeholder")
+					});
+				});
+			</script>
+		<![endif]-->
+		<script type="text/javascript">
+			var CODETYPE = "reg";
+			var regController = new Controller(".step-con");
+			var regModel = {};
+			$(document).ready(function() {
+				//token
+				$.token();
+				//init city
+				$.loadCityData(function(cityData) {
+					$('[data-toggle="city-picker"]').citypicker({
+						dataSource: cityData
+					});
+				});
+				regController.set(regModel);
+				//$.support.leadingWhitespace false ie6-8
+				$(".btn-sendcode").click(function() {
+					var linkSendCode = $(this);
+					if(linkSendCode.attr("enb") != "1") {
+						return;
+					}
+					var regData = regController.getJSON();
+					if(!mobileValidate(regData.admin_mobile)) {
+						$.clearGritter();
+						$.showErrorGritter("手机号码有误，请重新输入。", {
+							position: "login-center reg-center"
+						});
+						$(".form-control-mobile").focus();
+						return false;
+					}
+					if(regData.captcha_code.length == 0) {
+						$.clearGritter();
+						$.showErrorGritter("请输入右侧图像验证码。", {
+							position: "login-center reg-center"
+						});
+						$(".form-control-imgcode").focus();
+						return false;
+					}
+					//验证手机是否存在
+					$.ajaxPost(SAASAPIS.BS.company.check_mobile, {
+							mobile: regData.admin_mobile
+						},
+						function(response) {
+							if(response.code == 0) {
+								$.ajaxGet(SAASAPIS.BASE.code.sms + $.toQueryString({
+									type: CODETYPE,
+									mobile: regData.admin_mobile,
+									captcha_type: CODETYPE,
+									captcha_code: regData.captcha_code
+								}, true), function(response) {
+									if(response.code != 0) {
+										$.showErrorGritter("获取手机验证码失败：" + response.msg, {
+											time: 3000,
+											position: "login-center reg-center"
+										});
+										initVerifyCode();
+										$(".form-control-imgcode").val("");
+										$(".form-control-imgcode").focus();
+									} else {
+										linkSendCode.removeClass("act").attr("enb", "0").attr("disabled", "disabled");
+										var ss = 60;
+										var stob = setInterval(function() {
+											if(ss > 0) {
+												ss--;
+												linkSendCode.text("获取(" + ss + "s)");
+											} else {
+												linkSendCode.removeAttr("disabled");
+												//initVerifyCode();
+												linkSendCode.addClass("act").attr("enb", "1").text("发送验证码");
+												clearInterval(stob);
+											}
+										}, 1000);
+									}
+								});
+							} else {
+								$.clearGritter();
+								$.showErrorGritter("此手机号已注册，不能再次注册。", {
+									position: "login-center reg-center"
+								});
+							}
+						});
+				});
+				$("button[g='gostep']").click(function() {
+					var regData = regController.getJSON();
+					var nameLength = regData.company_name.length;
+					if((nameLength < 4 && nameLength > 0) || !(/^[a-zA-Z\u4e00-\u9fa5\0-9]+$/.test(regData.company_name))) {
+						$.clearGritter();
+						$.showErrorGritter("请输入完整的企业名称，<br>例如：北京XX医药有限公司。", {
+							position: "login-center reg-center"
+						});
+						$(".form-control-company_name").focus();
+						return false;
+					}
+					var salesCount = parseInt(regData.sales_num);
+					if(salesCount > 1000 || salesCount <= 0) {
+						$.showErrorGritter("销售人数范围为（1-1000），请确认。", {
+							position: "login-center reg-center"
+						});
+						return false;
+					}
+					var cityCode = $(".form-control-city").data("code");
+					if(cityCode.indexOf("/") < 0) {
+						$.clearGritter();
+						$.showErrorGritter("请选择企业所在城市。", {
+							position: "login-center reg-center"
+						});
+						$(".form-control-city").focus();
+						return false;
+					}
+					regData.area_id = cityCode.split("/")[1];
+					//step
+					var step = $(this).attr("step");
+					var con_container;
+					if(step == 1) {
+						con_container = undefined;
+					} else if(step == 2) {
+						con_container = ".step-con1";
+					} else if(step == 3) {
+						con_container = ".step-con2";
+					}
+					if(!con_container || inputValidateForGritter(con_container, "login-center reg-center")) {
+						if(step == 3) {
+							//提交
+							if(regData.password.length < 6 || regData.password1.length < 6) {
+								$.clearGritter();
+								$.showErrorGritter("密码长度至少6位。", {
+									position: "login-center reg-center"
+								});
+								return false;
+							}
+							if(regData.password != regData.password1) {
+								$.clearGritter();
+								$.showErrorGritter("两次密码不一致，重新输入。", {
+									position: "login-center reg-center"
+								});
+								return false;
+							}
+							if(!checkPassword(regData.password)){
+								return false;
+							}
+							//alert(JSON.stringify(regData));
+							$.ajaxPost(SAASAPIS.BS.companies, regData,
+								function(response) {
+									if(response.code == 0) {
+										changeStep(step);
+									} else {
+										$.clearGritter();
+										$.showErrorGritter("注册失败：" + response.msg, {
+											position: "login-center reg-center"
+										});
+									}
+								});
+						} else {
+							changeStep(step);
+						}
+					}
+					return false;
+				});
+				$(".img-code").click(function() {
+					initVerifyCode();
+				});
+				//first load
+				initVerifyCode();
+			});
+
+			function checkPassword(str) {
+				var reg2 = /([a-zA-Z0-9!@#$%^&*()_?<>{}=+-]){6,12}/;
+				var reg3 = /[a-zA-Z]+/;
+				var reg4 = /[0-9]+/;
+				if(reg2.test(str) && reg3.test(str) && reg4.test(str)) {
+					return true;
+				} else if(!reg2.test(str)) {
+					$.showErrorGritter("密码长度在6-12位");
+					return false;
+				} else if(!reg3.test(str)) {
+					$.showErrorGritter("密码需含有字母");
+					return false;
+				} else if(!reg4.test(str)) {
+					$.showErrorGritter("密码需含有数字");
+					return false;
+				}
+			}
+
+			function changeStep(step) {
+				$(".step").removeClass("step1").removeClass("step2").removeClass("step3").addClass("step" + step);
+				$(".step-con").addClass("hide");
+				$(".step-con" + step).removeClass("hide");
+			}
+
+			function initVerifyCode() {
+				$(".img-code").attr("src", SAASAPIS.BASE.captcha + "?height=32&width=110&type=" + CODETYPE + "&t=" + new Date().getTime());
+				$(".form-control-imgcode").val("");
+			}
+		</script>
+	</body>
+
+</html>

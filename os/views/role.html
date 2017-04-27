@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>角色管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+	</head>
+
+	<body>
+		<div class="page-container">
+			<div class="remark">
+				<i class="fa fa-list-ol fa-2x"></i><span>*运营端角色管理，可添加、编辑、删除角色、分配角色权限以及停/启用角色</span>
+			</div>
+			<div class="content">
+				<div class="search">
+					<div class="form-inline">
+						<select id="selStatus" class="form-control">
+							<option value="0">请选择状态</option>
+							<option value="1">启用</option>
+							<option value="2">停用</option>
+						</select>
+						<input id="txtKey" class="form-control" type="text" placeholder="请输入角色名称" />
+						<button type="button" class="btn btn-default" onclick="reloadGrid();" role-auth="os/roles|get">查 询</button>
+					</div>
+				</div>
+				<div class="role-list">
+					<table id="grid-table" class="grid-module">
+					</table>
+					<div id="grid-pager">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-info hide">
+			<form class="form-horizontal model-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">角色名称</label>
+					<input type="text" class="form-control" placeholder="角色名称" bind="name" nulltip="角色名称">
+				</div>
+				<div class="form-group form-inline">
+					<label>备注</label>
+					<textarea class="form-control" bind="remark"></textarea>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-modules hide">
+			<form class="form-horizontal model-modules">
+				<div class="form-group form-inline">
+					<table border="0">
+						<tr>
+							<td style="width: 90px; text-align: center; border-right: 1px solid #eee;" valign="top">
+								模块
+							</td>
+							<td style=" padding-left: 15px;">
+								<div class="tree tree-selectable treeMenu">
+								</div>
+							</td>
+						</tr>
+					</table>
+
+				</div>
+			</form>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info" onclick="openModelInfo('add');" role-auth="os/roles|post"><i class="fa fa-plus"></i> 添加角色</a>
+			<a class="btn btn-sm btn-danger" onclick="openModelInfo('update');" show-on="singleselect" role-auth="os/roles/0|put"><i class="fa fa-edit"></i> 编辑</a>
+			<a class="btn btn-sm btn-danger" onclick="openSetModulesPOP();" show-on="singleselect" role-auth="os/role_of_modules|post"><i class="fa fa-cog"></i> 分配权限</a>
+			<a class="btn btn-sm btn-danger" show-on="multiselect" onclick="setDisable(1);" role-auth="os/roles|patch"><i class="fa fa-unlock"></i> 启用</a>
+			<a class="btn btn-sm btn-danger" show-on="multiselect" onclick="setDisable(2);" role-auth="os/roles|patch"><i class="fa fa-lock"></i> 停用</a>
+			<a class="btn btn-sm btn-danger" show-on="multiselect" onclick="deleteModels();" role-auth="os/roles|delete"><i class="fa fa-trash"></i> 删除</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			var grid_selector = "#grid-table";
+			var pager_selector = "#grid-pager";
+			var modulesJSON = [];
+			$(document).ready(function() {
+				//token
+				$.token();
+				//grid
+				//133 = remark 21(padding+border) + search margin-bottom 10 + pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".remark").height() - $(".search").height() - 153;
+				//alert($(".remark").height());
+				var colNames = ['', '', '', '', '角色名称', '备注', '状态', '创建时间'];
+				var colModel = [{
+					name: 'id',
+					index: 'id',
+					hidden: true
+				}, {
+					name: 'module_ids',
+					index: 'module_ids',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue) {
+								return cellvalue;
+							}
+							var moduleIds = [];
+							for(var i in rowObject.modules) {
+								moduleIds.push(rowObject.modules[i].module_id);
+							}
+							return moduleIds;
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'name',
+					index: 'name',
+					hidden: true
+				}, {
+					name: 'status',
+					index: 'status',
+					hidden: true
+				}, {
+					name: '__name',
+					index: '__name',
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"openModelInfo('update'," + rowObject.id + ");\" role-auth=\"os/roles/0|put\" role-auth-tip=\"你无权限修改角色信息。\">" + rowObject.name + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'remark',
+					index: 'remark',
+					sortable: true
+				}, {
+					name: 'status_name',
+					index: 'status_name',
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return rowObject.status == 2 ? "<span class='fa fa-lock'><span> 停用" : "启用";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'create_time',
+					index: 'create_time',
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return $.convertToDate(cellvalue).Format("yyyy-MM-dd");
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				grid = $(grid_selector).initJqGrid({
+					grid_selector: grid_selector,
+					pager: pager_selector,
+					url: OSAPIURL + "/roles",
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight,
+					sortname: "create_time",
+					sortorder: "desc"
+				});
+			});
+			//add and update
+			function openModelInfo(action, id) {
+				var actionText = (action == "add" ? "添加" : "修改");
+				var modalId = $.modal().show(actionText + "角色", ".pnl-info",
+					function(modal) {
+						//to save
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var roleData = roleController.getJSON();
+						$.ajaxByAction(action, OSAPIURL + "/roles" + (action == "update" ? ("/" + roleData.id) : ""), roleData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "角色成功。");
+									modal.modal('hide');
+									roleData.__name = roleData.name;
+									$(grid).jqGrid(action == "add" ? "addRowData" : "setRowData", action == "update" ? roleData.id : response.data, roleData);
+
+									$(grid).reloadGrid();
+								} else {
+									$.showErrorGritter("保存角色信息失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-info";
+				//控制输入框点击回车阻止表单提交功能
+				$(formContainer + " input[type='text']").keydown(function(e) {
+					if(e.keyCode == 13) {
+						e.preventDefault();
+					}
+				});
+				var rowData = {};
+				var roleController = new Controller(formContainer);
+				if(action == "update") {
+					var rowIndex = id || $(grid_selector).jqGrid('getGridParam', 'selrow');
+					if(!rowIndex) {
+						return false;
+					}
+					rowData = $(grid_selector).jqGrid('getRowData', rowIndex);
+				}
+				roleController.set(rowData);
+			}
+			//set modules
+			function openSetModulesPOP() {
+				//init modules
+				if(modulesJSON.length == 0) {
+					$.ajaxGet(OSAPIURL + "/modules?isall=true", function(response) {
+						modulesJSON = response.data.rows;
+						//init
+						initModuleTree(formContainer);
+						//bind selected modules
+						bindSelectedModules(formContainer, rowData);
+					});
+				}
+				var rowIndex = $(grid).jqGrid('getGridParam', 'selrow');
+				var modalId = $.modal().show("分配权限", ".pnl-modules",
+					function(modal) {
+						var selectMenuIds = "";
+						$(formContainer + " .treeMenu p input:checked").each(function() {
+							selectMenuIds += "," + $(this).val();
+						});
+						if(!selectMenuIds) {
+							alert("请选择要分配的模块。");
+							return false;
+						}
+						selectMenuIds = selectMenuIds.substring(1);
+						var roleModuelData = {
+							role_id: rowIndex,
+							module_ids: selectMenuIds.split(',')
+						};
+						$.ajaxPost(OSAPIURL + "/role_of_modules", roleModuelData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("分配权限成功。");
+									modal.modal('hide');
+									$(grid).jqGrid("setRowData", rowIndex, {
+										module_ids: selectMenuIds
+									});
+								} else {
+									$.showErrorGritter("分配权限失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-modules";
+				var rowData = $(grid_selector).jqGrid('getRowData', rowIndex);
+				//init module tree
+				if(modulesJSON.length > 0) {
+					initModuleTree(formContainer);
+					//bind selected modules
+					bindSelectedModules(formContainer, rowData);
+				}
+			}
+
+			function bindSelectedModules(formContainer, rowData) {
+				var module_ids = rowData.module_ids.split(',');
+				for(var i in module_ids) {
+					$(formContainer + " .treeMenu p input[value='" + module_ids[i].toString() + "']").attr("checked", "checked");
+				}
+			}
+			//delete module
+			function deleteModels() {
+				$.modal().confirm("你将删除选择的角色，删除后不能恢复，确认删除吗？", function() {
+					var selRowsIndex = $(grid).jqGrid('getGridParam', 'selarrrow');
+					if(selRowsIndex.length > 0) {
+						$.ajaxDelete(OSAPIURL + "/roles", {
+								ids: selRowsIndex
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("删除角色成功。");
+									//refresh data
+									//var len = selRowsIndex.length;
+									//for (var i = 0; i < len; i++) {
+									//	$(grid).jqGrid("delRowData", $(grid).jqGrid('getGridParam', 'selrow'));
+									//}
+									$(grid).reloadGrid();
+								} else if(response.code > 0 && response.data.not_allow) {
+									var cannotDelModels = response.data.not_allow;
+									var canotDelNames = [];
+									for(var i in cannotDelModels) {
+										$(grid).jqGrid("setSelection", cannotDelModels[i].role_id);
+										canotDelNames.push(cannotDelModels[i].role_name);
+									}
+									$.showErrorGritter("角色 [" + canotDelNames.join(',') + "] 删除失败，该角色已关联用户，本次删除操作取消。");
+								} else {
+									$.showErrorGritter("删除角色失败：" + response.msg);
+								}
+							});
+					}
+					//					var rowIndex = $(grid).jqGrid('getGridParam', 'selrow');
+					//					if (rowIndex) {
+					//						$.ajaxDelete(OSAPIURL + "/roles/" + rowIndex.toString(), null,
+					//							function(response) {
+					//								if (response.code == 0) {
+					//									//success
+					//									$.showSuccessGritter("删除角色成功。");
+					//									//refresh data
+					//									$(grid).jqGrid("delRowData", $(grid).jqGrid('getGridParam', 'selrow'));
+					//								} else {
+					//									$.showErrorGritter("提交删除失败：" + response.msg);
+					//								}
+					//							});
+					//					}
+				});
+			}
+
+			function setDisable(state) {
+				var statusArr = $.getSelectRowIdsForjqGrid(grid, "status");
+				if(statusArr.indexOf("2") >= 0 && state == 2) {
+					$.showErrorGritter("已停用的角色不能进行停用操作。");
+					return false;
+				}
+				if(statusArr.indexOf("1") >= 0 && state == 1) {
+					$.showErrorGritter("已启用的角色不能进行启用操作。");
+					return false;
+				}
+
+				var doDisable = function() {
+					var status = state == 2 ? "停用" : "启用";
+					var selRowsIndex = $(grid).jqGrid('getGridParam', 'selarrrow');
+					if(selRowsIndex.length > 0) {
+						$.ajaxPatch(OSAPIURL + "/roles", {
+								ids: selRowsIndex,
+								status: state
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(status + " 角色成功。");
+									//refresh data
+									var len = selRowsIndex.length;
+									for(var i = 0; i < len; i++) {
+										var rowIndex = $(grid).jqGrid('getGridParam', 'selrow');
+										$(grid).jqGrid("setRowData", rowIndex, {
+											status_name: status,
+											status: state
+										});
+										$(grid).jqGrid("setSelection", rowIndex);
+									}
+								} else {
+									$.showErrorGritter("修改状态失败：" + response.msg);
+								}
+							});
+					}
+				};
+				if(state == 2) {
+					$.modal().confirm("角色停用后所属该角色的账户将无法进行相关操作，可再次启用后正常使用，确认停用该角色吗？", function() {
+						doDisable();
+					})
+				} else {
+					doDisable();
+				}
+			}
+
+			function reloadGrid() {
+				var url = OSAPIURL + "/roles?status=";
+				var statusId = $("#selStatus").val();
+				if(statusId != "") {
+					url += statusId;
+				}
+				var key = $("#txtKey").val();
+				if(key != "") {
+					url += "&key=" + key;
+				}
+				$("#grid-table").jqGrid('setGridParam', {
+					page: 1,
+					url: url
+				}).trigger("reloadGrid", {});
+			}
+
+			function initModuleTree(formContainer) {
+				for(var i in modulesJSON) {
+					var mu = modulesJSON[i];
+					if(mu.pid == 0) {
+						$(formContainer + " .treeMenu").append("<p mid='" + mu.id + "'><input id='ck" + mu.id + "' type='checkbox' value='" + mu.id + "'/> <label for='ck" + mu.id + "'>" + mu.name + "</label></p>");
+						appendTreeNode(formContainer, mu.id);
+					}
+				}
+				$(formContainer + " .treeMenu p input").change(function() {
+					var mchecked = this.checked;
+					if(mchecked) {
+						$(this).parent().find("input:checkbox").each(function() {
+							this.checked = true;
+						});
+					} else {
+						$(this).parent().find("input:checkbox").attr("checked", false);
+					}
+					var pid = $(this).attr("pid");
+					if(pid) {
+						$("#ck" + pid).each(function() {
+							if(this.checked && $(this).parent().find("input[id!=ck" + pid + "]:checked").length > 0) {
+								return false;
+							}
+							if(mchecked)
+								this.checked = mchecked;
+							pid = $(this).attr("pid");
+							if(pid) {
+								$("#ck" + pid).each(function() {
+									if(mchecked)
+										this.checked = mchecked;
+								});
+							}
+						});
+					}
+				});
+			}
+			//tree node
+			function appendTreeNode(formContainer, pid) {
+				for(var i in modulesJSON) {
+					var mu = modulesJSON[i];
+					if(mu.pid == pid) {
+						$(formContainer + " .treeMenu p[mid='" + pid + "']").append("<p mid='" + mu.id + "' style='padding-left:20px;'><input id='ck" + mu.id + "' pid='" + pid + "' type='checkbox' value='" + mu.id + "'/> <label for='ck" + mu.id + "'>" + mu.name + "</label></p>");
+						appendTreeNode(formContainer, mu.id);
+					}
+				}
+			}
+		</script>
+	</body>
+
+</html>

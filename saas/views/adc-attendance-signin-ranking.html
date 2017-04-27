@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>签到排名</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			
+			.page-container {
+				padding: 0;
+				margin: 0;
+			}
+			
+			.page-container .content {
+				padding: 0;
+				padding-left: 10px;
+			}
+			
+			ul {
+				zoom: 1;
+			}
+			
+			ul:after {
+				clear: both;
+				content: '.';
+				display: block;
+				width: 0;
+				height: 0;
+				visibility: hidden;
+			}
+			
+			li {
+				cursor: pointer;
+			}
+			
+			.content-menu {
+				height: 45px;
+				border-bottom: 1px solid #C9C9C9;
+				background-color: #f8f8f8;
+				/*padding-top: 10px;*/
+			}
+			
+			.content-menu-list {
+				padding-left: 10px;
+				height: 45px;
+			}
+			
+			.content-menu-list li {
+				height: 44px;
+				line-height: 44px;
+				padding: 0 10px;
+				text-align: center;
+				float: left;
+				/*margin-left: 10px;*/
+				margin-right: 20px;
+				font-size: 14px;
+				color: #666;
+			}
+			
+			.content-menu-list li.menuselectstyle {
+				color: #009ed8;
+				border-bottom: 2px solid #009ed8;
+			}
+			
+			.content-main>div {
+				margin-left: 10px;
+			}
+			
+			.content-main-signindate {
+				height: 40px;
+				line-height: 40px;
+				padding-left: 10px;
+				margin: 14px 0 12px 0;
+			}
+			
+			.content-main-signindate input[type=date] {
+				width: 300px;
+				height: 30px;
+			}
+			
+			.content-main-rankingmenu {
+				margin-top: 14px;
+				height: 36px;
+				border: 1px solid #e3e3e3;
+				border-bottom: none;
+				background-color: #f8f8f8;
+				border-bottom: 2px solid #85beeb;
+			}
+			
+			.rankingmenu-list {
+				/*padding-left: 30px;*/
+				height: 36px;
+				line-height: 36px;
+			}
+			
+			.rankingmenu-list li {
+				float: left;
+				padding: 0 10px;
+				margin-right: 20px;
+				min-width: 75px;
+			}
+			
+			li.selectedstyle {
+				color: #fff;
+				background-color: #85beeb;
+				/*border-bottom: 2px solid #009ed8;*/
+			}
+			/*.rankingmenu-list li:hover {
+				font-weight: bold;
+				text-decoration: underline;
+			}*/
+			
+			.content-main-rankingmode {
+				height: 36px;
+				padding-left: 40px;
+			}
+			
+			.rankingmode-list {
+				/*width: 150px;*/
+				background: #F9F9F9;
+				/*border: 1px solid #D7D7D7;*/
+				/*border-radius: 3px;*/
+				/*-webkit-border-radius: 3px;*/
+				/*-moz-border-radius: 3px;*/
+				display: inline-block;
+				padding: 0 20px;
+			}
+			
+			.content-main-rankingmode .rankingmode-list {
+				height: 26px;
+				/*width: 70px;*/
+				margin: 3px 10px;
+				border: 1px solid #e3e3e3;
+				background-color: #fff;
+				padding: 0;
+			}
+			
+			.content-main-rankingmode .rankingmode-list li {
+				height: 24px;
+				width: 34px;
+				line-height: 24px;
+				margin: 0;
+				text-align: center;
+				background-color: #f3f3f3;
+				border-left: 1px solid #e9e9e9;
+			}
+			
+			.content-main-rankingmode .rankingmode-list li:first-child {
+				border-left: 0;
+			}
+			
+			.content-main-rankingmode .rankingmode-list li.selectedstyle {
+				background-color: #fff;
+			}
+			
+			.content-main-rankingmode .rankingmode-list li:last-child {
+				margin: 0;
+			}
+			
+			.rankingmode-list li {
+				height: 36px;
+				line-height: 36px;
+				float: left;
+				/*margin-left: 30px;*/
+			}
+			
+			.rankingmode-list li:last-child {
+				margin-left: 30px;
+			}
+			/*.rankingmode-list li:hover {
+				font-weight: bold;
+				text-decoration: underline;
+			}*/
+			
+			.content-main-myranking {
+				height: 62px;
+				/*margin-bottom: 10px;*/
+				border: 1px solid #e3e3e3;
+				/*margin-left: 10px;*/
+				/*margin-top: 14px;*/
+			}
+			
+			.content-main-myranking ul {
+				height: 62px;
+				width: 100%;
+			}
+			
+			.content-main-myranking ul li>span {
+				font-size: 14px;
+				color: #666;
+			}
+			
+			.content-main-myranking ul li>span span {
+				color: #999;
+			}
+			
+			.content-main-myranking ul li {
+				float: left;
+				cursor: auto;
+				width: 24%;
+				height: 62px;
+				line-height: 62px;
+				text-align: center;
+			}
+			
+			.liimg img {
+				width: 40px;
+				height: 40px;
+				border-radius: 20px;
+				margin-right: 10px;
+			}
+			
+			.content-main-myranking ul li img {
+				/*margin-right: 10px;*/
+			}
+			
+			.content-main-myranking ul li.limyinfo {
+				line-height: 62px;
+			}
+			
+			.signinonemonth .content-main-myranking ul li.limyinfo {
+				line-height: 62px;
+			}
+			
+			.content-main-rankinglist {
+				margin-top: 0;
+			}
+			
+			.ui-jqgrid .ui-jqgrid-hdiv {
+				border-top: none!important;
+			}
+			
+			.ui-jqgrid-hdiv .ui-jqgrid-htable {
+				border-top: none!important;
+			}
+			
+			.content-main-rankingmap {
+				display: none;
+				width: 100%;
+			}
+			
+			.map-rankingpopup {
+				width: 300px;
+				border: 1px solid #D7D7D7;
+				border-radius: 5px 5px 0 0;
+				-webkit-border-radius: 5px 5px 0 0;
+				-moz-border-radius: 5px 5px 0 0;
+			}
+			
+			.map-rankingtable {
+				width: 100%;
+			}
+			
+			th {
+				text-align: center
+			}
+			
+			.map-rankingtable tr {
+				border-bottom: 1px solid #DDDDDD;
+				padding: 0 20px;
+				text-align: center;
+			}
+			
+			.map-rankingall {
+				display: block;
+				text-align: right;
+				height: 30px;
+				line-height: 30px;
+			}
+			
+			.map-rankingsite {
+				border: 1px solid #ABABAB;
+				background: #F2F2F2;
+				text-align: center;
+			}
+			
+			.ap-rankingall-site {}
+			
+			.rankingall-popuptable {
+				border: 1px solid #D7D7D7;
+				width: 400px;
+				margin: 10px auto;
+			}
+			
+			.rankingall-popuptable tr {
+				border-bottom: 1px solid #D7D7D7;
+				text-align: center;
+				line-height: 30px;
+			}
+			
+			.popup-off {
+				display: block;
+				margin: 0 auto;
+			}
+			
+			.signinonemonth {
+				display: none;
+			}
+			
+			.BMap_bubble_content {
+				margin-bottom: -10px;
+			}
+			
+			.date-picker {
+				display: inline;
+			}
+			
+			.adc-in-date {
+				border: 1px solid #e3e3e3;
+				display: inline-block;
+				width: 205px;
+				height: 36px;
+				line-height: 36px;
+				margin-left: -10px;
+				padding-left: 10px;
+			}
+			
+			.adc-in-date>span {
+				color: #666;
+				font-size: 14px;
+			}
+			
+			.adc-in-date input {
+				border: none;
+				width: 130px;
+				color: #999;
+			}
+			
+			.adc-in-date img {
+				margin-left: -20px;
+				margin-bottom: 4px;
+			}
+			
+			.divided-line:after {
+				margin-top: 16px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container signin-ranking">
+			<div class="content">
+				<!--<div class="remark hide">
+					<img src="../resources/images/sign-in-icon.png" alt="" /><span>*我的签到排名及同事签到位置查看</span>
+				</div>-->
+			</div>
+			<div class="content-menu">
+				<ul class="content-menu-list">
+					<li class="menuselectstyle">单日签到排名</li>
+					<li>月度签到排名</li>
+				</ul>
+			</div>
+			<!--单日签到排名-->
+			<div class="content-main signinoneday">
+				<div class="content-main-signindate">
+					<div class="adc-in-date">
+						<span>签到日期:</span>
+						<input type="text" class="form-control form-control-height-30 date-picker" placeholder="年 /月 /日" onchange="updateGrid()" style="width: 120px;">
+						<img src="../resources/images/ri-li-icon.png" alt="" />
+					</div>
+				</div>
+				<div class="content-main-myranking">
+					<ul>
+						<li class="liimg limyinfo divided-line">
+							<img src="" alt="无法显示">
+							<span class="name">我</span>
+						</li>
+						<li class="limyinfo divided-line">
+							<img src="../resources/images/adc-rank-icon.png" alt="" />
+							<span>签到排名：<span>-</span></span>
+						</li>
+						<li class="myranking-signindate divided-line">
+							<img src="../resources/images/adc-in-time.png" alt="" /> 签到时间：
+							<span>-</span>
+						</li>
+						<li>
+							<img src="../resources/images/adc-in.png" alt="" /> 签到地点：
+							<span class="signin-place">-</span>
+						</li>
+					</ul>
+				</div>
+				<div class="content-main-rankingmenu at">
+					<ul class="rankingmenu-list lt">
+						<li data-ranking="asc" data-limit="10">前十名</li>
+						<li data-ranking="desc" data-limit="10">后十名</li>
+						<li class="selectedstyle" data-ranking="asc" data-limit="">所有排名</li>
+						<li data-ranking="asc" data-limit="">未签</li>
+					</ul>
+					<div class="content-main-rankingmode rt">
+						<ul class="rankingmode-list">
+							<!--地图-->
+							<li class="selectedstyle"><img src="../resources/images/adc-list-icon.png" alt="" /></li>
+							<!--列表-->
+							<li class="view-map-ranking"><img src="../resources/images/adc-map-icon.png" alt="" /></li>
+						</ul>
+					</div>
+				</div>
+				<div class="content-main-rankinglist">
+					<div class="content-main-ranking-list">
+						<table id="rankingday-table">
+						</table>
+						<div id="gridday-pager">
+						</div>
+					</div>
+				</div>
+				<div class="content-main-rankingmap" id="allmap">
+
+				</div>
+			</div>
+			<!--月度签到排名-->
+			<div class="content-main signinonemonth">
+				<div class="content-main-signindate">
+					<label>日期：<input type="month" placeholder="年 /月" class="signindate" onchange="updateGrid()"></label>
+				</div>
+				<div class="content-main-rankingmenu">
+					<ul class="rankingmenu-list">
+						<li data-ranking="asc" data-limit="10">前十名</li>
+						<li data-ranking="desc" data-limit="10">后十名</li>
+						<li class="selectedstyle" data-ranking="asc" data-limit="">所有排名</li>
+					</ul>
+				</div>
+				<div class="content-main-rankinglist">
+					<div class="content-main-myranking">
+						<ul>
+							<li class="liimg">
+								<img src="" alt="无法显示">
+							</li>
+							<li class="limyinfo">
+								<p>我</p>
+							</li>
+							<li><span>排名：第<span></span>名</span>
+							</li>
+						</ul>
+					</div>
+					<div class="content-main-ranking-list">
+						<table id="rankingmonth-table">
+						</table>
+						<div id="gridmonth-pager">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--地图全部显示弹窗-->
+		<div class="map-rankingall-popup hide">
+			<p class='map-rankingall-site'>地址：<span>重庆市沙坪坝区高滩岩正街30号</span></p>
+			<table class="rankingall-popuptable">
+				<tr>
+					<th width='10%'>排名</th>
+					<th width='30%'>姓名</th>
+					<th>签到时间</th>
+				</tr>
+			</table>
+			<input type="button" name="rankingall-popup-off" id="rankingall-popup-off" data-dismiss="modal" class="popup-off btn btn-default btn-sm" value="关闭" />
+		</div>
+	</body>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript" src="../resources/js/main.min.js"></script>
+	<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG"></script>-->
+	<script type="text/javascript">
+		var grid_selector = "#rankingday-table";
+		var page = "#gridday-pager";
+		var rankingMonth_selector = "#rankingmonth-table";
+		var signinRankingListUrl = {
+			day: BSAPIURL + "/center_attendances/rank_by_day",
+			month: BSAPIURL + "/center_attendances/rank_by_month"
+		}
+		var configUrl = BSAPIURL + "/config/signin_rank";
+		var gridHeight = $(window).height() - $(".content").outerHeight(true) - $(".content-menu").outerHeight(true) - 330;
+		var signinRankingType = "day",
+			signinRankingDayType = "list";
+		var marker, map, infoWindow;
+		var mapZoomLevle = "",
+			Distance;
+
+		var signinRankingDayGrid, signinRankingMonthGrid, myInfoData;
+		var gridNum = 140000,
+			searchDay = new Date().Format("yyyy-MM-dd"),
+			searchMonth = new Date().addMonth(-1).Format("yyyy-MM"),
+			isNoSign = true;
+		var mapZoomScale = [10, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000, 2000000].reverse();
+		Distance = mapZoomScale[0];
+		window.onload = function() {
+			var script = document.createElement("script");
+			script.src = "http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG&callback=doApi";
+			$("body").append(script);
+
+		};
+		//范围数组
+		var mapPointInfoData = [];
+		var colNames = ['', '', '排名', '姓名', '签到时间', '签到地点'];
+		var colModel = [{
+			name: 'id',
+			index: 'id',
+			hidden: true,
+			formatter: function(cellvalue, options, rowObject) {
+				return rowObject.attendance_id;
+			}
+		}, {
+			name: 'location_data',
+			index: 'location_data',
+			hidden: true,
+			formatter: function(cellvalue, options, rowObject) {
+				return rowObject.attendance_in_lat + "," + rowObject.attendance_in_lon;
+			}
+		}, {
+			name: 'attendance_in_order',
+			sortable: true,
+			hidden: false
+		}, {
+			name: 'employee_name',
+			index: 'employee_name',
+			hidden: false,
+			formatter: function(cellvalue, options, rowObject) {
+				try {
+					return "<img style='width:40px; height:40px; margin-right:10px;border-radius: 20px;' src='" + rowObject.employee_avatar + "' alt='头像'>" +
+						rowObject.employee_name;
+				} catch(e) {
+					return '-';
+				}
+			}
+		}, {
+			name: 'attendance_in_time_cn',
+			hidden: false,
+			formatter: function(cellvalue, options, rowObject) {
+				return cellvalue || "-";
+			}
+		}, {
+			name: '__attendance_in_address',
+			hidden: false,
+			formatter: function(cellvalue, options, rowObject) {
+				try {
+					return(rowObject.attendance_in_address == null ? "-" : "<img src='../resources/images/adc-map-location.png' alt='定位图标' />" + rowObject.attendance_in_address);
+				} catch(e) {
+					return '-';
+				}
+			}
+		}];
+		var opts = {
+			width: 350, // 信息窗口宽度
+			//title: "地区签到排名", // 信息窗口标题
+			enableMessage: true //设置允许信息窗发送短息
+		};
+		$(document).ready(function() {
+			$(".content-main-rankingmap").css("height", gridHeight + 134);
+			//绑定初始时间
+			$(".date-picker").val(searchDay);
+			$(".signindate").val(searchMonth);
+			writeTable(colNames, colModel, grid_selector, page);
+		});
+		$(function() {
+			loadConfig() //加载配置
+			//列表、地图显示模式切换
+			$(".rankingmode-list li").click(function() {
+				$(this).addClass("selectedstyle").siblings().removeClass("selectedstyle");
+				if($(this).hasClass("view-map-ranking")) {
+					signinRankingDayType = "map";
+					$(".content-main-rankingmap").show().siblings(".content-main-rankinglist").hide();
+					//打开百度地图
+					map = new BMap.Map("allmap"); // 创建Map实例
+					map.centerAndZoom("重庆", 6);
+					map.addControl(new BMap.MapTypeControl()); //添加地图类型控件
+					map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+					mapData();
+					mapZoomLevle = map.getZoom();
+					map.addEventListener("zoomend", function() {
+						changeZoomLevel();
+					}); //
+				} else {
+					signinRankingDayType = "list";
+					updateGrid();
+					$(".content-main-rankinglist").show().siblings(".content-main-rankingmap").hide();
+				}
+			});
+
+			//前十后十所有排名
+			$(".rankingmenu-list li").click(function() {
+				isNoSign = true;
+				$(this).addClass("selectedstyle").siblings().removeClass("selectedstyle");
+				$(".rankingmode-list li:last-child").show();
+				if($(this).index() == 3) {
+					isNoSign = false;
+					$(".rankingmode-list li:first-child").trigger("click").siblings().hide();
+				}
+				updateGrid();
+			});
+			//日排名与月排名
+			$(".content-menu-list li").click(function() {
+				$(this).addClass("menuselectstyle").siblings().removeClass("menuselectstyle");
+				if($(this).text() == "月度签到排名") {
+					signinRankingType = "month";
+					$(".signinonemonth").show().siblings(".signinoneday").hide();
+					var page = "#gridmonth-pager";
+					gridHeight += 40;
+					var colNames = ['', '排名', '姓名'];
+					var colModel = [{
+						name: 'id',
+						index: 'id',
+						hidden: true,
+						formatter: function(cellvalue, options, rowObject) {
+							return rowObject.employee_id;
+						}
+					}, {
+						name: 'attendance_rank',
+						index: 'attendance_rank',
+						hidden: false,
+						formatter: function(cellvalue, options, rowObject) {
+							return rowObject.rank;
+						}
+					}, {
+						name: 'employee_name',
+						index: 'employee_name',
+						hidden: false,
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return "<img style='width:60px; height:60px; margin-right:30px' src='" + rowObject.employee_avatar + "' alt='头像'>" +
+									rowObject.employee_name;
+							} catch(e) {
+								return '';
+							}
+						}
+					}];
+					writeTable(colNames, colModel, rankingMonth_selector, page);
+
+				} else {
+					signinRankingType = "day";
+					$(".signinoneday").show().siblings(".signinonemonth").hide();
+					var page = "#gridday-pager";
+					var colNames = ['', '排名', '姓名', '签到时间', '签到地点'];
+					var colModel = [{
+						name: 'id',
+						index: 'id',
+						hidden: true,
+						formatter: function(cellvalue, options, rowObject) {
+							return rowObject.attendance_id;
+						}
+					}, {
+						name: 'location_data',
+						index: 'location_data',
+						hidden: true,
+						formatter: function(cellvalue, options, rowObject) {
+							return rowObject.attendance_in_lat + "," + rowObject.attendance_in_lon;
+						}
+					}, {
+						name: 'attendance_in_order',
+						hidden: false
+					}, {
+						name: 'employee_name',
+						index: 'employee_name',
+						hidden: false,
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return "<img style='width:60px; height:60px; margin-right:30px' src='" + BASEAPIURL + rowObject.employee_avatar + "' alt='头像'>" +
+									rowObject.employee_name;
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: 'attendance_in_time_cn',
+						hidden: false
+					}, {
+						name: '__attendance_in_address',
+						hidden: false,
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return "<i class='fa fa-map-marker' aria-hidden='true'></i>" + (rowObject.attendance_in_address == null ? "" : rowObject.attendance_in_address);
+							} catch(e) {
+								return '';
+							}
+						}
+					}];
+					writeTable(colNames, colModel, grid_selector, page);
+				}
+			});
+		});
+		//加载配置
+		function loadConfig() {
+			$.ajaxGet(configUrl, function(response) {
+				if(response.code == 0) {
+					$(".rankingmenu-list li:first-child").text("前" + response.data.asc + "名");
+					$(".rankingmenu-list li:first-child").attr("data-limit",response.data.asc);
+					$(".rankingmenu-list li:nth-child(2)").text("后" + response.data.desc + "名");
+					$(".rankingmenu-list li:nth-child(2)").attr("data-limit",response.data.desc);
+				}
+			});
+		}
+
+		function changeZoomLevel() {
+			console.log("当前地图缩放等级：" + map.getZoom());
+			Distance = mapZoomScale[map.getZoom() - 3];
+			console.log((map.getZoom() - 3), Distance)
+			mapZoomLevle = map.getZoom();
+			mapData();
+		}
+		//地图加载数据
+		function mapData() {
+			map.clearOverlays(); //清楚所以覆盖物
+			//全部数组
+			var mapDataList = [];
+			//匹配完成的数组
+			var outmodedData = [];
+			//清空
+			mapPointInfoData = [];
+			var str = "&attendance_null=1";
+			var infoData = {
+				"attendance_date": $(".date-picker").val(),
+				"attendance_month": $(".signindate").val(),
+				"sort": (signinRankingType == "day" ? $(".signinoneday .rankingmenu-list .selectedstyle").attr("data-ranking") : $(".signinonemonth .rankingmenu-list .selectedstyle").attr("data-ranking")),
+				"rank_limit": (signinRankingType == "day" ? $(".signinoneday .rankingmenu-list .selectedstyle").attr("data-limit") : $(".signinonemonth .rankingmenu-list .selectedstyle").attr("data-limit"))
+			}
+			$.ajaxGet(signinRankingListUrl.day + $.toQueryString(infoData, true) + (isNoSign ? "" : str), function(response) {
+				if(response.code == 0) {
+					mapDataList = response.data.rows;
+					if(mapDataList.length == 0)
+						return false;
+					for(var i in mapDataList) {
+						var infoDataSingle = mapDataList[i];
+						var matchData = matchScopeData(Distance, mapDataList, infoDataSingle, outmodedData);
+						if(matchData) {
+							mapPointInfoData.push(matchData);
+						}
+					}
+					for(var i in mapPointInfoData) {
+						var sContent = "<table class='map-rankingtable'><tr><th width='10%'>排名</th><th width='30%'>姓名</th><th>签到时间</th></tr>";
+						for(var j in mapPointInfoData[i]) {
+							//var point = new BMap.Point(mapPointInfoData[i][0].attendance_in_lon, mapPointInfoData[i][0].attendance_in_lat);
+							var marker = new BMap.Marker(new BMap.Point(mapPointInfoData[i][0].attendance_in_lon, mapPointInfoData[i][0].attendance_in_lat)); // 创建标注
+							if(j < 5) {
+								sContent +=
+									"<tr>" +
+									"<td>" + mapPointInfoData[i][j].attendance_in_order + "</td>" +
+									"<td>" + mapPointInfoData[i][j].employee_name + "</td>" +
+									"<td>" + isTodayOrYesterday(mapPointInfoData[i][j].attendance_date) + " " + mapPointInfoData[i][j].attendance_in_time_cn + "</td>" +
+									"</tr>";
+							}
+						}
+						sContent += "</table>" +
+							"<a href='#' class='map-rankingall' onclick='openAllRanking(" + i + ")'>查看全部》</a>" +
+							"<p class='map-rankingsite'>地址：<span>" + mapPointInfoData[i][0].attendance_in_address + "</span></p>";
+						//打印点
+						//console.log(sContent)
+						map.addOverlay(marker); // 将标注添加到地图中
+						addClickHandler(sContent, marker);
+						//								infoWindow = new BMap.InfoWindow(sContent); // 创建信息窗口对象
+						//								addMarker(point);
+					}
+				} else {
+					$.showErrorGritter("获取经纬度失败：" + response.msg);
+				}
+			});
+
+		}
+
+		function addClickHandler(content, marker) {
+			marker.addEventListener("click", function(e) {
+				openInfo(content, e)
+			});
+		}
+
+		function openInfo(content, e) {
+			var p = e.target;
+			var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+			var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象 
+			map.openInfoWindow(infoWindow, point); //开启信息窗口
+		}
+		// 编写自定义函数,创建标注
+		function addMarker(point) {
+			marker = new BMap.Marker(point);
+			map.addOverlay(marker);
+			marker.addEventListener("click", function() {
+				this.openInfoWindow(infoWindow);
+				$(".BMap_bubble_content").parent().css({
+					"width": "274px",
+					"left": "0",
+					"top": "25px",
+					"overflow": "visible"
+				});
+			});
+		}
+		//匹配范围内数据（参数：距离范围，总数组，单个数组，匹配过的数组）
+		function matchScopeData(Distance, mapDataList, infoSingle, outmodedData) {
+			var returnData = [];
+			for(var i in mapDataList) {
+				var infoDataSingle = mapDataList[i];
+				var pointA = new BMap.Point(infoSingle.attendance_in_lon, infoSingle.attendance_in_lat); // 创建中心坐标
+				var pointB = new BMap.Point(infoDataSingle.attendance_in_lon, infoDataSingle.attendance_in_lat);
+
+				if(outmodedData.indexOf(infoDataSingle) == -1 && map.getDistance(pointA, pointB) <= Distance) {
+					returnData.push(infoDataSingle);
+					outmodedData.push(infoDataSingle);
+				}
+			}
+			if(returnData.length == 0) {
+				return null;
+			}
+			return returnData;
+		}
+
+		function openAllRanking(index) {
+			console.log(mapPointInfoData)
+			//alert(JSON.stringify(mapPointInfoData[index]));
+			listData = mapPointInfoData[index];
+			console.log(listData[0]);
+			var rankingSiteText = listData[0].attendance_in_address ? listData[0].attendance_in_address : "";
+			var modalId = $.modal({
+				showFooter: false
+			}).show("签到地址：" + rankingSiteText, ".map-rankingall-popup",
+				function(modal) {}
+			);
+			var str = "";
+			console.log(listData)
+			for(var i in listData) {
+				str += "<tr>";
+				str += "<td width='10%'>" + listData[i].attendance_in_order + "</td>";
+				str += "<td width='30%'>" + listData[i].employee_name + "</td>";
+				str += "<td>" + isTodayOrYesterday(listData[i].attendance_date) + " " + listData[i].attendance_in_time_cn + "</td>";
+				str += "</tr>";
+			}
+			$("#" + modalId + " .rankingall-popuptable").append(str);
+			$("#" + modalId + " .map-rankingall-site span").text(listData[0].attendance_in_address ? listData[0].attendance_in_address : "");
+		}
+		//数据读取写入表
+		function writeTable(colNames, colModel, writePlace, pager_selector) {
+			var infoData = {
+				"attendance_date": $(".date-picker").val(),
+				"attendance_month": $(".signindate").val(),
+				"sort": (signinRankingType == "day" ? $(".signinoneday .rankingmenu-list .selectedstyle").attr("data-ranking") : $(".signinonemonth .rankingmenu-list .selectedstyle").attr("data-ranking")),
+				"rank_limit": (signinRankingType == "day" ? $(".signinoneday .rankingmenu-list .selectedstyle").attr("data-limit") : $(".signinonemonth .rankingmenu-list .selectedstyle").attr("data-limit"))
+			}
+			var url = (signinRankingType == "day" ? signinRankingListUrl.day : signinRankingListUrl.month);
+			var name;
+			name = $(writePlace).initJqGrid({
+				grid_selector: writePlace,
+				pager: pager_selector,
+				//footerBtnContainer: "#grid-footer-container",
+				url: url + $.toQueryString(infoData, true),
+				colNames: colNames,
+				colModel: colModel,
+				height: gridHeight,
+				multiselect: false,
+				rowNum: gridNum,
+				afterLoadComplete: function(response) {
+					myInfoData = response.data;
+					//绑定我的数据
+					if(myInfoData.my_attendance) {
+						myInfoData.my_attendance && $(".liimg>img").attr("src", myInfoData.my_attendance.employee_avatar);
+						$(".limyinfo>span.name").html(myInfoData.my_attendance.employee_name);
+						$(".content-main-myranking>ul>li>span>span").html(myInfoData.my_attendance.attendance_in_order || "-");
+						if(myInfoData.my_attendance.attendance_out_time != null) {
+							$(".myranking-signindate>span").html(myInfoData.my_attendance.attendance_in_time_cn || "-");
+						}
+						$(".signin-place").html(myInfoData.my_attendance.attendance_in_address || "-");
+						if(signinRankingType == "month") {
+							$(".content-main-myranking>ul>li>span>span").html(myInfoData.my_attendance.rank);
+
+						}
+					}
+				}
+			});
+			if(signinRankingType == "day") {
+				signinRankingDayGrid = name;
+			} else {
+				signinRankingMonthGrid = name;
+			}
+		}
+		//更新表
+		function updateGrid() {
+			var str = "&attendance_null=1";
+			searchDay = $(".date-picker").val();
+			searchMonth = $(".signindate").val();
+			var grid = "";
+			var infoData = {
+				"attendance_date": $(".date-picker").val(),
+				"attendance_month": $(".signindate").val(),
+				"sort": (signinRankingType == "day" ? $(".signinoneday .rankingmenu-list .selectedstyle").attr("data-ranking") : $(".signinonemonth .rankingmenu-list .selectedstyle").attr("data-ranking")),
+				"rank_limit": (signinRankingType == "day" ? $(".signinoneday .rankingmenu-list .selectedstyle").attr("data-limit") : $(".signinonemonth .rankingmenu-list .selectedstyle").attr("data-limit"))
+			}
+			if(signinRankingType == "day") {
+				grid = signinRankingDayGrid;
+			} else {
+				grid = signinRankingMonthGrid;
+			}
+			//更新表操作
+			if(signinRankingType == "day" && signinRankingDayType == "map") {
+				mapData();
+			} else {
+				var url = (signinRankingType == "day" ? signinRankingListUrl.day : signinRankingListUrl.month);
+				$(grid).jqGrid('setGridParam', {
+					page: 1,
+					sortname: "sort",
+					sortorder: (signinRankingType == "day" ? $(".signinoneday .rankingmenu-list .selectedstyle").data("ranking") : $(".signinonemonth .rankingmenu-list .selectedstyle").data("ranking")),
+					url: url + $.toQueryString(infoData, true) + (isNoSign ? "" : str),
+					//					rowNum: gridNum
+				}).trigger("reloadGrid", {});
+			}
+		} //日期选择
+		$(".date-picker").datepicker({
+			autoclose: true,
+			format: "yyyy-mm-dd"
+		});
+	</script>
+
+</html>

@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>企业信息</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/city-picker.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.form-group.form-inline {
+				float: left;
+				margin-right: 100px;
+			}
+			
+			.form-group-level:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.page-company .form-group-btn {
+				line-height: 70px;
+				height: 70px;
+			}
+			
+			hr {
+				margin-bottom: 10px;
+				margin-top: 0;
+			}
+			
+			.form-group {
+				margin-bottom: 5px;
+			}
+			
+			.page-company .form-group-logo .imgs img {
+				height: 100px;
+			}
+			
+			.credentials-code {
+				margin-top: 25px;
+			}
+			
+			.input-flag {
+				width: 140px!important;
+			}
+			
+			.page-company .form-group-logo .imgs,
+			.page-company .form-group-qa .imgs {
+				margin-left: 142px;
+				min-height: 100px;
+			}
+			
+			.page-company .form-group-btn {
+				/*bottom: 25px;*/
+			}
+			
+			.form-inline label,
+			label {
+				color: #999;
+				font-size: 14px;
+			}
+			
+			.form-control,
+			select,
+			.form-control-noborder {
+				color: #666!important;
+			}
+			
+			.border-left-label {
+				border-left: 3px solid #ca192b;
+				padding-left: 5px;
+				font-weight: bold;
+				color: #666;
+			}
+			
+			.form-group-logo-edit,
+			.form-group-qa-edit {
+				position: relative;
+				width: 100%;
+			}
+			
+			.btn-upload-logo,
+			.btn-upload-lisense {
+				position: absolute;
+				top: 10px;
+				left: 20%;
+				cursor: pointer;
+				text-decoration: underline;
+			}
+			
+			.btn-upload-lisense {
+				left: 40%;
+			}
+			
+			.page-company .form-group-logo .imgs,
+			.page-company .form-group-qa .imgs {
+				margin-top: -20px
+			}
+			
+			.color-666 {
+				color: #666!important;
+			}
+			
+			.btn-post {
+				margin-right: 20px;
+			}
+			
+			.footer-btns {
+				border-top: 1px solid #bbb;
+				padding-left: 5%;
+			}
+			
+			.btn-cancel img {
+				margin-top: -5px;
+			}
+			
+			.page-company .form-inline label {
+				min-width: 146px;
+			}
+			
+			.form-group-btn .btn {
+				height: 30px;
+				line-height: 15px;
+				border-radius: 2px;
+			}
+			
+			.upload-img-default {
+				margin-left: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-company" style="margin-top:0px;">
+			<!--<div class="remark" style="padding: 5px 0;">
+				<img src="../resources/images/info-weihu-icon.png" alt="" /><span>*企业信息填写、认证资料提交</span>
+			</div>-->
+			<div class="content">
+				<div class="form-horizontal form-company-auth" style="padding-bottom: 70px;">
+					<!--<div class="form-group form-group-verifyed form-inline hide">
+						<h4><label class="label label-success">已审核</label></h4>
+					</div>
+					<div class="form-group form-group-verify-refuse form-inline hide">
+						<h4><label class="label label-danger">审核未通过</label></h4>
+						<div class="text-indent">
+							您提交的资质图片清晰度不够，请重新上传。
+						</div>
+					</div>-->
+					<div class="form-group-line form-group-auth-alert hide">
+						<div class="alert alert-warning" role="alert">您还未提交认证，请完善企业信息后
+							<a href="javascript:;" onclick="parent.openTab('企业认证','views/company-auth.html',true)">“去认证”</a>
+						</div>
+					</div>
+					<div class="form-group-level">
+						<div class="form-group-line">
+							<label class="border-left-label">企业基本信息</label>
+							<hr>
+						</div>
+						<div group="info">
+							<div class="form-group form-inline">
+								<label class="input-flag">企业名称：</label>
+								<input type="text" class="form-control form-control-company_name hide" placeholder="企业名称" bind="name" nulltip="企业名称" maxlength="50">
+								<span class="form-control form-control-noborder company-info-name" bind="name"></span>
+							</div>
+							<div class="form-group form-inline">
+								<label class="input-flag">企业简称：</label>
+								<input type="text" class="form-control hide" placeholder="企业简称" bind="short_name" nulltip="企业简称" maxlength="10">
+								<span class="form-control form-control-noborder" style="height: 40px;" bind="short_name"></span>
+							</div>
+							<div class="form-group form-inline">
+								<label class="input-flag">所在城市：</label>
+								<p style=" position: relative; display: inline-block;">
+									<input type="text" class="form-control form-control-city hide" placeholder="选择所在城市" bind="area_id" nulltip="企业所在城市" readonly="readonly" data-toggle="city-picker">
+									<span class="form-control form-control-noborder city-name" bind="area_cn"></span>
+								</p>
+							</div>
+							<div class="form-group form-inline">
+								<label class="input-flag">企业地址：</label>
+								<input type="text" class="form-control hide" placeholder="企业详细地址" bind="address" nulltip="企业地址">
+								<span class="form-control form-control-noborder" bind="address"></span>
+							</div>
+							<div class="form-group form-inline">
+								<label class="input-flag">所属行业：</label>
+								<select class="form-control form-control-industry hide" placeholder="所属行业" bind="industry" nulltip="所属行业">
+									<option value="">选择企业所属行业</option>
+								</select>
+								<span class="form-control form-control-noborder" bind="industry_cn"></span>
+							</div>
+							<div class="form-group form-inline">
+								<label class="input-flag">企业性质：</label>
+								<select class="form-control form-control-quality hide" placeholder="企业性质" bind="quality" nulltip="企业性质">
+									<option value="">选择企业性质</option>
+								</select>
+								<span class="form-control form-control-noborder" bind="quality_cn"></span>
+							</div>
+							<!--<div class="form-group form-inline">
+							<label class="input-flag">企业邮箱</label>
+							<input type="text" class="form-control company-email" placeholder="企业邮箱" bind="email" nulltip="企业邮箱" maxlength="30" valitype="email">
+							<button type="button" class="btn btn-default btn-sendcode" enb="1">获取验证码</button>
+						</div>
+						<div class="form-group form-inline form-group-emailcode">
+							<label>&nbsp;</label>
+							<input type="text" class="form-control" placeholder="请输入邮箱收到的验证码" bind="email" nulltip="验证码" maxlength="6">
+						</div>-->
+							<div class="form-group form-inline">
+								<label class="input-flag">企业电话：</label>
+								<input type="text" class="form-control hide" placeholder="企业电话" bind="phone_number" nulltip="企业电话" maxlength="12" valitype="tel">
+								<span class="form-control form-control-noborder" bind="phone_number"></span>
+							</div>
+							<div class="form-group form-inline">
+								<label class="input-flag">传真：</label>
+								<input type="text" class="form-control hide" placeholder="传真" bind="fax" nulltip="传真" maxlength="12" valitype="tel">
+								<span class="form-control form-control-noborder" bind="fax"></span>
+							</div>
+							<div class="form-group form-inline form-group-logo form-group-logo-edit hide">
+								<label class="input-flag1" style="padding-left: 57px;">企业logo：</label>
+								<a style="" class="btn-upload-logo" id="btnUploadLOGO">上传logo</a>
+								<div class="imgs">
+									<img class="upload-img-default" src="../resources/images/upload-img-default.png" alt="" />
+								</div>
+								<div class="upload">
+								</div>
+							</div>
+							<div class="form-group form-inline form-group-logo form-group-logo-show">
+								<label class="input-flag1" style="padding-left: 48px;">企业logo：</label>
+								<div class="imgs">
+									<!--<img class="upload-img-default" src="../resources/images/upload-img-default.png" alt="" />-->
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group-level">
+						<div class="form-group-line">
+							<label class="border-left-label">企业证照：</label>
+							<p class="right-btn"><a class="btn btn-default btn-sm btn-edit hide" group="img">修改</a></p>
+							<hr>
+						</div>
+
+						<div group="info" class="form-group credentials-code-container" style="float: left;">
+							<div class="form-group form-inline hide">
+								<label class="input-flag">证件类型：</label>
+								<div bind="" style="float: right;">
+									<label>
+										<input type="radio" checked="checked" name="credentials-type" bind="code_type" value="1" />
+										<span class="color-666">多证合一营业执照</span><span>(原“注册号”字样，调整为18位的“统一社会信用代码”)</span>
+									</label>
+									<label>
+										<input type="radio"  name="credentials-type" bind="code_type" value="0"/>
+										<span class="color-666">普通营业执照</span><span>(仍然标识为15位的“注册号”)</span>
+									</label>
+								</div>
+
+								<!--<input type="text" class="form-control organization-code hide" placeholder="组织机构代码（12345678-9）" bind="code" nulltip="组织机构代码" maxlength="10">-->
+								<div class="form-group-line credentials-code hide" index="0">
+									<label class="input-flag">注册号：</label>
+									<input style="margin-left: 6px;min-width: 220px;" class="form-control" maxlength="15" type="text" placeholder="请输入15位工商注册号" />
+								</div>
+								<div class="form-group-line credentials-code" index="1">
+									<label class="input-flag">统一社会信用代码：</label>
+									<input style="margin-left: 6px;min-width: 220px;" class="form-control" maxlength="18" type="text" placeholder="请输入18位统一社会信用代码" />
+								</div>
+							</div>
+							<div group="info form-control">
+								<label style="padding-left: 55px;" class="input-flag credentials-code-type-has">证件类型：</label>
+								<span class="form-control-noborder" style="padding: 6px 12px;" bind="code_type_cn"></span>
+							</div>
+							<div group="info form-control">
+								<label class="input-flag credentials-code-has" bind="code_type_name_cn"></label>
+								<span class="form-control-noborder" style="padding: 6px 12px;" bind="code"></span>
+							</div>
+
+						</div>
+						<div class="form-group form-group-qa form-group-qa-show form-inline" style="margin-left: -3px;float: initial;margin-top: 66px;">
+							<label class="input-flag">营业执照：</label>
+							<div class="imgs" style="margin-left: 157px;">
+								<!--<img class="upload-img-default" src="../resources/images/upload-img-default.png" alt="" />-->
+								<!--<a href="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" target="_blank">
+									<img class="img-qa" src="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" width="130" />
+								</a>
+								<a href="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" target="_blank">
+									<img class="img-qa" src="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" width="130" />
+								</a>
+								<a href="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" target="_blank">
+									<img class="img-qa" src="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" width="130" />
+								</a>-->
+							</div>
+							<p class="tip" style="color:#ca192b;padding-left: 40px;width: auto;">
+								1、请上传营业执照图片，请确保信息清晰可见。<br> 2、支持.jpg、.jpeg、.bmp、.gif、.png格式，大小不超过5M。
+							</p>
+						</div>
+						<div class="form-group form-group-qa form-group-qa-edit form-inline hide" style="">
+							<label class="input-flag">营业执照：</label>
+							<a class="btn-upload-lisense" id="btnUploadQA">上传营业执照</a>
+							<div class="imgs">
+								<!--<img class="upload-img-default" src="../resources/images/upload-img-default.png" alt="" />-->
+								<!--<a href="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" target="_blank">
+									<img class="img-qa" src="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" width="130" path="/img/872/1598872/1310/135250fc1e7d3fd.jpg" />
+									<span class="close" onclick="$(this).parent().remove();return false;">&times;</span>
+								</a>
+								<a href="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" target="_blank">
+									<img class="img-qa" src="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" width="130" path="/img/872/1598872/1310/135250fc1e7d3fd.jpg" />
+									<span class="close" onclick="$(this).parent().remove();return false;">&times;</span>
+								</a>
+								<a href="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" target="_blank">
+									<img class="img-qa" src="http://img3.jc001.cn/img/872/1598872/1310/135250fc1e7d3fd.jpg" width="130" path="/img/872/1598872/1310/135250fc1e7d3fd.jpg" />
+									<span class="close" onclick="$(this).parent().remove();return false;">&times;</span>
+								</a>-->
+							</div>
+							<div class="upload">
+							</div>
+							<p class="tip" style="color:#ca192b;padding-left: 40px;width: auto;">
+								1、请上传营业执照图片，请确保信息清晰可见。<br> 2、支持.jpg、.jpeg、.bmp、.gif、.png格式，大小不超过5M。
+							</p>
+						</div>
+					</div>
+					<div class="form-group-level">
+						<div class="form-group-line">
+							<label class="border-left-label">企业联系人信息：</label>
+							<p class="right-btn"><a class="btn btn-default btn-sm btn-edit hide" group="link">修改</a></p>
+							<hr>
+						</div>
+						<div group="info" class="form-group-last">
+							<div class="form-group form-inline">
+								<label class="input-flag">企业联系人：</label>
+								<input type="text" class="form-control hide" placeholder="企业联系人" bind="contact_person" nulltip="企业联系人" maxlength="12">
+								<span class="form-control form-control-noborder" bind="contact_person"></span>
+							</div>
+							<div class="form-group form-inline">
+								<label class="input-flag">职务：</label>
+								<input type="text" class="form-control hide" placeholder="职务" bind="contact_title" nulltip="职务" maxlength="12">
+								<span class="form-control form-control-noborder" bind="contact_title"></span>
+							</div>
+							<div class="form-group form-inline">
+								<label class="input-flag">手机号码：</label>
+								<input type="text" class="form-control hide" placeholder="手机号码" bind="contact_mobile" nulltip="手机号码" maxlength="11" valitype="mobile">
+								<span class="form-control form-control-noborder" bind="contact_mobile"></span>
+							</div>
+							<div class="form-group form-inline">
+								<label class="input-flag">办公电话：</label>
+								<input type="text" class="form-control hide" placeholder="办公电话" bind="contact_office_phone" nulltip="办公电话" maxlength="12" valitype="tel">
+								<span class="form-control form-control-noborder" bind="contact_office_phone"></span>
+							</div>
+							<div class="form-group form-inline">
+								<label class="input-flag">QQ：</label>
+								<input type="text" class="form-control hide" placeholder="QQ" bind="contact_qq" nulltip="QQ" maxlength="20">
+								<span class="form-control form-control-noborder" bind="contact_qq"></span>
+							</div>
+							<div class="form-group form-inline">
+								<label class="input-flag">电子邮箱：</label>
+								<input type="text" class="form-control hide" placeholder="电子邮箱" bind="contact_email" nulltip="电子邮箱" maxlength="30" valitype="email">
+								<span class="form-control form-control-noborder" bind="contact_email"></span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group form-group-btn form-inline footer-btns">
+						<!--<hr>-->
+						<a class="btn btn-danger def-btn-danger btn-edit" group="info">
+							<img src="../resources/images/btn-edit.png" alt="" />修改
+						</a>
+						<!--<label>&nbsp;</label>-->
+						<a class="btn btn-info def-btn-info btn-post hide">
+							<img src="../resources/images/btn-save.png" alt="" />保 存
+						</a>
+						<a class="btn btn-danger def-btn-danger btn-cancel hide" onclick="initFormToShowMode();">
+							<img src="../resources/images/btn-cancel.png" alt="" />取 消
+						</a>
+					</div>
+					<div class="form-group form-group-btn-update form-inline footer-btns hide">
+						<label>&nbsp;</label>
+						<a class="btn btn-primary btn-update">更改认证</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.data.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			var formSelector = ".form-company-auth";
+			var comController = new Controller(formSelector);
+			//0-待提交，1-审核中，2-已审核，3-审核未通过
+			var verifyStatus = 0;
+			var loadedItemCount = 0;
+			//上传的LOGO
+			var imgPathOfLogo = "";
+			//上传的资质
+			var imgPathsOfQA = [];
+			//企业地址
+			var defaultCityData;
+			$(document).ready(function() {
+				//------------消息通知相关-----------------------
+				var publisher = parent.HHMQ.createPublisher('企业信息', 'company-auth');
+				//页面关闭事件
+				//消息推送
+				context.onPageClose = function() {
+					publisher.dispose();
+				};
+				//------------消息通知相关 end -------------------
+				//loading
+				$.showLoadingPop("正在加载企业信息，请稍后...");
+				$(".city-picker-span").addClass("hide");
+				//token
+				$.token();
+				$.loadHangyeData(function(data) {
+					for(var i in data) {
+						var item = data[i];
+						$('.form-control-industry').append("<option value='" + item.code_tree_id + "'>" + item.code_name + "</option>");
+					}
+					loadedItemCount++;
+					loadCompanyInfo();
+				});
+				$.loadQYXZData(function(data) {
+					for(var i in data) {
+						var item = data[i];
+						$('.form-control-quality').append("<option value='" + item.code_tree_id + "'>" + item.code_name + "</option>");
+					}
+					loadedItemCount++;
+					loadCompanyInfo();
+				});
+				//企业认证情况
+				var uIsAdmin = $.cookie("_u_is_admin") == 1;
+				if(uIsAdmin) {
+					$.ajaxGet(SAASAPIS.BS.company.status, function(response) {
+						if(response.code == 0) {
+							//success
+							var compData = response.data;
+							var infoStatus = compData.info.status;
+							if(infoStatus == 5) {
+								//已完成
+							} else if(infoStatus == 1) {
+								//待完善
+							} else if(infoStatus == 2) {
+								//待提交
+								$(".form-group-auth-alert").removeClass("hide");
+							}
+							publisher.publisheMsg({
+								action: "perfected",
+								msg: infoStatus
+							});
+						} else {
+							$.showErrorGritter("加载企业认证信息失败：" + response.msg);
+						}
+					});
+				}
+				//				if (verifyStatus == 1) {
+				//					//正在审核
+				//					initVerifyingMode();
+				//				} else if (verifyStatus == 2) {
+				//					//已审核
+				//					initVerifyedMode();
+				//				} else if (verifyStatus == 3) {
+				//					//审核未通过
+				//					initVerifyRefuseMode();
+				//				}
+				//发送验证码
+				$(".btn-sendcode").click(function() {
+					var email = $(".company-email").val();
+					if(!emailValidate(email)) {
+						$.showErrorGritter("企业邮箱格式有误，请重新输入。");
+						$(".company-email").focus();
+						return false;
+					}
+					var linkSendCode = $(this);
+					if(linkSendCode.attr("enb") != "1") {
+						return;
+					}
+					linkSendCode.removeClass("act").attr("enb", "0").attr("disabled", "disabled");
+					var ss = 60;
+					var stob = setInterval(function() {
+						if(ss > 0) {
+							ss--;
+							linkSendCode.text("获取(" + ss + "s)");
+						} else {
+							linkSendCode.removeAttr("disabled");
+							linkSendCode.addClass("act").attr("enb", "1").text("发送验证码");
+							clearInterval(stob);
+						}
+					}, 1000);
+				});
+				//提交
+				$(".btn-post").click(function() {
+					var comData = comController.getJSON();
+					var nameLength = comData.name.length;
+					if((nameLength < 4 && nameLength > 0) || !(/^[a-zA-Z\u4e00-\u9fa5\0-9]+$/.test(comData.name))) {
+						$.clearGritter();
+						$.showErrorGritter("请输入完整的企业名称，<br>例如：北京XX医药有限公司。");
+						$(".form-control-company_name").focus();
+						return false;
+					}
+
+					var cityCode = $(".form-control-city").data("code");
+					console.log(cityCode);
+					if(cityCode.indexOf("/") < 0) {
+						$.clearGritter();
+						$.showErrorGritter("请选择企业所在城市。");
+						$(".form-control-city").focus();
+						return false;
+					}
+					comData.area_id = cityCode.split("/")[1];
+					console.log($(".form-control-city").val())
+					if(!inputValidateForGritter(formSelector)) {
+						return false;
+					}
+					//					if (!imgPathOfLogo) {
+					//						$.clearGritter();
+					//						$.showErrorGritter("请先上传企业LOGO。");
+					//						return false;
+					//					}
+					comData.logo = imgPathOfLogo;
+					console.log(comData)
+					//qa
+					var qaImgs = [];
+					$(".form-group-qa-edit .imgs .img-qa[path]").each(function() {
+						qaImgs.push($(this).attr("path"));
+					});
+					if(qaImgs.length == 0) {
+						$.clearGritter();
+						$.showErrorGritter("请先上传企业资质凭证。");
+						return false;
+					}
+					comData.identity_images = qaImgs; //qaImgs.join(",");
+					comData.code_type = $("input[type='radio']:checked").val();
+					comData.code = $(".credentials-code[index='" + comData.code_type + "'] input").val();
+					//var reg;
+					if(comData.code_type == 1) {
+						//reg=/[0-9]{17}[A-Za-z]{1}/;
+						if(comData.code.length != 18) {
+							$.showErrorGritter("请填写正确的统一社会信用代码");
+							$(".credentials-code[index='1'] input").focus();
+							return false;
+						}
+					} else {
+						//reg=/[0-9]{15}/;
+						if(comData.code.length != 15) {
+							$.showErrorGritter("请填写正确的注册号");
+							$(".credentials-code[index='0'] input").focus();
+							return false;
+						}
+					}
+					$.ajaxPut(SAASAPIS.BS.companies, comData, function(response) {
+						if(response.code == 0) {
+							//success
+							$.showSuccessGritter("企业信息保存成功，已经提交审核，请耐心等待");
+							setTimeout(function() {
+								window.location = window.location;
+							}, 1000);
+							//消息推送
+							publisher.publisheMsg({
+								action: "perfected",
+								msg: "企业信息已完善。"
+							});
+						} else {
+							$.showErrorGritter("企业信息保存失败：" + response.msg);
+							return false;
+						}
+					});
+					//initVerifyingMode();
+				});
+				$("a[group]").click(function() {
+					if($(this).attr("data-isclick") == "false") {
+						$.showSuccessGritter("企业信息正在审核，<br>审核期间不能修改企业信息。 ", {
+							time: 30000
+						});
+						return false;
+					}
+					var group = $(this).attr("group");
+					initFormToEditMode(group);
+				});
+				//upload
+				initUpload();
+			});
+			//组织 机构代码
+			//			$(".organization-code").blur(function() {
+			//				//CheckOrgCode(organizationCode);
+			//				var reg = /^([0-9A-Z]){8}-[0-9|A-Z]$/;
+			//				if(!reg.test($(this).val())) {
+			//					$.showErrorGritter("请输入正确的组织机构代码！");
+			//					$(".organization-code").focus();
+			//				}
+			//});
+
+			function initUpload() {
+				$("#btnUploadQA").initUploader({
+					url: SAASAPIS.BS.upload.image,
+					up_container: ".form-group-qa-edit .upload",
+					FilesAdded: function(up, files) {
+						console.log(arguments)
+						if(files.length == 0) {
+							return;
+						}
+						for(var i in files) {
+							var mFile = files[i];
+							//$(".form-group-qa-edit .imgs").append("<a href=\"{src}\" target=\"_blank\"><img class=\"img-qa\" src=\"{src}\" /><span class=\"close\" onclick=\"$(this).parent().remove();return false;\">&times;</span></a>".replace(/{src}/g, mFile.name));
+						}
+						return true;
+					},
+					FileUploaded: function(up, file, response) {
+						var resp = JSON.parse(response.response);
+						console.log(resp)
+						var imgCount = $(".form-group-qa-edit .imgs a");
+						if(imgCount.length >= 3) {
+							$.showErrorGritter("营业执照最多只能上传3张。");
+							up.removeFile(file);
+							return false;
+						}
+						$(".form-group-qa-edit .upload-img-default").remove();
+						var imgPath = resp.data.path;
+						$(".form-group-qa-edit .imgs").append(("<a href=\"{src}\" target=\"_blank\"><img class=\"img-qa\" src=\"{src}\" path=\"" + imgPath + "\" /><span class=\"close\" onclick=\"loadDefault(this);$(this).parent().remove();return false;\">&times;</span></a>").replace(/{src}/g, (imgPath)));
+					}
+				});
+				$("#btnUploadLOGO").initUploader({
+					url: SAASAPIS.BS.upload.image,
+					up_container: ".form-group-logo-edit .upload",
+					FilesAdded: function(up, files) {
+						if(files.length == 0) {
+							return;
+						}
+						for(var i in files) {
+							var mFile = files[i];
+							//$(".form-group-logo-edit .imgs").html("<img class=\"img-qa\" src=\"{src}\" width='130'/>".replace(/{src}/g, mFile.name));
+						}
+						return true;
+					},
+					FileUploaded: function(up, file, response) {
+						var resp = JSON.parse(response.response);
+						console.log(resp)
+						imgPathOfLogo = resp.data.path;
+						$(".form-group-logo-edit .upload-img-default").remove();
+						$(".form-group-logo-edit .imgs").html("<a href=\"{src}\" target=\"_blank\"><img class=\"img-qa\" src=\"{src}\" /><span class=\"close\" onclick=\"loadDefault(this);$(this).parent().remove();return false;\">&times;</span></a>".replace(/{src}/g, (imgPathOfLogo)));
+					}
+				});
+			}
+			function loadDefault(obj){
+				var str="<img class=\"upload-img-default\" src=\"../resources/images/upload-img-default.png\" alt=\"\" />";
+				console.log($(obj).parent().siblings().length)
+				if($(obj).parent().siblings().length<1){
+					$(obj).parent().after(str);
+					if($(obj).parents().is(".form-group-logo-edit")){
+						imgPathOfLogo="";
+					}
+				}
+			}
+			//审核中
+			function initVerifyingMode() {
+				//$(formSelector + " [bind]").each(function() {
+				//	$(this).after("<span class=\"form-control form-control-noborder\" bind=\"" + $(this).attr("bind") + "\">saasas</span>");
+				//	$(this).remove();
+				//});
+				//$(formSelector + " input.form-control," + formSelector + " select.form-control").remove();
+				//$(".city-picker-span,.city-picker-dropdown,.btn-sendcode,.form-group-emailcode,#btnUploadQA,.tip,.form-group-btn,.close").remove();
+				//$(".modal-backdrop,.imgs,.verifying-tip").removeClass("hide");
+				$(".modal-backdrop,.verifying-tip").removeClass("hide");
+			}
+			//已审核
+			function initVerifyedMode() {
+				initVerifyingMode();
+				$(".modal-backdrop,.verifying-tip").addClass("hide");
+				$(".form-group-verifyed,.form-group-btn-update").removeClass("hide");
+			}
+			//审核未通过
+			function initVerifyRefuseMode() {
+				$(".form-group-verify-refuse").removeClass("hide");
+			}
+			//单选按钮事件
+			$("input[type='radio']").click(function() {
+				var type = $(this).attr("value");
+				$(".credentials-code").addClass("hide");
+				$(".credentials-code[index='" + type + "']").removeClass("hide");
+			});
+			/*$(".credentials-code[index] input").blur(function(){
+				var codeType=$("input[type='radio']:checked").val();
+				var reg;
+				var me=this;
+					if(codeType==1){
+						reg=/[0-9]{17}[A-Za-z]{1}/;
+						if(!reg.test($(me).val())){
+							$.showErrorGritter("请填写正确的统一社会信用代码");
+							$(me).focus();
+							return false;
+						}
+					}else{
+						reg=/[0-9]{15}/;
+						if(!reg.test($(me).val())){
+							$.showErrorGritter("请填写正确的注册号");
+							$(me).focus();
+							return false;
+						}
+					}
+			});*/
+			//企业信息可编辑状态
+			function initFormToEditMode(group) {
+				var groupSelector = "div[group='" + group + "']";
+				$(groupSelector + " input.form-control," + groupSelector + " select.form-control").removeClass("hide");
+				$(groupSelector + " span.form-control").addClass("hide");
+				if(group == "info") {
+					var cityName = $(groupSelector + " .city-name").text();
+					var cityCode = $(".form-control-city").data("code");
+					console.log(cityName + "---" + cityCode)
+					if(cityName != "") {
+						$(".city-picker-span>span.title").empty();
+						$(".city-picker-span>span:first-child").addClass("hide");
+						$(".city-picker-span>span.title").show().attr("title", cityName.replace(/-/g, "/")).append("<span class=\"select-item\" style=\"display:inli\" data-count=\"province\" data-code=\"" + cityCode.replace("/", "").slice(0, 6) + "\">" + cityName.split(/-/g)[0] +
+							"</span>/<span class=\"select-item\" data-count=\"city\" data-code=\"" + cityCode + "\">" + cityName.split(/-/g)[1] + "</span>");
+						$(".form-control-city").data("code", cityCode.replace("/", "").slice(0, 6) + cityCode);
+						$(".form-control-city").val($(".city-name").text().replace("-", "/"));
+					}
+					$(".city-picker-span").removeClass("hide");
+					$(".form-group-logo-show").addClass("hide");
+					$(".form-group-logo-edit").removeClass("hide");
+					//img
+					$(".form-group-qa-show").addClass("hide");
+					$(".form-group-qa-edit").removeClass("hide");
+					$(".credentials-code-container>div:last-child").addClass("hide");
+					$(".credentials-code-container>div:first-child").removeClass("hide");
+					$(".credentials-code-type-has").parent().addClass("hide");
+				} else if(group == "img") {
+					//alert(1)
+					$(".form-group-qa-show").addClass("hide");
+					$(".form-group-qa-edit").removeClass("hide");
+				}
+				//$(".form-group-btn").removeClass("hide");
+				$(".form-group-btn .btn-edit").addClass("hide");
+				$(".form-group-btn .btn-post,.form-group-btn .btn-cancel").removeClass("hide");
+
+			}
+			//企业信息展示状态
+			function initFormToShowMode() {
+				loadCompanyInfo();
+				var groupSelector = ".form-company-auth";
+				$(groupSelector + " input.form-control," + groupSelector + " select.form-control").addClass("hide");
+				$(groupSelector + " span.form-control").removeClass("hide");
+				$(".city-picker-span").addClass("hide");
+				$(".form-group-logo-show").removeClass("hide");
+				$(".form-group-logo-edit").addClass("hide");
+				//img
+				$(".form-group-qa-show").removeClass("hide");
+				$(".form-group-qa-edit").addClass("hide");
+				//$(".form-group-btn").addClass("hide");
+				$(".form-group-btn .btn-post,.form-group-btn .btn-cancel").addClass("hide");
+				$(".form-group-btn .btn-edit").removeClass("hide");
+				$(".credentials-code-container>div:last-child").removeClass("hide");
+				$(".credentials-code-container>div:first-child").addClass("hide");
+				$(".credentials-code-type-has").parent().removeClass("hide");
+			}
+			//加载企业信息
+			function loadCompanyInfo() {
+				if(loadedItemCount < 2) {
+					return;
+				}
+				//load companyinfo 
+				$.ajaxGet(SAASAPIS.BS.companies, function(response) {
+					if(response.code != 0) {
+						$.showErrorGritter("加载企业信息失败：" + response.msg)
+						//hide
+						$.hideLoadingPop();
+						return false;
+					}
+					//show
+					$(".credentials-code").addClass("hide");
+					$(".credentials-code[index='" + response.data.code_type + "']").removeClass("hide");
+					$(".credentials-code[index='" + response.data.code_type + "'] input").val(response.data.code);
+					response.data.code_type_cn = response.data.code_type == 0 ? "普通营业执照" : "多证合一营业执照";
+					response.data.code_type_name_cn = response.data.code_type == 0 ? "注册号:" : "统一社会信用代码:";
+					if(response.data.code_type == 0) {
+						$("label[bind='code_type_name_cn']").css("padding-left", "70px");
+					}
+					comController.set(response.data);
+					var compStatus = response.data.verify_status.info.status;
+					if(compStatus == 3 || compStatus == 6) { //&&response.data.is_verify==1
+						//待审核
+						$(".btn-edit").attr("data-isclick", "false").css("cursor", "not-allowed").addClass("disabled");
+
+					}
+					//init city
+					defaultCityData = response.data.area_cn.split('-');
+					$.loadCityData(function(cityData) {
+						console.log(defaultCityData[0] ? defaultCityData[0].trim() : "");
+						console.log(defaultCityData[1] ? defaultCityData[1].trim() : "");
+						$("input[data-toggle='city-picker']").citypicker({
+							dataSource: cityData,
+							province: defaultCityData[0] ? defaultCityData[0].trim() : "",
+							city: defaultCityData[1] ? defaultCityData[1].trim() : "",
+							district: defaultCityData[2] ? defaultCityData[2].trim() : ""
+						});
+						//$(".city-picker-span").click();
+						$(".city-picker-span").addClass("hide");
+						$(".form-control-city").data("code", "/" + response.data.area_id);
+					});
+					//imgs
+					var qaImgs = response.data.identity_images;
+					if(qaImgs && qaImgs.length > 0) {
+						for(var i in qaImgs) {
+							var imgPath = qaImgs[i];
+							$(".form-group-qa-edit .imgs").append(("<a href=\"{src}\" target=\"_blank\"><img class=\"img-qa\" src=\"{src}\" path=\"" + imgPath + "\" /><span class=\"close\" onclick=\"loadDefault(this);$(this).parent().remove();return false;\">&times;</span></a>").replace(/{src}/g, (imgPath)));
+							$(".form-group-qa-show .imgs").append(("<a href=\"{src}\" target=\"_blank\"><img class=\"img-qa\" src=\"{src}\" path=\"" + imgPath + "\" /></a>").replace(/{src}/g, (imgPath)));
+						}
+					}else{
+						$(".form-group-qa-edit .imgs").html("<img class=\"upload-img-default\" src=\"../resources/images/upload-img-default.png\" alt=\"\" />");
+					}
+					//logo
+					imgPathOfLogo = response.data.logo;
+					if(imgPathOfLogo) {
+						$(".form-group-logo-edit .imgs").html("<a href=\"{src}\" target=\"_blank\"><img class=\"img-qa\" src=\"{src}\" /><span class=\"close\" onclick=\"loadDefault(this);$(this).parent().remove();return false;\">&times;</span></a>".replace(/{src}/g, (imgPathOfLogo)));
+						$(".form-group-logo-show .imgs").html("<a href=\"{src}\" target=\"_blank\"><img class=\"img-qa\" src=\"{src}\" /></a>".replace(/{src}/g, (imgPathOfLogo)));
+					}else{
+						$(".form-group-logo-show .imgs").html("<img class=\"upload-img-default\" src=\"../resources/images/upload-img-default.png\" alt=\"\" />");
+					}
+					//hide
+					$.hideLoadingPop();
+				});
+			}
+		</script>
+	</body>
+
+</html>

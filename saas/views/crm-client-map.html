@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>客户地图</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+			.page-container .content {
+				padding-top: 0;
+			}
+			
+			.client-map .content-main-left {
+				width: 200px;
+				font-size: 12px;
+				color: #666;
+			}
+			
+			.client-map .menu-top {
+				/*margin-left: 20px;*/
+				max-height: 750px;
+				overflow-y: auto;
+			}
+			
+			.client-map .menu-top li {
+				cursor: pointer;
+				line-height: 25px;
+			}
+			
+			.client-map .menu-top i {
+				margin-right: 5px;
+			}
+			
+			.client-map .menu-top li li {
+				margin-left: 15px;
+			}
+			
+			.client-map .menu-top img {
+				vertical-align: baseline;
+			}
+			
+			.client-map .content-main-right {
+				margin-left: 200px;
+				position: relative;
+			}
+			
+			.client-map #allmap {
+				width: 100%;
+				border: 1px solid #CCCCCC;
+				border-top: 0;
+			}
+			
+			.client-map .BMap_bubble_content {
+				font-size: 14px;
+				/*line-height: 60px;*/
+			}
+			
+			.client-map .client-list {
+				position: absolute;
+				top: 10px;
+				left: 10px;
+				z-index: 10;
+				background: #fff;
+				width: 350px;
+				border: 1px solid #ccc;
+			}
+			
+			.client-map a {
+				cursor: pointer;
+			}
+			
+			.client-map a.active {
+				cursor: default;
+				font-weight: bold;
+				color: #666;
+			}
+			
+			.client-map a.active:hover {
+				cursor: default;
+				font-weight: bold;
+				text-decoration: none;
+				color: #666;
+			}
+			
+			.client-map .client-list-top {
+				text-align: center;
+				border-bottom: 1px solid #ccc;
+				line-height: 30px;
+				height: 30px;
+				cursor: pointer;
+			}
+			
+			.client-map .client-list-top>p {
+				width: 80%;
+				text-align: left;
+				padding-left: 15px;
+				color: #CA192B;
+				font-size: 14px;
+			}
+			
+			.client-num {
+				color: #666;
+			}
+			
+			.client-map .client-list-top a {
+				float: right;
+				margin-right: 10px;
+				width: 50px;
+				text-align: right;
+			}
+			
+			.client-map .client-list-bottom {
+				display: none;
+				min-height: 300px;
+			}
+			
+			.client-map .client-list-bottom ul {
+				padding-top: 14px;
+			}
+			
+			.client-map .client-list-bottom ul li {
+				zoom: 1;
+				/*padding-left: 14px;*/
+			}
+			
+			.client-map .client-list-bottom ul li:after {
+				content: "";
+				display: block;
+				height: 0;
+				clear: both;
+				visibility: hidden
+			}
+			
+			.client-map .pull-left-site {
+				display: inline-block;
+				/*width: 70px;*/
+				margin-right: 20px;
+				text-align: left;
+			}
+			
+			.client-list-coordinate {
+				font-size: 12px;
+				height: 55px;
+				padding-left: 44px;
+				color: #666;
+			}
+			
+			.client-list-coordinate:hover,
+			.client-list-coordinate.active {
+				background-color: #eff8ff;
+				;
+			}
+			
+			.client-list-coordinate .client-name {
+				font-size: 14px;
+				/*height: 30px;*/
+				/*line-height: 20px;*/
+				color: #666;
+				display: block;
+			}
+			
+			.client-list-coordinate .client-name,
+			.client-list-coordinate .client-addr {
+				max-width: 280px;
+			}
+			
+			.client-list-coordinate {
+				background: url(../resources/images/coordinate.png) no-repeat;
+				margin-left: 1px;
+				position: relative;
+				color: #999;
+				background-position-x: 14px;
+				background-position-y: 11px;
+				padding-top: 7px;
+			}
+			
+			.client-list-coordinate .map-ranking {
+				position: absolute;
+				font-size: 11px;
+				left: 14px;
+				top: 14px;
+				color: #fff;
+				width: 22px;
+				text-align: center;
+			}
+			
+			.client-list-info {
+				float: left;
+			}
+			
+			.client-list-info p {
+				height: 20px;
+				line-height: 20px;
+				color: #999;
+			}
+			
+			.client-list-info p:first-child {
+				font-weight: bold;
+				color: #000;
+			}
+			
+			.page-num-container {
+				margin: 0 10px;
+				position: relative;
+				display: inline-block!important;
+				width: 185px;
+				height: 20px;
+				overflow: hidden;
+			}
+			
+			.page-num-move {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 999999999999px;
+			}
+			
+			.jp-current {
+				display: inline-block;
+				margin: 0 5px;
+				width: 27px;
+			}
+			
+			.client-list-bottom {
+				position: relative;
+				padding-bottom: 25px;
+			}
+			
+			.client-list-page {
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				height: 40px;
+				border-top: 1px solid #eee;
+				font-size: 12px;
+				color: #666;
+				line-height: 40px;
+				padding-left: 16px;
+			}
+			
+			.client-list-page a {
+				color: #009ED8;
+				display: inline-block;
+				margin: 0 10px;
+			}
+			
+			.client-list-page a:hover,
+			.client-list-page a:focus,
+			.client-list-page a:active {
+				text-decoration: none;
+			}
+			
+			.client-list-page .jp-to-page,
+			.client-list-page span {
+				color: #666;
+			}
+			
+			.client-list-page input {
+				width: 26px;
+				height: 20px;
+				margin: 0 3px;
+				padding: 0;
+				text-align: center;
+				font-size: 12px;
+			}
+			
+			.client-list-page,
+			.page-num-container,
+			.page-num-move:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.content-ul-name {
+				padding: 5px;
+			}
+			
+			.content-ul-name.active,
+			.content-ul-name.hover {
+				background-color: #eee;
+			}
+			
+			.client-province-list {
+				overflow-y: auto;
+			}
+			
+			.client-province-list span {
+				display: block;
+				padding: 3px 15px;
+				cursor: pointer;
+			}
+			
+			.client-province-list span span {
+				display: inline-block;
+				font-size: 14px;
+				padding: 0;
+			}
+			
+			.active,
+			.hover {
+				background-color: #eff8ff;
+			}
+			
+			.BMap_pop {}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container client-map">
+			<div class="content">
+				<div class="remark">
+					<i class="fa fa-list-ol fa-2x"></i><span>*企业的客户分布地图</span>
+				</div>
+			</div>
+			<div class="content-main">
+				<div class="content-main-left pull-left">
+					<ul class="menu-top">
+					</ul>
+				</div>
+				<div class="content-main-right">
+					<!--地图-->
+					<div class="map" id="allmap">
+
+					</div>
+					<div class="client-list">
+						<div class="client-list-top">
+							<p class="pull-left"><span class="pull-left-site client-area">全国:</span><span class="client-num"></span></p>
+							<a class="toggle-client-list" area-hidden='true'><img src="../resources/images/dobble-down-icon.png" data-trans-src="../resources/images/dobble-up-icon.png" alt="" /></a>
+							<div class="clearfix"></div>
+						</div>
+						<div class="client-list-bottom">
+							<ul id="clientList">
+							</ul>
+							<div class="client-list-page">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript" src="../resources/js/main.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG"></script>
+	<script type="text/javascript">
+		var allClients = [],
+			devidedClients = [],
+			mapPointInfoData = [],
+			provinceDistributionData = [];
+		var pageSize = 10000;
+		var markers = [],
+			allClientsNum = 0,
+			addNum = 0;
+		var mapInfo = {
+			quanGuo: { //全国
+				SUO_FANG: 5,
+				MAX: 100
+			},
+			shiHuoSheng: { //省、市
+				SUO_FANG: 8,
+				MAX: 50
+			},
+			qu: { //区
+				SUO_FANG: 11,
+				MAX: 10
+			}
+		}
+		CLIENT_ADMINISTRATIVE_DIVISION = 102;
+		var marker, map, infoWindow;
+		var mapZoomLevle = "",
+			Distance;
+		var mapZoomScale = [0, 0, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000, 2000000].reverse();
+		Distance = mapZoomScale[2];
+		var mapIconOfSingle;
+		var mapIconOfZoom;
+		var showMapSinglePoint = false;
+		var clientProvinceLoading = false;
+		var dataIsEndLoad = false;
+		//map
+		var mapHeight = $(window).height() - $(".content").outerHeight(true) - 20;
+		$(".content-main,.content-main-left,.menu-top").css({
+			height: $(window).height() - 10 + "px",
+			"max-height": $(window).height() - 10 + "px"
+		});
+		$(".client-list-bottom").css({
+			"height": $(window).height() - 160 + "px"
+		});
+		$("#allmap").height(mapHeight);
+		//加载左侧地理分布树
+		loadClientArea();
+
+		function loadClientArea() {
+			$.ajaxGet(BSAPIURL + "/crm/clients/area", function(resp) {
+				if(resp.code != 0) {
+					$.showErrorGritter("行政区域加载失败：" + resp.msg);
+					return false;
+				}
+				$(".menu-top").empty();
+				onClientAreaGeted("", resp.data);
+				$(".content-ul li span").mouseover(function() {
+					$(this).addClass("hover");
+				}).mouseout(function() {
+					$(this).removeClass("hover");
+				});
+			});
+		}
+		var isTopest = true;
+
+		function onClientAreaGeted(parentCode, data) {
+			for(var i in data) {
+				var $liDom =
+					$("<li data-code='" + data[i].code_tree + "'>" +
+						"	<div class='content-ul-menu'>" +
+						"		<img src='../resources/images/minus-o-icon.png' area-hidden='false' data-trans-src='../resources/images/plus-o-icon.png' onclick='approvallevels(this)'/>" +
+						"		<span class='content-ul-name " + (isTopest ? " active" : "") + "' level='" + (data[i].code_tree.length < 4 ? "quanGuo" : data[i].code_tree.length < 7 ? "shiHuoSheng" : "qu") + "' onclick='onCityNameClick(this)'>" + (data[i].code_name == "城市代码" ? "全国" : data[i].code_name) + "</span>" +
+						"	</div>" +
+						"	<ul class='content-ul'></ul>" +
+						"</li>");
+				$liDom.data("code", data[i].code_tree);
+				isTopest = false;
+				if(!parentCode) $(".menu-top").append($liDom);
+				else $(".menu-top li[data-code='" + parentCode + "']>ul").append($liDom);
+				if(data[i].codes && data[i].codes.length > 0) {
+					onClientAreaGeted(data[i].code_tree, data[i].codes);
+				}
+			}
+			leftMenuClear();
+		}
+		//第一次加载客户
+		function loadClientListFirst(areaCode, level, cityName) {
+			allClients = [];
+			devidedClients = [];
+			$.ajaxGet(BSAPIURL + "/crm/clients/query?page=1&rows=" + pageSize + "&area=" + (areaCode || ""), function(resp) {
+				if(resp.code != 0) {
+					$.showErrorGritter("加载客户失败：" + resp.msg);
+					return false;
+				}
+				allClientsNum = resp.data.records;
+				onClientsDataGeted(resp.data);
+				for(var i = 1, len = Math.ceil(resp.data.records / 100); i < len; i++) {
+					loadClientsByPage(i + 1);
+				}
+			});
+			initMap(cityName, level);
+		}
+		loadClientListFirst();
+		//分页加载客户
+		function loadClientsByPage(pageNum) {
+			var timer = "timer" + pageNum;
+			timer = setTimeout(function() {
+				$.ajaxGet(BSAPIURL + "/crm/clients/query?page=" + pageNum + "&rows=" + pageSize, function(resp) {
+					clearTimeout(timer);
+					timer = null;
+					if(resp.code != 0) {
+						//$.showErrorGritter("加载客户失败："+resp.msg);
+						return false;
+					}
+					onClientsDataGeted(resp.data);
+				});
+			});
+		}
+		//获取到客户数据
+		function onClientsDataGeted(data) {
+			var clients = data.rows;
+			var index = -1;
+			if(clients.length < 100) {
+				dataIsEndLoad = true;
+			}
+			for(var i = 0; i < clients.length; i++) {
+				var client = clients[i];
+				clients[i].num = i + 1;
+				allClients.push(client);
+				var point = {};
+				if(client.client_addr_map_location_lat && client.client_addr_map_location_lon) {
+					addNum++;
+				} else {
+					point = viewPointByKeyword(client, mapIconOfSingle, i);
+				}
+			}
+			locationDataChange(allClients, markerZoom);
+
+		}
+		// 百度地图API功能
+		function initMap(cityName, level) {
+			map = new BMap.Map("allmap");
+			if(!level) level = "quanGuo";
+			if(cityName) {
+				locationDefaultByCity(cityName, level);
+				return false;
+			}
+			mapIconOfSingle = new BMap.Icon("../resources/images/coordinate.png", new BMap.Size(22, 33), {
+				anchor: new BMap.Size(20, 33)
+			});
+			mapIconOfZoom = new BMap.Icon("../resources/images/map-zoom.png", new BMap.Size(40, 40), {
+				anchor: new BMap.Size(20, 43)
+			});
+			var geolocation = new BMap.Geolocation();
+			geolocation.getCurrentPosition(function(r) {
+				if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+					point = r.point;
+					map.centerAndZoom(point, mapInfo[level].SUO_FANG);
+					map.enableScrollWheelZoom();
+					mapZoomLevle = map.getZoom();
+					map.addEventListener("zoomend", function() {
+						changeZoomLevel();
+					});
+					//console.log("当前地图缩放等级：" + map.getZoom());
+				} else {
+					//定位失败 定位到城市
+					viewPointByKeyword("重庆市");
+				}
+			}, {
+				enableHighAccuracy: false
+			});
+		}
+		//城市定位中心
+		function locationDefaultByCity(cityName, level) {
+			var localSearch = new BMap.LocalSearch(map);
+			localSearch.enableAutoViewport();
+			localSearch.setSearchCompleteCallback(function(searchResult) {
+				var poi = searchResult.getPoi(0);
+				try {
+					var pt = poi.point;
+					//poi.point
+					map.centerAndZoom(pt, mapInfo[level].SUO_FANG);
+					Distance = mapZoomScale[2];
+					map.enableScrollWheelZoom();
+					mapZoomLevle = map.getZoom();
+					map.addEventListener("zoomend", function() {
+						changeZoomLevel();
+					});
+				} catch(e) {
+
+				}
+			});
+			localSearch.search(cityName);
+		}
+		//initMap("北京",2);
+
+		function viewPointByKeyword(client, mapIconOfSingle, i) {
+			var keyword = client.client_addr_map_address || client.client_addr;
+			if(!keyword) {
+				allClientsNum--;
+				return false;
+			}
+			var localSearch = new BMap.LocalSearch(map);
+			localSearch.enableAutoViewport();
+			localSearch.setSearchCompleteCallback(function(searchResult) {
+				var poi = searchResult.getPoi(0);
+				try {
+					var pt = poi.point;
+					//poi.point
+					client.client_addr_map_location_lat = pt.lat;
+					client.client_addr_map_location_lon = pt.lng;
+					addNum++;
+				} catch(e) {}
+			});
+			localSearch.search(keyword);
+		};
+
+		function setMapMarkerOfSingle(client, mapIconOfSingle, i, isZoom) {
+			var marker = new BMap.Marker(new BMap.Point(client.client_addr_map_location_lon, client.client_addr_map_location_lat), {
+				icon: mapIconOfSingle
+			}); // 创建标注
+			marker.info = i + 1;
+			var content = client.client_full_name + "<br>" + client.client_addr;
+			var label;
+			label = new BMap.Label(i + 1, {
+				offset: new BMap.Size(4, 4)
+			});
+			label.setStyle({
+				color: "#fff",
+				fontSize: "11px",
+				backgroundColor: "0.05",
+				border: "0",
+				textAlign: "center"
+			});
+			marker.setLabel(label);
+			map.addOverlay(marker);
+			addClickHandler(content, marker, true);
+		};
+
+		function setMapMarkerOfZoom(client, mapIconOfSingleOfZoom, zoomNum) {
+			var marker = new BMap.Marker(new BMap.Point(client.client_addr_map_location_lon, client.client_addr_map_location_lat), {
+				icon: mapIconOfSingleOfZoom
+			}); // 创建标注
+			marker.info = "共" + zoomNum;
+			var content = "共" + zoomNum + "个客户";
+			var label;
+			label = new BMap.Label(zoomNum + "家", {
+				offset: new BMap.Size(20 - ((zoomNum + "家").toString().length) * 5, 8)
+			});
+			label.setStyle({
+				color: "#fff",
+				fontSize: "11px",
+				backgroundColor: "0.05",
+				border: "0",
+				textAlign: "center"
+			});
+			marker.setLabel(label);
+			map.addOverlay(marker);
+			addClickHandler(content, marker);
+		};
+		//地图缩放等级改变
+		function changeZoomLevel(action) {
+			console.log("当前地图缩放等级：" + map.getZoom());
+			if(action) {
+				map.setZoom(map.getZoom() + 1)
+			}
+			Distance = mapZoomScale[map.getZoom() - 3];
+			console.log((map.getZoom() - 3), Distance)
+			if(Distance < 20000) {
+				Distance = 10;
+				showMapSinglePoint = true;
+				console.log("显示单个")
+			} else {
+				showMapSinglePoint = false;
+				console.log("显示聚合")
+			}
+			mapZoomLevle = map.getZoom();
+			markerZoom(allClients)
+			//locationDataChange(allClients, );
+		}
+		//点分组
+		function markerZoom(clients) {
+			//$("#clientList").empty();
+			$(".client-list-top .client-num").text("共" + allClients.length + "家客户单位");
+			map.clearOverlays(); //清楚所以覆盖物
+			//全部数组
+			var mapDataList = [];
+			//匹配完成的数组
+			var outmodedData = [];
+			//清空
+			mapPointInfoData = [];
+			for(var i in clients) { //1    10
+				var infoDataSingle = clients[i];
+				var matchData = matchScopeData(Distance, clients, infoDataSingle, outmodedData);
+				//console.log(matchData)
+				if(matchData && matchData.length > 1) { //聚合过的
+					mapPointInfoData.push(matchData);
+				} else if(matchData && matchData.length == 1) {
+					if(showMapSinglePoint) {
+						mapPointInfoData.push(matchData);
+					} else {
+						mapPointInfoData.unshift(matchData);
+					}
+				}
+			}
+			devidedClients = [];
+			//console.log(mapPointInfoData)
+			for(var n = 0; n < mapPointInfoData.length; n++) {
+				//var marker = new BMap.Marker(new BMap.Point(mapPointInfoData[i][0].client_addr_map_location_lon, mapPointInfoData[i][0].client_addr_map_location_lat)); // 创建标注
+				//打印点
+				//map.addOverlay(marker); // 将标注添加到地图中
+				setClientListPage(mapPointInfoData, n, 1);
+				if(!showMapSinglePoint) { //打印集合
+					setMapMarkerOfZoom(mapPointInfoData[n][0], mapIconOfZoom, mapPointInfoData[n].length);
+				} else { //打印点
+					devidedClients.push(mapPointInfoData[n][0]);
+					setMapMarkerOfSingle(mapPointInfoData[n][0], mapIconOfSingle, n);
+				}
+
+			}
+			loadClientList(1);
+		}
+
+		function locationDataChange(data, callBack) {
+			if(data) {
+				var len = data.length;
+				for(var i in data) {
+					if(!data[i].client_addr_map_location_lon || !data[i].client_addr_map_location_lat) {
+						getLocationInfo(data[i].client_administrative_division_cn, i);
+					} else {
+						if(i == len - 1)
+							callBack && callBack(data);
+					}
+				}
+			}
+
+			function getLocationInfo(location, n) {
+				var myGeo = new BMap.Geocoder();
+				myGeo.getPoint(location, function(point) {
+					if(point) {
+						data[n].client_addr_map_location_lon = point.lng;
+						data[n].client_addr_map_location_lat = point.lat;
+						if(n == len - 1)
+							callBack && callBack(data);
+					} else {
+						console.log(location + ":您选择地址没有解析到结果!");
+					}
+				});
+			}
+		}
+		//设置客户列表
+		function setClientListPage(data, index, currPage) {
+			if(!showMapSinglePoint) {
+				$(".client-list-page").addClass("hide");
+				return false;
+			}
+			$(".client-list-page").removeClass("hide");
+			//设置下面的分页
+			var allPageNum = index - 1;
+			$(".client-list-page").empty();
+			//halfPageNum=parseInt(allPageNum/2);
+			$(".client-list-page").append("<span class='curr-page'>1</span>/<span class='all-page'>" + Math.ceil(allPageNum / 10) + "</span>" + "<a class=\"jp-previous jp-disabled\" onclick=\"jumpToPage('',this)\">上一页</a>");
+			/*var pageNumList = "<div class='page-num-container'><div class='page-num-move'>";
+			for(var i = 1; i <= Math.ceil(allPageNum / 10); i++) {
+				pageNumList += "<a class=\"jp-current " + (i == 1 ? "active" : "") + "\" index='" + i + "' onclick=\"jumpToPage('',this)\">" + i + "</a>";
+			}
+			pageNumList += "</div></div>"*/
+			$(".client-list-page").append("<a class=\"jp-next\" onclick=\"jumpToPage('',this)\">下一页</a>" + "<a class=\"jp-to-page\" index='0'>到<input type='text' />页</a>");
+			$(".client-list-page .jp-to-page input").keydown(function(e) {
+				if(e.keyCode == 13) {
+					jumpToPage($(this).val(), this);
+				}
+			});
+			/*
+			 * 
+			 * */
+		}
+		//跳转到某一页
+		function jumpToPage(pageNum, obj) {
+			var currPage = parseInt($(".curr-page").text()) || 1;
+			var allPageNum = parseInt($(".all-page").text()) || 1;
+			var moveToNum = 0;
+			if(!pageNum) {
+				if($(obj).hasClass("jp-previous")) {
+					moveToNum = currPage - 1;
+				} else {
+					moveToNum = currPage + 1;
+				}
+				if(moveToNum < 1) {
+					$.showErrorGritter("当前已经是第一页");
+					return false;
+				}
+				if(moveToNum > allPageNum) {
+					$.showErrorGritter("当前已经是最后一页");
+					return false;
+				}
+			} else {
+				moveToNum = pageNum;
+				if(moveToNum < 1) {
+					$.showErrorGritter("页数不能小于1");
+					return false;
+				}
+				if(moveToNum > allPageNum) {
+					$.showErrorGritter("页数不能大于" + allPageNum);
+					return false;
+				}
+			}
+			$(".curr-page").text(moveToNum);
+			loadClientList(moveToNum);
+		}
+
+		function loadClientList(index) {
+			var pageClients = "";
+			var startIndex = (index - 1) * 10;
+			if(showMapSinglePoint) {
+				$("#clientList,.client-list-page").show();
+				$(".client-province-list").remove()
+				for(var i = startIndex; i < startIndex + 10; i++) {
+					if(!devidedClients[i]) break
+					pageClients +=
+						"<li style=\"cursor:pointer;\" data-lon='" + devidedClients[i].client_addr_map_location_lon + "' data-lat='" + devidedClients[i].client_addr_map_location_lat + "' data-loaction-name='" + devidedClients[i].client_addr + "'>" +
+						"	<div class=\"client-list-coordinate\">" +
+						"		<span class='map-ranking'>" + (i + 1) + "</span>" +
+						"		<span class='client-name css-overhidden' title='" + devidedClients[i].client_full_name + "'>" + devidedClients[i].client_full_name + "</span>" +
+						"		<span class='client-addr css-overhidden' title='" + (devidedClients[i].client_addr_map_address || devidedClients[i].client_addr || "地址暂无") + "'>" + (devidedClients[i].client_addr_map_address || devidedClients[i].client_addr || "地址暂无") + "</span>"
+					"	</div>" +
+					"</li>";
+				}
+			} else { //省份数据统计
+				provinceDistributionData = [];
+				if(!clientProvinceLoading && dataIsEndLoad && $(".client-province-list").length == 0)
+					clientListByProvince(allClients);
+			}
+			$("#clientList").empty().append(pageClients);
+			//			if(!showMapSinglePoint) {
+			//				$(".client-list-bottom").hide();
+			//				$(".client-list-top i").removeClass("fa-angle-double-up").addClass("fa-angle-double-down");
+			//			}
+			$("#clientList li").unbind("click").click(function() {
+				var content = $(this).find(".client-name").html();
+				$("#clientList li").removeClass("active");
+				$(this).addClass("active");
+				jumpDesignatedSpot($(this).data("lon"), $(this).data("lat"), content);
+			});
+		}
+		//处理数据-合成不同省份坐标数组
+		function clientListByProvince(data) {
+			clientProvinceLoading = true;
+			//console.log(data)
+			var isLast = false;
+			for(var i in data) {
+				var lon = data[i].client_addr_map_location_lon;
+				var lat = data[i].client_addr_map_location_lat;
+				if(i == (data.length - 1)) {
+					isLast = true;
+				}
+				if(!lon || !lat) {
+					getLocationlonOrlat(data[i].client_addr, data[i].client_administrative_division_cn, isLast, getProvince);
+				} else {
+					getProvince(lon, lat, isLast);
+				}
+			}
+		}
+		//显示省份数据
+		function showClientList() {
+			if(provinceDistributionData) {
+				$(".client-province-list").remove();
+				var $dom = $("<div class='client-province-list'></div>");
+				for(var i in provinceDistributionData) {
+					$dom.append("<span>" + provinceDistributionData[i].name + "<span class='note-font-type'>" + "（" + provinceDistributionData[i].num + "）</span></span>");
+				}
+				$(".client-list-bottom").append($dom);
+				$("#clientList,.client-list-page").hide();
+			}
+			clientProvinceLoading = false;
+			$(".client-province-list").css({
+				"height": $(window).height() - 200 + "px"
+			});
+			$(".client-province-list>span").mouseover(function() {
+				$(this).addClass("hover");
+			}).mouseout(function() {
+				$(this).removeClass("hover");
+			});
+			$(".client-province-list>span").unbind("click").click(function() {
+				var text = $(this).text();
+				$(".client-province-list span").removeClass("active");
+				$(this).addClass("active");
+				$(".menu-top li span").each(function(i) {
+					if(text.indexOf($(this).text()) != -1) {
+						$(this).trigger("click");
+					};
+				});
+			});
+			$(".client-province-list>span").unbind("mouseover").mouseover(function() {
+				$(this).addClass("hover");
+			}).unbind("mouseout").mouseout(function() {
+				$(this).removeClass("hover");
+			});
+		}
+		//获取数据省份
+		function getProvince(lon, lat, isLast) {
+			var locationdProvince = "";
+			var myGeo = new BMap.Geocoder();
+			var point = new BMap.Point(lon, lat);
+			myGeo.getLocation(point, function(rel) {
+				if(rel.address) {
+					if(!isExist(rel.addressComponents.province)) {
+						provinceDistributionData.push({
+							"name": rel.addressComponents.province,
+							"num": 1
+						});
+					}
+				}
+				if(isLast) {
+					showClientList();
+				}
+			});
+		}
+
+		function isExist(data) {
+			var isExist = false;
+			for(var i in provinceDistributionData) {
+				if(provinceDistributionData[i].name == data) {
+					isExist = true;
+					provinceDistributionData[i].num = (provinceDistributionData[i].num + 1);
+					break;
+				}
+			}
+			return isExist;
+		}
+
+		function jumpDesignatedSpot(lon, lat, content) {
+			if(!lon || !lat) {
+				$.showErrorGritter("请先到客户页面填写该客户地址后查看！");
+				return false;
+			}
+			var new_point = new BMap.Point(lon, lat);
+			map.panTo(new_point);
+			var point = new BMap.Point(new_point.lng, new_point.lat);
+			var opts = {
+				width: 100, // 信息窗口宽度
+				height: 20, // 信息窗口高度
+				title: "<span style='color: #666;font-size: 14px;'>" + content + "</span>", // 信息窗口标题
+				enableMessage: true //设置允许信息窗发送短息
+			};
+			var infoWindow = new BMap.InfoWindow('', opts); // 创建信息窗口对象 
+			map.openInfoWindow(infoWindow, point); //开启信息窗口
+			$(".BMap_pop").css("top", parseInt($(".BMap_pop").css("top")) - 15 + "px");
+		}
+		//解析中文地址并返回经纬度
+		function getLocationlonOrlat(location1, location2, isLast, callBack) {
+			//if(!location1) return false;
+			var myGeo = new BMap.Geocoder();
+			// 将地址解析结果显示在地图上,并调整地图视野
+			getLocationInfo(location1);
+
+			function getLocationInfo(location) {
+				myGeo.getPoint(location, function(point) {
+					if(point) {
+						callBack(point.lng, point.lat, isLast);
+					} else {
+						console.log(location + ":您选择地址没有解析到结果!");
+						getLocationInfo(location2);
+					}
+				});
+			}
+		}
+		//匹配范围内数据（参数：距离范围，总数组，单个数组，匹配过的数组）
+		function matchScopeData(Distance, mapDataList, infoSingle, outmodedData) {
+			//console.log(outmodedData)
+			if(showMapSinglePoint)
+				Distance = 0;
+			var returnData = [];
+			if(showMapSinglePoint) {
+				returnData.push(infoSingle);
+			} else {
+				for(var i in mapDataList) {
+					var infoDataSingle = mapDataList[i];
+					var pointA = new BMap.Point(infoSingle.client_addr_map_location_lon, infoSingle.client_addr_map_location_lat); // 创建中心坐标
+					var pointB = new BMap.Point(infoDataSingle.client_addr_map_location_lon, infoDataSingle.client_addr_map_location_lat);
+					var a_b_distance = map.getDistance(pointA, pointB);
+					if(isNaN(a_b_distance))
+						a_b_distance = 0;
+					if(outmodedData.indexOf(infoDataSingle) == -1 && a_b_distance<= Distance) {
+						returnData.push(infoDataSingle);
+						outmodedData.push(infoDataSingle);
+					}
+				}
+			}
+			if(returnData.length == 0) {
+				return null;
+			}
+			return returnData;
+		}
+
+		function addClickHandler(content, marker, showInfoWindow) {
+			//			if(showInfoWindow){
+			//				marker.addEventListener("mouseover", function(e) {
+			//					openInfo(content, e,"over")
+			//				});
+			//				marker.addEventListener("mouseout", function(e) {
+			//					openInfo(content, e,"over")
+			//				});
+			//			}
+			marker.addEventListener("click", function(e) {
+				openInfo(content, e, "click", showInfoWindow);
+			});
+		}
+
+		function openInfo(content, e, action, showInfoWindow) {
+			console.log(content)
+			var p = e.target;
+			var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+			var opts = {
+				width: 100, // 信息窗口宽度
+				height: 20, // 信息窗口高度
+				title: "<span style='color: #666;font-size: 14px'>" + getStyledContent(content) + "</span>", // 信息窗口标题
+				enableMessage: true //设置允许信息窗发送短息
+			};
+			var infoWindow = new BMap.InfoWindow("", opts); // 创建信息窗口对象 
+			map.openInfoWindow(infoWindow, point); //开启信息窗口
+			if(action == "click" && !showInfoWindow) {
+				changeZoomLevel("click");
+			}
+		}
+		//获取信息窗口显示的html
+		function getStyledContent(data) {
+			try {
+				var dataArr = data.split("<br>");
+				return "<span style='color: #666;font-size: 14px;'>" + (dataArr[0] || "") + "</span>" + "<br><span style='color:#999;font-size: 12px;'>" + (dataArr[1] || "") + "</span>";
+			} catch(e) {
+				return "<span style='color: #666;font-size: 14px;'>" + (data || "") + "</span>"
+			}
+
+		}
+		//approvallevelsLoadData();
+		//删除最低级分支前+-号
+		function leftMenuClear() {
+			$(".menu-top li").each(function(index) {
+				if($(this).children("ul").children("li").length == 0) {
+					$(this).find("img").remove();
+					var x = $(this).css("text-indent");
+					$(this).css("margin-left", parseInt(x) + 21 + "px");
+
+				}
+			});
+		}
+
+		//左侧销售部菜单
+		$(".menu-title").click(function() {
+			if($(this).children("i").hasClass("fa-minus-square-o")) {
+				$(this).children("i").removeClass("fa-minus-square-o").addClass("fa-plus-square-o");
+				$(this).next().slideUp();
+			} else {
+				$(this).children("i").removeClass("fa-plus-square-o").addClass("fa-minus-square-o");
+				$(this).next().slideDown();
+			}
+		});
+		//客户列表下拉
+		$(".client-list-top").unbind("click").click(function() {
+			//if(!showMapSinglePoint) return false;
+			if($(this).find(".toggle-client-list").attr("area-hidden") == "true") {
+				$(this).find(".toggle-client-list").attr("area-hidden", false);
+				$(this).find(".toggle-client-list").parent().next().slideDown();
+			} else {
+				$(this).find(".toggle-client-list").attr("area-hidden", true);
+				$(this).find(".toggle-client-list").parent().next().slideUp();
+			}
+			transImgSrc($(this).find(".toggle-client-list img"));
+		});
+		//下拉上收
+		function approvallevels(obj) {
+			if($(obj).attr("area-hidden") == "true") {
+				$(obj).attr("area-hidden", false);
+				$(obj).parent().next("ul").slideDown();
+			} else {
+				$(obj).attr("area-hidden", true);
+				$(obj).parent().next("ul").slideUp();
+			}
+			transImgSrc($(obj));
+		}
+		//点击城市名称的处理函数
+		function onCityNameClick(obj) {
+			$(".content-ul-name").removeClass("active");
+			$(obj).addClass("active");
+			//传值
+			var txt = $(obj).text();
+			$(".pull-left-site").html(txt + ":");
+			$(".client-province-list span").show()
+			if(txt != "全国")
+				$(".client-province-list span").each(function(i) {
+					var provinceName = $(this).text();
+					if(provinceName.indexOf(txt) == -1) {
+						$(this).hide()
+					}
+				});
+			loadClientListFirst($(obj).parent().parent().attr("data-code"), $(obj).attr("level"), txt);
+		}
+	</script>
+
+</html>

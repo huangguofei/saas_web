@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title></title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<style>
+
+		</style>
+	</head>
+
+	<body>
+		<div>
+			<input id="files-list" type="text" />
+			<div id="output"></div>
+			<div id="progress"></div>
+		</div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			/*
+			 *封装webSoket类
+			 * 
+			 * */
+			var reconnectCounter = 0;
+			var msgCounter=0;
+			$.webSoket = function(options, onopenCallback, onmessageCallback, onerrorCallback, oncloseCallback) {
+				var sessionId = document.cookie.slice(155, document.cookie.length);
+				/*
+				 *{
+				 * wsServer: 服务器地址，
+				 * delay:心跳包间隔时间，
+				 * 
+				 * }
+				 * */
+				var ws, //保存创建的WebSocket
+					wsHeartBeat; //保存发送心跳包的定时器
+				//已经建立连接， 可以进行通讯；
+				try {
+					ws = new WebSocket("ws://" + options.wsServer + ":" + options.protocal); //创建WebSocket对象
+					$.showLoadingPop("正在连接，请稍候......");
+				} catch(e) {
+					throw new Error("不能连接到该地址。");
+					//$.webSoket(options);
+				}
+				////定义发送数据的函数
+				ws.onsend = function(data) {
+					data.session_id = sessionId;
+					ws.send(encodeDataPack("1", data));
+				}
+				ws.binaryType = 'arraybuffer';//设置返回数据的类型为Arraybuffer
+				ws.onopen = function(evt) {
+					$.hideLoadingPop();
+					//已经建立连接
+					ws.send(encodeDataPack("3", {
+						session_id: sessionId,
+						client_type: 9,
+						dev: "00"
+					}));
+					$("#output").html("已经建立连接");
+					//发送请求
+					//console.log(ws);
+					ws.onmessage = function(evt) {
+						//收到服务器消息，使用evt.data提取
+						//console.log("收到服务器消息，使用evt.data提取" + JSON.stringify(evt));
+						var recvData=decodeDataPack(evt.data);
+						console.log(recvData)
+						clearInterval(wsHeartBeat);
+						if(msgCounter==1){
+							console.log(recvData)
+							wsHeartBeat = setInterval(function() {
+							//console.log(ws.readyState);
+							if(ws.readyState != 1) {
+								//$.webSoket(options);
+								return false;
+							}
+							ws.send(encodeDataPack("1", {
+								"session_id": sessionId
+								})); //发送心跳包，证明客户端还处于连接状态
+							}, recvData.data.client_ping_interval);
+						}
+						msgCounter++;
+						//onmessageCallback(evt.data);
+					};
+					ws.onerror = function(evt) {
+						//产生异常
+						console.log("产生异常" + JSON.stringify(evt));
+						onerrorCallback(evt.data);
+					};
+				};
+				ws.onclose = function(evt) {
+					$.hideLoadingPop();
+					$("#output").html("服务器断开连接。" + JSON.stringify(evt.reason));
+					console.log(evt);
+					//如果连接失败，重新进行连接
+					ws.close();
+					//$.webSoket(options);
+				};
+				
+				////
+				var get_protocol_int16_value = function(buffer, startIndex, length) {
+					var view = new DataView(buffer.slice(startIndex, startIndex + length));
+					return view.getInt16(0);
+				};
+				var get_protocol_int32_value = function(buffer, startIndex, length) {
+					var view = new DataView(buffer.slice(startIndex, startIndex + length));
+					return view.getInt32(0);
+				};
+				var set_protocol_int16_value = function(buffer, data) {
+					var view = new DataView(buffer);
+					view.setInt16(0, data);
+				};
+				var set_protocol_int32_value = function(buffer, data) {
+					var view = new DataView(buffer);
+					view.setInt32(0, data);
+				};
+				var string2Bin = function(str) {
+					var result = [];
+					for(var i = 0; i < str.length; i++) {
+						result.push(str.charCodeAt(i));
+					}
+					return result;
+				};
+
+				var bin2String = function(array) {
+					return String.fromCharCode.apply(String, array);
+				};
+//				var ping = function() {
+//					if(ws.readyState != ws.OPEN) {
+//						//状态异常
+//						clearInterval(wsHeartBeat);
+//						return false;
+//					}
+//					//设置session_id
+//					ws.send(encodeDataPack(2, {
+//						session_id: $.cookie("session_id")
+//					}));
+//					//socket.send('36  101 2   9999{"session_id":"123"}');
+//				};
+				////发送消息的函数	
+				function encodeDataPack(type, data) {
+					if(typeof data == "object")
+						data = JSON.stringify(data);
+
+					//消息协议
+					var u8_protocol_ver = new Uint8Array(2);
+					set_protocol_int16_value(u8_protocol_ver.buffer, 1);
+					var protocol_ver = u8_protocol_ver;
+					//console.dir(u8_protocol_ver);
+
+					//消息类型
+					var u8_cmd = new Uint8Array(4);
+					set_protocol_int32_value(u8_cmd.buffer, type);
+					var cmd = u8_cmd;
+
+					//消息ID
+					var u8_msg_id = new Uint8Array(4);
+					set_protocol_int32_value(u8_msg_id.buffer, 369258);
+					var msg_id = u8_msg_id;
+
+					//消息头长
+					var header = (protocol_ver.length + cmd.length + msg_id.length);
+					var u8_header_len = new Uint8Array(2);
+					set_protocol_int16_value(u8_header_len.buffer, header);
+					var header_len = u8_header_len;
+
+					//包长
+					var pack_len_val = header + data.length + 6;
+					var u8_pack_len = new Uint8Array(4);
+					set_protocol_int32_value(u8_pack_len.buffer, pack_len_val);
+					var pack_len = u8_pack_len;
+
+					data = string2Bin(data);
+					//console.dir(data);
+
+					var u8_pack = new Uint8Array(pack_len.length + header_len.length + protocol_ver.length + cmd.length + msg_id.length + data.length);
+					u8_pack.set(pack_len);
+					var pos = pack_len.length;
+					u8_pack.set(header_len, pos);
+					pos += header_len.length;
+					u8_pack.set(protocol_ver, pos);
+					pos += protocol_ver.length;
+					u8_pack.set(cmd, pos);
+					pos += cmd.length;
+					u8_pack.set(msg_id, pos);
+					pos += msg_id.length;
+					u8_pack.set(data, pos);
+
+					console.dir(u8_pack.buffer);
+					return u8_pack.buffer;
+					//socket.send(u8_pack.buffer);
+				};
+				
+				////接收到消息的处理函数
+				function decodeDataPack(receiveData) {
+					var buf = new Uint8Array(receiveData);
+					//console.dir(buf);
+
+					var buffer = receiveData;
+					//解析
+					var offset = 0;
+					
+					//包长
+					var pack_len = get_protocol_int32_value(buffer, offset, 4);
+					//console.log(pack_len);
+					offset += 4;
+					
+					//消息头长
+					var header_len = get_protocol_int16_value(buffer, offset, 2);
+					//console.log(header_len);
+					offset += 2;
+
+					//消息协议
+					var protocol_ver = get_protocol_int16_value(buffer, offset, 2);
+					//console.log(protocol_ver);
+					offset += 2;
+
+					//消息类型
+					var cmd = get_protocol_int32_value(buffer, offset, 4);
+					//console.log(cmd);
+					offset += 4;
+
+					//消息ID
+					var msg_id = get_protocol_int32_value(buffer, offset, 4);
+					//console.log(msg_id);
+					offset += 4;
+
+					var dataArr = [];
+					for(var i = offset; i < buf.byteLength; i++) {
+						dataArr.push(buf[i]);
+					}
+					var data_json = bin2String(dataArr);
+					//console.dir(data_json);
+					var recvData = JSON.parse(data_json);
+//					switch(cmd) {
+//						case 1:
+//							//收到配置信息
+//							var pingInterval = recvData.client_ping_interval;
+//							if(pingInterval < 5000) {
+//								break;
+//							}
+//							if(wsHeartBeat) {
+//								clearInterval(wsHeartBeat);
+//							}
+//							wsHeartBeat = setInterval(function() {
+//								ping();
+//							}, pingInterval);
+//							//第一次ping
+//							ping();
+//							break;
+//					}
+//					log4ws('收到消息\n' + JSON.stringify({
+//						action: cmd,
+//						data: recvData
+//					}, null, 4));
+					return {
+						action: cmd,
+						data: recvData
+					};
+				}
+				return ws;
+				/*
+				//异常  连接未建立->0  连接正在关闭->2  连接已经关闭或不可用->3  
+					console.log("重连")
+					if(wsHeartBeat) { //如果定时器已经打开，则清除
+						console.log("清除")
+						clearInterval(wsHeartBeat);
+					}
+					$.showErrorGritter("与服务器连接异常，正在重试......");
+					reconnectCounter++;
+					if(reconnectCounter>6){
+						$.showErrorGritter("不连了");
+						return false;
+					}
+					console.log(reconnectCounter)
+					//$.webSoket(options); //重连
+					//return ws.readyState;*/
+			}
+			var ws = $.webSoket({
+				wsServer: "192.168.1.250",
+				protocal: "8012",
+				delay: 3000
+			});
+			//			ws.onsend({
+			//					name: "1"
+			//			});
+			//console.log(ws.onclose)
+			//alert(parseInt(2001,2))
+			/*var currentKeyCode = -1,
+				altkey = false,
+				rightKey = false,
+				pageY = 0,
+				listernType = null;
+			$(window).keydown(function() {
+				top.altkey = event.altKey;
+				top.currentKeyCode = event.keyCode;
+			});
+			$(document).on("contextmenu", function(e) {
+				rightKey = true;
+
+			});
+
+			function isReloadOrClose(event) {
+				var msg = null;
+				if(currentKeyCode == 116 || rightKey) {
+					//116:F5
+					if(currentKeyCode == 116) {
+						msg = "刷新窗口!(F5)";
+					}
+					if(rightKey) {
+						msg = "右键刷新窗口!";
+					}
+					top.listernType = "reload";
+				} else {
+					msg = "点击关闭窗口";
+					top.listernType = "close";
+					if((altkey || currentKeyCode == 18) || (currentKeyCode == 115)) {
+						msg = "关闭窗口!(alt+F4)";
+					}
+					if(currentKeyCode == 91) {
+						msg = "Mac关闭窗口!(commad)";
+					}
+				}
+				currentKeyCode = -1, altkey = false, rightKey = false, pageY = 0, listernType = null;
+				return msg;
+			}
+			window.onbeforeunload = function(event) {
+				event.preventDefault();
+				
+					alert(121)
+				
+			}
+//			$(window).unload(function(event) {
+//				alert("Bye now!");
+//			});
+//			window.onclose(function() {
+//				//alert("saghdkjashbdjk")
+//			});*/
+			//			var builder = new BolbBuilder();
+			//			builder.append("Hello World!");
+			//			var blob = builder.getBlob("text/plain");
+			//			console.log(blob);
+		</script>
+	</body>
+
+</html>

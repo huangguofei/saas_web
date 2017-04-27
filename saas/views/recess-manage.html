@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>放假设置</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+			.recess-manage-center {
+				min-width: 1200px;
+			}
+			
+			.recess-manage-yearsearch {
+				padding: 10px 20px;
+			}
+			
+			.recess-manage-yearsearch select {
+				width: 160px;
+				margin-left: 10px;
+			}
+			
+			.year-statistics {
+				width: 95%;
+				margin: 10px auto;
+				border: 1px solid #D7D7D7;
+				border-radius: 5px;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+			}
+			
+			.year-statistics-tab {
+				width: 100%;
+			}
+			
+			.year-statistics-tab tr,
+			th {
+				text-align: center;
+				border-bottom: 1px solid #D7D7D7;
+				line-height: 30px;
+			}
+			
+			.year-statistics-tab tr:last-child {
+				border-bottom: 0;
+			}
+			
+			.recess-addinfo {
+				margin-left: 20px;
+			}
+			
+			.add-statutory-recess-info {
+				line-height: 200px;
+				text-align: center;
+				font-size: 18px;
+			}
+			
+			.unify-p {
+				margin-top: 10px;
+			}
+			
+			.unify-p span {
+				display: inline-block;
+				width: 120px;
+				text-align: right;
+				vertical-align: top;
+				margin-right: 5px;
+			}
+			
+			.unify-p input[type=text],
+			textarea {
+				width: 438px;
+			}
+			
+			.unify-p input[type=text] {
+				height: 35px;
+				line-height: 35px;
+				display: inline;
+			}
+			
+			.unify-p select {
+				width: 60px;
+			}
+			
+			.recess-date input[type=text] {
+				height: 30px;
+				width: 144px;
+				display: inline;
+			}
+			
+			.recess-sex label {
+				margin-right: 20px;
+			}
+			
+			.recess-time ul li input[type=date] {
+				border: 0;
+				width: 200px;
+			}
+			
+			.recess-time ul {
+				margin-left: 4px;
+				width: 439px;
+				border: 1px solid #D7D7D7;
+			}
+			
+			.recess-time ul li {
+				line-height: 35px;
+				border-bottom: 1px solid #D7D7D7;
+			}
+			
+			.recess-time ul li:last-child {
+				border-bottom: 0;
+			}
+			
+			.recess-time ul li i {
+				font-size: 20px;
+			}
+			
+			.recess-time select {
+				margin-left: 165px;
+				margin-right: -15px;
+			}
+			
+			.recess-time span {
+				display: inline-block;
+			}
+			
+			.recess-time ul li a {
+				margin-left: 10%;
+			}
+			
+			.list-sp-timequantum {
+				margin-left: 20%;
+			}
+			
+			.list-dept-select-temp .item {
+				display: inline-block;
+				padding: 3px 8px;
+				margin-bottom: 5px;
+				border: 1px solid #eee;
+			}
+			
+			.form-control-dept-select .item {
+				display: inline-block;
+				padding: 3px 8px;
+				margin-bottom: 5px;
+				border: 1px solid #eee;
+				width: auto;
+			}
+			
+			.form-control-dept-select {
+				margin-right: 0;
+				height: 42px;
+			}
+			
+			.btn-dept-select {
+				margin-top: 2px;
+				margin-left: 7px;
+			}
+			
+			.unify-p span.asteriskstyle {
+				color: #FF0000;
+				display: inline;
+				margin-right: 0;
+			}
+			
+			.table-p {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				-o-text-overflow: ellipsis;
+				white-space: nowrap;
+				width: 90%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container recess-manage">
+			<div class="content">
+				<div class="remark">
+					<i class="fa fa-list-ol fa-2x"></i><span>*企业放假时间管理</span>
+				</div>
+			</div>
+			<div class="recess-manage-center">
+				<div class="recess-manage-yearsearch">
+					<label>年份：
+						<select onchange="recessTimeQuery()" class="yearsearch">
+							<!--<option value="2016">2016</option>
+							<option value="2015">2015</option>-->
+						</select>
+					</label>
+					<div class="year-statistics">
+						<table class="year-statistics-tab">
+							<tr>
+								<th>年份</th>
+								<th>总放假次数</th>
+								<th>总放假天数</th>
+							</tr>
+							<tr>
+								<td>2016</td>
+								<td>10</td>
+								<td>20</td>
+							</tr>
+						</table>
+					</div>
+
+				</div>
+				<div class="recess-info-tab">
+					<table id="infotab">
+
+					</table>
+					<div id="grid-pager">
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--添加法定节假日弹窗-->
+		<div class="add-statutory-recess hide">
+			<p class="add-statutory-recess-info">确认添加国家法定节假日？</p>
+		</div>
+		<!--添加/编辑法定节假日弹窗-->
+		<div class="add-edit-recess hide">
+			<div class="recess-title unify-p">
+				<span><span class="asteriskstyle">*</span>放假主题：</span>
+				<input type="text" placeholder="请输入放假主题" bind="holiday_rule_title">
+			</div>
+			<div class="recess-reasons unify-p">
+				<span><span class="asteriskstyle">*</span>放假事由：</span>
+				<textarea style="resize:none" class="" bind="holiday_rule_desc"></textarea>
+			</div>
+			<div class="recess-department unify-p">
+				<span><span class="asteriskstyle">*</span>请选择适用部门：</span>
+				<span class="form-control form-control-dept-select" style="width: 345px; margin-right: 0;text-align: left;"></span>
+				<label><a href="javascript:;" class="btn btn-default btn-dept-select"> 选择部门 </a></label>
+			</div>
+			<div class="recess-sex unify-p">
+				<span><span class="asteriskstyle">*</span>选择性别：</span>
+				<label><input type="radio" name="hgf" checked="checked" bind="holiday_rule_sex" value="1">不限</label>
+				<label><input type="radio" name="hgf" bind="holiday_rule_sex" value="3">女性</label>
+				<label><input type="radio" name="hgf" bind="holiday_rule_sex" value="2">男性</label>
+			</div>
+			<div class="recess-date unify-p">
+				<span><span class="asteriskstyle">*</span>请选择放假时间：</span>
+				<!--<input type="date" class="recessfirstdate" bind="holiday_rule_begin_date" onchange="recessfirstDate(this)">-->
+				<input type="text" class="form-control form-control-height-30 date-picker" placeholder="放假时间" bind="holiday_rule_begin_date" nulltip="放假时间" style="width: 120px;">
+				<select name="" bind="holiday_rule_begin_type">
+					<option value="3">全天</option>
+					<option value="1">上午</option>
+					<option value="2">下午</option>
+				</select> 至
+				<!--<input type="date" class="recesslastdate" bind="holiday_rule_end_date" onchange="recessLastDate(this)">-->
+				<input type="text" class="form-control form-control-height-30 date-picker" placeholder="放假时间" bind="holiday_rule_end_date" style="width: 120px;">
+				<select name="" bind="holiday_rule_end_type">
+					<option value="3">全天</option>
+					<option value="1">上午</option>
+					<option value="2">下午</option>
+				</select>
+			</div>
+			<div class="recess-time unify-p">
+				<span class="float-left"><span class="asteriskstyle">*</span>补班时间：</span>
+				<ul class="float-left">
+					<li>
+						<input type="text" class="form-control form-control-height-30 date-picker recesslastdate" placeholder="年/月/日" style="width: 120px;">
+						<select>
+							<option value="3">全天</option>
+							<option value="1">上午</option>
+							<option value="2">下午</option>
+						</select>
+						<a href="javascript:" onclick="addOverTime(this)"><i class="fa fa-plus" aria-hidden="true"></i></a>
+					</li>
+					<!--<li>
+						<span class="list-sp-date">2016-06-07</span>
+						<span class="list-sp-timequantum">全天</span>
+						<a href="javascript:"><i class="fa fa-times" aria-hidden="true"></i></a>
+					</li>-->
+				</ul>
+				<div class="clear">
+				</div>
+			</div>
+		</div>
+		<!--删除弹窗-->
+		<div class="delete-recessinfo hide">
+			<p>确认删除<span class="delete-sp"></span>?</p>
+		</div>
+		<!--表格底部按钮-->
+		<div id="grid-footer-container" class="hide">
+			<!--表格按钮-->
+			<a class="btn btn-sm btn-info recess-addinfo" onclick="addStatutoryRecess()"> 添加法定节假日</a>
+			<a class="btn btn-sm btn-info recess-addinfo" onclick="addEditRecess('add')"> 添加其他放假</a>
+			<a class="btn btn-sm btn-info recess-addinfo" onclick="addEditRecess('edit')"> 编辑</a>
+			<a class="btn btn-sm btn-info recess-addinfo" onclick="dateRecess()"> 删除</a>
+		</div>
+	</body>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript" src="../resources/js/main.min.js"></script>
+	<script type="text/javascript">
+		var grid_selector = "#infotab";
+		var pager_selector = "#grid-pager";
+		var recessManageUrl = BSAPIURL + "/holidays";
+		var infoGrid;
+		$(document).ready(function() {
+
+		});
+		$(function() {
+			//生成今年去年前年三年下拉且默认显示今年
+			var strList=[];
+			var nowYear=$.timeNow().Format("yyyy");
+			for(var i=0;i<3;i++){
+				if(i==0){
+					strList[i]="<option value='"+nowYear+"' select='select'>"+nowYear+"</option>";
+				}else{
+					strList[i]="<option value='"+(nowYear-i)+"'>"+(nowYear-i)+"</option>";
+				}
+				$(".yearsearch").append(strList[i]);
+			}
+			dataLoad();
+			//预加载今年放假信息
+			recessTimeQuery();
+		});
+		//放假统计数据加载
+		function recessTimeQuery() {
+			var timeYear = $(".yearsearch option:selected").val();
+			var recessManageStaticsUrl = BSAPIURL + "/holidays/statics/"+timeYear;
+			$.ajaxGet(recessManageStaticsUrl, function(response) {
+				if(response.code == 0) {
+					var dataList=response.data;
+					$(".year-statistics-tab tr td").eq(0).html(dataList.year);
+					$(".year-statistics-tab tr td").eq(1).html(dataList.num);
+					$(".year-statistics-tab tr td").eq(2).html(dataList.day);
+				} else {
+					$.showErrorGritter(actionText + "失败：" + response.msg);
+				}
+			});
+		}
+		//数据加载
+		function dataLoad() {
+			var gridHeight = $(window).height() - $(".content").outerHeight(true) - $(".recess-manage-yearsearch").outerHeight(true) - 102;
+			//alert($(".remark").height());
+			var colNames = ['', '', '放假主题', '放假事由', '适用范围', '放假时间', '补班时间', '更新日期'];
+			var colModel = [{
+				name: 'id',
+				index: 'id',
+				hidden: true,
+				formatter: function(cellvalue, options, rowObject) {
+					return rowObject.holiday_rule_id;
+				}
+			}, { //相关数据
+				name: '__data',
+				index: '__data',
+				hidden: true,
+				formatter: function(cellvalue, options, rowObject) {
+					try {
+						return JSON.stringify(rowObject);
+					} catch(e) {
+						return '';
+					}
+				}
+			}, { //放假主题
+				name: '__holiday_rule_title',
+				index: '__holiday_rule_title',
+				hidden: false,
+				formatter: function(cellvalue, options, rowObject) {
+					try {
+						return "<a href='javascript:;' onclick=\"addEditRecess('edit','" + rowObject.holiday_rule_id + "');\" role-auth=\"saas/files/0|put\" role-auth-tip=\"你无权限修改放假数据。\">" + rowObject.holiday_rule_title + "</a>";
+						//return "<a href='javascript:;' onclick=\"addEditRecess('edit','" + rowObject.holiday_rule_id + "')'>" + rowObject.holiday_rule_title + "</a>";
+					} catch(e) {
+						return '';
+					}
+				}
+			}, { //放假事由
+				name: 'holiday_rule_desc',
+				index: 'holiday_rule_desc',
+				hidden: false,
+				formatter: function(cellvalue, options, rowObject) {
+					return "<p class='table-p'>" + rowObject.holiday_rule_desc + "</p>"
+				}
+			}, { //适用范围
+				name: 'holiday_rule_departments',
+				index: 'holiday_rule_departments',
+				hidden: false,
+				formatter: function(cellvalue, options, rowObject) {
+					var departmentsListStr = "";
+					for(var i in rowObject.holiday_rule_departments) {
+						departmentsListStr += rowObject.holiday_rule_departments[i].depa_name + "  ";
+					}
+					return departmentsListStr;
+				}
+			}, { //放假时间
+				name: 'information_content_html',
+				index: 'information_content_html',
+				hidden: false,
+				formatter: function(cellvalue, options, rowObject) {
+					return rowObject.holiday_rule_begin_date + "(" + (rowObject.holiday_rule_begin_type == 1 ? "上午" : ((rowObject.holiday_rule_begin_type == 2) ? "下午" : '全天')) + ")" + "至" +
+						rowObject.holiday_rule_end_date + "(" + (rowObject.holiday_rule_end_type == 1 ? "上午" : ((rowObject.holiday_rule_end_type == 2) ? "下午" : '全天')) + ")，共" + $.getDaysOfTimeDifference(rowObject.holiday_rule_end_date, rowObject.holiday_rule_begin_date) + "天";
+				}
+			}, { //补班时间
+				name: 'holiday_rule_fill',
+				index: 'holiday_rule_fill',
+				sortable: false,
+				formatter: function(cellvalue, options, rowObject) {
+					var ruleFillListStr = "";
+					for(var i in rowObject.holiday_rule_fill) {
+						ruleFillListStr += rowObject.holiday_rule_fill[i].date + "(" + (rowObject.holiday_rule_fill[i].type == 1 ? "上午" : ((rowObject.holiday_rule_begin_type == 2) ? "下午" : '全天')) + ")  ";
+					}
+					return ruleFillListStr;
+				}
+
+			}, { //更新日期
+				name: 'update_time',
+				index: 'update_time',
+				sortable: false,
+			}];
+			infoGrid = $(grid_selector).initJqGrid({
+				grid_selector: grid_selector,
+				pager: pager_selector,
+				footerBtnContainer: "#grid-footer-container",
+				url: recessManageUrl,
+				colNames: colNames,
+				colModel: colModel,
+				height: gridHeight,
+				showPager: false
+			});
+		}
+		//添加法定节假日
+		function addStatutoryRecess() {
+			var modalId = $.modal().show("提示", ".add-statutory-recess",
+				function(modal) {
+					alert("保存成攻");
+					$("#" + modalId).modal('hide');
+				});
+
+		}
+		//添加/编辑其他节假日
+		function addEditRecess(txt, id) {
+
+			if(txt == "edit" && (!$(infoGrid).isSelectedRowForjqGrid() && !id)) {
+				$.showErrorGritter("请先选择要编辑的放假信息!");
+				return false;
+			}
+			var actionText = (txt == "add" ? "添加其他放假" : "编辑");
+			var holidayId;
+			var modalId = $.modal().show(actionText, ".add-edit-recess",
+				function(modal) {
+					var addUrl = "";
+					var infoData = infoController.getJSON();
+					//获取部门选择
+					var selectDeptIds = [];
+					$(formContainer + " .form-control-dept-select span[data-dept-id]").each(function() {
+						selectDeptIds.push($(this).data("dept-id"));
+					});
+					if(selectDeptIds.length == 0) {
+						$.showErrorGritter("请先选择放假适用的部门。");
+						return false;
+					}
+					infoData.holiday_rule_departments = selectDeptIds;
+					//获取补假时间
+					var holiday_rule_fill = {};
+					$("#" + modalId + " .recess-time li:first").siblings().each(function(index) {
+						var tim = $(this).find("span:first").text();
+						var timty = $(this).find("span:last").attr("data");
+						holiday_rule_fill[index] = {
+							"date": tim,
+							"type": timty
+						}
+					});
+					infoData.holiday_rule_fill = holiday_rule_fill;
+
+					//alert(JSON.stringify(infoData));
+					if(txt == "add") {
+						//添加
+						addUrl = BSAPIURL + "/holidays";
+						$.ajaxPost(addUrl, infoData, function(response) {
+							if(response.code == 0) {
+								$("#" + modalId).modal('hide');
+								infoGrid.reloadGrid();
+							} else {
+								$.showErrorGritter(actionText + "失败：" + response.msg);
+							}
+						});
+					} else {
+						//编辑
+						addUrl = BSAPIURL + "/holidays/" + holidayId;
+						$.ajaxPut(addUrl, infoData, function(response) {
+							if(response.code == 0) {
+								$("#" + modalId).modal('hide');
+								infoGrid.reloadGrid();
+							} else {
+								$.showErrorGritter(actionText + "失败：" + response.msg);
+							}
+						});
+					}
+
+				});
+
+			var formContainer = "#" + modalId + " .modal-body";
+			var selectDeptDom = $(formContainer + " .form-control-dept-select");
+			var rowData = {};
+			var infoController = new Controller(formContainer);
+			var tempHtml = "<span class=\"item\" data-dept-id=\"{ID}\">{N} <i class=\"fa fa-times icon-close\" onclick=\"$(this).parent().remove();\"></i></span> ";
+
+			//日期选择
+			$(formContainer + " .date-picker").datepicker({
+				autoclose: true,
+				format: "yyyy-mm-dd"
+			});
+			if(txt == "edit") {
+				var rowIndex = $(grid_selector).getJqGridRowIndexByField("id", id) || $(grid_selector).jqGrid('getGridParam', 'selrow');
+				if(!rowIndex) {
+					return false;
+				}
+				//rowData = $(grid_selector).jqGrid('getRowData', rowIndex);
+				rowData = JSON.parse(unescape($(grid_selector).jqGrid('getRowData', rowIndex).__data));
+				infoController.set(rowData);
+				//适用部门
+				for(var i in rowData.holiday_rule_departments) {
+					var deptData = rowData.holiday_rule_departments[i];
+					selectDeptDom.append(tempHtml.replace("{N}", deptData.depa_name).replace("{ID}", deptData.depa_tree_code));
+				}
+				//补假
+				for(var i in rowData.holiday_rule_fill) {
+					//appentHolidayFillItem(rowData.holiday_rule_fill[i].date, rowData.holiday_rule_fill[i].type);
+					var str = "<li>";
+					str += "<span class='list-sp-date'>" + rowData.holiday_rule_fill[i].date + "</span>";
+					str += "<span class='list-sp-timequantum' data='" + rowData.holiday_rule_fill[i].type + "'>" + timeBucket(rowData.holiday_rule_fill[i].type) + "</span>";
+					str += "<a href='javascript:'onclick='deleteOverTime(this)'><i class='fa fa-times' aria-hidden='true'></i></a>";
+					str += "</li>";
+					$("#" + modalId + " .recess-time li:first").after(str);
+				}
+				holidayId = rowData.holiday_rule_id;
+			}
+
+			//默认显示今日
+			var dateString = getDate();
+			$("#" + modalId + " .recessfirstdate").val(dateString);
+			//---------------------------------------------------------------------------------------------------------
+			$("#" + modalId + " .btn-dept-select").click(function() {
+				$.showDeptSelectPop({
+					subTitle: "选择适用部门：",
+					selectedDeptIds: [],
+					multiple: true,
+					okCallback: function(selectDepts) {
+						for(var i in selectDepts) {
+							var deptData = selectDepts[i];
+							if(selectDeptDom.find("span[data-dept-id='" + deptData.dept_id + "']").length > 0) {
+								continue;
+							}
+							selectDeptDom.append(tempHtml.replace("{N}", deptData.dept_name).replace("{ID}", deptData.dept_id));
+						}
+					}
+				});
+
+			});
+		}
+		//---------------------------------------------------------------------------------------------------------
+
+		//开始时间不能在结束时间之后
+		function recessfirstDate(obj) {
+			var lastDate = $(obj).nextAll(".recesslastdate").val();
+			if(lastDate !== "") {
+				if($(obj).val() > lastDate) {
+					$(obj).val("");
+					$.showErrorGritter("日期不能在" + lastDate + "之后!");
+				}
+			};
+		}
+		//日期选择后显示上下午下拉(失效)
+		function recessLastDate(obj) {
+			if($(obj).prev().is('select')) {
+				var starTime = $(obj).prevAll(".recessfirstdate").val();
+				if($(obj).val() <= starTime) {
+					$.showErrorGritter("所选日期不能不能在" + starTime + "之前！");
+					$(obj).val("");
+					$(obj).next("select").attr("disabled", "disabled");
+					return false;
+				}
+			}
+
+		}
+		//添加补办时间
+		function addOverTime(obj) {
+			var isAddInfo = true;
+			var dateStr = $(obj).prevAll(".recesslastdate").val();
+			var timeQuantum = $(obj).prevAll("select").find("option:selected").text();
+			if(dateStr == "" || timeQuantum == "") {
+				$.showErrorGritter("请先完善当前信息！");
+				return false;
+			}
+
+			$(obj).parent().nextAll("li").each(function() {
+				if($(this).children(".list-sp-date").text() == dateStr) {
+					if($(this).children(".list-sp-timequantum").text() == "全天") {
+						isAddInfo = false;
+						$.showErrorGritter("不能添加重复数据！");
+					} else if($(this).children(".list-sp-timequantum").text() == timeQuantum) {
+						isAddInfo = false;
+						$.showErrorGritter("不能添加重复数据！");
+					} else if(timeQuantum == "全天") {
+						isAddInfo = false;
+						$.showErrorGritter("不能添加重复数据！");
+					}
+				}
+			});
+			//全天包括上下午！
+			if(isAddInfo) {
+				var str = "<li>";
+				str += "<span class='list-sp-date'>" + dateStr + "</span>";
+				str += "<span class='list-sp-timequantum' data='" + timeBucket(timeQuantum) + "'>" + timeQuantum + "</span>";
+				str += "<a href='javascript:'onclick='deleteOverTime(this)'><i class='fa fa-times' aria-hidden='true'></i></a>";
+				str += "</li>";
+				$(obj).parent().after(str);
+			}
+		}
+		//删除补班时间
+		function deleteOverTime(obj) {
+			$(obj).parent().remove();
+		}
+		//删除放假
+		function dateRecess(id) {
+			if((!$(infoGrid).isSelectedRowForjqGrid() && !id)) {
+				$.showErrorGritter("请先选择要删除的放假");
+				return false;
+			}
+			var modalId = $.modal().show("提示", ".delete-recessinfo",
+				function(modal) {
+					var deleteUrl = BSAPIURL + "/holidays";
+					var selRowsIndex = $(grid_selector).jqGrid('getGridParam', 'selarrrow');
+					if(selRowsIndex.length > 0) {
+						var selectRowIds = $(grid_selector).getSelectRowIdsForjqGrid("id");
+						$.ajaxDelete(deleteUrl, {
+								holiday_rule_ids: selectRowIds
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$("#" + modalId).modal('hide');
+									$(grid_selector).reloadGrid();
+									$.modal().alert("删除成功");
+									//refresh data
+
+								} else {
+									$.showErrorGritter("删除失败：" + response.msg);
+								}
+							});
+					}
+
+				});
+
+			//$("#" + modalId + " .delete-sp").html(rowData.holiday_rule_title);
+		}
+		//获取当前日期
+		function getDate() {
+			var date = new Date();
+			var dateString = date.getFullYear();
+			if((date.getMonth() + 1) < 10) {
+				dateString += "-0" + (date.getMonth() + 1);
+			} else {
+				dateString += "-" + (date.getMonth() + 1);
+			}
+			if(date.getDate() < 10) {
+				dateString += "-0" + date.getDate();
+			} else {
+				dateString += "-" + date.getDate();
+			}
+			return dateString;
+		}
+		//返回时间段
+		function timeBucket(txt) {
+			switch(txt) {
+				case "1":
+					return "上午";
+					break;
+				case "2":
+					return "下午";
+					break;
+				case "3":
+					return "全天";
+					break;
+				case "上午":
+					return "1";
+					break;
+				case "下午":
+					return "2";
+					break;
+				case "全天":
+					return "3";
+			}
+		}
+		//返回性别
+		function backSex(txt) {
+			switch(txt) {
+				case "1":
+					return "不限";
+					break;
+				case "2":
+					return "男性";
+					break;
+				case "3":
+					return "女性";
+					break;
+				case "不限":
+					return "1";
+					break;
+				case "男性":
+					return "2";
+					break;
+				case "女性":
+					return "3";
+			}
+		}
+	</script>
+
+</html>

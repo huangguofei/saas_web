@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>配置</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			body,
+			.page-container {
+				height: 100%;
+				padding-top: 0;
+			}
+			
+			.content {
+				height: 94%;
+				padding: 10px 15px 0 0;
+			}
+			
+			input[type="text"] {
+				border: 1px solid #eee;
+				border-radius: 0!important;
+			}
+			
+			.panel-sel {
+				/*margin: 10px 15px;*/
+				/*margin-top: 10px;*/
+				border: 1px solid #e3e3e3;
+				line-height: 38px;
+				background-color: #f8f8f8;
+				border-bottom: 2px solid #85beeb;
+				border-left: 0;
+			}
+			
+			.panel-item,
+			.panel-item:hover {
+				display: inline-block;
+				color: #666;
+				border-right: 1px solid #e3e3e3;
+				width: 78px;
+				text-align: center;
+				text-decoration: none;
+			}
+			
+			.panel-item:first-child {
+				border-left: 1px solid #e3e3e3;
+			}
+			
+			.panel-item.active,
+			.panel-item.active:hover {
+				background-color: #85beeb;
+				color: #fff;
+				border-left: 0;
+			}
+			
+			.panel-container {
+				/*margin: 0 15px;*/
+				/*padding: 15px 0;*/
+				border: 1px solid #ccc;
+				border-left: 0;
+				/*border-radius: 10px;*/
+				border-top: 0;
+				/*max-height: 94%;*/
+				overflow-y: hidden;
+			}
+			
+			.panel-container>div {
+				/*max-height: 94%;*/
+				position: relative;
+				padding-bottom: 90px;
+			}
+			
+			.btns-container {
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				line-height: 65px;
+				border: 1px solid #e3e3e3;
+				width: 100%;
+				background-color: #f8f8f8;
+				text-align: right;
+			}
+			
+			.btns-container a {
+				display: inline-block;
+				margin-right: 1%;
+			}
+			
+			.panel-detail-body {
+				/*padding-right: 100px;*/
+				/*max-height: 94%;*/
+				overflow-y: auto;
+			}
+			
+			table {
+				width: 100%;
+				border-collapse: collapse;
+			}
+			
+			.panel-detail-head table thead td {
+				border: none;
+				border-right: 1px solid #e3e3e3;
+			}
+			
+			.panel-detail-body table td {
+				border: 1px solid #e3e3e3;
+			}
+			/*.border-bottom-td {
+				border-bottom: 1px solid #ccc;
+			}*/
+			
+			.panel-detail-body tr td,
+			.panel-detail-head tr td {
+				padding: 10px;
+			}
+			
+			.panel-detail-body tr.non-rowspaned td:first-child,
+			.panel-detail-head tr td:first-child {
+				width: 10%;
+			}
+			
+			.panel-detail-body tr.non-rowspaned td:nth-child(2),
+			.panel-detail-head tr td:nth-child(2) {
+				width: 20%;
+			}
+			
+			.panel-detail-body tr.non-rowspaned td:nth-child(3),
+			.panel-detail-head tr td:nth-child(3) {
+				width: 30%;
+			}
+			
+			.panel-detail-body tr.non-rowspaned td:nth-child(4),
+			.panel-detail-head tr td:nth-child(4) {
+				width: 20%;
+			}
+			
+			.panel-detail-body tr.non-rowspaned td:nth-child(5),
+			.panel-detail-head tr td:nth-child(5) {
+				width: 20%;
+			}
+			
+			.panel-detail-body tr.rowspaned td:nth-child(1) {
+				width: 20%;
+			}
+			
+			.panel-detail-body tr.rowspaned td:nth-child(2) {
+				width: 30%;
+			}
+			
+			.panel-detail-body tr.rowspaned td:nth-child(3) {
+				width: 20%;
+			}
+			
+			.panel-detail-body tr.rowspaned td:nth-child(4) {
+				width: 20%;
+			}
+			
+			.set-birthday-alert-container {
+				display: inline-block;
+				position: relative;
+			}
+			
+			.can-change label {
+				display: inline-block;
+				margin-right: 20px;
+			}
+			
+			.sel-birthday-alert-type {
+				position: absolute;
+				display: none;
+				top: 30px;
+				left: 0;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				background-color: #fff;
+				padding: 10px;
+				/*text-align: center;*/
+			}
+			
+			.sel-birthday-alert-type label {
+				display: block;
+				width: 90%;
+			}
+			
+			.width-fixed {
+				display: inline-block;
+				/*width: 50px;*/
+			}
+			
+			.argu-set-module input {
+				outline: none;
+				border-radius: 5px;
+			}
+			
+			.use-status-1 {
+				color: #21b5a9;
+			}
+			
+			.use-status-0 {
+				color: #ca192b;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container">
+			<div class="remark">
+				<i class="fa fa-list-ol fa-2x"></i>
+				<span>*企业端功能模块系统配置</span>
+			</div>
+			<div class="content">
+				<div class="panel-sel at">
+					<a href="javascript:;" index="0" class="panel-item lt active">审批设置</a><a href="javascript:;" index="2" class="panel-item lt">参数设置</a>
+				</div>
+				<div class="panel-container">
+					<!--审批设置-->
+					<div class="module-set-panel" index="0">
+						<div class="panel-detail-head">
+							<table>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+						<div class="panel-detail-body">
+							<table>
+								<thead>
+									<tr>
+										<td>模块</td>
+										<td>功能</td>
+										<td>说明</td>
+										<td>是否允许自定义审批</td>
+										<td>审批状态</td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="non-rowspaned">
+										<td class="border-bottom-td" rowspan="1">公告</td>
+										<td class="border-bottom-td">公告发布</td>
+										<td class="border-bottom-td">发布公告时需要审批</td>
+										<td class="border-bottom-td"> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td class="border-bottom-td"> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="non-rowspaned">
+										<td class="border-bottom-td" rowspan="2">文档</td>
+										<td>文档共享</td>
+										<td>分享文档给其他部门及员工需要审批</td>
+										<td> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td class="border-bottom-td">文档下载</td>
+										<td class="border-bottom-td">下载共享的文档需要审批</td>
+										<td class="border-bottom-td"> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td class="border-bottom-td"> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="non-rowspaned">
+										<td class="border-bottom-td" rowspan="1">资讯</td>
+										<td class="border-bottom-td">资讯发布</td>
+										<td class="border-bottom-td">发布资讯时需要审批</td>
+										<td class="border-bottom-td"> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td class="border-bottom-td"> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="non-rowspaned">
+										<td class="border-bottom-td" rowspan="9">CRM</td>
+										<td>更改客户单位状态</td>
+										<td>更改客户单位状态时需要审批</td>
+										<td> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td>更改科室/部门状态</td>
+										<td>更改科室/部门状态时需要审批</td>
+										<td> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td>更改联系人状态</td>
+										<td>更改客户联系人状态时需要审批</td>
+										<td> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td>移交客户</td>
+										<td>移交客户时需要审批</td>
+										<td> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td>共享客户</td>
+										<td>共享客户时需要审批</td>
+										<td> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td>取消共享客户</td>
+										<td>取消客户共享时需要审批</td>
+										<td> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td>修改共享客户</td>
+										<td>修改客户共享时需要审批</td>
+										<td> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td>移客户至公海</td>
+										<td>移客户至公海时需要审批</td>
+										<td> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td class="border-bottom-td">公海客户申领</td>
+										<td class="border-bottom-td">公海客户申领时需要审批</td>
+										<td class="border-bottom-td"> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td class="border-bottom-td"> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="non-rowspaned">
+										<td class="border-bottom-td" rowspan="3">考勤</td>
+										<td>申请加班</td>
+										<td>发起加班申请时需要审批</td>
+										<td> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td>申请请假</td>
+										<td>发起请假申请时需要审批</td>
+										<td> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td class="border-bottom-td">申请销假</td>
+										<td class="border-bottom-td">发起销假申请时需要审批</td>
+										<td class="border-bottom-td"> <span class="static">不允许员工发起自定义审批</span> <label class="can-change hide"><input type="checkbox" value="1"><span>允许员工发起自定义审批</span></label> </td>
+										<td class="border-bottom-td"> <span class="static"></span>
+											<div class="can-change hide">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="btns-container">
+							<a href="javascript:;" class="btn btn-danger def-btn-danger btn-edit" onclick="letPanelBodyCanEdit(this)"><img src="../resources/images/btn-edit.png" alt="" />编辑</a>
+							<a href="javascript:;" class="btn btn-info def-btn-info btn-submit hide" onclick="saveChange(this)"><img src="../resources/images/btn-save.png" alt="" />保存</a>
+							<a href="javascript:;" class="btn btn-danger def-btn-danger btn-cancel hide" onclick="cancelChange(this)"><img src="../resources/images/btn-cancel.png" alt="" />取消</a>
+						</div>
+					</div>
+					<!--参数设置-->
+					<div class="module-set-panel argu-set-module hide" index="2">
+						<!--<div class="panel-detail-head">
+							<table>
+								<tbody>
+									
+								</tbody>
+							</table>
+						</div>-->
+						<div class="panel-detail-body">
+							<table>
+								<thead>
+									<tr>
+										<td>模块</td>
+										<td>功能</td>
+										<td>说明</td>
+										<td>参数</td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="non-rowspaned">
+										<td class="border-bottom-td">考勤签到</td>
+										<td class="border-bottom-td">考勤时关联的客户范围</td>
+										<td class="border-bottom-td">员工考勤签到时关联附近客户的有效范围</td>
+										<td class="border-bottom-td">
+											<span class="static width-fixed"></span>
+											<input class="can-change  min-val" type="text" data-min-val="200" />
+											<span>米</span>
+										</td>
+									</tr>
+									<tr class="non-rowspaned">
+										<td class="border-bottom-td" rowspan="2">签到排名</td>
+										<td>正数名次显示数</td>
+										<td>员工签到排名正数默认显示名次数</td>
+										<td>
+											<span class="static width-fixed"></span>
+											<input type="text" maxlength="3" class="can-change min-val" data-min-val="1" data-max-val="100" onKeyUp="value=value.replace(/\D/g,'')" onafterpaste="value=value.replace(/\D/g,'')"/>
+											<span>名</span>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td class="border-bottom-td">倒数名次显示数</td>
+										<td class="border-bottom-td">员工签到排名倒数默认显示名次数</td>
+										<td class="border-bottom-td">
+											<span class="static width-fixed"></span>
+											<input type="text" maxlength="3" class="can-change min-val" data-min-val="1" data-max-val="100" onKeyUp="value=value.replace(/\D/g,'')" onafterpaste="value=value.replace(/\D/g,'')"/>
+											<span>名</span>
+										</td>
+									</tr>
+									<tr class="non-rowspaned">
+										<td class="border-bottom-td">瞄一瞄</td>
+										<td class="border-bottom-td">获取员工位置时间间隔</td>
+										<td class="border-bottom-td">员工工作时间内获取其当前位置的时间间隔</td>
+										<td class="border-bottom-td">
+											<span class="static width-fixed"></span>
+											<input class="can-change  min-val" type="text" data-min-val="1" />
+											<span>分钟</span>
+										</td>
+									</tr>
+									<tr class="non-rowspaned">
+										<td class="border-bottom-td" rowspan="2">CRM</td>
+										<td>客户生日提醒</td>
+										<td>客户生日提醒时间设置</td>
+										<td>
+											<span class="static width-fixed"></span>
+											<div class="set-birthday-alert-container can-change">
+												<input type="text" />
+												<div class="sel-birthday-alert-type">
+													<label>
+														<input type="checkbox" value="0"/>
+														<span>当天</span>
+													</label>
+													<label>
+														<input type="checkbox" value="1"/>
+														<span>前一天</span>
+													</label>
+													<label>
+														<input type="checkbox" value="7"/>
+														<span>提前一周</span>
+													</label>
+													<label>
+														<input type="checkbox" value="30"/>
+														<span>提前一个月</span>
+													</label>
+												</div>
+											</div>
+											<span>提醒</span>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td class="border-bottom-td">拜访客户定位误差</td>
+										<td class="border-bottom-td">拜访客户定位时允许的最大误差</td>
+										<td class="border-bottom-td">
+											<span class="static width-fixed"></span>
+											<input type="text" class="can-change min-val" data-min-val="200" />
+											<span>米</span>
+										</td>
+									</tr>
+									<tr class="non-rowspaned">
+										<td class="border-bottom-td" rowspan="2">员工未登录提醒</td>
+										<td>提醒上级</td>
+										<td>员工在工作日未登录系统需在次日提醒其上级</td>
+										<td class="border-bottom-td"> <span class="static"></span>
+											<div class="can-change hide" data-not="1">
+												<label><input type="radio" name="use-type" value="0" />停用</label>
+												<label><input type="radio" name="use-type" value="1" />启用</label>
+											</div>
+										</td>
+									</tr>
+									<tr class="rowspaned">
+										<td class="border-bottom-td">提醒范围</td>
+										<td class="border-bottom-td">员工在工作日未登录系统次日提醒的范围</td>
+										<td class="border-bottom-td"> <span class="static"></span>
+											<select class="can-change hide" style="width: 130px;" data-not="1">
+												<option value="1">直接上级</option>
+												<option value="2">所有上级</option>
+											</select>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="btns-container">
+							<a href="javascript:;" class="btn btn-danger def-btn-danger btn-edit" onclick="letPanelBodyCanEdit(this)"><img src="../resources/images/btn-edit.png" alt="" />编辑</a>
+							<a href="javascript:;" class="btn btn-info def-btn-info btn-submit hide" onclick="saveChange(this)"><img src="../resources/images/btn-save.png" alt="" />保存</a>
+							<a href="javascript:;" class="btn btn-danger def-btn-danger btn-cancel hide" onclick="cancelChange(this)"><img src="../resources/images/btn-cancel.png" alt="" />取消</a>
+							<!--<a href="javascript:;" class="btn btn-sm btn-default btn-edit" onclick="letPanelBodyCanEdit(this);">编辑</a>
+							<a href="javascript:;" class="btn btn-sm btn-default btn-submit hide" onclick="saveChange(this);">保存</a>
+							<a href="javascript:;" class="btn btn-sm btn-default btn-cancel hide" onclick="cancelChange(this);">取消</a>-->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			/*
+									 
+									 * 审批配置
+									 * 
+									 * 
+									 * */
+			//模块ID
+			var MODULE = [{
+				module_id: 1, //审批配置模块
+				sub_module_group_item_ids: [
+					1, //发布公告
+					11, //发布共享
+					12, //文档下载
+					21, //发布资讯
+					31, //更改客户单位状态 
+					32, //更改科室状态 
+					33, //更改联系人状态 
+					34, //客户移交
+					35, //客户共享
+					37, //客户取消共享 
+					36, //客户修改共享
+					38, //移入公海 
+					39, //公海客户申领
+					51, //申请加班 
+					52, //请假 
+					53 //销假 
+				]
+			}, {
+				module_id: 5, //参数配置模块
+				sub_module_group_item_ids: [
+					940, //考勤签到
+					921, //正数名次显示数
+					922, //倒数名次显示数
+					930, //瞄一瞄
+					900, //客户生日提醒 
+					910, //客户拜访定位误差
+					950, //提醒上级
+					951  //提醒范围
+				]
+			}];
+			var ALL_MODULE = {
+				apv_module: { //审批
+					apv_module_id: 1,
+					apv_module_item_disabled: 0,
+					apv_module_item_used: 1,
+					apv_module_item_custormize_disabled: 0,
+					apv_module_item_custormize_allow: 1
+				},
+				argu_module: {
+					argu_module_id: 5,
+					argu_module_birthday: 0,
+					argu_module_location_min: 300,
+					argu_module_birthday_alert: 900, //客户生日提醒 
+					argu_module_location_error: 910, //客户拜访定位误差
+					argu_module_sort_positive: 921, //正数名次显示数
+					argu_module_sort_negative: 922, //倒数名次显示数
+					argu_module_alert_leader: 950, //提醒上级
+					argu_module_alert_leader_area:951  //提醒范围
+				}
+
+			}
+			var BIRTHDAY_ALERT_TYPE = {
+				the_same_day: "0", //当天
+				prev_day: "1", //前一天
+				prev_week: "7", //前一周
+				prev_month: "30" //前一个月
+			};
+			var isCorrect=true;//数据格式是否正确
+			$(".panel-container>div").css("height", $(window).height() - 75 + "px");
+			$(".panel-container>div .panel-detail-body").css("height", $(window).height() - $(".panel-detail-head").outerHeight(true) - 150 + "px").css("overflow-y", "auto");
+			//			$(".panel-container>div .panel-detail-body").css("height",$(window).height() - $(".panel-detail-head").outerHeight(true) - 70+"px").css("overflow-y","auto");
+			var configData;
+			for(var i in MODULE) {
+				$(".panel-container .module-set-panel:eq('" + i + "')").addClass("module-" + MODULE[i].module_id).attr("index", MODULE[i].module_id);
+				$(".panel-sel .panel-item:eq('" + i + "')").addClass("module-" + MODULE[i].module_id).attr("index", MODULE[i].module_id);
+				$(".panel-container .module-set-panel:eq('" + i + "') .btn").attr("index", MODULE[i].module_id);
+				for(var n in MODULE[i].sub_module_group_item_ids) {
+					$(".panel-container .module-set-panel:eq('" + i + "') .panel-detail-body tbody tr:eq('" + n + "') input").attr("name", "use-type-" + n);
+					$(".panel-container .module-set-panel:eq('" + i + "') .panel-detail-body tbody tr:eq('" + n + "')").addClass("module-item-" + MODULE[i].sub_module_group_item_ids[n]).data("config_type", MODULE[i].sub_module_group_item_ids[n]).attr("index", MODULE[i].sub_module_group_item_ids[n]);
+				}
+			}
+			$(".panel-item").click(function(e) {
+				var index = $(this).attr("index");
+				$(".panel-item").removeClass("active");
+				$(this).addClass("active");
+				$(".module-set-panel").addClass("hide");
+				$(".module-set-panel[index='" + index + "']").removeClass("hide");
+				cancelChange("", index);
+				onConfigDataGeted(index, configData[index]);
+			});
+			$("input[data-min-val]").blur(function() {
+				var inputVal = parseInt($(this).val());
+				if(inputVal < parseInt($(this).attr("data-min-val")) || isNaN(inputVal)) {
+					$.showErrorGritter("当前值必须为大于" + $(this).attr("data-min-val") + "的数字，请重新输入");
+					$(this).focus();
+					isCorrect = false;
+					return false;
+				} else {
+					isCorrect = true;
+				}
+			});
+			$("input[data-max-val]").blur(function() {
+				var inputVal = parseInt($(this).val());
+				if(inputVal > parseInt($(this).attr("data-max-val")) || isNaN(inputVal)) {
+					$.showErrorGritter("当前值必须为小于" + $(this).attr("data-max-val") + "的数字，请重新输入");
+					$(this).focus();
+					isCorrect = false;
+					return false;
+				} else {
+					isCorrect = true;
+				}
+			});
+			//让某一个panel处于可编辑状态
+			function letPanelBodyCanEdit(obj) {
+				//按钮切换
+				var index = $(obj).attr("index");
+				$(".module-set-panel[index='" + index + "'] .btn-edit").addClass("hide");
+				$(".module-set-panel[index='" + index + "'] .btn-submit").removeClass("hide");
+				$(".module-set-panel[index='" + index + "'] .btn-cancel").removeClass("hide");
+				//面板状态切换
+				$(".module-set-panel[index='" + index + "'] td .static").addClass("hide");
+				$(".module-set-panel[index='" + index + "'] td .can-change").removeClass("hide");
+				$(".module-set-panel[index='" + index + "'] td .can-change").each(function(){
+					if($(this).data("not")){
+						return true;
+					}
+					$(this).val($(this).prev().text());
+					if($(this).hasClass("set-birthday-alert-container")){
+						console.log($(this).prev().data("code"))
+						letSeledBirthdayAlertChecked($(this).children(".sel-birthday-alert-type"),$(this).prev().data("code"));
+						$(this).children("input").val(getBirthdayAlertTypeCn($(this).prev().data("code")))
+						$(this).children("input").code=$(this).prev().data("code");
+					}
+				});
+				//$(".module-set-panel[index='" + index + "'] td .can-change").val($(".module-set-panel[index='" + index + "'] td .can-change").prev().text())
+			}
+			//保存
+			function saveChange(obj) {
+				var index = $(obj).attr("index");
+				if(index == ALL_MODULE.apv_module.apv_module_id) {
+					saveApvSetData(index);
+				} else if(index == ALL_MODULE.argu_module.argu_module_id) {
+					saveArguSetData(index);
+				}
+			}
+			//保存审批设置数据
+			function saveApvSetData(index) {
+				var configArr = [];
+				$(".module-set-panel[index='" + index + "'] .panel-detail-body tbody tr").each(function() {
+					var oneConfigData = {};
+					oneConfigData.config_id = $(this).data("config_id") || "";
+					oneConfigData.config_type = $(this).data("config_type") || "";
+					if($(this).hasClass("non-rowspaned")) {
+						oneConfigData.config_value = $(this).find("td:eq(4) input:checked").val() || 0;
+						oneConfigData.config_value1 = $(this).find("td:eq(3) input:checked").val() || 0;
+					} else {
+						oneConfigData.config_value = $(this).find("td:eq(3) input:checked").val() || 0;
+						oneConfigData.config_value1 = $(this).find("td:eq(2) input:checked").val() || 0;
+					}
+
+					configArr.push(oneConfigData);
+				});
+				$.ajaxPost(BSAPIURL + "/config", { datas: configArr }, function(resp) {
+					if(resp.code == 0) {
+						$.showSuccessGritter("保存成功！");
+						//按钮切换
+						$(".module-set-panel[index='" + index + "'] .btn-edit").removeClass("hide");
+						$(".module-set-panel[index='" + index + "'] .btn-submit").addClass("hide");
+						$(".module-set-panel[index='" + index + "'] .btn-cancel").addClass("hide");
+						//面板状态切换
+						$(".module-set-panel[index='" + index + "'] td .static").removeClass("hide");
+						$(".module-set-panel[index='" + index + "'] td .can-change").addClass("hide");
+						getConfigData(index);
+					} else {
+						$.showErrorGritter("保存失败：" + resp.msg);
+					}
+				});
+			}
+			//取消
+			function cancelChange(obj, index) {
+				if(obj) var index = $(obj).attr("index");
+				//按钮切换
+				$(".module-set-panel[index='" + index + "'] .btn-edit").removeClass("hide");
+				$(".module-set-panel[index='" + index + "'] .btn-submit").addClass("hide");
+				$(".module-set-panel[index='" + index + "'] .btn-cancel").addClass("hide");
+				//面板状态切换
+				$(".module-set-panel[index='" + index + "'] td .static").removeClass("hide");
+				$(".module-set-panel[index='" + index + "'] td .can-change").addClass("hide");
+			}
+			//获取数据
+			function getConfigData(activeModuleId) {
+				$.ajaxGet(BSAPIURL + "/config", function(resp) {
+					if(resp.code != 0) {
+						$.showErrorGritter("获取配置信息失败：" + resp.msg);
+						return false;
+					}
+					configData = resp.data;
+					if(!activeModuleId) activeModuleId = $(".panel-item.active").attr("index");
+					$(".panel-item.module-" + activeModuleId).click();
+					onConfigDataGeted(activeModuleId, resp.data[activeModuleId]);
+					$("option").unbind("click").click(function() {
+						$(this).prop("selected", "selected").siblings().removeProp("selected");
+					});
+				});
+			}
+			getConfigData();
+			//获取到config数据
+			function onConfigDataGeted(activeModuleId, data) {
+				if(!data || data.length < 1) return;
+				if(activeModuleId == ALL_MODULE.apv_module.apv_module_id) {
+					bindApvModuleDataOnHtml(data);
+				}
+				if(activeModuleId == ALL_MODULE.argu_module.argu_module_id) {
+					bindArguModuleDataOnHtml(data);
+				}
+			}
+			//绑定审批配置数据
+			function bindApvModuleDataOnHtml(data) {
+				for(var i = 0, len = data.length; i < len; i++) {
+					var itemContainer = $(".module-item-" + data[i].config_type);
+					itemContainer.data("config_id", data[i].config_id);
+					itemContainer.data("config_type", data[i].config_type);
+					if(!data[i].config_value) data[i].config_value = 0;
+					if(itemContainer.hasClass("non-rowspaned")) {
+						itemContainer.find("td:eq(4) .static").text(data[i].config_value == 0 ? "停用" : "启用").removeClass("use-status-" + (data[i].config_value == 0 ? 1 : 0)).addClass("use-status-" + data[i].config_value);
+						itemContainer.find("td:eq(4) .can-change input[value='" + data[i].config_value + "']").prop("checked", true);
+
+						itemContainer.find("td:eq(3) .static").text(data[i].config_value1 == 0 ? "不允许员工发起自定义审批" : "允许员工发起自定义审批");
+						if(data[i].config_value1 == 1) itemContainer.find("td:eq(3) .can-change input").prop("checked", true);
+						else itemContainer.find("td:eq(3) .can-change input").removeProp("checked");
+					} else {
+						itemContainer.find("td:eq(3) .static").text(data[i].config_value == 0 ? "停用" : "启用").removeClass("use-status-" + (data[i].config_value == 0 ? 1 : 0)).addClass("use-status-" + data[i].config_value);
+						itemContainer.find("td:eq(3) .can-change input[value='" + data[i].config_value + "']").prop("checked", true);
+						itemContainer.find("td:eq(2) .static").text(data[i].config_value1 == 0 ? "不允许员工发起自定义审批" : "允许员工发起自定义审批");
+						if(data[i].config_value1 == 1) itemContainer.find("td:eq(2) .can-change input").prop("checked", true);
+						else itemContainer.find("td:eq(2) .can-change input").removeProp("checked");
+					}
+
+				}
+			}
+			/*
+			 
+			 * 参数配置
+			 * 
+			 * 
+			 * */
+			$(".set-birthday-alert-container input[type='text']").click(function() {
+				$(this).parent().find(">div").slideDown("slow");
+			});
+			$(".set-birthday-alert-container>div label").click(function() {
+				onSetBirthdayLabelClick();
+			});
+
+			function onSetBirthdayLabelClick() {
+				var allSelCodeType = "",
+					allSelText = "";
+				$(".set-birthday-alert-container>div label").each(function() {
+					if($(this).find("input:checked").length > 0) {
+						allSelText += (!allSelText ? "" : ",") + $(this).find("span").text();
+						allSelCodeType += (!allSelCodeType ? "" : ",") + $(this).find("input").val();
+					}
+				});
+				var canChangeInputSelector = $(".set-birthday-alert-container input[type='text']");
+				canChangeInputSelector.attr("code", allSelCodeType);
+				canChangeInputSelector.val(allSelText);
+			}
+			$("body").click(function(e) {
+				if($(event.target).parents(".set-birthday-alert-container").length < 1) {
+					$(".set-birthday-alert-container>div").slideUp("slow");
+				}
+			})
+			//绑定参数配置数据
+			function bindArguModuleDataOnHtml(data) {
+				for(var i = 0, len = data.length; i < len; i++) {
+					var itemContainer = $(".module-item-" + data[i].config_type);
+					itemContainer.data("config_id", data[i].config_id);
+					itemContainer.data("config_type", data[i].config_type);
+					if(data[i].config_type == ALL_MODULE.argu_module.argu_module_alert_leader){
+						itemContainer.find("td:eq(3) .static").text(data[i].config_value=="1"?"开启":"关闭");
+						itemContainer.find("td:eq(3) .can-change input[value='"+data[i].config_value+"']").attr("checked","checked");
+						continue;
+					}
+					if(data[i].config_type == ALL_MODULE.argu_module.argu_module_alert_leader_area){
+						itemContainer.find("td:eq(2) .static").text(data[i].config_value?(data[i].config_value=="1"?"直接上级":"所有上级"):"");
+						//itemContainer.find("td:eq(2) .can-change option[value='"+data[i].config_value+"']").prop("selected","selected");
+						itemContainer.find("td:eq(2) .can-change").val(data[i].config_value);
+						continue;
+					}
+					if(data[i].config_type == ALL_MODULE.argu_module.argu_module_birthday_alert) {
+						var alertText = getBirthdayAlertTypeCn(data[i].config_value);
+						itemContainer.find("td:eq(3) .static").text(alertText).data("code",data[i].config_value);
+						itemContainer.find("td:eq(3) .can-change input[type='text']").attr("code", data[i].config_value).attr("title", alertText).val(alertText);
+						letSeledBirthdayAlertChecked(itemContainer.find("td:eq(3) .can-change .sel-birthday-alert-type"), data[i].config_value);
+					} else {
+						if(itemContainer.hasClass("non-rowspaned")) {
+							itemContainer.find("td:eq(3) .static").text(data[i].config_value);
+							itemContainer.find("td:eq(3) .can-change").val(data[i].config_value);
+						} else {
+							itemContainer.find("td:eq(2) .static").text(data[i].config_value);
+							itemContainer.find("td:eq(2) .can-change").val(data[i].config_value);
+						}
+					}
+				}
+			}
+			//获得生日提醒的中文描述
+			function getBirthdayAlertTypeCn(typeCode) {
+				console.log(arguments)
+				var typeCodeArr = typeCode.split(",");
+				var alertTextArr = [];
+				for(var i = 0, len = typeCodeArr.length; i < len; i++) {
+					if(typeCodeArr[i] == BIRTHDAY_ALERT_TYPE.the_same_day) alertTextArr.push("当天");
+					if(typeCodeArr[i] == BIRTHDAY_ALERT_TYPE.prev_day) alertTextArr.push("前一天");
+					if(typeCodeArr[i] == BIRTHDAY_ALERT_TYPE.prev_week) alertTextArr.push("提前一周");
+					if(typeCodeArr[i] == BIRTHDAY_ALERT_TYPE.prev_month) alertTextArr.push("提前一个月");
+				}
+				return alertTextArr.join(",");
+			}
+			//生日提醒各个类型的复选框默认选中
+			function letSeledBirthdayAlertChecked(selector, typeCode) {
+				console.log(arguments)
+				var typeCodeArr = typeCode.split(",");
+				for(var i = 0, len = typeCodeArr.length; i < len; i++) {
+					selector.find("input[value='" + typeCodeArr[i] + "']").prop("checked", "checked");
+				}
+			}
+			//保存参数设置数据
+			function saveArguSetData(index) {
+				var configArr = [];
+				$(".module-set-panel[index='" + index + "'] .panel-detail-body tbody tr").each(function() {
+					var oneConfigData = {};
+					var val = "";
+					oneConfigData.config_id = $(this).data("config_id") || "";
+					oneConfigData.config_type = $(this).data("config_type") || "";
+					if(oneConfigData.config_type == ALL_MODULE.argu_module.argu_module_birthday_alert) {
+						val = $(this).find("td:eq(3) input[type='text']").attr("code");
+					} else if(oneConfigData.config_type == ALL_MODULE.argu_module.argu_module_alert_leader){
+						val = $(this).find("td:eq(3) input[type='radio']:checked").val();
+					} else if(oneConfigData.config_type == ALL_MODULE.argu_module.argu_module_alert_leader_area){
+						val = $(this).find("td:eq(2) option:selected").val();
+					}else{
+						var max = "";
+						var min = "";
+						var action = "";
+						if($(this).hasClass("non-rowspaned")) {
+							max = $(this).find("td:eq(3) input[type='text']").data("max-val");
+							min = $(this).find("td:eq(3) input[type='text']").data("min-val");
+							val = $(this).find("td:eq(3) input[type='text']").val();
+							action = $(this).find("td:eq(1)").text();
+						} else {
+							max = $(this).find("td:eq(2) input[type='text']").data("max-val");
+							min = $(this).find("td:eq(2) input[type='text']").data("min-val");
+							val = $(this).find("td:eq(2) input[type='text']").val();
+							action = $(this).find("td:eq(0)").text();
+						}
+						if(isCorrect) {
+							var isValue = isValueSure(min, max, val, action);
+							if(!isValue) { isCorrect = false; return false; }
+						}
+					}
+					oneConfigData.config_value = val
+					configArr.push(oneConfigData);
+				});
+				if(!isCorrect) return false;
+				$.ajaxPost(BSAPIURL + "/config", { datas: configArr }, function(resp) {
+					if(resp.code == 0) {
+						$.showSuccessGritter("保存成功！");
+						//按钮切换
+						$(".module-set-panel[index='" + index + "'] .btn-edit").removeClass("hide");
+						$(".module-set-panel[index='" + index + "'] .btn-submit").addClass("hide");
+						$(".module-set-panel[index='" + index + "'] .btn-cancel").addClass("hide");
+						//面板状态切换
+						$(".module-set-panel[index='" + index + "'] td .static").removeClass("hide");
+						$(".module-set-panel[index='" + index + "'] td .can-change").addClass("hide");
+						getConfigData(index);
+					} else {
+						$.showErrorGritter("保存失败：" + resp.msg);
+					}
+				});
+			}
+			//比较大小
+			function isValueSure(minVal, maxVal, value, action) {
+				console.log(arguments)
+				value = parseInt(value);
+				if(minVal) {
+					minVal = parseInt(minVal);
+					if(value < minVal) {
+						$.showErrorGritter(action + "不能小于" + minVal);
+						return false;
+					}
+				}
+				if(maxVal) {
+					maxVal = parseInt(maxVal);
+					if(value > maxVal) {
+						$.showErrorGritter(action + "不能大于" + maxVal);
+						return false;
+					} else {
+						return true;
+					}
+				} else {
+					return true;
+				}
+			}
+		</script>
+	</body>
+
+</html>

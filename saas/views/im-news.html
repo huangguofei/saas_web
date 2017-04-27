@@ -1,0 +1,2068 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>圈子</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<link rel="stylesheet" href="../resources/css/hgf.css" />
+		<style type="text/css">
+			body {
+				background: #f3f3f3;
+			}
+			
+			.neparent.ws {
+				position: fixed;
+				right: -10px;
+				top: 30%;
+				zoom: 1;
+			}
+			
+			.neparent.ws:after {
+				content: ".";
+				height: 0;
+				display: block;
+				clear: both;
+				visibility: hidden;
+			}
+			
+			.neparent.ws-right {
+				width: 70px;
+				height: 120px;
+				background: #FCFCFC;
+				height: 630px;
+				position: relative;
+				z-index: 10;
+			}
+			
+			.neparent.ws-right i {
+				font-size: 36px;
+				color: #fff;
+			}
+			
+			.neparent.ws-right a {
+				display: inline-block;
+				background: #0099FF;
+				width: 50px;
+				height: 50px;
+				border-radius: 25px;
+				-webkit-border-radius: 25px;
+				-moz-border-radius: 25px;
+				text-align: center;
+				line-height: 65px;
+				position: relative
+			}
+			
+			.neparent.ws-right-service {
+				margin-top: 20px;
+			}
+			
+			.neparent.ws-left {
+				border: 1px solid #ccc;
+				padding-top: 10px;
+				width: 300px;
+				margin-right: 5px;
+				height: 630px;
+				position: relative;
+				left: 310px;
+				background: #fff;
+			}
+			
+			.top-search {
+				width: 200px;
+			}
+			
+			.neparent.ws-left-top {
+				padding: 0 10px;
+				padding-bottom: 5px;
+				position: relative;
+			}
+			
+			.top-add {
+				border: 0;
+				background: #fff;
+				font-size: 20px;
+				font-weight: bold;
+			}
+			
+			.neparent.ws-left-menu {
+				border-top: 1px solid #ccc;
+				border-bottom: 1px solid #ccc;
+				padding: 5px 0;
+			}
+			
+			.neparent.ws-left-menu ul {
+				zoom: 1;
+			}
+			
+			.neparent.ws-left-menu ul:after {
+				content: ".";
+				display: block;
+				height: 0;
+				clear: both;
+				visibility: hidden;
+			}
+			
+			.neparent.ws-left-menu ul li {
+				float: left;
+				width: 25%;
+				text-align: center;
+			}
+			
+			.neparent.ws-left-menu ul li:last-child a {
+				position: relative;
+			}
+			
+			.neparent.ws-left-menu ul li:last-child a span {
+				top: -10px;
+				right: -10px;
+			}
+			
+			.neparent.ws-left-menu ul li i.checkstyle {
+				color: #0099FF;
+			}
+			
+			.neparent.ws-left-menu i {
+				font-size: 26px;
+			}
+			
+			.neparent.ws-left-infolist .infolist-chatlist li {
+				zoom: 1;
+				padding: 5px;
+				border-bottom: 1px solid #ccc;
+			}
+			
+			.neparent.ws-left-infolist .infolist-chatlist li .list-detele {
+				display: none;
+				cursor: pointer;
+			}
+			
+			.infolist-chatlist li:hover .list-detele {
+				display: inherit;
+			}
+			
+			.infolist-chatlist li:hover .list-num {
+				display: none;
+			}
+			
+			.neparent.ws-left-infolist>ul {
+				height: 540px;
+				overflow: auto;
+			}
+			
+			.selectstyle {
+				background: #C5D0DC;
+			}
+			
+			.neparent.ws-left-infolist .infolist-chatlist li:hover {
+				background: #C5D0DC;
+			}
+			
+			.neparent.ws-left-infolist .infolist-chatlist li:after {
+				content: ".";
+				display: block;
+				height: 0;
+				clear: both;
+				visibility: hidden;
+			}
+			
+			.neparent.ws-left-infolist li img {
+				width: 50px;
+				height: 50px;
+			}
+			
+			.infolist-right {
+				width: 210px;
+			}
+			
+			.infolist-right-newinfo {
+				position: relative;
+				margin-top: 5px;
+			}
+			
+			.infolist-right-newinfo span:first-child {
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
+				display: inline-block;
+				width: 80%;
+			}
+			
+			.infolist-time {
+				float: right;
+			}
+			
+			.infolist-servicelist i,
+			.infolist-grouplist i {
+				color: #0099FF;
+				font-size: 20px;
+				width: 12px
+			}
+			
+			.infolist-servicelist li div,
+			.infolist-grouplist li div {
+				border-bottom: 1px solid #ccc;
+				padding-left: 5px;
+			}
+			
+			.infolist-grouplist li li {
+				padding-left: 20px;
+			}
+			
+			.infolist-servicelist li[chat-type] div {
+				border-bottom: 0;
+			}
+			
+			.infolist-grouplist li[chat-type] {
+				border-bottom: 1px solid #ccc;
+			}
+			
+			.infolist-servicelist li img {
+				/*margin-left: 60px;*/
+				margin: 3px;
+				margin-right: 10px;
+			}
+			
+			.infolist-servicelist li img+span,
+			.tree-name {
+				font-weight: bold;
+			}
+			
+			.infolist-servicelist li {
+				line-height: 50px;
+				padding: 0;
+				border: 0;
+				cursor: pointer;
+			}
+			
+			.infolist-servicelist li li div {
+				padding-left: 20px;
+			}
+			
+			.infolist-servicelist li li li div {
+				padding-left: 40px;
+			}
+			
+			.infolist-servicelist li li li div {
+				/*padding-left: 60px;*/
+			}
+			
+			.infolist-servicelist li li li {
+				border-bottom: 1px solid #ccc;
+			}
+			
+			.tree-num {
+				margin-left: 20px;
+			}
+			
+			.tree-add {
+				cursor: pointer;
+				float: right;
+				margin-right: 20px;
+				font-size: 24px;
+				color: #0099FF;
+			}
+			
+			.infolist-grouplist li {
+				line-height: 50px;
+				padding: 5px;
+			}
+			
+			.infolist-grouplist li img {
+				margin-right: 10px;
+			}
+			
+			.add-group-name {
+				width: ;
+			}
+			
+			.colleague-circle {}
+			
+			.colleague-circle-main {
+				width: 1200px;
+				margin: 0 auto;
+			}
+			
+			.colleague-circle-main-right {
+				width: 1118px;
+				margin-left: 20px;
+			}
+			
+			.colleague-circle-write {
+				border: 1px solid #eee;
+				box-shadow: 0px 3px 3px #ccc;
+				-webkit-box-shadow: 0px 3px 3px #ccc;
+				-moz-box-shadow: 0px 3px 3px #ccc;
+				margin-bottom: 20px;
+				background: #FFF;
+			}
+			
+			.colleague-circle-write-menu {
+				background: #DDDDDD;
+				text-indent: 2rem;
+				line-height: 30px;
+				font-weight: bold;
+			}
+			
+			.write-content {
+				border: 1px solid #e3e3e3;
+			}
+			
+			.colleague-circle-write-content {
+				margin: 10px;
+				margin-bottom: 0;
+			}
+			
+			.write-content-nav i {
+				font-size: 20px;
+				margin: 5px;
+				cursor: pointer;
+			}
+			
+			.write-content-nav i:hover {
+				/*text-shadow: 5px 5px 2px #ccc;*/
+			}
+			
+			.write-content-text {
+				resize: none;
+				height: 80px;
+				width: 100%;
+				margin-bottom: -10px;
+				outline: none;
+				border: 0;
+			}
+			/*
+			.write-content-text:focus {
+				border: 0;
+				outline: none;
+			}*/
+			
+			.write-content-btn {
+				padding: 5px;
+				background: #f9f9f9;
+			}
+			
+			.circle-trends-box,
+			.about-me .about-me-box {
+				border: 1px solid #eee;
+				background: #FFF;
+				margin-bottom: 10px;
+				position: relative;
+			}
+			
+			.about-me .about-me-box {
+				padding-bottom: 10px;
+			}
+			
+			.circle-trends-box img,
+			.about-me img {
+				width: 40px;
+				height: 40px;
+				margin-right: 10px;
+				border-radius: 3px;
+				-webkit-border-radius: 3px;
+				-moz-border-radius: 3px;
+			}
+			
+			.box-main .image-content img {
+				width: 120px;
+				height: 120px;
+			}
+			
+			.trends-info {
+				height: 50px;
+				max-width: 90%;
+			}
+			
+			.colleague-circle-space .trends-info {
+				height: 40px;
+				max-width: 90%;
+			}
+			
+			.about-me .box-top .trends-info p {
+				display: block;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			
+			.colleague-circle-space,
+			.about-me {
+				font-size: 14px;
+			}
+			
+			.trends-time {
+				font-size: 12px;
+			}
+			
+			.colleague-circle-space .box-top .trends-info p {
+				/*height: 50%;*/
+			}
+			
+			.box-top {
+				padding: 10px;
+			}
+			
+			.circle-trends-box .trends-image {
+				width: auto;
+				height: auto;
+				max-width: 900px;
+				margin: 10px;
+			}
+			
+			.trends-text {
+				line-height: 26px;
+				text-indent: 2rem;
+				padding: 0 10px;
+				word-wrap: break-word;
+				word-break: break-all;
+			}
+			
+			.more-text {
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 5;
+				overflow: hidden;
+			}
+			
+			.box-bottom {
+				padding: 5px 10px 10px;
+				border-top: 1px solid #ccc;
+			}
+			
+			.trends-interaction-menu {
+				line-height: 30px;
+				font-size: 16px;
+			}
+			
+			.trends-interaction-menu i {
+				font-size: 24px;
+				cursor: pointer;
+				width: 23px;
+				display: inline-block;
+				height: 23px;
+				color: #BBBBBB;
+				background-repeat: no-repeat;
+			}
+			
+			.praise {
+				background: url(../resources/images/praise.png);
+			}
+			
+			.trends-interaction-menu i.active {
+				color: #fa7a71;
+				background: url(../resources/images/praise-active.png);
+			}
+			
+			.back-icon {
+				vertical-align: sub;
+				background-image: url(../resources/images/comment-icon.png);
+			}
+			
+			.trends-like-people {
+				font-size: 12px;
+				margin-left: 10px;
+			}
+			
+			.interaction-send,
+			.reply-send {
+				text-align: right;
+				padding: 5px;
+				margin: 10px;
+			}
+			
+			.interaction-send {
+				display: none;
+			}
+			
+			.interaction-send-text {
+				width: 100%;
+				height: 60px;
+				border-color: #e3e3e3;
+				resize: none;
+			}
+			
+			.interaction-btn-send {}
+			
+			.interaction-info>p {
+				line-height: 25px;
+			}
+			
+			.interaction-info img {
+				width: 40px;
+				height: 40px;
+				float: left;
+			}
+			
+			.interaction-main {
+				font-size: 12px;
+				width: 95%;
+				word-wrap: break-word;
+				word-break: break-all;
+			}
+			
+			.interaction-time {
+				min-width: 50%;
+				margin-left: 5px;
+				display: block;
+			}
+			
+			.interaction-list i {
+				width: 23px;
+				height: 20px;
+				display: inline-block;
+				margin-left: 10px;
+				cursor: pointer;
+			}
+			
+			.praise {
+				width: 25px;
+				margin-left: 5px;
+			}
+			
+			.write-content-nav {}
+			
+			.search-list {
+				width: 200px;
+				position: absolute;
+				z-index: 10;
+				background: #FCFCFC;
+				border: 1px solid #ccc;
+				top: 31px;
+				display: none;
+			}
+			
+			.search-title {
+				font-weight: bold;
+				display: inline-block;
+				text-indent: 1rem;
+			}
+			
+			.search-list ul {}
+			
+			.seach-firend {
+				border-bottom: 10px solid #FDFDFD;
+			}
+			
+			.search-list ul li {
+				line-height: 30px;
+				cursor: pointer;
+				text-indent: 2rem;
+			}
+			
+			.fa-envelope-o {
+				position: relative;
+			}
+			
+			.-info-num {
+				font-size: 12px;
+			}
+			
+			.new-info-remind {
+				line-height: 30px;
+				text-align: center;
+				background: #DDEDF8;
+				border-left: 1px solid #ccc;
+				border-right: 1px solid #ccc;
+			}
+			
+			.colleague-circle-space .new-info-remind {
+				border: 0;
+				cursor: pointer;
+			}
+			
+			.about-me {
+				display: none;
+			}
+			
+			.box-main {
+				width: 88%;
+				margin: 0 auto;
+				background: #FAFAFA;
+				text-indent: 2rem;
+				padding: 10px 20px;
+			}
+			
+			.interaction-name {
+				cursor: pointer;
+				vertical-align: top;
+				color: #009ed8;
+			}
+			
+			.trends-name {
+				color: #009ed8;
+			}
+			
+			.interaction-name:hover {
+				color: #56ABE4;
+			}
+			
+			.interaction-list-a li {
+				margin: 5px auto;
+			}
+			
+			.interaction-list-a .interaction-info:hover .detele-comment {
+				display: inline-block
+			}
+			
+			.detele-comment {
+				display: none;
+				margin-left: 10px;
+			}
+			
+			.upload-image {
+				/*width: 950px;*/
+				margin-bottom: 5px;
+				zoom: 1;
+			}
+			
+			.upload-image:after {
+				content: ".";
+				height: 0;
+				display: block;
+				visibility: hidden;
+				clear: both;
+			}
+			
+			.upload-image img {
+				width: 100%;
+				height: 100%;
+			}
+			
+			.image-box {
+				position: relative;
+				width: 80px;
+				height: 80px;
+				float: left;
+				margin-right: 10px;
+			}
+			
+			.image-box:hover .detele-img {
+				display: inline-block;
+			}
+			
+			.detele-img {
+				position: absolute;
+				right: 0px;
+				cursor: pointer;
+				background: #CA1B2A;
+				color: #FFF;
+				width: 15px;
+				height: 15px;
+				text-align: center;
+				/*background: url(../resources/images/delete-img.png);*/
+				display: none;
+			}
+			
+			.detele-img img {
+				width: 6px;
+				height: 6px;
+				margin-bottom: 6px;
+			}
+			
+			.upload-image-add {
+				width: 80px;
+				height: 80px;
+				border: 1px dashed #e3e3e3;
+				background: #f8f8f8;
+				text-align: center;
+				float: left;
+				line-height: 80px;
+				color: #ccc;
+				cursor: pointer;
+			}
+			
+			.upload-image-addimg {
+				display: inline-block;
+				width: 12px;
+				height: 12px;
+				background: url(../resources/images/add-img.png);
+			}
+			
+			.moxie-shim {
+				display: none;
+			}
+			
+			.at-group-list-name {
+				margin-left: 10px;
+			}
+			
+			.dynamic-at {
+				top: -6px;
+				left: 60px;
+				z-index: 5;
+			}
+			
+			.dynamic-at .at-group-list ul li:hover {
+				background: #fff;
+			}
+			
+			.dynamic-at .at-group-list ul li {
+				line-height: 0;
+			}
+			
+			.dynamic-at .tree-name {
+				margin-left: 10px;
+				line-height: 20px;
+				max-width: 130px;
+			}
+			
+			.dynamic-at input[type=checkbox] {
+				margin-right: 10px;
+			}
+			
+			.dynamic-at .at-page-buttom {
+				height: 40px;
+				border-top: 1px solid #ccc;
+				text-align: center;
+			}
+			
+			.dynamic-at .btn-sure {
+				margin: 5px auto;
+			}
+			
+			.dynamic-at .at-group-list {
+				height: 360px;
+			}
+			
+			.dynamic-at {
+				width: 300px;
+				border: 1px solid #C5C5C5;
+				box-shadow: 2px 2px 2px #3C475D;
+				-webkit-box-shadow: 2px 2px 2px #3C475D;
+				-moz-box-shadow: 2px 2px 2px #3C475D;
+				position: absolute;
+				background: #fff;
+			}
+			
+			.dynamic-at .at-top {
+				width: 100%;
+				height: 40px;
+				padding: 0 10px;
+				border-bottom: 1px solid #ccc;
+			}
+			
+			.dynamic-at .at-top input {
+				width: 249px;
+				border-right: 0;
+				margin-top: 5px;
+				float: right;
+				outline: none;
+			}
+			
+			.dynamic-at .at-top i {
+				margin-top: 5px;
+			}
+			
+			.dynamic-at .at-top input:focus {
+				border: 1px solid #D5D5D5!important;
+				border-right: 0!important;
+			}
+			
+			.dynamic-at .at-group-list {
+				width: 100%;
+				height: 400px;
+				overflow: auto;
+			}
+			
+			.dynamic-at .at-group-list img {
+				width: 40px;
+				height: 40px;
+				border-radius: 20px;
+				-webkit-border-radius: 20px;
+				-moz-border-radius: 20px;
+			}
+			
+			.dynamic-at .at-group-list ul li {
+				padding-left: 10px;
+				padding-right: 0;
+				cursor: pointer;
+			}
+			
+			.dynamic-at .at-group-list ul li li {
+				padding-left: 15px;
+			}
+			
+			.dynamic-at .at-group-list ul li li li {
+				padding-left: 20px;
+			}
+			
+			.dynamic-at .at-group-list ul li li li li {
+				padding-left: 30px;
+			}
+			
+			.at-list {
+				color: #0099FF;
+			}
+			
+			.dynamic-menu {
+				border: 0;
+				zoom: 1;
+			}
+			
+			.dynamic-menu:after {
+				content: "";
+				height: 0;
+				clear: both;
+				visibility: hidden;
+				display: block;
+			}
+			
+			.dynamic-menu li {
+				float: left;
+				line-height: 40px;
+				padding: 0 10px;
+			}
+			
+			.dynamic-menu li.active a {
+				color: #ca192b;
+				font-weight: bold;
+			}
+			
+			.dynamic-menu li a {
+				color: #999;
+			}
+			
+			.at-data-list {
+				line-height: 30px;
+			}
+			
+			.at-list {
+				margin-left: 10px;
+				cursor: pointer;
+			}
+			
+			.at-list:hover .detele-at {
+				display: inline;
+			}
+			
+			.detele-at {
+				color: red;
+				display: none;
+			}
+			
+			.trends-at-list {
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				width: 100%;
+				text-indent: 3rem;
+				font-size: 12px;
+			}
+			
+			.trends-at-list .interaction-name {
+				color: #0099FF;
+			}
+			
+			.circle-trends-box .image-content .trends-image {
+				width: 200px;
+				height: 200px;
+			}
+			
+			.dynamic-top {
+				border: 1px solid #eee;
+				background: #fff;
+				margin-bottom: 10px;
+			}
+			
+			.text-content {
+				width: 100%;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				overflow: hidden;
+				word-wrap: break-word;
+				cursor: pointer;
+			}
+			
+			.about-me-box .trends-time {
+				text-indent: 6rem;
+				margin-top: 5px;
+			}
+			
+			.reply-info-list {
+				/*text-indent: 6rem;*/
+				line-height: 30px;
+				padding: 0 60px;
+			}
+			
+			.new-info-reminder {
+				top: -8px;
+				right: -2px;
+				width: 10px;
+				height: 10px;
+			}
+			
+			.dynamic-particulars {
+				display: none;
+			}
+			
+			.btn-return {
+				margin-bottom: 10px;
+			}
+			
+			.goback-top {
+				position: fixed;
+				bottom: 100px;
+				right: 10px;
+				cursor: pointer;
+				display: none;
+			}
+			
+			.goback-top img {
+				width: 50px;
+				height: auto;
+			}
+			
+			.detele-dynamic {
+				display: none;
+				cursor: pointer;
+				margin-left: 10px;
+				color: #6A6AC5;
+			}
+			
+			.box-top:hover .detele-dynamic {
+				display: inline-block;
+			}
+			
+			.interaction-text {
+				word-wrap: break-word;
+				display: inline-block;
+				max-width: 90%
+			}
+			
+			.message-info-num {
+				color: red;
+			}
+			
+			.message-num {
+				display: inline-block;
+				width: 8px;
+				height: 8px;
+				background: red;
+				border-radius: 4px;
+				-webkit-border-radius: 4px;
+				-moz-border-radius: 4px;
+				position: absolute;
+				right: 4px;
+				top: 10px;
+			}
+			
+			.write-btn-send {
+				margin: 10px 0;
+				float: right;
+			}
+			
+			.news-replay-btn {
+				position: absolute;
+				top: 10px;
+				right: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container colleague-circle">
+			<div class="remark">
+				<i class="fa fa-list-ol fa-2x"></i>
+				<span>*同事间工作、生活交流圈</span>
+			</div>
+			<a class="goback-top"><img src="../resources/images/top.png"></a>
+			<div class="content colleague-circle-main">
+				<div class="colleague-circle-main-right pull-right">
+					<div class="dynamic-main">
+						<div class="colleague-circle-write">
+							<div class="colleague-circle-write-content">
+								<div class="write-content">
+									<textarea class="write-content-text" placeholder="说点什么吧"></textarea>
+
+									<div class="write-content-btn">
+										<div class="write-content-nav">
+											<i class="fa fa-file-image-o" aria-hidden="true"></i>
+											<i class="fa fa-at" aria-hidden="true" onclick="atColleague(this)"></i>
+										</div>
+									</div>
+								</div>
+								<input type="button" class="write-btn-send btn btn-success" id="" value="发送" />
+								<div class="clearfix"></div>
+							</div>
+						</div>
+						<div class="dynamic-top">
+							<ul class="dynamic-menu">
+								<li class="active" data-type="" style="position: relative;">
+									<a href="javascript:;">全部动态</a>
+								</li>
+								<li data-type="self">
+									<a href="javascript:;">我的动态</a>
+								</li>
+								<li data-type="news">
+									<a href="javascript:;">与我相关</a>
+								</li>
+							</ul>
+						</div>
+						<div class="colleague-circle-space">
+							<!--<p class="new-info-remind">有新消息，点击刷新</p>-->
+							<div class="colleague-circle-trends">
+								<p>暂无好友动态</p>
+							</div>
+						</div>
+						<!--关于我-->
+						<div class="about-me">
+							<!--<p class="new-info-remind">有新消息，点击刷新</p>-->
+							<p>暂无动态消息</p>
+						</div>
+					</div>
+					<div class="dynamic-particulars">
+						<input type="button" name="" value="返回" class="btn btn-default btn-sm btn-return" />
+					</div>
+				</div>
+				<div class="clearfix"></div>
+
+			</div>
+		</div>
+
+	</body>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript" src="../resources/js/customize/pinyin.js"></script>
+	<script type="text/javascript" src="../resources/js/main.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.qqFace.js"></script>
+	<script type="text/javascript" src="../resources/js/customize/websocket.js"></script>
+	<script type="text/javascript" src="../resources/js/customize/IM.js"></script>
+	<script type="text/javascript" src="../resources/js/customize/jquery.dotdotdot.min.js"></script>
+	<script type="text/javascript">
+		var type = 1;
+		//我的Id
+		var myId = parent.myId,
+			myName = parent.myName,
+			myAvatar = parent.myAvatar,
+			nuReadNum = "";
+		$(document).ready(function() {
+			//------------消息队列相关-----------------------
+			var subscriber = parent.HHMQ.createSubscriber('圈子', 'main,welcome', function(flag, msgData) {
+				if(flag == "welcome") {
+					$.showSuccessGritter(JSON.stringify(msgData), {
+						clear: false
+					});
+				}
+				//收到消息
+				if(msgData.action == 61) {
+					//新圈子动态
+					receiveNewInfo(msgData.msg);
+				} else if(msgData.action == 67) {
+					//新我的动态
+					receiveNewMyInfo(msgData.msg);
+				}
+			});
+			//页面关闭事件
+			context.onPageClose = function() {
+				subscriber.dispose();
+			};
+			//------------消息队列相关 end -------------------
+		})
+		$(function() {
+			//未读动态数
+			parent.ws.onsend(parent.ws.cmdTag.NOREADINFONUM, {}, function(data) {
+				console.log(data);
+				if(data.action == 200 || data.action == 500) return false;
+				nuReadNum = data.data.unread_feeds_num;
+				if(nuReadNum != 0)
+					$(".dynamic-menu li[data-type='news']").append("<span class=\"message-info-num\">(" + nuReadNum + ")</span>");
+			});
+			//返回顶部
+			//滚动100px出现否则隐藏
+			$(window).scroll(function() {
+				if($(window).scrollTop() > 100) {
+					$(".goback-top").fadeIn(1500);
+				} else {
+					$(".goback-top").fadeOut(1500);
+				}
+			});
+			$(".goback-top").click(function() {
+				if($("html").scrollTop()) {
+					$("html").animate({
+						scrollTop: 0
+					}, 1000);
+					return false;
+				}
+				$("body").animate({
+					scrollTop: 0
+				}, 1000);
+				return false;
+			});
+			$(".write-content-text").at();
+		});
+
+		//行数统计，展开收起
+		function statisticsLine() {
+			$(".trends-text").each(function(index) {
+				var lineHeight = parseInt($(this).css("line-height"));
+				var height = $(this).outerHeight(true);
+				var num = height / lineHeight;
+				if(num > 4 && !$(this).nextAll().is("a")) {
+					$(this).after("<a href=\"javascript:;\" style='display: block;text-align: right; margin-right: 10px;'>展开</a>");
+					$.zoom({
+						container: $(this),
+						handle: $(this).next(),
+						height: 100,
+						showText: "收起，展开",
+						oneState: 1
+					});
+				}
+			});
+		}
+		//圈子事件sss
+		var isOneReadFriendDynamicData = true;
+		var isOneReadDynamicData = true;
+		$(function() {
+			//看状态和看圈子切换
+			$(".colleague-circle-main-left i").click(function() {
+				$(".dynamic-particulars").hide();
+				$(".dynamic-main").show();
+				$(this).children("span").remove();
+				if($(this).hasClass("fa-users")) { //查看动态
+
+				} else { //查看与我相关
+
+				}
+			});
+			//全部动态、我的动态、消息切换
+			$(".dynamic-menu li").click(function() {
+				isOneReadFriendDynamicData = true;
+				isOneReadDynamicData = true;
+				$(this).addClass("active").siblings().removeClass("active");
+				if($(this).data("type") == "news") {
+					$(".about-me").show().siblings(".colleague-circle-space").hide();
+					messageNum();
+					$(".about-me").empty();
+					loadAllData("", "news");
+				} else {
+					if($(this).index() == 0)
+						$(this).children("span").hide();
+					$(".colleague-circle-space").show().siblings(".about-me").hide();
+					$(".colleague-circle-trends").empty();
+					loadAllData("", "dynamic");
+				}
+			});
+			//评论
+			$(document).on("click", ".trends-interaction-menu .back-icon", function() {
+				console.log("打开评论")
+				var str = "<div class=\"reply-send\">";
+				str += "<textarea class=\"interaction-send-text\" maxlength=\"200\" placeholder=\"说点什么\"></textarea>";
+				str += "<input type=\"button\" value=\"发送\" class=\"btn btn-default btn-sm interaction-btn-send\" onclick=\"commentInfo(this)\">";
+				str += "</div>";
+				if($(".reply-send").length != 0) {
+					$(".reply-send").remove();
+				} else {
+					$(this).parent().after(str);
+					$(this).parent().next().find(".interaction-send-text").focus();
+				}
+
+			});
+			//点赞
+			$(document).on("click", ".trends-interaction-menu .praise", function() {
+				var obj = this;
+				var dynamicId = $(this).parents(".circle-trends-box").attr("id");
+				parent.ws.onsend(65, {
+					"moment_id": dynamicId
+				}, function(data) {
+					if(data.action == 200) {
+						if(!$(obj).hasClass("active")) { //点赞
+							$(obj).addClass("active");
+							if($(obj).siblings("span").children().length == 0) {
+								$(obj).siblings("span").append("<span class=\"people-name interaction-name\" data-id=" + myId + " onclick=\"parent.openPersonageInfo(this)\">" + myName + "</span>");
+							} else {
+								$(obj).siblings("span").append("<span class=\"people-name interaction-name\" data-id=" + myId + " onclick=\"parent.openPersonageInfo(this)\">," + myName + "</span>");
+							}
+						} else { //取消赞
+							$(obj).removeClass("active");
+							$(obj).siblings("span").children("span[data-id=" + myId + "]").remove();
+						}
+					};
+					if(data.action == 500) {
+						$.showErrorGritter("点赞/取消点赞失败！");
+						return false;
+					}
+				});
+			});
+			//回复
+			$(document).on("click", ".interaction-info .reply-btn", function() {
+				var objName = "";
+				objName = $(this).parent().parent().find(".interaction-name:first-child").text();
+				console.log("回复" + objName);
+				if($(this).parents(".interaction-info").next().is(".reply-send")) {
+					$(this).parents(".interaction-info").next().remove();
+				} else {
+					$(".reply-send").remove();
+					var str = "<div class=\"reply-send\">";
+					str += "<textarea class=\"interaction-send-text\" maxlength=\"200\" placeholder=\"回复 " + objName + "\"></textarea>";
+					str += "<input type=\"button\" value=\"发送\" class=\"btn btn-default btn-sm interaction-btn-send\" onclick=\"commentInfo(this)\">";
+					str += "</div>";
+					$(this).parents(".interaction-info").after(str);
+					$(this).parents(".interaction-info").next().find(".interaction-send-text").focus();
+				}
+			});
+			//圈子传图片
+			$(".write-content-nav>.fa-file-image-o").attr("id", "uploadImage");
+			$("#uploadImage").initUploader({
+				url: SAASAPIS.BS.upload.image,
+				up_container: ".upload",
+				FilesAdded: function(up, files) {
+					return true;
+				},
+				FileUploaded: function(up, file, response) {
+					var resp = JSON.parse(response.response);
+					if(resp.code == 0) {
+						var filesPath = resp.data.path;
+						var filesName = resp.data.name;
+						var filesId = resp.data.id;
+						if($(".upload-image").length != 0) {
+							if($(".upload-image .image-box").length >= 9) {
+								$.showErrorGritter("您最多能上传9张图片！");
+								//$(".upload-image .upload-image-add").replaceWith("<div class=\"upload-image-explain\">最多上传9张图片</div>");
+							} else {
+								var str = "<div class=\"image-box\" data-fileid=" + filesId + ">";
+								str += "<img src=" + filesPath + " data-path=" + filesPath + ">";
+								str += "<i class=\"detele-img\" aria-hidden=\"true\" onclick=\"deteleImage(this)\"><img src=\"../resources/images/delete-img.png\"></i>";
+								str += "</div>";
+								$(".upload-image-add").before(str);
+								if($(".upload-image .image-box").length >= 9) {
+									$(".upload-image .upload-image-add").hide();
+								}
+							}
+						} else {
+							$(".write-content-text").after("<div class=\"upload-image\">" +
+								"<div class=\"image-box\" data-fileid=" + filesId + ">" +
+								"<img src=" + filesPath + " data-path=" + filesPath + ">" +
+								"<i class=\"detele-img\" aria-hidden=\"true\" onclick=\"deteleImage(this)\"><img src=\"../resources/images/delete-img.png\"></i>" +
+								"</div>" +
+								"<div class=\"upload-image-add\"><i class=\"upload-image-addimg\" aria-hidden=\"true\"></i></div>" +
+								"</div>");
+							$(".upload-image-add").attr("id", "uploadAddImage");
+							$("#uploadAddImage").initUploader({
+								url: SAASAPIS.BS.upload.image,
+								FilesAdded: function(up, files) {
+									return true;
+								},
+								FileUploaded: function(up, file, response) {
+									var resp = JSON.parse(response.response);
+									if(resp.code == 0) {
+										var filesPath = resp.data.path;
+										var filesName = resp.data.name;
+										var filesId = resp.data.id;
+										//console.log(filesPath)
+										if($(".upload-image .image-box").length >= 9) {
+											$.showErrorGritter("您最多能上传9张图片！");
+											//$(".upload-image .upload-image-add").replaceWith("<div class=\"upload-image-explain\">最多上传9张图片</div>");
+										} else {
+											var str = "<div class=\"image-box\" data-fileid=" + filesId + ">";
+											str += "<img src=" + filesPath + " data-path=" + filesPath + ">";
+											str += "<i class=\"detele-img\" aria-hidden=\"true\" onclick=\"deteleImage(this)\"><img src=\"../resources/images/delete-img.png\"></i>";
+											str += "</div>";
+											$(".upload-image-add").before(str);
+											if($(".upload-image .image-box").length >= 9) {
+												$(".upload-image .upload-image-add").addClass("hide");
+											}
+											bindMagnifyEvent();
+										}
+									} else {
+										$.showErrorGritter("上传失败：" + resp.msg);
+									}
+								}
+							});
+						}
+						bindMagnifyEvent();
+					} else {
+						$.showErrorGritter("上传失败：" + resp.msg);
+					}
+				}
+			});
+			$(".colleague-circle-trends").unbind("click").on('click', '.detele-dynamic', function() {
+				var dynamicId = $(this).parents(".circle-trends-box").attr("id");
+				console.log(dynamicId)
+				var modalId = $.modal().confirm("确认删除该条动态？", function(data) {
+					parent.ws.onsend(71, {
+						"moment_id": dynamicId
+					}, function(data) {
+						console.log(data)
+						if(data.action == 200) {
+							$.showSuccessGritter("删除成功！");
+							$("#" + dynamicId).remove();
+						} else {
+							$.showErrorGritter(data.data.message);
+						}
+					});
+				});
+				$(".modal-dialog").css('margin-top', "100px");
+			});
+			//发表
+			$(".write-btn-send").click(function() {
+				var contentText = $(".write-content-text").val();
+				console.log(contentText);
+				var contentTextHtml = contentText.replace(/\n/g, "<br/>");
+				if(!contentText) {
+					contentText = "";
+					if($(".upload-image>.image-box").length == 0) {
+						$.showErrorGritter("发布圈子内容不能为空！");
+						return false;
+					}
+				}
+				var atListData = [];
+				var atListDataHtml = "";
+				$(".at-data-list>.at-list").each(function() {
+					atListData.push($(this).attr('data-id'));
+					atListDataHtml += "<span class=\"interaction-name\" data-id=" + $(this).attr('data-id') + " onclick=\"parent.openPersonageInfo(this)\">" + $(this).children(".at-name").text() + "</span>";
+				});
+				var fileData = [];
+				var fileDataListHtml = "";
+				$(".upload-image .image-box").each(function() {
+					var fileId = $(this).attr("data-fileid");
+					var filePath = $(this).children("img").attr("data-path");
+					fileData.push({
+						"file_id": fileId,
+						"file_type": 1,
+						"file_info": filePath
+					});
+					var imgSrc = $(this).children("img").attr("src");
+					fileDataListHtml += "<img src=" + imgSrc + " class=\"trends-image\">";
+				});
+				//console.log(fileData)
+				parent.ws.onsend(60, {
+					"at_list": atListData,
+					"content": contentText,
+					"files": fileData
+				}, function(data) {
+					if(data.action == 500) {
+						$.showErrorGritter("发表动态失败");
+						return false;
+					}
+					if(data.action == 200) {
+						$.showSuccessGritter("发布成功!");
+						//						parent.ws.onsend(62, {
+						//							"base_moment_id": "",
+						//							"limit": 10,
+						//							"type": $(".dynamic-menu .active").data("type")
+						//						}, function(data) {
+						//							loadFriendDynamic(data);
+						//						});
+						$(".dynamic-menu li:first-child").trigger("click");
+						statisticsLine();
+					}
+				});
+				//清空
+				$(".write-content-text").val("");
+				$(".at-data-list").remove();
+				$(".upload-image").remove();
+			});
+			//筛选
+			//滚动加载
+			$(window).scroll(function() {
+				if((($(window).scrollTop() + $(window).height())) >= $(document).height()) {
+					if($(".about-me").css("display") == "none") {
+						var lastInfoId = $(".colleague-circle-trends>.circle-trends-box:last-child").attr("id");
+						console.log("圈子分割Id：" + lastInfoId);
+						loadAllData(lastInfoId, "dynamic");
+					} else {
+						var lastInfoId = $(".about-me>.about-me-box:last-child").attr("id");
+						console.log("动态分割Id：" + lastInfoId);
+						loadAllData(lastInfoId, "news");
+					}
+				}
+			});
+			$(".dynamic-menu .active").trigger("click");
+		});
+
+		function loadAllData(lastMessageId, type) {
+			if(type) {
+				if(type == "news") {
+					parent.ws.onsend(66, {
+						"base_feed_id": lastMessageId,
+						"limit": 10
+					}, function(data) {
+						loadMyDynamic(data);
+					});
+				} else {
+					parent.ws.onsend(62, {
+						"base_moment_id": lastMessageId,
+						"limit": 10,
+						"type": $(".dynamic-menu .active").data("type")
+					}, function(data) {
+						loadFriendDynamic(data);
+					});
+				}
+			}
+		}
+		//删除上传图片
+		function deteleImage(obj) {
+			$(obj).parent().remove();
+			//alert($(".upload-image .image-box").length)
+			if($(obj).is("i")) {
+				if($(".upload-image .image-box").length == 0) {
+					$(".upload-image").remove();
+				} else if($(".upload-image .image-box").length < 9 && $(".upload-image .image-box").length > 0) {
+					$(".upload-image .upload-image-add").show();
+				}
+			} else {
+				if($(".at-data-list .at-list").length == 0) {
+					$(".at-data-list").remove();
+				}
+			}
+
+		}
+		//发圈子@同事
+		function atColleague(obj) {
+			if(!$(obj).next().is(".dynamic-at")) {
+				var str = "<div class=\"dynamic-at\">";
+				str += "<div class=\"at-top\">";
+				str += "<i class=\"fa fa-search pull-right search-ico\" aria-hidden=\"true\"></i>";
+				str += "<input type=\"text\" placeholder=\"请输入姓名进行查找\" />";
+				str += "</div>";
+				str += "<div class=\"at-group-list\">";
+				str += "<ul class=\"friend-list\">";
+				str += "</ul>";
+				str += "</div>";
+				str += "<div class=\"at-page-buttom\">";
+				str += "<input type=\"botton\" class=\"btn btn-sm btn-default btn-sure\" value=\"确认\">";
+				str += "</div>";
+				str += "</div>";
+				$(obj).after(str);
+				getFriendData(1);
+			} else {
+				$(".dynamic-at").remove();
+			}
+		}
+
+		function getFriendData(showType) {
+			parent.ws.onsend(20, {}, function(data) {
+				if(data.action == 200) {
+					return false;
+				}
+				if(data.action == 500) {
+					$.showErrorGritter("加载好友失败！");
+					return false;
+				}
+				if(showType == 1)
+					loadFriendData(data);
+				else {}
+			});
+		}
+
+		function atInputShow() {
+
+		}
+		//加载好友列表
+		function loadFriendData(data) {
+			var firendListData = data.data;
+			//清除
+			$(".friend-list").empty();
+			loadtree(firendListData, ".friend-list", 1);
+
+			function loadtree(data, parent, type) {
+				for(var i in data) {
+					var treedata = data[i];
+					var str = "";
+					if(type == 1) { //部门
+						str += "<li data-id=" + treedata.depa_id + ">";
+						str += "<div data-id=" + treedata.depa_id + ">";
+						str += "<i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>";
+						str += "<span class=\"tree-name css-overhidden\">" + treedata.depa_name + "</span>";
+						str += "</div>";
+						str += "<ul>";
+						str += "</ul>";
+						str += "</li>";
+					} else { //人
+						if(!treedata.employee_enabled) continue;
+						str += "<li data-id=" + treedata.employee_id + " class=\"colleague-man\">";
+						str += "<label>";
+						str += "<input type=\"checkbox\" value=" + treedata.employee_id + ">";
+						str += "<img src=\"" + treedata.employee_avatar + "\" class=\"avatar-img\">";
+						str += "<span class=\"tree-name css-overhidden\">" + treedata.employee_name + "</span>";
+						str += "</label>";
+						str += "</li>";
+					}
+					$(parent).append(str);
+					if(treedata.sub_departments && treedata.sub_departments.length > 0) {
+						loadtree(treedata.sub_departments, ".friend-list li[data-id=" + treedata.depa_id + "]>ul", 1);
+					}
+					if(treedata.employees && treedata.employees.length > 0) {
+						loadtree(treedata.employees, ".friend-list li[data-id=" + treedata.depa_id + "]>ul", 2);
+					}
+				}
+				//添加收缩事件
+				$(".friend-list div").unbind("click").click(function() {
+					if($(this).children("i").hasClass("fa-caret-right")) {
+						$(this).children("i").removeClass("fa-caret-right").addClass("fa-caret-down");
+						$(this).next().slideDown();
+					} else {
+						$(this).children("i").removeClass("fa-caret-down").addClass("fa-caret-right");
+						$(this).next().slideUp();
+					}
+				});
+				//搜索
+				$(".dynamic-at .at-top input").keyup(function() {
+					var searchText = $(this).val();
+					if(searchText == "") {
+						$(".dynamic-at li").show();
+					} else {
+						$(".dynamic-at li").each(function(index) {
+							var contrastText = $(this).find(".tree-name").text();
+							if(!pinyinSearch(searchText, contrastText)) {
+								$(this).hide();
+							} else {
+								$(this).show();
+							}
+						});
+					}
+				});
+				//添加点击事件
+				$(".btn-sure").unbind("click").click(function() {
+					var str = "";
+					$(".at-group-list input[type=checkbox]:checked").each(function(index) {
+						var manId = $(this).val();
+						var manName = $(this).siblings(".tree-name").text();
+						if($(".at-data-list").length != 0) { //已存在
+							var isExist = false;
+							$(".at-data-list>span").each(function() {
+								if($(this).attr("data-id") == manId) {
+									isExist = true;
+								}
+							});
+							if(!isExist) {
+								$(".at-data-list").append("<span class=\"at-list\" contenteditable=\"false\" data-id=" + manId + "><span class=\"at-name\">" + manName + "</span><span class=\"detele-at\" onclick=\"deteleImage(this)\">×</span></span>");
+							}
+						} else { //没存在
+							$(".write-content-btn").append("<p class=\"at-data-list\"><span>提到了：</span><span class=\"at-list\" contenteditable=\"false\" data-id=" + manId + "><span class=\"at-name\">" + manName + "</span><span class=\"detele-at\" onclick=\"deteleImage(this)\">×</span></span></p>");
+						}
+					});
+					$(".dynamic-at").remove();
+				});
+			}
+		}
+		//评论
+		function commentInfo(obj) {
+			var commentToId = "";
+			var commentText = $(obj).prev().val();
+			var contentDom = "";
+			if(commentText == "") {
+				$(obj).parent().remove();
+				return false;
+			}
+			var dynamicId = $(obj).parents(".circle-trends-box").attr("id");
+			if(!$(obj).parent().prev().is(".trends-interaction-menu")) {
+				//回复
+				console.log("回复");
+				commentToId = $(obj).parent().prev().find(".comment-to").attr("data-id");
+				var commentToName = $(obj).parent().prev().find(".comment-to").text();
+				contentDom = $(obj).parents("li");
+				parent.ws.onsend(63, {
+					"comment_content": commentText,
+					"moment_id": dynamicId,
+					"comment_answer_to": commentToId
+				}, function(data) {
+					addCommentContent({
+						"commentText": commentText,
+						"commentId": dynamicId,
+						"commentLocation": contentDom,
+						"commentToName": commentToName,
+						"commentToId": commentToId
+					}, data);
+				});
+			} else { //评论
+				console.log("评论");
+				commentToId = "";
+				contentDom = $(obj).parent().next().find("ul");
+				parent.ws.onsend(63, {
+					"comment_content": commentText,
+					"moment_id": dynamicId,
+					"comment_answer_to": commentToId
+				}, function(data) {
+					addCommentContent({
+						"commentText": commentText,
+						"commentId": dynamicId,
+						"commentLocation": contentDom
+					}, data);
+				});
+			}
+			$(obj).parent().remove();
+		}
+		//添加评论或回复
+		function addCommentContent(info, data) {
+			if(data.action == 500) {
+				$.showErrorGritter("评论或回复失败！");
+				return false;
+			}
+			if(data.action == 200) {
+				return false;
+			}
+			if(info.commentToName == undefined) {
+				console.log("评论==========");
+				var str = "<li id=" + data.data.comment_id + ">" +
+					"<div class=\"interaction-info\">" +
+					"<img src=" + myAvatar + " class=\"interaction-headportrait pull-left\" />" +
+					"<p class=\"interaction-main pull-left\">" +
+					"<span class=\"interaction-name comment-to\" onclick=\"parent.openPersonageInfo(this)\" data-id=" + myId + ">" + myName + "</span>:" +
+					info.commentText +
+					"<span class=\"interaction-time\">" + isTodayOrYesterday(changeDate(data.data.timestamp)) +
+					"<i class=\"back-icon reply-btn\" aria-hidden=\"true\"></i><a href=\"javascript:;\" class=\"detele-comment\" onclick=\"deteleComment(this)\">删除</a></span>" +
+					"</p>" +
+					"<div class=\"clearfix\"></div>" +
+					"</div>" +
+					"</li>";
+
+				info.commentLocation.append(str);
+			} else {
+				console.log("回复============");
+				var str = "<li id=" + data.data.comment_id + ">" +
+					"<div class=\"interaction-info\">" +
+					"<img src=" + myAvatar + " class=\"interaction-headportrait pull-left\" />" +
+					"<p class=\"interaction-main pull-left\">" +
+					"<span class=\"interaction-names\"><span class=\"interaction-name comment-to\" onclick=\"parent.openPersonageInfo(this)\" data-id=" + myId + ">" +
+					parent.myName + "</span>回复<span class=\"interaction-name\" data-id=" + info.commentToId + " onclick=\"parent.openPersonageInfo(this)\">" + info.commentToName + "</span>:</span>" +
+					info.commentText +
+					"<span class=\"interaction-time\">" + isTodayOrYesterday(changeDate(data.data.timestamp)) +
+					"<i class=\"back-icon reply-btn\" aria-hidden=\"true\"></i><a href=\"javascript:;\" class=\"detele-comment\" onclick=\"deteleComment(this)\">删除</a></span>" +
+					"</p>" +
+					"<div class=\"clearfix\"></div>" +
+					"</div>" +
+					"</li>";
+				info.commentLocation.after(str);
+			}
+		}
+		//删除我的评论
+		function deteleComment(obj) {
+			var commentId = $(obj).parents("li").attr("id");
+			parent.ws.onsend(70, {
+				"comment_id": commentId
+			}, function(data) {
+				if(data.action == 500) {
+					$.showErrorGritter("删除失败！");
+					return false;
+				}
+				if(data.action == 200) {
+					$.showSuccessGritter("删除成功！");
+					$(obj).parents("li").remove();
+				}
+			});
+		}
+		//加载动态
+		function loadFriendDynamic(data) {
+			if(data.action == 200) return false;
+			if(data.action == 500) {
+				$.showErrorGritter("加载圈子失败！");
+				return false;
+			}
+			console.log(data);
+			var FriendDynamicData = data.data;
+			if(FriendDynamicData.length == 0) {
+				//$(".colleague-circle-trends").append("<p>暂无动态</p>");
+				return false;
+			}
+			for(var i in FriendDynamicData) {
+				if(isOneReadFriendDynamicData) {
+					friendDynamicIsRead(FriendDynamicData[i].moment_id, 1);
+					//取消新圈子红点
+					var parentDomChrome = parent.document.getElementsByClassName("fa-chrome");
+					$(parentDomChrome).next(".new-info-reminder").remove();
+					isOneReadFriendDynamicData = false;
+				}
+				$(".colleague-circle-trends").append(singleDynamic(FriendDynamicData[i], ""));
+			}
+			bindMagnifyEvent();
+			statisticsLine();
+
+		}
+
+		function messageShow(num) {
+			if(num) {
+				num = parseInt(num);
+				if(num > 99) {
+					num = "99+";
+				}
+				return num;
+			}
+		}
+
+		function messageNum() {
+			$(".message-info-num").hide();
+			//删除Im未读消息
+			var parentDomChrome = parent.document.getElementsByClassName("fa-chrome");
+			var parentDomChatopen = parent.document.getElementsByClassName("chat-open");
+			var allNewsNum = parseInt($(parentDomChatopen).children(".all-num").text());
+			var newsNum = parseInt($(parentDomChrome).find(".all-friend-dynamic-num").text())
+			if($(parentDomChrome).find(".all-friend-dynamic-num").length != 0) {
+				var infoNum = allNewsNum - newsNum;
+				if(infoNum > 0) {
+					$(parentDomChatopen).children(".all-num").text(messageShow(infoNum));
+					$(parentDomChatopen).children(".all-num").data("num", infoNum);
+				} else {
+					$(parentDomChatopen).children(".all-num").remove();
+				}
+			}
+			$(parentDomChrome).find(".all-friend-dynamic-num").remove();
+		}
+		//加载我的动态
+		var feedData = {};
+
+		function loadMyDynamic(data) {
+			if(data.action == 200) return false;
+			if(data.action == 500) {
+				$.showErrorGritter("加载动态失败！");
+				return false;
+			}
+			var myDynamicData = data.data;
+			//console.log(myDynamicData)
+			for(var i in myDynamicData) {
+				if(isOneReadDynamicData) {
+					friendDynamicIsRead(myDynamicData[i].feed_id, 2);
+					isOneReadDynamicData = false;
+				}
+				feedData[myDynamicData[i].feed_id] = myDynamicData[i].moment;
+				var str = "";
+				var fromEmployeeData = myDynamicData[i].from_employee;
+				var fromDynamicData = myDynamicData[i].moment;
+				var fromReplyData = myDynamicData[i].comment;
+				var imgInfoListHtml = "";
+				//默认显示第一张图片
+				if(fromDynamicData.moment_file_list) {
+					imgInfoListHtml += "<img src=" + fromDynamicData.moment_file_list[0].file_info + " class=\"trends-image\">";
+				}
+				//}
+				str += "<div class=\"about-me-box\" id=" + myDynamicData[i].feed_id + " data-dynamic-id=" + fromDynamicData.moment_id + ">";
+				str += "<div class=\"box-top\">";
+				str += "<img src='" + fromEmployeeData.employee_avatar + "' class=\"pull-left\" />";
+				str += "<div class=\"trends-info pull-left\">";
+				str += "<p class=\"trends-name\"><span class=\"interaction-name\" data-id=" + fromEmployeeData.employee_id + " onclick=\"parent.openPersonageInfo(this)\">" + fromEmployeeData.employee_name + "</span></p>";
+				if(myDynamicData[i].feed_type == 1) {
+					//@到你
+					str += "<p class=\"trends-main\">提到了我</p>";
+				} else if(myDynamicData[i].feed_type == 2) {
+					//回复你
+					str += "<p class=\"trends-main\" title='" + fromReplyData.comment_content + "'>回复了我：" + fromReplyData.comment_content + "</p>";
+				} else if(myDynamicData[i].feed_type == 3) {
+					//赞你
+					str += "<p class=\"trends-main\">赞了我</p>";
+				} else if(myDynamicData[i].feed_type == 4) {
+					if(fromReplyData.comment_answer_to != null) {
+						str += "<p class=\"trends-main\" title='" + fromReplyData.comment_content + "'>回复了<span class=\"interaction-name\" data-id=" + fromReplyData.comment_answer_to.employee_id + " onclick=\"parent.openPersonageInfo(this)\">" + fromReplyData.comment_answer_to.employee_name + "</span>：" + fromReplyData.comment_content + "</p>";
+					} else {
+						//评论你
+						str += "<p class=\"trends-main\" title='" + fromReplyData.comment_content + "'>评论了我：" + fromReplyData.comment_content + "</p>";
+					}
+				} else {
+
+				}
+				str += "</div>";
+				str += "<div class=\"clearfix\"></div>";
+				str += "</div>";
+				str += "<div class=\"box-main\">";
+				str += "<div class=\"image-content pull-left\">" + imgInfoListHtml + "</div>";
+				str += "<p class=\"text-content pull-left\" onclick=\"viewSingleNews(this);\" title='" + fromDynamicData.moment_content + "'>" + fromDynamicData.moment_content + "</p>";
+				str += "<div class=\"clearfix\"></div>";
+				str += "</div>";
+				str += "<p class=\"trends-time\">" + isTodayOrYesterday(myDynamicData[i].feed_time, false) + "</p>";
+				str += "<a href=\"javascript:;\" class=\"btn btn-link news-replay-btn reply-btn\" onclick=\"infoReply(this)\">回复</a>";
+				str += "</div>";
+				$(".about-me").append(str);
+			}
+			bindMagnifyEvent();
+			statisticsLine();
+		}
+
+		function viewSingleNews(obj) {
+			var feedId = $(obj).parents(".about-me-box").attr("id");
+			var fromDynamicData = feedData[feedId];
+			$(".dynamic-main").hide();
+			$(".dynamic-particulars").show();
+			$(".dynamic-particulars>.circle-trends-box").remove();
+			$(".dynamic-particulars").append(singleDynamic(fromDynamicData, "single"));
+			bindMagnifyEvent();
+			//返回
+			$(".btn-return").click(function() {
+				$(".dynamic-particulars").hide();
+				$(".dynamic-main").show();
+
+			});
+		}
+		//生成一条动态
+		function singleDynamic(data, type) {
+			if(data) {
+				var praiseManNum = "";
+				var strs = "<i class=\"praise\" aria-hidden=\"true\"></i>";
+				for(var j in data.like_employees) {
+					var manData = data.like_employees[j];
+					if(j < data.like_employees.length - 1) {
+						praiseManNum += "<span class=\"people-name interaction-name\" data-id=" + manData.employee_id + " onclick=\"parent.openPersonageInfo(this)\">" + manData.employee_name + ",</span>";
+					} else {
+						praiseManNum += "<span class=\"people-name interaction-name\" data-id=" + manData.employee_id + " onclick=\"parent.openPersonageInfo(this)\">" + manData.employee_name + "</span>";
+					}
+					if(myId == data.like_employees[j].employee_id) {
+						strs = strs.replace("praise", "praise active");
+					}
+				}
+				var atListHtml = "";
+				if(data.moment_at_list.length != 0) {
+					atListHtml += "<p class=\"trends-at-list\">提到：";
+					for(var j in data.moment_at_list) {
+						var manData = data.moment_at_list[j];
+						if(j == data.moment_at_list.length - 1) {
+							atListHtml += "<span class=\"interaction-name\" data-id=" + manData.employee_id + " onclick=\"parent.openPersonageInfo(this)\">" + (manData.employee_name == myName ? "我" : manData.employee_name) + "</span></p>";
+						} else {
+							atListHtml += "<span class=\"interaction-name\" data-id=" + manData.employee_id + " onclick=\"parent.openPersonageInfo(this)\">" + (manData.employee_name == myName ? "我" : manData.employee_name) + "</span>、";
+						}
+					}
+				}
+				var commentListStr = "";
+				var commentDataList = data.comments.reverse();
+				for(var j in data.comments) {
+					var commentData = data.comments[j];
+					var isMyReleaseStr = "";
+					if(commentData.comment_creator.employee_id == myId) {
+						isMyReleaseStr = "<a href=\"javascript:;\" class=\"detele-comment\" onclick=\"deteleComment(this)\">删除</a>";
+					}
+					if(!data.comments[j].comment_answer_to) {
+						//评论
+						commentListStr += "<li id=" + commentData.comment_id + ">" +
+							"<div class=\"interaction-info\">" +
+							"<img src=" + commentData.comment_creator.employee_avatar + " class=\"interaction-headportrait pull-left\" />" +
+							"<p class=\"interaction-main pull-left  aaaaa\">" +
+							"<span class=\"interaction-name comment-to\" onclick=\"parent.openPersonageInfo(this)\" data-id=" + commentData.comment_creator.employee_id + ">" + commentData.comment_creator.employee_name + ":</span>" +
+							commentData.comment_content +
+							"<span class=\"interaction-time\">" + isTodayOrYesterday(changeDate(commentData.comment_time)) + "<i class=\"back-icon reply-btn\" aria-hidden=\"true\"></i>" + isMyReleaseStr + "</span>" +
+							"</p>" +
+							"<div class=\"clearfix\"></div>" +
+							"</div>" +
+							"</li>";
+					} else { //回复
+						commentListStr += "<li id=" + commentData.comment_id + ">" +
+							"<div class=\"interaction-info\">" +
+							"<img src=" + commentData.comment_creator.employee_avatar + " class=\"interaction-headportrait pull-left\" />" +
+							"<p class=\"interaction-main pull-left aaaaa\">" +
+							"<span class=\"interaction-names\"><span class=\"interaction-name comment-to\" onclick=\"parent.openPersonageInfo(this)\" data-id=" + commentData.comment_creator.employee_id + ">" +
+							commentData.comment_creator.employee_name + "</span>回复<span class=\"interaction-name\" data-id=" + commentData.comment_answer_to.employee_id + " onclick=\"parent.openPersonageInfo(this)\">" + commentData.comment_answer_to.employee_name + "</span>:</span>" +
+							commentData.comment_content +
+							"<span class=\"interaction-time\">" + isTodayOrYesterday(changeDate(commentData.comment_time)) + "<i class=\"back-icon reply-btn\" aria-hidden=\"true\"></i>" + isMyReleaseStr + "</span>" +
+							"</p>" +
+							"<div class=\"clearfix\"></div>" +
+							"</div>" +
+							"</li>";
+					}
+
+				}
+				var imgInfoListHtml = "";
+				for(var j in data.moment_file_list) {
+					imgInfoListHtml += "<img src=" + data.moment_file_list[j].file_info + " class=\"trends-image\">";
+				}
+				//是不是自己发的
+				var isMyPublish = false;
+				if(type != "single")
+					if(data.moment_creator.employee_id == myId)
+						isMyPublish = true;
+				var str = "";
+				str += "<div class=\"circle-trends-box\" id=" + data.moment_id + ">" +
+					"<div class=\"box-top\">" +
+					"<img src='" + data.moment_creator.employee_avatar + "' class=\"pull-left\" />" +
+					"<div class=\"trends-info pull-left\">" +
+					"<p class=\"trends-name interaction-name\" data-id=" + data.moment_creator.employee_id + " onclick=\"parent.openPersonageInfo(this)\">" + data.moment_creator.employee_name + "</p>" +
+
+					//"<p class=\"trends-time\">" + isTodayOrYesterday(changeDate(FriendDynamicData[i].moment_date),true) + "</p>" +
+					"<p class=\"trends-operation\"><span class=\"trends-time\">" + isTodayOrYesterday(changeDate(data.moment_date), false) + "</span>" + (isMyPublish ? "<span class=\"detele-dynamic\">删除</span>" : "") + "</p>" +
+					"</div>" +
+					"<div class=\"clearfix\"></div>" +
+					"</div>" +
+					atListHtml +
+					"<p class=\"trends-text\">" + data.moment_content + "</p>" +
+					"<div class=\"image-content\">" +
+					imgInfoListHtml +
+					"</div>" +
+					"<span style=\"width:80%;color:#5596a5;margin-left:10px\">" + data.moment_location + "</span>" +
+					"<div class=\"box-bottom\">" +
+					"<p class=\"trends-interaction-menu\">" +
+					"<i class=\"back-icon\" aria-hidden=\"true\"></i>" +
+					strs +
+					"<span class=\"trends-like-people\">" + praiseManNum + "</span>" +
+					"</p>" +
+					//									"<div class="interaction-send">
+					//										"<textarea class="interaction-send-text" placeholder="请输入..."></textarea>
+					//										<input type="button" value="发送" class="interaction-btn-send" />
+					//									</div>
+					"<div class=\"interaction-list\">" +
+					"<ul class=\"interaction-list-a\">" +
+					commentListStr +
+
+					"</ul>" +
+					"</div>" +
+					"</div>" +
+					"</div>";
+				return str;
+			}
+		}
+		//圈子动态已读未读
+		function friendDynamicIsRead(dynamicId, type) {
+			console.log(dynamicId + "，" + type)
+			if(type == 1) { //圈子已读
+				parent.ws.onsend(68, {
+					"moment_id": dynamicId
+				}, function(data) {
+					if(data.action == 200) {
+						console.log("圈子已读ID：" + dynamicId);
+						console.log(data);
+					}
+					if(data.action == 500) {
+						$.showErrorGritter("阅读圈子失败！");
+						return false;
+					}
+				});
+			} else { //动态已读
+				parent.ws.onsend(69, {
+					"feed_id": dynamicId
+				}, function(data) {
+					if(data.action == 200) {
+						console.log("动态已读ID：" + dynamicId);
+						console.log(data);
+					}
+					if(data.action == 500) {
+						$.showErrorGritter("阅读动态失败！");
+						return false;
+					}
+				});
+			}
+		}
+		//回复
+		function infoReply(obj) {
+			var objName = $(obj).parents(".about-me-box").find(".interaction-name").text();
+			var str = "<div class=\"reply-send\">";
+			str += "<textarea class=\"interaction-send-text\" maxlength=\"200\" placeholder=\"回复 " + objName + "：\"></textarea>";
+			str += "<input type=\"button\" value=\"发送\" class=\"btn btn-default btn-sm interaction-btn-send\" onclick=\"replyInfo(this)\">";
+			str += "</div>";
+			if($(obj).next().is(".reply-send")) {
+				$(".reply-send").remove();
+			} else {
+				$(".reply-send").remove();
+				$(obj).after(str);
+				$(obj).next().find(".interaction-send-text").focus();
+			}
+			//发送
+		}
+		//我的动态发送
+		function replyInfo(obj) {
+			var contentBody = $(obj).parents(".about-me-box").attr("id");
+			var replyToId = $(obj).parents(".about-me-box").find(".interaction-name").attr("data-id");
+			var replyText = $(obj).prev().val();
+			if(replyText == "") {
+				$(obj).parent().remove();
+				return false;
+			}
+			var replyToDynamicId = $(obj).parents(".about-me-box").attr("data-dynamic-id");
+			var replyToName = $(obj).parents(".about-me-box").find(".box-top .interaction-name").text();
+			parent.ws.onsend(63, {
+				"comment_answer_to": replyToId,
+				"comment_content": replyText,
+				"moment_id": replyToDynamicId
+			}, function(data) {
+				if(data.action == 200) {
+					var str = "<p class=\"reply-info-list\">我回复<span class=\"interaction-name\" data-id=" + replyToId + " onclick=\"parent.openPersonageInfo(this)\">" + replyToName + ":</span>" + replyText + "</p>";
+					//console.log(contentBody)
+					$("#" + contentBody).find(".trends-time").after(str);
+					$(obj).parent().remove();
+				}
+				if(data.action == 500) {
+					$.showErrorGritter("评论失败！");
+					return false;
+				}
+			});
+		}
+		//接收好友动态
+		function receiveNewInfo(data) {
+			if($(".colleague-circle-space .new-info-remind").length == 0 && $(".dynamic-menu li:first-child").hasClass('active')) {
+				$(".colleague-circle-trends").before("<p class=\"new-info-remind\" onclick=\"refreshDynamic(this,'')\">有新消息，点击刷新</p>");
+			}
+			$(".dynamic-menu li[data-type='']").append("<span class=\"message-num\"></span>");
+		}
+		//接收我的动态
+		function receiveNewMyInfo(data) {
+			if($(".about-me .new-info-remind").length == 0) {
+				$(".about-me").prepend("<p class=\"new-info-remind\" onclick=\"refreshDynamic(this,'news')\">有新消息，点击刷新</p>");
+			}
+			var noReadNum = 0;
+			if($(".message-info-num").length != 0) {
+				noReadNum = parseInt($(".message-info-num").text().match(/\d+/g)) + 1;
+				$(".message-info-num").text("(" + noReadNum + ")");
+			} else {
+				$(".dynamic-menu li[data-type='news']").append("<span class=\"message-info-num\">(1)</span>");
+			}
+		}
+		//重新加载动态
+		function refreshDynamic(obj, type) {
+			$(".dynamic-menu li[data-type=" + type + "]").trigger("click");
+			$(obj).remove();
+		}
+		//光标处插入(myField:插入的容器、myValue:插入的内容)
+		function insertAtCursor(myField, myValue) {
+			//IE support
+			if(document.selection) {
+				$(myField).focus();
+				sel = document.selection.createRange();
+				sel.text = myValue;
+				sel.select();
+			}
+			//MOZILLA/NETSCAPE support 
+			else if(myField.selectionStart || myField.selectionStart == '0') {
+				var startPos = myField.selectionStart;
+				var endPos = myField.selectionEnd;
+				// save scrollTop before insert www.keleyi.com
+				var restoreTop = myField.scrollTop;
+				myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+				if(restoreTop > 0) {
+					myField.scrollTop = restoreTop;
+				}
+				myField.focus();
+				myField.selectionStart = startPos + myValue.length;
+				myField.selectionEnd = startPos + myValue.length;
+			} else {
+				myField.value += myValue;
+				$(myField).focus();
+			}
+		}
+		//@输入触发
+		$.fn.at = function(option) {
+			$(this).keyup(function() {
+				var txt = $(this).val();
+				var lastPrintTxt = txt.substring(txt.length - 2, txt.length - 1);
+				if(lastPrintTxt == "@") {
+
+				}
+			});
+
+		}
+
+		function bindMagnifyEvent() {
+			console.log("百度")
+			$(".upload-image img,.image-content img").unbind("click").click(function() {
+				var imgSrcs = [$(this).attr("src")];
+				var imgContainer = $(".upload-image img[data-path]");
+				if($(this).hasClass("trends-image"))
+					imgContainer = $(this).siblings("img");
+				imgContainer.each(function(i) {
+					imgSrcs.push($(this).attr("src"));
+				});
+				parent.magnifyImage(imgSrcs);
+			});
+		}
+	</script>
+
+</html>

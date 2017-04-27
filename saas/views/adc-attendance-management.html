@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>考勤管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.page-container,
+			.page-container .content {
+				padding: 0;
+			}
+			
+			.main-wrap {
+				padding-top: 14px;
+			}
+			
+			.left-menu {
+				width: 220px;
+				border: 1px solid #e3e3e3;
+				border-width: 0 1px 0 0;
+				padding-top: 5px;
+			}
+			
+			.page-container .content .main-wrap {
+				margin-left: 230px;
+			}
+			
+			.sign_in_container,
+			.sign_out_container {
+				position: relative;
+			}
+			
+			.sign_in_container input,
+			.sign_out_container input {
+				padding-left: 90px;
+			}
+			
+			.sign_in_year_month_day {
+				background-image: url(../resources/images/select-down-icon.png);
+				background-repeat: no-repeat;
+				background-position: 115px 8px;
+				/*background: #EFEFEF;*/
+			}
+			
+			.sign_in_year_month_day,
+			.sign_out_year_month_day_container {
+				position: absolute;
+				left: 115px;
+				top: 0px;
+				width: 140px;
+				border: 1px solid #E3E3E3;
+				text-align: left;
+				line-height: 30px;
+				height: 34px;
+				padding-left: 5px;
+			}
+			
+			.span-back {
+				background: #EFEFEF;
+				width: 140px;
+				height: 34px;
+				display: inline-block;
+				vertical-align: bottom;
+			}
+			
+			.form-group .out_hour,
+			.form-group .out_min,
+			.form-group .in_hour,
+			.form-group .in_min {
+				width: 50px;
+				background: initial;
+				-webkit-appearance: inherit;
+				padding-left: 20px;
+				padding-right: 0;
+				border: 0;
+				height: 34px;
+				line-height: 28px;
+				color: #999;
+				background-image: url(../resources/images/announcement.png)!important;
+			}
+			
+			.in_date,
+			.out_date {
+				display: inline-block;
+				width: 255px;
+				/*margin-left: 150px;*/
+				height: 34px;
+				line-height: 34px;
+				border: 1px solid #e3e3e3;
+			}
+			
+			.out_date {
+				margin-left: 145px;
+			}
+			
+			.sign_out_date {
+				display: inline-block;
+				width: 92px;
+				background-color: #fff;
+				border: 1px solid #e3e3e3;
+				padding: 5px;
+				position: absolute;
+				top: 28px;
+				right: -1px;
+			}
+			
+			.sign_out_view {
+				cursor: pointer;
+			}
+			
+			.sign_out_date span {
+				cursor: pointer;
+				display: block;
+				width: auto;
+			}
+			
+			.sign_out_date span:first-child {
+				border-bottom: 1px solid #ccc;
+			}
+			
+			.page-attendance .content {
+				padding: 0!important;
+			}
+			
+			.page-menu {
+				line-height: 44px;
+				border-bottom: 1px solid #e3e3e3;
+				font-size: 14px;
+				padding-left: 10px;
+				background-color: #f8f8f8;
+			}
+			
+			.page-menu a,
+			.page-menu a:hover {
+				cursor: pointer;
+				display: inline-block;
+				height: 44px;
+				line-height: 44px;
+				text-decoration: none;
+				color: #666;
+				width: 75px;
+				text-align: center;
+			}
+			
+			.page-menu a.select-style {
+				color: #009ed8;
+				border-bottom: 2px solid #009ed8;
+			}
+			
+			.subordinate-location-search {
+				height: 60px;
+				border-bottom: 1px solid #e3e3e3;
+				line-height: 60px;
+				margin: 14px 0;
+			}
+			
+			.select-list {
+				display: inline-block;
+				width: 50%;
+				height: 46px;
+				line-height: 23px;
+				border: 1px solid #eee;
+				line-height: 30px;
+				margin-right: 10px;
+				float: left;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow-y: auto;
+			}
+			
+			.select-employees {
+				width: 100px;
+				height: 30px;
+				line-height: 30px;
+				display: inline-block;
+				padding-left: 10px;
+				float: left;
+				margin-top: 5px;
+			}
+			
+			.subordinate-location-search .search-btn {
+				height: 30px;
+				margin-bottom: 5px;
+				line-height: 10px;
+				margin-left: 10px;
+			}
+			
+			.view-title {
+				height: 20px;
+				line-height: 10px;
+				margin: 6px 0;
+			}
+			
+			.change-btn {
+				font-weight: bold;
+				margin-right: 20px;
+			}
+			
+			#subordinate-location-tab th,
+			#subordinate-location-tab td {
+				text-align: center;
+			}
+			
+			.new-date {
+				margin-right: 10px;
+				color: red;
+			}
+			
+			#allmap {
+				width: 100%;
+			}
+			
+			.map-label {
+				position: relative;
+				top: -10px;
+				background: #EA8010;
+				color: #fff;
+				display: inline-block;
+				width: 16px;
+				border-radius: 8px;
+				right: 10px;
+			}
+			
+			.map-box {
+				zoom: 1;
+			}
+			
+			.map-box:after {
+				content: ",";
+				height: 0px;
+				display: block;
+				visibility: hidden;
+				clear: both;
+			}
+			
+			.map-box div {
+				width: 60px;
+				height: 100px;
+				float: left;
+			}
+			
+			.map-box img {
+				width: 60px;
+				/*border-radius: 30px;*/
+			}
+			
+			.map-box span {
+				display: inline-block;
+				width: 60px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				text-align: center;
+			}
+			
+			.map-box-loaction {
+				border-top: 1px solid #ccc;
+				padding-top: 10px;
+			}
+			
+			.year-holiday>div,
+			.leave-lieu div {
+				margin-top: 20px;
+			}
+			
+			.year-holiday label,
+			.leave-lieu label {
+				width: 120px;
+			}
+			
+			.year-holiday input,
+			.year-holiday textarea,
+			.leave-lieu input,
+			.leave-lieu textarea {
+				width: 300px;
+			}
+			
+			.subordinate-location-content {
+				padding-left: 10px;
+			}
+			
+			.tree>li {
+				margin-left: 0;
+			}
+			
+			.tree .top-line:before {
+				margin-top: 10px!important;
+			}
+			
+			.tree>li ul>li:last-child:before {
+				margin-top: 11px!important;
+			}
+			
+			.leave-lieu label,
+			.year-holiday label {
+				text-align: right;
+				vertical-align: top;
+			}
+			
+			.remarks {
+				max-width: 55px;
+				vertical-align: bottom;
+			}
+			
+			.model-employee-select-common-linkmans .wrap-source li {
+				margin-right: 0;
+				border: none;
+			}
+			
+			.model-employee-select-common-linkmans .list-emp li {
+				margin-left: 15px;
+			}
+			
+			.model-employee-select-common-linkmans .list-emp li[data-type='2'] {
+				margin-left: 25px;
+			}
+			
+			.model-employee-select-common-linkmans .list-emp li img {
+				margin-right: 5px;
+				margin-top: -7px;
+			}
+			
+			.model-employee-select-common-linkmans .selected-emp {
+				display: block;
+				padding: 5px 20px 5px 10px;
+				border-bottom: 1px dashed #eee;
+			}
+			
+			.css-overhidden {
+				max-width: 350px;
+				min-width: 0;
+			}
+			
+			.no-tip {
+				color: #ccc;
+			}
+			
+			.select-list {
+				padding: 5px;
+			}
+			
+			.select-list-box {
+				border: 1px solid #eee;
+				padding: 3px 20px 3px 5px;
+				margin: 0px 3px;
+			}
+			
+			.select-list-box {
+				border: 1px solid #eee;
+				padding: 3px 20px 3px 5px;
+				margin: 0px 3px;
+			}
+			
+			.select-list .close-icon-container .close-icon {
+				right: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-attendance">
+			<div class="page-menu">
+				<a href="javascript:;" class="work-state select-style">工作状态</a>
+				<a href="javascript:;" class="subordinate-location">瞄一瞄</a>
+			</div>
+			<div class="content">
+				<div class="">
+					<div class="left-menu">
+						<div class="treeview" style="width: auto;">
+							<ul class="tree tree-dept-menu">
+
+							</ul>
+						</div>
+					</div>
+					<div class="main-wrap">
+						<div class="search">
+
+						</div>
+						<table id="grid-table" class="grid-module">
+						</table>
+						<div id="grid-pager">
+						</div>
+					</div>
+				</div>
+				<div class="subordinate-location-content hide">
+					<div class="subordinate-location-search">
+						<div class="select-list">
+							<span class="no-tip">请选择员工进行查看</span>
+							<!--<span class="select-list-box">A同事<i class="fa fa-times" aria-hidden="true"></i></span>-->
+						</div>
+						<a class="select-employees btn-a-default" onclick="selectViewEmployees(this)">请选择员工</a>
+						<!--<input type="button" class="btn btn-default search-btn" onclick="search(this)" value="确认" /> ----------
+						<label>地址:<input type="text" class="" id="loactiontxt" /></label>
+						<label>经度:<input type="text" class="" id="loactionlon" /></label>
+						<label>纬度:<input type="text" class="" id="loactionlat" /></label>
+						<input type="button" name="addlocation" class="btn btn-default" id="addlocation" value="传位置（测试）" onclick="addLocation()" />-->
+					</div>
+					<div class="subordinate-location-view">
+						<p class="view-title">
+							<a data-type="map" class="change-btn btn-a-default" onclick="changeShowData(this)">切换为文本模式</a><span class="note-font-type">当前时间：</span><span class="now-date note-font-type"></span>
+						</p>
+						<div class="subordinate-location-map" id="allmap">
+						</div>
+						<div class="subordinate-location-table hide">
+							<table class="table table-bordered" id="subordinate-location-tab">
+								<tr class="active">
+									<th>姓名</th>
+									<th>地址</th>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-change-work-type hide">
+			<form class="form-horizontal form-horizontal-label-right model-change-work-type">
+				<div class="form-group form-inline">
+					<label class="input-flag">可变更项：</label>
+				</div>
+				<div class="form-group form-inline">
+					<label class="">上午</label>
+					<select style="width: 318px;" class="am-type">
+						<option value="0">请选择</option>
+						<option value="1">工作</option>
+						<option value="2">休息</option>
+						<option value="3">请假</option>
+						<option value="4">出差</option>
+						<option value="6">放假</option>
+					</select>
+				</div>
+				<div class="form-group form-inline">
+					<label class="">下午</label>
+					<select style="width: 318px;" class="pm-type">
+						<option value="0">请选择</option>
+						<option value="1">工作</option>
+						<option value="2">休息</option>
+						<option value="3">请假</option>
+						<option value="4">出差</option>
+						<option value="6">放假</option>
+					</select>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag" style="vertical-align: top;">变更原因：</label>
+					<textarea cols="40" rows="5"></textarea>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-attendance-info hide">
+			<form class="form-horizontal form-horizontal-label-right model-attendance-info">
+				<div class="form-group form-inline sign_in_container">
+					<label class="input-flag">签到时间：</label>
+					<span class="span-back"><span class="sign_in_year_month_day" bind="sign_in_year_month_day"></span></span>
+					<!--<input type="time" class="form-control" placeholder="请输入签到时间" bind="sign_in_hour_minutes">-->
+					<div class="in_date">
+						<select class="in_hour">
+						</select>
+						:
+						<select class="in_min">
+						</select>
+					</div>
+
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">签到状态：</label>
+					<select class="form-control" bind="sign_in_result">
+						<option value="10">正常</option>
+						<option value="15">未签</option>
+						<option value="11">迟到</option>
+						<option value="12">旷工半天</option>
+						<option value="13">旷工一天</option>
+					</select>
+				</div>
+				<div class="form-group form-inline sign_out_container" style="position: relative;">
+					<label class="input-flag">签退时间：</label>
+					<select class="sign_out_year_month_day_container" autocomplete="off">
+
+					</select>
+					<!--<input type="time" class="form-control" placeholder="请输入签退时间" bind="sign_out_hour_minutes">-->
+					<div class="out_date">
+						<select class="out_hour">
+						</select>
+						:
+						<select class="out_min">
+						</select>
+					</div>
+
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">签退状态：</label>
+					<select class="form-control" bind="sign_out_result">
+						<option value="20">正常</option>
+						<option value="25">未签</option>
+						<option value="21">早退</option>
+						<option value="26">旷工半天</option>
+						<option value="27">旷工一天</option>
+					</select>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">是否加班：</label>
+					<select class="form-control" bind="is_overwork">
+						<option value="0">否</option>
+						<option value="1">是</option>
+					</select>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag" style="vertical-align: top;">变更原由：</label>
+					<textarea class="form-control" bind="change_reason" maxlength="500" placeholder="请输入变更原由" nulltip="变更原由"></textarea>
+				</div>
+			</form>
+		</div>
+		<!--查看加班记录弹窗-->
+		<div class="view-overwork-page hide">
+			<table class="overwork-list">
+				<tr>
+					<th>日期</th>
+					<th>工作状态</th>
+					<th>加班类型</th>
+					<th>加班主题</th>
+					<th>开始时间</th>
+					<th>预估计加班时长(小时)</th>
+					<th>加班事由</th>
+					<th>加班人员名单</th>
+					<th>实际签到时间</th>
+					<th>实际签退时间</th>
+					<th>实际时长(小时)</th>
+					<th>照片</th>
+				</tr>
+
+			</table>
+		</div>
+		<!--更改剩余调休-->
+		<div class="leave-lieu-container hide">
+			<div class="leave-lieu">
+				<div>
+					<label class="input-flag">剩余调休天数：</label>
+					<input type="text" bind="total" nulltip="剩余调休天数" />
+				</div>
+				<div>
+					<label class="input-flag">变更原因：</label>
+					<textarea rows="3" cols="50" bind="desc" nulltip="变更原因" /></textarea>
+				</div>
+			</div>
+		</div>
+		<!--更改年假调休-->
+		<div class="year-holiday-container hide">
+			<div class="year-holiday">
+				<div>
+					<label class="input-flag">剩余年假天数：</label>
+					<input type="text" bind="total" nulltip="剩余年假天数" />
+				</div>
+				<div>
+					<label class="input-flag">变更原因：</label>
+					<textarea rows="3" cols="50" bind="desc" nulltip="变更原因" /></textarea>
+				</div>
+			</div>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openWorkTypePop();" role-auth="saas/companies/0/manage_announcements|post"><i class="fa fa-edit"></i> 更改工作状态</a>
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openAttendanceInfoPop();" enable-on="singleselect" role-auth="saas/companies/0/manage_announcements|post"><i class="fa fa-edit"></i> 更改出勤信息</a>
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openUpdateLeaveLieuPop();" enable-on="singleselect" role-auth="saas/companies/0/manage_announcements|post"><i class="fa fa-edit"></i> 更改剩余调休</a>
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openUpdateYearHolidayPop();" enable-on="singleselect" role-auth="saas/companies/0/manage_announcements|post"><i class="fa fa-edit"></i> 更改剩余年假</a>
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openAdcChangeRecordPop();" enable-on="singleselect" role-auth="saas/companies/0/manage_announcements|post"><i class="fa fa-list"></i> 考勤变更记录</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.nestable.min.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/department.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/attendance.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/approval.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/common.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hgf.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG"></script>
+		<script type="text/javascript">
+			//APIS
+			var ATTENDANCEAPIS = {
+				//考勤记录
+				attendances: BSAPIURL + "/sign_records",
+				//更改考勤记录
+				attendance: BSAPIURL + "/sign_record/",
+			};
+			var gridSelector = "#grid-table";
+			var pagerSelector = "#grid-pager";
+			var viewEmployeesLocation = BSAPIURL + "/location";
+			//选择的部门/职位ID
+			var selectDeptId, selectRealDeptId, selectDeptName, selectRealDeptName;
+			var selectDeptIsTopest = false;
+			//临时参数
+			var tmpSelectTags = {};
+			//def date
+			var defDate = $.timeNow().Format("yyyy-MM-dd");
+			//部门数据
+			var deptsJSON = [];
+			var grid = '';
+			var employeesLocationData = [], //全部数组
+				outmodedData = [], //已匹配过的数组
+				mapPointInfoData = [], //组装完成数组
+				map, mapZoomLevle, distance;
+			var mapZoomScale = [10, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000, 2000000].reverse();
+			distance = mapZoomScale[0];
+			var mapHeight = $(window).height() - $(".page-menu").outerHeight(true) - $(".subordinate-location-search").outerHeight(true) - $(".view-title").outerHeight(true);
+			$("#allmap").height(mapHeight);
+			$(document).ready(function() {
+				//定时器
+				var timer = setInterval(function() {
+					$(".now-date").text($.timeNow().Format("yyyy-MM-dd hh:mm"));
+				}, 1000);
+				$(".left-menu").css("height", ($(window).height() - $(".page-menu").outerHeight(true)) + "px")
+					.css("max-height", ($(window).height() - $(".page-menu").outerHeight(true)) + "px");
+				$(".treeview").css("height", $(".left-menu").outerHeight(true) - 10 + "px")
+					.css("max-height", $(".left-menu").outerHeight(true) - 10 + "px");
+				$(".subordinate-location-map").css({
+					"height": $(window).height - $(".page-menu").outerHeight(true) - $(".subordinate-location-search").outerHeight(true) - $(".view-title").outerHeight(true) + "px",
+					"max-height": $(window).height - $(".page-menu").outerHeight(true) - $(".subordinate-location-search").outerHeight(true) - $(".view-title").outerHeight(true) + "px",
+				});
+				$.showLoadingPop("正在加载部门数据，请稍候...");
+				//search
+				$.initSearchControls4TagMode({
+					auto: false,
+					grid: gridSelector,
+					container: ".search",
+					removeHeight4Grid: $(".page-menu").outerHeight(true),
+					keyName: "key",
+					keyPlaceholder: "请输入员工姓名进行查询",
+					onChange: function(selectTags) {
+						tmpSelectTags = selectTags;
+						reloadAttendanceGrid();
+					},
+					groups: [{
+						type: "date",
+						text: "选择日期",
+						items: [{
+							name: "date",
+							placeholder: "选择日期",
+							value: defDate
+						}]
+					}, {
+						name: "work_status",
+						text: "工作状态",
+						items: [{
+							key: "工作",
+							value: "1"
+						}, {
+							key: "休息",
+							value: "2"
+						}, {
+							key: "请假",
+							value: "3"
+						}, {
+							key: "出差",
+							value: "4"
+						}, {
+							key: "放假",
+							value: "6"
+						}]
+					}, {
+						name: "sign_result",
+						text: "考勤结果",
+						items: [{
+							key: "全部",
+							value: ""
+						}, {
+							key: "正常",
+							value: "1"
+						}, {
+							key: "迟到",
+							value: "11"
+						}, {
+							key: "早退",
+							value: "21"
+						}, {
+							key: "旷工半天",
+							value: "12"
+						}, {
+							key: "旷工一天",
+							value: "13"
+						}, {
+							key: "未签",
+							value: "55"
+						}, {
+							key: "不考勤",
+							value: "30"
+						}]
+					}, {
+						name: "has_relation_client",
+						text: "关联客户",
+						items: [{
+							key: "是",
+							value: "1"
+						}, {
+							key: "否",
+							value: "0"
+						}]
+					}, {
+						name: "has_overtime",
+						text: "加　　班",
+						items: [{
+							key: "是",
+							value: "1"
+						}, {
+							key: "否",
+							value: "0"
+						}]
+					}]
+				});
+				//token
+				$.token();
+				//$(".module-tree").css("top", ($(".remark").height() + 41) + "px");
+				var gridHeight = $(window).height() - $(".page-menu").outerHeight(true) - $(".search").outerHeight(true) - 145;
+				//grid
+				var colNames = ['', '日期', '工号', '姓名', '部门职务', '签到排名', '工作状态', '签到时间、位置', '签到考勤结果', '签退时间、位置', '签退考勤结果', '关联客户', '加班', '照片', '销假申请', '剩余调休', '剩余年假' /*, '办公电话', '手机号'*/ ];
+				var colModel = [{
+						name: 'id',
+						hidden: true,
+						formatter: function(cellvalue, options, rowObject) {
+							return rowObject.sign_id;
+						}
+					}, {
+						name: 'sign_date',
+						width: 80
+					}, {
+						name: 'employee_code',
+						width: 40,
+						formatter: function(cellvalue, options, rowObject) {
+							return rowObject.employee.employee_code;
+						}
+					}, {
+						name: 'employee_name',
+						formatter: function(cellvalue, options, rowObject) {
+							return rowObject.employee.name;
+						},
+						width: 70
+					}, {
+						name: '',
+						formatter: function(cellvalue, options, rowObject) {
+							return rowObject.employee.department_name + "," + rowObject.employee.title;
+						}
+					}, {
+						name: 'sign_rank',
+						width: 65,
+					}, {
+						name: 'work_status_cn',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								var workStatusText = "";
+								if(rowObject.work_status.am) {
+									if(rowObject.work_status.am.status == 3 || rowObject.work_status.am.has_leave) {
+										workStatusText += "（上午：<a href='javascript:;' onclick=\"openLeaveRecordsPop('2','" + rowObject.sign_date + "','" + rowObject.employee.employee_id + "');\">" + rowObject.work_status.am.status_cn + "</a>）";
+									} else {
+										workStatusText += "（上午：" + rowObject.work_status.am.status_cn + "）";
+									}
+									//workStatusText += "（上午：" + rowObject.work_status.am.status_cn + "）";
+								}
+								if(rowObject.work_status.pm) {
+									if(rowObject.work_status.pm.status == 3 || rowObject.work_status.pm.has_leave) {
+										workStatusText += "（下午：<a href='javascript:;' onclick=\"openLeaveRecordsPop('2','" + rowObject.sign_date + "','" + rowObject.employee.employee_id + "');\">" + rowObject.work_status.pm.status_cn + "</a>）";
+									} else {
+										workStatusText += "（下午：" + rowObject.work_status.pm.status_cn + "）";
+									}
+									//workStatusText += "（下午：" + rowObject.work_status.pm.status_cn + "）";
+								}
+								return workStatusText;
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: 'sign_in_time',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return "<i style=\"" + (rowObject.attendance_in_address ? "color:orange;" : "") + "\" class=\"fa fa-map-marker\" aria-hidden=\"true\" title=\"" + (rowObject.attendance_in_address ? rowObject.attendance_in_address : "") + "\"></i> " + cellvalue;
+							} catch(e) {
+								return '';
+							}
+						},
+						width: 120
+					}, {
+						name: 'sign_in_result_cn',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return rowObject.sign_in_result == 11 ? (rowObject.sign_in_result_cn + "(" + rowObject.later_hour + "小时)") : rowObject.sign_in_result_cn;
+							} catch(e) {
+								return '';
+							}
+						},
+						width: 95
+					}, {
+						name: 'sign_out_time',
+						formatter: function(cellvalue, options, rowObject) {
+							if(rowObject.sign_out_timestamp && (parseFloat(rowObject.sign_out_timestamp) / (60 * 60 * 24) - parseFloat(new Date(rowObject.sign_date).getTimestamp()) / (60 * 60 * 24)) >= 1) {
+								return "<i style=\"" + (rowObject.attendance_out_address ? "color:orange;" : "") + "\" class=\"fa fa-map-marker\" aria-hidden=\"true\" title=\"" + (rowObject.attendance_out_address ? rowObject.attendance_out_address : "") + "\"></i> " +
+									cellvalue + " (次日)";
+							}
+							return "<i style=\"" + (rowObject.attendance_out_address ? "color:orange;" : "") + "\" class=\"fa fa-map-marker\" aria-hidden=\"true\" title=\"" + (rowObject.attendance_out_address ? rowObject.attendance_out_address : "") + "\"></i> " + cellvalue;
+						},
+						width: 120
+					}, {
+						name: 'sign_out_result_cn',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return rowObject.sign_out_result == 21 ? (rowObject.sign_out_result_cn + "(" + rowObject.befor_hour + "小时)") : rowObject.sign_out_result_cn;
+							} catch(e) {
+								return '';
+							}
+						},
+						width: 95
+					}, {
+						name: '__crm_relations',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								var showStr = ["{AP}<br>", "{AP}"];
+								if(rowObject.crm_relations.length != 0) {
+									for(var i in rowObject.crm_relations) {
+										var crm = rowObject.crm_relations[i];
+										var txt = showStr[crm.attendance_type - 1];
+										if(crm.client)
+											txt = txt.replace("{AP}", crm.attendance_type_cn + ":" + crm.client.client_full_name);
+										else
+											txt = txt.replace("{AP}", crm.attendance_type_cn + ":无客户（<span class=\"remarks css-overhidden\">" + crm.remark + "</span>）");
+										showStr[crm.attendance_type - 1] = txt;
+									}
+								}
+								return showStr[0].replace("{AP}", "签到：-") + showStr[1].replace("{AP}", "签退：-");
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: 'is_overwork',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								if(rowObject.is_overwork != 0) {
+									var overworkTime = 0;
+									for(var i in rowObject.overwork_records) {
+										overworkTime += parseInt(rowObject.overwork_records[i].overtime_limit);
+									}
+									var str = "是(" + (overworkTime||0) + "小时)";
+									return "<a href=\"javascript:;\" onclick=\"openOvertimeRecordsPop('2','" + rowObject.sign_date + "','" + rowObject.employee.employee_id + "')\">" + str + "</a>"
+								} else {
+									return "否";
+								}
+							} catch(e) {
+								return '';
+							}
+						},
+						width: 70
+					}, {
+						name: '',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								//签到图片 picture.sign_in
+								//签退图片 picture.sign_out
+								if(!rowObject.picture.sign_in && !rowObject.picture.sign_out) {
+									return "-";
+								}
+								return "<a href='javascript:;' onclick=\"openAttendancePhotosPop('" + rowObject.picture.sign_in + "','" + rowObject.picture.sign_out + "');\">查看照片</a>";
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: '',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								if(rowObject.cancels.length == 0) {
+									return "-";
+								}
+								return "<a href='javascript:;' onclick=\"viewApplyFor('" + rowObject.sign_id + "');\">" + rowObject.cancels.length + "</a>";
+							} catch(e) {
+								return '';
+							}
+						},
+						width: 60
+					}, {
+
+						name: '__overtime_leave_total',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return "<a href='javascript:;' onclick=\"openAnnualleaveOrRestChangeRecord('" + rowObject.sign_id + "','overtime');\">" + rowObject.overtime_leave_total + "</a>";
+							} catch(e) {
+								return '';
+							}
+						},
+						width: 60
+					}, {
+						name: '__annual_leave_total',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return "<a href='javascript:;' onclick=\"openAnnualleaveOrRestChangeRecord('" + rowObject.sign_id + "','annualleave');\">" + rowObject.annual_leave_total + "</a>";
+							} catch(e) {
+								return '';
+							}
+						},
+						width: 60
+					}
+					/*, {
+										name: '',
+										formatter: function(cellvalue, options, rowObject) {
+											return rowObject.employee.office_phone;
+										}
+									}, {
+										name: '',
+										formatter: function(cellvalue, options, rowObject) {
+											return rowObject.employee.mobile;
+										}
+									}*/
+				];
+				grid = $(gridSelector).initJqGrid({
+					storeRowDataInCache: true,
+					gridSelector: gridSelector,
+					pager: pagerSelector,
+					url: ATTENDANCEAPIS.attendances + "?date=" + defDate,
+					colNames: colNames,
+					height: $(window).height() - $(".remark").outerHeight(true) - $(".page-menu").outerHeight(true) - $(".search").outerHeight(true) - 92,
+					colModel: colModel,
+					height: gridHeight,
+					multiselect: true,
+					thDefaultWidth: 80
+				});
+				//部门树
+				//				loadDeptTree({
+				//					container: ".tree-dept-menu",
+				//					onNodeSelected: function(node) {
+				//						selectDeptIsTopest = node.isTopest;
+				//						selectDeptId = node.deptId;
+				//						selectRealDeptId = node.realDeptId;
+				//						selectDeptName = node.deptName;
+				//						selectRealDeptName = node.realDeptName;
+				//
+				//						reloadAttendanceGrid();
+				//					}
+				//				});
+				loadDashedDeptTree({
+					container: ".tree-dept-menu",
+					url: SAASAPIS.BS.company.departments.replace("{id}", $.uuid()) + "?is_tree=1",
+					onlyShowDept: true,
+					showDeptChildCount: true,
+					removeHeightForTree: $(".page-menu").outerHeight(true),
+					loadComplete: function() {
+						$(".tree-dept-menu label").click(function() {
+							selectDeptId = $(this).attr("code");
+							selectRealDeptId = $(this).attr("code");
+							selectDeptName = $(this).find("span:first-child").text();
+							selectRealDeptName = $(this).find("span:first-child").text();
+							reloadAttendanceGrid();
+						});
+					}
+				});
+				//工作状态和喵喵切换
+				$(".page-menu a").click(function() {
+					$(this).addClass("select-style").siblings().removeClass("select-style");
+					$(".content>div").eq($(this).index()).removeClass("hide").siblings().addClass("hide");
+					if($(".page-menu a:last-child").hasClass("select-style") && $("#allmap").children().length == 0) {
+						loadMap(); //加载地图
+					}
+				});
+			});
+
+			function openAnnualleaveOrRestChangeRecord(id, type) {
+				var data = $(grid).getRowData4JqGrid("id", id);
+				var showData = data.annual_leave_history;
+				if(type == "overtime") //调休
+					showData = data.overtime_leave_history;
+				if(showData.length == 0) {
+					$.showErrorGritter("无变更记录");
+					return false;
+				}
+				viewAnnualleaveOrRestChangeRecord(showData, type);
+			}
+			//重新加载考勤
+			var reloadAttendanceGrid = function() {
+				if(selectDeptId)
+					tmpSelectTags.department = selectDeptId;
+				//日期
+				tmpSelectTags.date = tmpSelectTags.date || defDate;
+				$(grid).jqGrid('setGridParam', {
+					page: 1,
+					url: ATTENDANCEAPIS.attendances + $.toQueryString(tmpSelectTags, true)
+				}).trigger("reloadGrid", {});
+			};
+			//工作状态
+			function openWorkTypePop() {
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要更改的人员。");
+					return false;
+				}
+				var modalIdOfWorkType = $.modal().show("更改工作类型", ".pnl-change-work-type", function(modal) {
+					var upData = {};
+					upData.attendance_ids = [];
+					for(var i in rowDatas) {
+						upData.attendance_ids.push(rowDatas[i].sign_id);
+					}
+					upData.am_status = $(formContainer + " .am-type option:selected").val();
+					upData.pm_status = $(formContainer + " .pm-type option:selected").val();
+					if(!upData.am_status && !upData.pm_status) {
+						$.showErrorGritter("请至少修改一个工作状态！");
+						return false;
+					}
+					upData.change_reason = $(formContainer + " textarea").val();
+					if(!upData.change_reason) {
+						$.showErrorGritter("请填写变更原因！");
+						return false;
+					}
+					$.ajaxPut(BSAPIURL + "/sign_records/work_status", upData, function(resp) {
+						if(resp.code == 0) {
+							$.showSuccessGritter("更改成功！");
+							$("#" + modalIdOfWorkType).modal('hide');
+							reloadAttendanceGrid();
+						} else {
+							$.showErrorGritter("服务器返回失败：" + resp.msg);
+						}
+					});
+				});
+				var formContainer = "#" + modalIdOfWorkType + " .model-change-work-type";
+				var rowDatas = getSelectedDatas(grid);
+				if(rowDatas.length == 1) {
+					$(formContainer + " .am-type option[value='" + rowDatas[0].work_status.am.status + "']").attr("selected", "selected");
+					$(formContainer + " .pm-type option[value='" + rowDatas[0].work_status.pm.status + "']").attr("selected", "selected");
+					$(formContainer + " textarea").val(rowDatas[0].change_reason);
+				}
+			}
+			//出勤信息
+			function openAttendanceInfoPop() {
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要更改的人员。");
+					return false;
+				}
+
+				var modalId = $.modal().show("更改出勤信息", ".pnl-attendance-info",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var upData = upController.getJSON();
+						upData.sign_in_hour_minutes = $(formContainer + " .in_hour").val() + ":" + $(formContainer + " .in_min").val();
+						upData.sign_out_hour_minutes = $(formContainer + " .out_hour").val() + ":" + $(formContainer + " .out_min").val();
+						upData.sign_out_year_month_day = $(formContainer + " .sign_out_year_month_day_container").val();
+						upData.sign_in_status = upData.sign_in_result;
+						upData.sign_out_status = upData.sign_out_result;
+						upData.sign_id = $(grid).getSelectRowIdsForjqGrid("id").join(",");
+						upData.sign_in_time = upData.sign_in_year_month_day + " " + upData.sign_in_hour_minutes;
+						upData.sign_out_time = upData.sign_out_year_month_day + " " + upData.sign_out_hour_minutes;
+
+						console.log(upData);
+						if(upData.sign_in_status != 15) {
+							if(upData.sign_in_hour_minutes==undefined) {
+								$.showErrorGritter("您更改的签到状态为非未签，请填写签到时间");
+								return false;
+							}
+						}
+						if(upData.sign_in_hour_minutes!=undefined &&upData.sign_in_hour_minutes!="00:00" && upData.sign_in_status == 15) {
+							$.showErrorGritter("您填写了签到时间，签到状态不能为未签，请修改！");
+							return false;
+						}
+						if(upData.sign_out_status != 25) {
+							if(upData.sign_out_hour_minutes==undefined) {
+								$.showErrorGritter("您更改的签退状态为非未签，请填写签退时间");
+								return false;
+							}
+						}
+						if(upData.sign_out_hour_minutes!=undefined && upData.sign_out_hour_minutes!="00:00" && upData.sign_out_status == 25) {
+							$.showErrorGritter("您填写了签退时间，签退状态不能为未签，请修改！");
+							return false;
+						}
+						$.ajaxPut(ATTENDANCEAPIS.attendance + upData.sign_id, upData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									modal.modal("hide");
+									$.showSuccessGritter("更改出勤记录成功。");
+									$(grid).reloadGrid();
+								} else {
+									$.showErrorGritter("更改出勤记录失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-attendance-info";
+				loadTimeDom(formContainer);
+				if(!$(grid).isSelectedMultipleRowForjqGrid()) {
+					var rowData = $(grid).getRowData4JqGrid();
+					console.log(rowData);
+					//没有加班申请就不允许修改是否加班
+					if(!rowData.has_overwork_apply) {
+						$(formContainer + " select[bind='is_overwork']").prop("disabled", "disabled");
+					}
+					//rowData.sign_in_result = 15;
+					//rowData.sign_in_time = "2016-12-26 08:59:59";
+					if(rowData.sign_in_result != 15) {
+						rowData.sign_in_year_month_day = (new Date(rowData.sign_date)).Format("yyyy-MM-dd");
+						rowData.sign_in_hour_minutes = rowData.sign_in_time;
+					} else {
+						rowData.sign_in_year_month_day = (new Date(rowData.sign_date)).Format("yyyy-MM-dd");
+						rowData.sign_in_hour_minutes = "";
+					}
+					if(rowData.sign_out_result != 25) {
+						//rowData.sign_out_year_month_day=(new Date(rowData.sign_in_time)).Format("yyyy-MM-dd");
+						var shouldOutDay = (new Date(rowData.sign_date)).Format("yyyy-MM-dd");
+						rowData.sign_out_year_month_day = shouldOutDay;
+
+						var shouldOutDayAfter = GetDateStr(1, rowData.sign_date);
+						$("#" + modalId + " .sign_out_year_month_day_container").append("<option value=\"" + shouldOutDay + "\" selected='selected'>" + shouldOutDay + "</option><option value=\"" + shouldOutDayAfter + "\">" + shouldOutDayAfter + "</option>");
+						rowData.sign_out_hour_minutes = rowData.sign_out_time;
+					} else {
+						var shouldOutDay = (new Date(rowData.sign_date)).Format("yyyy-MM-dd");
+						rowData.sign_out_year_month_day = shouldOutDay;
+						var shouldOutDayAfter = GetDateStr(1, rowData.sign_date);
+						$("#" + modalId + " .sign_out_year_month_day_container").append("<option value=\"" + shouldOutDay + "\" selected='selected'>" + shouldOutDay + "</option><option value=\"" + shouldOutDayAfter + "\">" + shouldOutDayAfter + "</option>");
+						rowData.sign_out_hour_minutes = "";
+					}
+					//					$("#" + modalId + " .sign_out_year_month_day_container").click(function() {
+					//						$(this).find(".sign_out_date").removeClass("hide");
+					//					});
+					//					$("#" + modalId + " .sign_out_year_month_day_container .sign_out_date span").click(function() {
+					//						$("#" + modalId + " .sign_out_year_month_day_container .sign_out_view_time").text($(this).text());
+					//						$(this).parent(".sign_out_date").addClass("hide");
+					//					});
+					//					$("body").click(function(event) {
+					//						if($(event.target).parents(".sign_out_year_month_day_container").length < 1) {
+					//							$("#" + modalId + " .sign_out_year_month_day_container .sign_out_date").addClass("hide");
+					//						}
+					//					});
+					$(formContainer + " .in_hour option[value=" + rowData.sign_in_time.substring(0, 2) + "]").attr("selected", "selected");
+					$(formContainer + " .in_min option[value=" + rowData.sign_in_time.substring(3, 5) + "]").attr("selected", "selected");
+					$(formContainer + " .out_hour option[value=" + rowData.sign_out_time.substring(0, 2) + "]").attr("selected", "selected");
+					$(formContainer + " .out_min option[value=" + rowData.sign_out_time.substring(3, 5) + "]").attr("selected", "selected");
+					var upController = new Controller(formContainer);
+					upController.set(rowData);
+				}
+			}
+
+			function loadTimeDom(container) {
+				for(var i = 0; i < 24; i++) {
+					var hour = i ;
+					if(hour < 10)
+						hour = "0" + hour;
+					$(container + " .in_hour," + container + " .out_hour").append("<option value=\"" + hour + "\">" + hour + "</option>");
+				}
+				for(var i = 0; i < 60; i++) {
+					var min = i ;
+					if(min < 10)
+						min = "0" + min;
+					$(container + " .in_min," + container + " .out_min").append("<option value=\"" + min + "\">" + min + "</option>");
+				}
+			}
+			//更改剩余调休
+			function openUpdateLeaveLieuPop() {
+				var rowData = $(grid).getRowData4JqGrid("id");
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择人员！");
+					return false;
+				}
+				var modalId = $.modal().show("更改剩余调休天数", ".leave-lieu-container", function(modal) {
+					var postData = controller.getJSON();
+					postData.employee_id = rowData.employee.employee_id;
+					if(!postData.desc) {
+						$.showErrorGritter("更改原因不能为空！");
+						return false;
+					}
+					if(parseInt(postData.total) < 0) {
+						$.showErrorGritter("更改的天数不对，请检查！");
+						return false;
+					}
+					$.ajaxPut(BSAPIURL + "/attendance/overtime_leave", postData, function(resp) {
+						if(resp.code == 0) {
+							$.showSuccessGritter("更改成功！");
+							$(grid).reloadGrid();
+							modal.modal("hide");
+						} else {
+							$.showErrorGritter("服务器返回失败：" + resp.msg);
+							return false;
+						}
+					})
+				});
+				var controller = new Controller("#" + modalId + " .leave-lieu");
+				controller.set({
+					total: rowData.overtime_leave_total,
+					desc: ""
+				});
+			}
+			//更改剩余年假
+			function openUpdateYearHolidayPop() {
+				var rowData = $(grid).getRowData4JqGrid("id");
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择人员！");
+					return false;
+				}
+				var modalId = $.modal().show("更改剩余年假天数", ".year-holiday-container", function(modal) {
+					var postData = controller.getJSON();
+					postData.employee_id = rowData.employee.employee_id;
+					if(!postData.desc) {
+						$.showErrorGritter("更改原因不能为空！");
+						return false;
+					}
+					if(parseInt(postData.total) < 0) {
+						$.showErrorGritter("更改的天数不对，请检查！");
+						return false;
+					}
+					$.ajaxPut(BSAPIURL + "/attendance/annual_leave", postData, function(resp) {
+						if(resp.code == 0) {
+							$.showSuccessGritter("更改成功！");
+							$(grid).reloadGrid();
+							modal.modal("hide");
+						} else {
+							$.showErrorGritter("服务器返回失败：" + resp.msg);
+							return false;
+						}
+					})
+				});
+				var controller = new Controller("#" + modalId + " .year-holiday");
+				controller.set({
+					total: rowData.annual_leave_total,
+					desc: ""
+				});
+			}
+			//查看考勤变更记录
+			function openAdcChangeRecordPop() {
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要查看的人员。");
+					return false;
+				}
+				openDataUpdateRecordsPop($(grid).getRowData4JqGrid().sign_id, '考勤变更记录');
+			}
+			//查看销假申请
+			function viewApplyFor(id) {
+				var rowData = $(grid).getRowData4JqGrid("id", id).cancels;
+				console.log(rowData);
+				viewCancelsLeave(rowData);
+			}
+			//选择查看地址的员工
+			function selectViewEmployees(obj) {
+				var aggregateEmps = [];
+				$(obj).prev(".select-list").children(".select-list-box").each(function(i) {
+					aggregateEmps.push({
+						"name": $(this).find(".css-overhidden").text(),
+						"id": $(this).data("id")
+					});
+				});
+				console.log(aggregateEmps)
+				$.showTreeEmployeeSelectPop({
+					title: "选择需要查看的员工",
+					subTitle: "请选择员工",
+					isAll: true,
+					isShowEmptyDepar: false,
+					isReturnEmp: true,
+					selectedEmployeeIds: aggregateEmps,
+					okCallback: function(employeesData) {
+						console.log(employeesData)
+						aggregateEmps = employeesData;
+						$(".select-list .select-list-box").remove();
+						if(aggregateEmps.length > 0) {
+							$(".select-list .no-tip").addClass("hide");
+						} else {
+							$(".select-list .no-tip").removeClass("hide");
+						}
+						for(var i = 0; i < aggregateEmps.length; i++) {
+							var $dom = $("<span data-id=\"" + aggregateEmps[i].id + "\" title='" + aggregateEmps[i].name + "' class=\"select-list-box close-icon-container\"><span class='css-overhidden'>" + aggregateEmps[i].name + "</span>" +
+								"<img class='close-icon' src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick='$(this).parent().remove();' /></span>");
+							$(".select-list").append($dom);
+						}
+						search(employeesData);
+					}
+				})
+			}
+			//搜索
+			function search(data) {
+				var ids = [];
+				$.each(data, function(i, v) {
+					//ids.push(v.emp);
+					ids = ids.concat(v.emp);
+				});
+				ids = unique(ids);
+				$.ajaxGet(viewEmployeesLocation + "?employee_ids=" + ids.join(","), function(response) {
+					employeesLocationData = response.data;
+					console.log(employeesLocationData)
+					if(response.code == 0)
+						if($(".change-btn").data("type") == "txt") {
+							loadTableDate(employeesLocationData);
+						} else {
+							loadMapData(employeesLocationData);
+						}
+					else
+						$.showErrorGritter(response.msg)
+				});
+			}
+			//文本、表格数据切换
+			function changeShowData(obj) {
+				if($(obj).attr("data-type") == "txt") {
+					$(obj).attr("data-type", "map").text("切换为文本模式");
+					loadMapData(employeesLocationData);
+					$(".subordinate-location-map").removeClass("hide").siblings("div").addClass("hide");
+				} else {
+					$(obj).attr("data-type", "txt").text("切换为地图模式");
+					loadTableDate(employeesLocationData);
+					$(".subordinate-location-table").removeClass("hide").siblings("div").addClass("hide");
+				}
+			}
+			//加载文本模式的table数据
+			function loadTableDate(data) {
+				$("#subordinate-location-tab tr:first-child").siblings().remove();
+				if(data) {
+					for(var i = 0; i < data.length; i++) {
+						$("#subordinate-location-tab").append("<tr><td>" + data[i].employee_name + "</td><td><span class='new-date'>" + data[i].post_time_cn + "</span>" + data[i].location_cn + "</td></tr>");
+					}
+				}
+			}
+			//加载地图
+			function loadMapData() {
+				map.clearOverlays(); //清楚所以覆盖物
+				mapPointInfoData = []; //清空
+				outmodedData = [];
+				if(employeesLocationData.length == 0)
+					return false;
+				for(var i in employeesLocationData) {
+					var infoDataSingle = employeesLocationData[i];
+					var matchData = matchScopeData(infoDataSingle);
+					if(matchData) {
+						mapPointInfoData.push(matchData);
+					}
+				}
+				console.log(mapPointInfoData);
+				for(var i in mapPointInfoData) {
+					console.log("纬度：" + mapPointInfoData[i][0].location_lat + "__经度：" + mapPointInfoData[i][0].location_lon)
+					//var marker = new BMap.Marker(new BMap.Point(mapPointInfoData[i][0].location_lon, mapPointInfoData[i][0].location_lat)); // 创建标注
+					var marker = customDot(mapPointInfoData[i][0], mapPointInfoData[i].length);
+					map.addOverlay(marker); // 将标注添加到地图中
+					//marker.setAnimation(BMAP_ANIMATION_BOUNCE);//跳动画
+					var sContent = "<div class=\"map-box\">";
+					for(var j in mapPointInfoData[i]) {
+						sContent += "<div><img class=\"img-circle\" src=\"" + mapPointInfoData[i][j].employee_avatar + "\"><span>" + mapPointInfoData[i][j].employee_name +
+							"</span><span style=\"color:#FF6687;margin-top:-5px\">" + mapPointInfoData[i][j].post_time_cn + "</span></div>";
+					}
+					sContent += "</div><p class=\"map-box-loaction\">地址：" + mapPointInfoData[i][0].location_cn + "</p>";
+					//打印点
+					addClickHandler(sContent, marker);
+					//infoWindow = new BMap.InfoWindow(sContent); // 创建信息窗口对象
+					//addMarker(point);
+				}
+			}
+			//加载地图插件
+			function loadMap() {
+				map = new BMap.Map("allmap"); // 创建Map实例
+				map.centerAndZoom("重庆", 6);
+				map.addControl(new BMap.MapTypeControl()); //添加地图类型控件
+				map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+				mapZoomLevle = map.getZoom();
+				map.addEventListener("zoomend", function() {
+					changeZoomLevel(); //绑定滚轮监听事件
+				});
+			}
+			//获取与缩放等级相对应的范围
+			function changeZoomLevel() {
+				console.log("当前地图缩放等级：" + map.getZoom());
+				distance = mapZoomScale[map.getZoom() - 3];
+				console.log((map.getZoom() - 3), distance)
+				mapZoomLevle = map.getZoom();
+				loadMapData();
+			}
+			//匹配范围内数据（参数：距离范围，总数组，单个数组，匹配过的数组）
+			function matchScopeData(infoSingle) {
+				console.log(infoSingle)
+				var returnData = [];
+				for(var i in employeesLocationData) {
+					var infoDataSingle = employeesLocationData[i];
+					var pointA = new BMap.Point(infoSingle.location_lon, infoSingle.location_lat); // 创建中心坐标
+					var pointB = new BMap.Point(infoDataSingle.location_lon, infoDataSingle.location_lat);
+					if(outmodedData.indexOf(infoDataSingle) == -1 && map.getDistance(pointA, pointB) <= distance) {
+						returnData.push(infoDataSingle);
+						outmodedData.push(infoDataSingle);
+					}
+				}
+				if(returnData.length == 0) {
+					return null;
+				}
+				return returnData;
+			}
+			//添加点击事件
+			function addClickHandler(content, marker) {
+				marker.addEventListener("click", function(e) {
+					openInfo(content, e)
+				});
+			}
+			var opts = {
+				width: 350, // 信息窗口宽度
+				//title: "地区签到排名", // 信息窗口标题
+				enableMessage: true //设置允许信息窗发送短息
+			};
+			//自定义点
+			function customDot(data, num) {
+				console.log(arguments);
+				var mapDotIcon = new BMap.Icon("../resources/images/user-avatar.png", new BMap.Size(100, 100), {
+					//					imageSize://图片大小
+					anchor: new BMap.Size(40, 40)
+				});
+				var mapPoint = new BMap.Point(data.location_lon, data.location_lat);
+				var marker = new BMap.Marker(mapPoint, {
+					icon: mapDotIcon
+				}); // 创建标注
+				var label;
+				label = new BMap.Label(num, {
+					offset: new BMap.Size(15, 7)
+				});
+				label.setStyle({
+					color: "red",
+					fontSize: "13px",
+					border: "0",
+					padding: "0",
+					//fontWeight: "bold",
+					textAlign: "center"
+				});
+				label.setContent("<img style=\"width:34px;\" class=\"img-circle\" title=\"" + data.employee_name +
+					"\" src=\"" + data.employee_avatar + "\">" + (num > 1 ? "<span class=\"map-label\" style=\"\">" + num + "</span>" : ""));
+				marker.setLabel(label);
+				return marker;
+
+			}
+			//打开地图弹窗
+			function openInfo(content, e) {
+				var p = e.target;
+				var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+				var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象 
+				map.openInfoWindow(infoWindow, point); //开启信息窗口
+			}
+			//造假
+			function addLocation() {
+				//				$.ajaxPost(viewEmployeesLocation, { "location_cn": $("#loactiontxt").val(), "location_lat": $("#loactionlat").val(), "location_lon": $("#loactionlon").val() }, function(response) {
+				//					if(response.code == 0) {
+				//						$.showSuccessGritter("恭喜你，造假成功！");
+				//					} else {
+				//						$.showErrorGritter("造假失败哦！");
+				//					}
+				//				});
+			}
+		</script>
+	</body>
+
+</html>

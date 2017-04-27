@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>下属工作状态</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-datetimepicker.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+	</head>
+	<style type="text/css">
+		.page-container .content .main-wrap {
+			padding-left: 14px;
+		}
+		
+		.page-container,
+		.page-container .content {
+			margin-top: 0px;
+			padding: 0px;
+		}
+		
+		.page-container .content .left-menu {
+			overflow: hidden;
+			width: 210px;
+		}
+		
+		.tree-dept-menu {
+			width: 200px;
+			/*overflow: hidden;*/
+		}
+		
+		.tree-dept-menu li {
+			margin-left: 10px;
+			line-height: 30px;
+			font-size: 16px;
+			font-weight: bold;
+			cursor: pointer;
+		}
+		
+		.tree-dept-menu li li {
+			margin-left: 10px;
+		}
+		
+		.left-menu {
+			border-right: 1px solid #e3e3e3;
+			max-height: auto!important;
+		}
+		
+		.tree-dept-menu li i {
+			font-size: 20px;
+			width: 16px;
+		}
+		
+		.tree.dashed-dept-tree li.top-line:before,
+		.tree.dashed-dept-tree>li>ul>li:last-child:before {
+			margin-top: 17px!important;
+		}
+		
+		.main-wrap {
+			margin-left: 210px!important;
+			padding: 10px 0 0 0;
+		}
+		
+		.main-wrap .content {
+			padding: 0;
+		}
+		
+		.page-menu {
+			line-height: 45px;
+			height: 45px;
+			border: 1px solid #e3e3e3;
+			border-width: 0 1px 1px 0;
+			font-size: 14px;
+			padding-left: 10px;
+			color: #666;
+			background-color: #f3f3f3;
+		}
+		
+		.page-menu a,
+		.page-menu a:hover {
+			display: inline-block;
+			cursor: pointer;
+			color: #666;
+			text-decoration: none;
+			margin-right: 15px;
+			padding: 0 5px;
+			height: 44px;
+		}
+		
+		.page-menu a.select-style {
+			color: #009ed8;
+			border-bottom: 2px solid #009ed8;
+		}
+		
+		.subordinate-location-search {
+			height: 60px;
+			/*border-bottom: 1px solid #ccc;*/
+			line-height: 60px;
+			padding-left: 20px;
+			width: 603px;
+			margin: 10px 0;
+			overflow: hidden;
+		}
+		
+		.select-list {
+			display: inline-block;
+			width: 600px;
+			height: 50px;
+			line-height: 50px;
+			border: 1px solid #e3e3e3;
+			/*border-left: 0px;*/
+			/*margin-left: -5px;*/
+			float: left;
+			margin-top: 5px;
+			overflow-y: auto;
+			/*overflow: hidden;*/
+			/*text-overflow: ellipsis;*/
+			/*white-space: nowrap;*/
+		}
+		
+		.close-icon-container {
+			border-bottom: 1px dashed #eee;
+			margin-bottom: 5px;
+			padding: 5px;
+			display: block;
+		}
+		
+		.select-employees {
+			width: 100px;
+			height: 30px;
+			line-height: 30px;
+			display: inline-block;
+			/*border: 1px solid #ccc;*/
+			/*border-right: 0px;*/
+			padding-left: 10px;
+			float: left;
+			margin-top: 25px;
+		}
+		
+		.select-list-box.close-icon-container {
+			/*line-break: 30px;*/
+			border: 1px solid #eee;
+			padding: 3px 25px 3px 5px;
+			margin: 0px 3px;
+			line-height: initial;
+			display: inline-block;
+		}
+		
+		.select-list-box.close-icon-container .close-icon {
+			right: 5px;
+		}
+		
+		.select-list-box i {
+			margin-left: 5px;
+			cursor: pointer;
+		}
+		
+		.subordinate-location-search .search-btn {
+			height: 30px;
+			margin-bottom: 5px;
+			line-height: 10px;
+			margin-left: 10px;
+		}
+		
+		.view-title {
+			height: 40px;
+			line-height: 40px;
+			padding-right: 14px;
+			margin-top: 20px;
+		}
+		
+		.change-btn {
+			font-weight: bold;
+			margin-right: 20px;
+		}
+		
+		#subordinate-location-tab th,
+		td {
+			text-align: center;
+		}
+		
+		.new-date {
+			margin-right: 10px;
+			color: red;
+		}
+		
+		#allmap {
+			width: 100%;
+		}
+		
+		.map-label {
+			position: relative;
+			top: -10px;
+			background: #EA8010;
+			color: #fff;
+			display: inline-block;
+			width: 16px;
+			border-radius: 8px;
+			right: 10px;
+		}
+		
+		.map-box {
+			zoom: 1;
+		}
+		
+		.map-box:after {
+			content: ",";
+			height: 0px;
+			display: block;
+			visibility: hidden;
+			clear: both;
+		}
+		
+		.map-box div {
+			width: 60px;
+			height: 100px;
+			float: left;
+		}
+		
+		.map-box img {
+			width: 60px;
+			/*border-radius: 30px;*/
+		}
+		
+		.map-box span {
+			display: inline-block;
+			width: 60px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			text-align: center;
+		}
+		
+		.map-box-loaction {
+			border-top: 1px solid #ccc;
+			padding-top: 10px;
+		}
+		
+		.remarks {
+			max-width: 55px;
+			vertical-align: bottom;
+		}
+		
+		.no-tip {
+			padding-left: 14px;
+			font-size: 12px;
+			color: #ccc;
+		}
+	</style>
+
+	<body>
+		<div class="page-container page-attendance">
+			<div class="page-menu">
+				<a href="javascript:;" class="work-state select-style">工作状态</a>
+				<a href="javascript:;" class="subordinate-location">瞄一瞄</a>
+			</div>
+			<div class="content">
+				<div class="work-state-content">
+					<div class="left-menu">
+						<div class="treeview" style="width: auto;">
+							<ul class="tree tree-dept-menu"></ul>
+						</div>
+					</div>
+					<div class="main-wrap">
+						<div class="search">
+						</div>
+						<table id="grid-table" class="grid-module">
+						</table>
+						<div id="grid-pager">
+						</div>
+					</div>
+				</div>
+				<div class="subordinate-location-content hide">
+					<div class="subordinate-location-search lt">
+						<div class="select-list">
+							<span class="no-tip">请选择员工</span>
+							<!--<span class="select-list-box">A同事<i class="fa fa-times" aria-hidden="true"></i></span>-->
+						</div>
+						<!--<input type="button" class="btn btn-default search-btn" onclick="search(this)" value="确认" /> ----------
+						<label>地址:<input type="text" class="" id="loactiontxt" /></label>
+						<label>经度:<input type="text" class="" id="loactionlon" /></label>
+						<label>纬度:<input type="text" class="" id="loactionlat" /></label>
+						<input type="button" name="addlocation" class="btn btn-default" id="addlocation" value="传位置（测试）" onclick="addLocation()" />-->
+					</div>
+					<a class="select-employees btn-a-default lt" onclick="selectViewEmployees(this)">请选择员工</a>
+					<p class="view-title rt">
+						<a data-type="map" class="change-btn btn-a-default" onclick="changeShowData(this)">切换为文本模式</a><span class="note-font-type">当前时间：</span><span class="note-font-type now-date"></span>
+					</p>
+					<div class="subordinate-location-view">
+						<div class="subordinate-location-map" id="allmap">
+						</div>
+						<div class="subordinate-location-table hide">
+							<table class="table table-bordered" id="subordinate-location-tab">
+								<tr class="active">
+									<th>姓名</th>
+									<th>地址</th>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="grid-footer-container" class="hide">
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.nestable.min.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datetimepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/department.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/approval.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/attendance.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hgf.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG"></script>
+		<script type="text/javascript">
+			//APIS
+			var ATTENDANCEAPIS = {
+				//下属工作状态
+				subordinateAdc: BSAPIURL + "/center_attendances/follow_leader"
+			};
+			var gridSelector = "#grid-table",
+				grid;
+			var pagerSelector = "#grid-pager";
+			var depaUrl = BSAPIURL + "/company/depas/?mode=2&with_employees=0";
+			var viewEmployeesLocation = BSAPIURL + "/location";
+			//选择的部门/职位ID
+			var selectDeptId, selectRealDeptId, selectDeptName, selectRealDeptName;
+			var selectDeptIsTopest = false;
+			//临时参数
+			var tmpSelectTags = {};
+			//def date
+			var defDate = $.timeNow().Format("yyyy-MM-dd");
+			var defHour = $.timeNow().Format("hh:mm");
+			//部门数据
+			var deptsJSON = [];
+			var employeesLocationData = [], //全部数组
+				outmodedData = [], //已匹配过的数组
+				mapPointInfoData = [], //组装完成数组
+				map, mapZoomLevle, distance;
+			var mapZoomScale = [10, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000, 2000000].reverse();
+			distance = mapZoomScale[0];
+			window.onload = function() {
+				var script = document.createElement("script");
+				//script.src = "http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG&callback=doApi";
+				$("body").append(script);
+
+			};
+			var mapHeight = $(window).height() - $(".remark").outerHeight(true) - $(".page-menu").outerHeight(true) - $(".subordinate-location-search").outerHeight(true) - $(".view-title").outerHeight(true);
+			$("#allmap").height(mapHeight);
+			$(document).ready(function() {
+				$.showLoadingPop("正在加载部门数据，请稍候...");
+				//定时器
+				var timer = setInterval(function() {
+					$(".now-date").text($.timeNow().Format("yyyy-MM-dd hh:mm"));
+				}, 1000);
+				var heightMenu = ($(window).height() - $(".page-menu").outerHeight(true)) - 10 + "px";
+				$(".left-menu").css("height", heightMenu).css("max-height", heightMenu);
+				$(".treeview").css("height", heightMenu).css("max-height", heightMenu);
+				//search
+				$.initSearchControls4TagMode({
+					auto: false,
+					url: ATTENDANCEAPIS.subordinateAdc,
+					grid: gridSelector,
+					container: ".search",
+					key_name: "key",
+					removeHeight4Grid: $(".page-menu").outerHeight(true) + $(".search").outerHeight(true) - 10,
+					key_placeholder: "请输入员工姓名进行查询",
+					onChange: function(selectTags) {
+						tmpSelectTags = selectTags;
+						reloadAttendanceGrid('', selectDeptId);
+					},
+					groups: [{
+						type: "date",
+						text: "选择日期",
+						items: [{
+							name: "attendance_date",
+							placeholder: "选择日期",
+							value: defDate
+						}]
+					}, {
+						type: "date",
+						mode: "time",
+						text: "签到时间",
+						items: [{
+							name: "in_begin_time",
+							placeholder: "开始时间"
+						}, {
+							type: "text",
+							value: "至"
+						}, {
+							name: "in_end_time",
+							placeholder: "结束时间",
+							//value: defHour
+						}]
+					}, {
+						name: "attendance_work_status",
+						text: "工作状态",
+						items: [{
+							key: "工作日",
+							value: "1"
+						}, {
+							key: "休息",
+							value: "2"
+						}, {
+							key: "放假",
+							value: "6"
+						}, {
+							key: "请假",
+							value: "3"
+						}, {
+							key: "出差",
+							value: "4"
+						}]
+					}, {
+						name: "has_relation_client",
+						text: "关联客户",
+						items: [{
+							key: "是",
+							value: "1"
+						}, {
+							key: "否",
+							value: "0"
+						}]
+					}, {
+						name: "has_overtime",
+						text: "加　　班",
+						items: [{
+							key: "是",
+							value: "1"
+						}, {
+							key: "否",
+							value: "0"
+						}]
+					}]
+				});
+				//token
+				$.token();
+				//$(".module-tree").css("top", ($(".remark").height() + 41) + "px");
+				//grid
+				var tabHeight = $(window).height() - $(".page-menu").outerHeight(true) - $(".search").outerHeight(true) - 150;
+				var colNames = ['', '日期', '工号', '姓名', '部门职务', '签到排名', '工作状态', '签到', '签退', '关联客户', '加班', '销假' /*, '办公电话', '手机号'*/ ];
+				var colModel = [{
+						name: 'id',
+						hidden: true,
+						formatter: function(cellvalue, options, rowObject) {
+							return rowObject.attendance_id;
+						}
+					}, {
+						name: 'attendance_date',
+						width: 150,
+						formatter: function(cellvalue, options, rowObject) {
+							var icon = "";
+							//未签
+							if(rowObject.attendance_result_status == 55) {
+								icon = "<i class='fa fa-exclamation-circle text-warning' title='未签'></i> ";
+							}
+							//加班
+							if(rowObject.attendance_overtime_type == 2 || rowObject.attendance_overtime_type == 3) {
+								icon = "<i class='fa fa-calendar-plus-o text-info' title='加班'></i> ";
+							}
+							//迟到、早退、旷工
+							if(rowObject.attendance_result_status == 13) {
+								icon = "<i class='fa fa-exclamation-triangle text-danger' title='异常'></i> ";
+							}
+							return icon + rowObject.attendance_date + "(" + rowObject.attendance_date_cn + ")";
+						}
+					}, {
+						name: 'employee_code',
+						sortable: true
+					}, {
+						name: 'employee_name',
+						sortable: true
+					}, {
+						name: 'depa_name',
+						formatter: function(cellvalue, options, rowObject) {
+							return rowObject.depa_name + "," + rowObject.post_name;
+						}
+					}, {
+						name: 'attendance_in_order',
+						sortable: true
+					}, {
+						name: '__attendance_work_status_cn',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								var workStatusText = "";
+								if(rowObject.attendance_work_status_of_am || rowObject.cancels.length > 0) {
+									if(rowObject.attendance_work_status_of_am_has_leave) {
+										workStatusText += "（上午：<a href='javascript:;' onclick=\"openLeaveRecordsPop('2','" + rowObject.attendance_date + "','" + rowObject.employee_id + "');\">" + rowObject.attendance_work_status_of_am_cn + "</a>）";
+									} else {
+										workStatusText += "（上午：" + rowObject.attendance_work_status_of_am_cn + "）";
+									}
+								}
+								if(rowObject.attendance_work_status_of_pm) {
+									if(rowObject.attendance_work_status_of_pm_has_leave) {
+										workStatusText += "<br>（下午：<a href='javascript:;' onclick=\"openLeaveRecordsPop('2','" + rowObject.attendance_date + "','" + rowObject.employee_id + "');\">" + rowObject.attendance_work_status_of_pm_cn + "</a>）";
+									} else {
+										workStatusText += "<br>（下午：" + rowObject.attendance_work_status_of_pm_cn + "）";
+									}
+								}
+								return workStatusText;
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: '__attendance_in_status_cn',
+						sortable: true,
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								if(rowObject.attendance_in_status == 11) {
+									return rowObject.attendance_in_time + ',' + rowObject.attendance_in_status_cn + (rowObject.later_hour ? "(" + rowObject.later_hour + "小时)" : "");
+								} else if(rowObject.attendance_in_status == 14 || rowObject.attendance_in_status == 15) {
+									return rowObject.attendance_in_status_cn;
+								} else {
+									return rowObject.attendance_in_time + ',' + rowObject.attendance_in_status_cn
+								}
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: '__attendance_out_status_cn',
+						sortable: true,
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								if(rowObject.attendance_out_status == 21) {
+									return rowObject.attendance_out_time + ',' + rowObject.attendance_out_status_cn + (rowObject.befor_hour ? "(" + rowObject.befor_hour + "小时)" : "");
+								} else if(rowObject.attendance_out_status == 22 || rowObject.attendance_out_status == 25) {
+									return rowObject.attendance_out_status_cn;
+								} else {
+									return rowObject.attendance_out_time + ',' + rowObject.attendance_out_status_cn
+								}
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: '__crm_relations',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								var showStr = ["{AP}<br>", "{AP}"];
+								if(rowObject.crm_relations.length != 0) {
+									for(var i in rowObject.crm_relations) {
+										var crm = rowObject.crm_relations[i];
+										var txt = showStr[crm.attendance_type - 1];
+										if(crm.client)
+											txt = txt.replace("{AP}", crm.attendance_type_cn + ":" + crm.client.client_full_name);
+										else
+											txt = txt.replace("{AP}", crm.attendance_type_cn + ":无客户（<span class=\"remarks css-overhidden\">" + crm.remark + "</span>）");
+										showStr[crm.attendance_type - 1] = txt;
+									}
+								}
+								return showStr[0].replace("{AP}", "签到：-") + showStr[1].replace("{AP}", "签退：-");
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: 'attendance_overtime_type_cn',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								if(rowObject.attendance_has_overtime != 0) {
+									var str = "是(" + rowObject.attendance_overtime + "小时)";
+									return "<a href=\"javascript:;\" onclick=\"openOvertimeRecordsPop('2','" + rowObject.attendance_date + "','" + rowObject.employee_id + "')\">" + str + "</a>"
+								} else {
+									return "否";
+								}
+							} catch(e) {
+								return '';
+							}
+						}
+					}, { //销假
+						name: 'cancels',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								if(rowObject.cancels.length != 0) {
+									return "<a href='javascript:;' onclick=\"viewCancelsLeaves('" + rowObject.attendance_id + "');\">" + rowObject.cancels.length + "</a> ";
+								} else {
+									return "0";
+								}
+							} catch(e) {
+								return '';
+							}
+						}
+					}
+					/*, {
+										name: 'employee_office_phone',
+										sortable: true
+									}, {
+										name: 'employee_primary_mobile',
+										sortable: true
+									}*/
+				];
+				grid = $(gridSelector).initJqGrid({
+					gridSelector: gridSelector,
+					storeRowDataInCache: true,
+					pager: pagerSelector,
+					url: ATTENDANCEAPIS.subordinateAdc + "?attendance_date=" + defDate, //+ "&in_end_time=" + defHour,
+					colNames: colNames,
+					colModel: colModel,
+					multiselect: false,
+					height: tabHeight
+				});
+				loadDeptTree();
+				//工作状态和喵喵切换
+				$(".page-menu a").click(function() {
+					$(this).addClass("select-style").siblings().removeClass("select-style");
+					$(".content>div").eq($(this).index()).removeClass("hide").siblings().addClass("hide");
+					if($(".page-menu a:last-child").hasClass("select-style") && $("#allmap").children().length == 0) {
+						loadMap(); //加载地图
+					}
+				});
+
+			});
+
+			//加载部门树
+			function loadDeptTree() {
+				loadDashedDeptTree({
+					container: ".tree-dept-menu",
+					url: depaUrl,
+					showIcon: true,
+					onlyShowDept: true,
+					childDepaKey: "departments",
+					depaIdKey: "depa_id",
+					showEmps: true,
+					parentDepaIdKey: "depa_parent_id",
+					removeHeightForTree: $(".page-menu").outerHeight(true) - 50,
+					loadComplete: function() {
+						$(".tree-dept-menu label").click(function() {
+							reloadAttendanceGrid(null, $(this).attr("code"));
+						});
+					}
+				});
+				return true;
+
+				$.ajaxGet(depaUrl, function(response) {
+					var depatTreeInfo = response.data;
+					loadTree(depatTreeInfo, $(".tree-dept-menu"));
+					$.hideLoadingPop();
+					$(".tree-dept-menu div i").click(function() {
+						if($(this).hasClass("fa-caret-right")) {
+							$(this).removeClass("fa-caret-right").addClass("fa-caret-down");
+							$(this).parent().next().slideDown();
+						} else {
+							$(this).removeClass("fa-caret-down").addClass("fa-caret-right");
+							$(this).parent().next().slideUp();
+						}
+					});
+				});
+
+				function loadTree(data, container) {
+					for(var i in data) {
+						var str = "";
+						str += "<li id=" + data[i].depa_id + ">";
+						str += "<div data-id=" + data[i].depa_id + ">";
+						str += "<i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>";
+						str += "<span onclick=\"reloadAttendanceGrid(this)\" class=\"tree-name css-overhidden\">" + data[i].depa_name + "</span>";
+						str += "</div>";
+						str += "<ul>";
+						str += "</ul>";
+						str += "</li>";
+						container.append(str);
+						if(data[i].departments) {
+							loadTree(data[i].departments, $("#" + data[i].depa_id + ">ul"));
+						}
+					}
+				}
+			}
+			//重新加载考勤状态
+			var reloadAttendanceGrid = function(obj, depaId) {
+				selectDeptId = obj ? $(obj).parent().attr("data-id") : depaId;
+				if(selectDeptId)
+					tmpSelectTags.depa_tree_code_arr = selectDeptId;
+				//月份
+				tmpSelectTags.attendance_date = tmpSelectTags.attendance_date || defDate;
+				$(grid).jqGrid('setGridParam', {
+					page: 1,
+					url: ATTENDANCEAPIS.subordinateAdc + $.toQueryString(tmpSelectTags, true)
+				}).trigger("reloadGrid", {});
+			};
+
+			function viewCancelsLeaves(id) {
+				var rowData = $(grid).getRowData4JqGrid("id", id).cancels;
+				viewCancelsLeave(rowData);
+			}
+			//选择查看地址的员工
+			function selectViewEmployees(obj) {
+				var aggregateEmps = [];
+				$(".select-list .select-list-box").each(function(i) {
+					aggregateEmps.push({
+						"name": $(this).text(),
+						"id": $(this).data("id")
+					});
+				});
+				$.showTreeEmployeeSelectPop({
+					title: "选择需要查看的员工",
+					subTitle: "请选择员工",
+					isAll: false,
+					isReturnEmp: true,
+					selectedEmployeeIds: aggregateEmps,
+					okCallback: function(employeesData) {
+						aggregateEmps = employeesData;
+						$(".select-list .select-list-box").remove();
+						if(aggregateEmps.length > 0) $(".select-list .no-tip").addClass("hide");
+						else $(".select-list .no-tip").removeClass("hide");
+						for(var i = 0; i < aggregateEmps.length; i++) {
+							var $dom = $("<span class=\"select-list-box close-icon-container\">" + aggregateEmps[i].name +
+								"<img src='../resources/images/item-close-black-icon.png' class='close-icon' data-trans-src='../resources/images/item-close-red-icon.png' onclick='$(this).parent().remove();' /></span>");
+							$dom.data("id", aggregateEmps[i].id);
+							$(".select-list").append($dom);
+						}
+						search(employeesData);
+					}
+				})
+			}
+			//搜索
+			function search(data) {
+				console.log(data)
+				var ids = [];
+				$.each(data, function(i, v) {
+					//ids.push(v.emp);
+					ids = ids.concat(v.emp);
+				});
+				ids = unique(ids);
+				console.log(ids)
+				$.ajaxGet(viewEmployeesLocation + "?employee_ids=" + ids.join(","), function(response) {
+					employeesLocationData = response.data;
+					console.log(response)
+					if(response.code == 0)
+						if($(".change-btn").data("type") == "txt") {
+							loadTableDate(employeesLocationData);
+						} else {
+							loadMapData(employeesLocationData);
+						}
+					else
+						$.showErrorGritter(response.msg);
+				});
+			}
+			//文本、表格数据切换
+			function changeShowData(obj) {
+				if($(obj).attr("data-type") == "txt") {
+					$(obj).attr("data-type", "map").text("切换为文本模式");
+					loadMapData(employeesLocationData);
+					$(".subordinate-location-map").removeClass("hide").siblings("div").addClass("hide");
+				} else {
+					$(obj).attr("data-type", "txt").text("切换为地图模式");
+					loadTableDate(employeesLocationData);
+					$(".subordinate-location-table").removeClass("hide").siblings("div").addClass("hide");
+				}
+			}
+			//加载文本模式的table数据
+			function loadTableDate(data) {
+				$("#subordinate-location-tab tr:first-child").siblings().remove();
+				if(data) {
+					for(var i = 0; i < data.length; i++) {
+						$("#subordinate-location-tab").append("<tr><td>" + data[i].employee_name + "</td><td><span class='new-date'>" + data[i].post_time_cn + "</span>" + data[i].location_cn + "</td></tr>");
+					}
+				}
+			}
+			//加载地图
+			function loadMapData() {
+				map.clearOverlays(); //清楚所以覆盖物
+				mapPointInfoData = []; //清空
+				outmodedData = [];
+				for(var i in employeesLocationData) {
+					var infoDataSingle = employeesLocationData[i];
+					var matchData = matchScopeData(infoDataSingle);
+					if(matchData) {
+						mapPointInfoData.push(matchData);
+					}
+				}
+				console.log(mapPointInfoData);
+				for(var i in mapPointInfoData) {
+					console.log("纬度：" + mapPointInfoData[i][0].location_lat + "__经度：" + mapPointInfoData[i][0].location_lon)
+					//var marker = new BMap.Marker(new BMap.Point(mapPointInfoData[i][0].location_lon, mapPointInfoData[i][0].location_lat)); // 创建标注
+					var marker = customDot(mapPointInfoData[i][0], mapPointInfoData[i].length);
+					map.addOverlay(marker); // 将标注添加到地图中
+					//marker.setAnimation(BMAP_ANIMATION_BOUNCE);//跳动画
+					var sContent = "<div class=\"map-box\">";
+					for(var j in mapPointInfoData[i]) {
+						sContent += "<div><img class=\"img-circle\" src=\"" + mapPointInfoData[i][j].employee_avatar + "\"><span>" + mapPointInfoData[i][j].employee_name +
+							"</span><span style=\"color:#FF6687;margin-top:-5px\" title='" + mapPointInfoData[i][j].post_time_cn + "'>" + mapPointInfoData[i][j].post_time_cn + "</span></div>";
+					}
+					sContent += "</div><p class=\"map-box-loaction\">地址：" + mapPointInfoData[i][0].location_cn + "</p>";
+					//打印点
+					addClickHandler(sContent, marker);
+					//infoWindow = new BMap.InfoWindow(sContent); // 创建信息窗口对象
+					//addMarker(point);
+				}
+			}
+			//加载地图插件
+			function loadMap() {
+				map = new BMap.Map("allmap"); // 创建Map实例
+				map.centerAndZoom("重庆", 6);
+				map.addControl(new BMap.MapTypeControl()); //添加地图类型控件
+				map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+				mapZoomLevle = map.getZoom();
+				map.addEventListener("zoomend", function() {
+					changeZoomLevel(); //绑定滚轮监听事件
+				});
+			}
+			//获取与缩放等级相对应的范围
+			function changeZoomLevel() {
+				console.log("当前地图缩放等级：" + map.getZoom());
+				distance = mapZoomScale[map.getZoom() - 3];
+				console.log((map.getZoom() - 3), distance)
+				mapZoomLevle = map.getZoom();
+				loadMapData();
+			}
+			//匹配范围内数据（参数：距离范围，总数组，单个数组，匹配过的数组）
+			function matchScopeData(infoSingle) {
+				console.log(infoSingle)
+				var returnData = [];
+				for(var i in employeesLocationData) {
+					var infoDataSingle = employeesLocationData[i];
+					var pointA = new BMap.Point(infoSingle.location_lon, infoSingle.location_lat); // 创建中心坐标
+					var pointB = new BMap.Point(infoDataSingle.location_lon, infoDataSingle.location_lat);
+					if(outmodedData.indexOf(infoDataSingle) == -1 && map.getDistance(pointA, pointB) <= distance) {
+						returnData.push(infoDataSingle);
+						outmodedData.push(infoDataSingle);
+					}
+				}
+				if(returnData.length == 0) {
+					return null;
+				}
+				return returnData;
+			}
+			//添加点击事件
+			function addClickHandler(content, marker) {
+				marker.addEventListener("click", function(e) {
+					openInfo(content, e)
+				});
+			}
+			var opts = {
+				width: 350, // 信息窗口宽度
+				//title: "地区签到排名", // 信息窗口标题
+				enableMessage: true //设置允许信息窗发送短息
+			};
+			//自定义点
+			function customDot(data, num) {
+				console.log(arguments);
+				var mapDotIcon = new BMap.Icon("../resources/images/user-avatar.png", new BMap.Size(100, 100), {
+					//					imageSize://图片大小
+					anchor: new BMap.Size(40, 40)
+				});
+				var mapPoint = new BMap.Point(data.location_lon, data.location_lat);
+				var marker = new BMap.Marker(mapPoint, {
+					icon: mapDotIcon
+				}); // 创建标注
+				var label;
+				label = new BMap.Label(num, {
+					offset: new BMap.Size(15, 7)
+				});
+				label.setStyle({
+					color: "red",
+					fontSize: "13px",
+					border: "0",
+					padding: "0",
+					//fontWeight: "bold",
+					textAlign: "center"
+				});
+				label.setContent("<img style=\"width:34px;\" class=\"img-circle\" title=\"" + data.employee_name +
+					"\" src=\"" + data.employee_avatar + "\">" + (num > 1 ? "<span class=\"map-label\" style=\"\">" + num + "</span>" : ""));
+				marker.setLabel(label);
+				return marker;
+
+			}
+			//打开地图弹窗
+			function openInfo(content, e) {
+				var p = e.target;
+				var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+				var infoWindow = new BMap.InfoWindow(content, opts); // 创建信息窗口对象 
+				map.openInfoWindow(infoWindow, point); //开启信息窗口
+			}
+			//造假
+			function addLocation() {
+				$.ajaxPost(viewEmployeesLocation, {
+					"location_cn": $("#loactiontxt").val(),
+					"location_lat": $("#loactionlat").val(),
+					"location_lon": $("#loactionlon").val()
+				}, function(response) {
+					if(response.code == 0) {
+						$.showSuccessGritter("恭喜你，造假成功！");
+					} else {
+						$.showErrorGritter("造假失败哦！");
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

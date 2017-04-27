@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>考勤规则设置</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.page-container,
+			.page-container .content {
+				padding-left: 0;
+			}
+			
+			.page-container .content {
+				padding-top: 20px;
+				padding-left: 16px;
+			}
+			
+			.nav {
+				height: 45px;
+				background-color: #f3f3f3;
+				border: 1px solid #e3e3e3;
+				border-width: 0 1px 1px 0;
+				line-height: 45px;
+				padding-left: 10px;
+				margin-bottom: 14px;
+			}
+			
+			.nav:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.nav li {
+				float: left;
+				margin-right: 15px;
+			}
+			
+			.nav>li>a,
+			.nav>li>a:hover {
+				color: #666;
+				height: 44px;
+				line-height: 44px;
+				text-align: center;
+				padding: 0 5px;
+				background-color: initial;
+			}
+			
+			.nav>li.active>a {
+				color: #009ed8;
+				border-bottom: 2px solid #009ed8;
+				background-color: initial;
+			}
+			
+			.tab-content .tab-pane-rule .search a.active {
+				color: #333;
+				font-weight: bold;
+				text-decoration: underline;
+			}
+			
+			.form-horizontal-label-right>.form-inline>label {
+				padding-right: 0;
+			}
+			
+			.model-adcrule-info .form-control-auto {
+				width: 700px;
+			}
+			
+			.model-adcrule-info .form-control-time,
+			.model-adcrule-info .form-control-month {
+				width: 100px;
+			}
+			
+			.time-picker .time-picker-select {
+				padding: 0 5px;
+			}
+			
+			.model-adcrule-info .form-group-adc-mins {
+				float: left;
+				margin-right: 10px;
+				width: 362px;
+				height: 190px;
+				border: 1px solid #eee;
+				border-radius: 3px;
+				margin-left: 4px;
+			}
+			
+			.model-adcrule-info .form-group-adc-mins label {
+				display: block;
+				background-color: #f3f3f3;
+				height: 40px;
+				line-height: 40px;
+				padding: 0 12px;
+			}
+			
+			.model-adcrule-info .form-group-adc-mins-auto {
+			    width: 738px;
+			    margin-left: 114px;
+			    margin-top: 20px;
+			    height: 110px;
+			}
+			
+			.model-adcrule-info .form-group-adc-mins-auto div {
+				margin-top: 15px;
+			}
+			
+			.model-adcrule-info .form-group-adc-mins .input-flag {
+				min-width: 72px;
+			}
+			
+			.model-adcrule-info .form-group-adc-mins-auto .input-flag {
+				min-width: 72px;
+			}
+			
+			.model-adcrule-info .form-group-adc-mins div.form-control {
+				padding-left: 0;
+				margin-left: 20px;
+				width: auto;
+			}
+			
+			.model-adcrule-info .form-group-adc-mins input.form-control {
+				margin: 0 5px;
+				width: 90px;
+				height: 30px;
+			}
+			
+			.model-adcrule-info .form-control-week label {
+				min-width: 70px;
+			}
+			
+			.model-adcrule-info .form-group-adc-mins-auto .form-control label {
+				min-width: 50px;
+			}
+			
+			.model-adcrule-info .form-control-week label:before,
+			.model-adcrule-info .form-group-adc-mins-auto .form-control label:before {
+				margin: 0;
+			}
+			
+			.model-adcrule-info .form-group-time select.form-control {
+				width: 230px;
+				height: 30px;
+			}
+			
+			.model-adcrule-info .form-group-time input.form-control {
+				width: 103px;
+				height: 30px;
+			}
+			
+			.non-rule {
+				background-color: #f3f3f3;
+				margin-top: -9px;
+				line-height: 36px;
+			}
+			
+			.non-rule-head {
+				display: inline-block;
+				width: 77px;
+				height: 100%;
+				height: 36px;
+				background-color: #85beeb;
+				line-height: 36px;
+				color: #fff;
+				padding-left: 10px;
+				position: relative;
+			}
+			
+			.non-rule-head:before {
+				content: "";
+				display: inline-block;
+				position: absolute;
+				top: 36px;
+				left: 0;
+				border-left: 1px solid #85beeb;
+				width: 1px;
+				height: 2px;
+				z-index: 9;
+			}
+			
+			.non-rule-body {
+				display: inline-block;
+				/*margin-left: 77px;*/
+				font-size: 12px;
+				color: #999;
+				width: calc(100% - 77px);
+				padding-right: 20px;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				vertical-align: middle;
+				height: 36px;
+				padding-left: 20px;
+			}
+			
+			.page-container .content .search {
+				margin-bottom: 12px;
+				margin-top: 27px;
+			}
+			
+			.page-container .content .search span {
+				padding: 3px 6px;
+				border-left: 3px solid #ca192b;
+				color: #666;
+			}
+			
+			#grid-table-rule td a,
+			#grid-table-rule td a:hover {
+				/*color: #666;*/
+				/*text-decoration: underline;*/
+			}
+			
+			.btn-a-default {
+				position: absolute;
+				top: 8px;
+				right: -85px;
+			}
+			
+			.rule-during {
+				float: right;
+			    margin-left: 115px;
+			    border: 1px solid #eee;
+			    padding: 15px 30px;
+			    padding-left: 0;
+			}
+			
+			.model-adcrule-info .form-group-time select.form-control {
+				width: 140px;
+				height: 33px;
+			}
+			
+			.rule-during>div:first-child {
+				margin-bottom: 10px;
+			}
+			
+			.rule-of-winter {
+				margin-top: -23px;
+			}
+			
+			.rule-of-summer {
+				border-width: 0 1px 1px 1px;
+			}
+			
+			.model-adcrule-info .form-group-time input.form-control {
+				width: 90px;
+				height: 30px;
+			}
+			
+			.rule-month {
+				width: 95px;
+				display: inline-block;
+				padding-left: 20px;
+				text-align: left;
+			}
+			
+			.form-inline .rule-month:before {
+				margin-right: 0;
+			}
+			
+			.time-to-time {
+				width: 32px;
+				display: inline-block;
+				text-align: center;
+			}
+			
+			.margin-left-10  {
+				margin-left: 10px;
+			}
+			
+			.day-type {
+				width: 55px;
+				display: inline-block;
+				text-align: center;
+				color: #CA192B;
+			}
+			
+			.color-red {
+				color: #CA192B;
+				padding-left: 3px;
+			}
+			
+			.form-group-bttom  {
+				width: 738px;
+				border: 1px solid #eee;
+			}
+			
+			.form-group-bttom>.form-control  {
+				width: 100%;
+			}
+			
+			.overtime-limit,
+			.tiaoxiu-rule {
+				height: 25px!important;
+				width: 75px!important;
+			}
+			
+			.font-bold {
+				display: inline-block;
+				width: 90px;
+				text-align: left;
+				margin-right: 10px;
+				padding-left: 12px;
+				/*font-weight: bold!important;*/
+			}
+			
+			.form-inline .font-bold:before {
+				margin-right: 0;
+			}
+			
+			.model-adcrule-info .form-control-auto {
+				width: 738px;
+			}
+			
+			.form-control-tiao-xiu label:nth-child(2),
+			.form-control-tiao-xiu label:nth-child(3) {
+				min-width: 0px;
+				margin-right: 40px;
+			}
+			
+			.form-control-tiao-xiu label:before {
+				width: 0;
+				margin-right: 0;
+			}
+			
+			select[bind='rule_is_require_photo'] {
+				padding-left: 20px!important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-attendance">
+			<div class="content">
+				<!--<ul class="nav" role="tablist">
+					<li role="presentation" class="active">
+						<a href="#tab-rule" aria-controls="tab-rule" role="tab" data-toggle="tab" index='1'>考勤规则</a>
+					</li>
+					<li role="presentation">
+						<a href="#tab-employee-adc-not" aria-controls="tab-employee-adc-not" role="tab" data-toggle="tab" index='2'>不参与考勤人员管理</a>
+					</li>
+				</ul>-->
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane-rule active" id="tab-rule">
+						<div class="non-rule at">
+							<span class="non-rule-head lt">考勤规则</span>
+							<span class="non-rule-body lt">
+								*未设置考勤规则
+							</span>
+						</div>
+						<div class="role-list">
+							<table id="grid-table-rule" class="grid-module">
+							</table>
+							<div id="grid-pager-rule">
+							</div>
+						</div>
+					</div>
+					<div role="tabpanel" class="" id="tab-employee-adc-not">
+						<div class="search">
+							<span>以下人员不参与考勤：</span>
+						</div>
+						<div class="role-list">
+							<table id="grid-table-employee-adc-not" class="grid-module">
+							</table>
+							<div id="grid-pager-employee-adc-not">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-adcrule-info hide">
+			<form class="form-horizontal form-horizontal-label-right model-adcrule-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">规则名称：</label>
+					<input type="text" class="form-control form-control-auto" placeholder="规则名称" bind="rule_title" nulltip="规则名称" maxlength="15">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">适用部门：</label>
+					<div class="form-control form-control-auto form-control-noborder" style="vertical-align:top;height: auto; margin-left: 0; padding: 0;">
+						<div class="form-group form-inline" style="position: relative;">
+							<span class="form-control form-control-dept-select" style="width: 610px;">
+								<!--<span class="area-text" bind="rule_department_apply_type_cn"></span>-->
+							</span>
+							<a class="btn-a-default btn-dept-select"> 选择部门 </a>
+						</div>
+					</div>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">工作日设定：</label>
+					<span class="form-control form-control-auto form-control-noborder form-control-height-auto form-control-week" style="padding-left: 0;">
+						<label><input type="checkbox" value="1" class="form-control-radio" /> 周一 </label>
+						<label><input type="checkbox" value="2" class="form-control-radio" /> 周二 </label>
+						<label><input type="checkbox" value="3" class="form-control-radio" /> 周三 </label>
+						<label><input type="checkbox" value="4" class="form-control-radio" /> 周四 </label>
+						<label><input type="checkbox" value="5" class="form-control-radio" /> 周五 </label>
+						<label><input type="checkbox" value="6" class="form-control-radio" /> 周六 </label>
+						<label><input type="checkbox" value="7" class="form-control-radio" /> 周日 </label>
+					</span>
+				</div>
+				<div class="form-group form-group-time form-inline form-group-rule-during">
+					<label class="input-flag">冬夏季时间：</label>
+					<div class="rule-during rule-of-winter">
+						<div class="form-group form-group-time form-inline">
+							<span class="rule-month" style="">冬季时间段 </span>
+							<select class="margin-left-10 form-control form-control-month" bind="rule_winter_work_month.begin_month">
+							</select>
+							<span class="time-to-time">至</span>
+							<select class="form-control form-control-month" bind="rule_winter_work_month.end_month">
+							</select>
+						</div>
+						<div class="form-group form-group-time form-inline">
+							<label class="rule-month">上班时间</label>
+							<span class="day-type">上午 </span>
+							<span class="form-control form-control-time form-control-time-am winter-start" placeholder="上午上班时间" bind="rule_winter_work_time.morning.begin"></span>
+							<span class="time-to-time">至</span>
+							<span class="form-control form-control-time form-control-time-am winter-end" placeholder="上午下班时间" bind="rule_winter_work_time.morning.end"></span>
+		
+							<span class="day-type">下午 </span>
+							<span class="form-control form-control-time form-control-time-pm winter-start" placeholder="下午上班时间" bind="rule_winter_work_time.afternoon.begin"></span>
+							<span class="time-to-time">至</span>
+							<span class="form-control form-control-time form-control-time-pm winter-end" placeholder="下午下班时间" bind="rule_winter_work_time.afternoon.end"></span>
+						</div>
+					</div>
+					<!--夏季-->
+					<div class="rule-during rule-of-summer">
+						<div class="form-group form-group-time form-inline">
+							<!--<label></label>-->
+							<span class="rule-month">夏季时间段 </span>
+							<select class="margin-left-10 form-control form-control-month" bind="rule_summer_work_month.begin_month">
+							</select>
+							<span class="time-to-time">至</span>
+							<select class="form-control form-control-month" bind="rule_summer_work_month.end_month">
+							</select>
+						</div>
+						<div class="form-group form-group-time form-inline">
+							<label class="rule-month">上班时间</label>
+							<span class="day-type">上午 </span>
+							<span class="form-control form-control-time form-control-time-am summer-start" placeholder="上午上班时间" bind="rule_summer_work_time.morning.begin"></span>
+							<span class="time-to-time">至</span>
+							<span class="form-control form-control-time form-control-time-am summer-end" placeholder="上午下班时间" bind="rule_summer_work_time.morning.end"></span>
+		
+							<span class="day-type">下午 </span>
+							<span class="form-control form-control-time form-control-time-pm summer-start" placeholder="下午上班时间" bind="rule_summer_work_time.afternoon.begin"></span>
+							<span class="time-to-time">至</span>
+							<span class="form-control form-control-time form-control-time-pm summer-end" placeholder="下午下班时间" bind="rule_summer_work_time.afternoon.end"></span>
+						</div>
+					</div>
+				</div>
+				<div class="rule-late form-group form-inline">
+					<label class="input-flag lt">考勤设置：</label>
+					<div class="form-group form-group-adc-mins form-inline">
+						<label class="">签到</label>
+						<div class="form-control form-control-noborder form-control-height-auto">
+							<span>晚于</span>
+							<input type="text" class="form-control" placeholder="请输入数字" bind="rule_delay_late_minute" nulltip="迟到分钟" maxlength="3" data-type="int">
+							<span>分钟以上视为<span class="color-red">迟到</span></span>
+						</div>
+						<div class="form-control form-control-noborder form-control-height-auto">
+							<span>晚于</span>
+							<input type="text" class="form-control" placeholder="请输入数字" bind="rule_absents_of_half_day.after_sign_in" nulltip="旷工半天分钟" maxlength="3" data-type="int">
+							<span>分钟以上视为<span class="color-red">旷工半天</span></span>
+						</div>
+						<div class="form-control form-control-noborder form-control-height-auto">
+							<span>晚于</labspanel>
+							<input type="text" class="form-control" placeholder="请输入数字" bind="rule_absents_of_whole_day.after_sign_in" nulltip="旷工一天分钟" maxlength="3" data-type="int">
+							<span>分钟以上视为<span class="color-red">旷工一天</span></span>
+						</div>
+					</div>
+					<div class="form-group form-group-adc-mins form-inline" style="margin-right: 0;">
+						<label class="">签退</label>
+						<!--<div class="form-control form-control-noborder form-control-height-auto" style="margin-left: 0;">
+							<span>早于</span>
+							<input type="text" class="form-control" placeholder="请输入数字" bind="before_sign_out" nulltip="早退分钟" maxlength="3" data-type="int">
+							<span>分钟以上视为早退</span>
+						</div>-->
+						<div class="form-control form-control-noborder form-control-height-auto">
+							<span>早于</span>
+							<input type="text" class="form-control" placeholder="分钟数" bind="rule_absents_of_half_day.before_sign_out" nulltip="旷工半天分钟" maxlength="3" data-type="int">
+							<span>分钟以上视为<span class="color-red">旷工半天</span></span>
+						</div>
+						<div class="form-control form-control-noborder form-control-height-auto">
+							<span>早于</labspanel>
+							<input type="text" class="form-control" placeholder="分钟数" bind="rule_absents_of_whole_day.before_sign_out" nulltip="旷工一天分钟" maxlength="3" data-type="int">
+							<span>分钟以上视为<span class="color-red">旷工一天</span></span>
+						</div>
+					</div>
+					<div class="form-group form-group-adc-mins form-group-adc-mins-auto form-inline">
+						<label class="">加班</label>
+						<div class="form-control form-control-noborder form-control-height-auto">
+							<span>上班</span>
+							<input type="text" class="form-control" placeholder="分钟数" bind="rule_overtime.before_sign_in" nulltip="加班签退分钟" maxlength="3" data-type="int">
+							<span>分钟前可补签前一天签退</span>
+						</div>
+						<div class="form-control form-control-noborder form-control-height-auto">
+							<span>下班</span>
+							<input type="text" class="form-control" placeholder="分钟数" bind="rule_overtime.after_sign_out" nulltip="加班分钟" maxlength="3" data-type="int">
+							<span>分钟后开始计算加班时间</span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group form-inline clear">
+					<label class="input-flag" style="padding-right: 0;">加班设置：</label>
+					<div class="form-group form-group-bttom form-inline">
+						<!--加班时长-->
+						<div class="form-control form-control-noborder form-control-height-auto" style="margin-left: 0;">
+							<label class="font-bold">加班时长</label>
+							<span>每不足一整小时，超过</span>
+							<input type="text" class="form-control overtime-limit" placeholder="分钟数" bind="rule_overtime_min_minute" nulltip="加班分钟" maxlength="2" data-type="int">
+							<span>分钟计1小时，低于则忽略不计</span>
+						</div>
+						<br />
+						<!--是否调休-->
+						<div class="form-control form-control-noborder form-control-tiao-xiu form-control-height-auto" style="margin-left: 0;">
+							<label class=" font-bold">加班计调休</label>
+							<label><input type="radio" name="rdVacations" value="2" class="form-control-radio" bind="rule_is_transfer_holiday" checked="checked" /> 否 </label>
+							<label><input type="radio" name="rdVacations" value="1" class="form-control-radio" bind="rule_is_transfer_holiday" /> 是 </label>
+						</div>
+						<br group="rule">
+						<div class="form-control form-control-noborder form-control-height-auto" style="margin-left: 0;" group="rule">
+							<label class=" font-bold" group="rule">调休规则</label>
+							<input type="text" class="form-control tiaoxiu-rule" placeholder="加班时长" bind="rule_transfer_holiday_rate.half_day" maxlength="3" data-type="int">
+							<span>小时加班时长，换算为 0.5 天调休假</span>
+						</div>
+						<br group="rule hide">
+						<div class="form-control form-control-noborder form-control-height-auto hide" style="margin-left: 114px;" group="rule">
+							<label class="input-flag font-bold" group="rule">调休规则</label>
+							<input type="text" class="form-control tiaoxiu-rule" placeholder="加班时长" bind="rule_transfer_holiday_rate.whole_day" maxlength="3" data-type="int">
+							<span>小时加班时长，换算为 1 天调休假</span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">拍照要求：</label>
+					<select class="form-control form-control-auto" bind="rule_is_require_photo">
+						<option value="1">每次考勤时需拍照</option>
+						<option value="2">加班时需拍照</option>
+						<option value="3">考勤时不需拍照</option>
+					</select>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-leader-info pnl-dept-select-share hide">
+			<form class="form-horizontal model-leader-info model-dept-select-share">
+				<div class="wrap wrap-source">
+					<label>请以部门为单位选择统计范围：</label>
+					<div class="box">
+						<ul class="list-emp tree tree-dept">
+
+						</ul>
+					</div>
+				</div>
+				<div class="wrap seg">
+					<div class="box">
+						<p>
+							<a href="javascript:;" class="btn-add"><i class="fa fa-arrow-right"></i></a>
+						</p>
+						<br>
+						<p>
+							<a href="javascript:;" class="btn-remove"><i class="fa fa-arrow-left"></i></a>
+						</p>
+					</div>
+				</div>
+				<div class="wrap wrap-new">
+					<label>已选择的范围：</label>
+					<div class="box">
+						<ul class="list-emp list-dept-select-temp">
+
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openAttendanceRuleInfoPop('add');" show-on1="singleselect" role-auth1="saas/companies/accounts/0/roles|post"><i class="fa fa-plus"></i> 新建考勤规则</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" show-on1="multiselect" onclick="openAttendanceRuleInfoPop('update');" role-auth1="saas/companies/accounts/selected/status|put"><i class="fa fa-edit"></i> 编辑</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" show-on1="multiselect" onclick="openAttendanceRuleDeletePop();" role-auth1="saas/companies/accounts/selected/status|put"><i class="fa fa-trash"></i> 删除</a>
+		</div>
+		<div id="grid-footer-container-notadc" class="hide">
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openAddEmployeeOfNotAdcPop();" show-on1="singleselect" role-auth1="saas/companies/accounts/0/roles|post"><i class="fa fa-plus"></i> 添加不考勤员工</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" show-on1="multiselect" onclick="openEmployeeNotadcDeletePop();" role-auth1="saas/companies/accounts/selected/status|put"><i class="fa fa-trash"></i> 删除</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			//APIS
+			var ATTENDANCERULEAPIS = {
+				//规则列表
+				rules: BSAPIURL + "/sign_rules",
+				//已设置部门
+				deptsIsSet: BSAPIURL + "/sign_rules/departments",
+				//不考勤人员
+				unsignEmployees: BSAPIURL + "/unsign_employees",
+			};
+			//考勤规则
+			var gridSelectorOfRule = "#grid-table-rule";
+			var pagerSelectorOfRule = "#grid-pager-rule";
+			var gridOfRule;
+			var isFirstLoadGridOfMyRule = true;
+			//不考勤人员
+			var gridSelectorOfNotadc = "#grid-table-employee-adc-not";
+			var pagerSelectorOfNotadc = "#grid-pager-employee-adc-not";
+			var gridOfNotadc;
+			var isFirstLoadGridOfMyNotadc = true;
+
+			$(document).ready(function() {
+				//token
+				$.token();
+				/*//标签页
+				$('.nav a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+					if($(this).attr("index") == 1) {
+						initAdcRuleTab();
+					} else {
+						initEmployeeNotAdcTab();
+					}
+				});*/
+				//考勤规则 夏季 冬季 切换
+				$(".tab-content .tab-pane-rule .search a").click(function() {
+					$(".tab-content .tab-pane-rule .search a").removeClass("active");
+					$(this).addClass("active");
+				});
+				//月份
+				var monthCNs = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
+				var monthHtml = "";
+				for(var i = 0; i < 12; i++) {
+					monthHtml += "<option value='" + (i + 1) + "'>" + monthCNs[i] + "</option>";
+				}
+				$(".form-control-month").html(monthHtml);
+				//初始考勤规则
+				initAdcRuleTab();
+				initEmployeeNotAdcTab();
+			});
+			//加载考勤规则
+			function initAdcRuleTab() {
+				if(!isFirstLoadGridOfMyRule) {
+					return false;
+				}
+				//grid
+				//122 = pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = ($(window).height()-14)/2 - $("#tab-rule .non-rule").outerHeight(true) - 135;
+				//alert($(".remark").height());
+				var colNames = ['', '', '规则名称', '适用范围'];
+				var colModel = [{
+					name: 'id',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return rowObject.atd_rule_id;
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: '__data',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return JSON.stringify(rowObject);
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: '__name',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"openAttendanceRuleInfoPop('update','" + rowObject.atd_rule_id + "');\" role-auth=\"saas/sign_rules/0|put\" role-auth-tip=\"你无权限修改考勤规则。\">" + rowObject.rule_title + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'account_real_name',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var deptNames = [];
+							for(var i in rowObject.rule_departments) {
+								deptNames.push(rowObject.rule_departments[i].depa_name);
+							}
+							return deptNames.join(",") + "<span style='color:#999;'>(" + (rowObject.rule_department_apply_type == 0 ? "所选部门" : "所选部门及其所有下属部门") + ")</span>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				gridOfRule = $(gridSelectorOfRule).initJqGrid({
+					pager: pagerSelectorOfRule,
+					url: ATTENDANCERULEAPIS.rules,
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight,
+					afterLoadComplete: function(resp) {
+						if(resp.data.non_rule_departments.length == resp.data.total) $(".non-rule .non-rule-body").html("*企业当前未设置考勤规则");
+						else if(resp.data.non_rule_departments.length > 0) {
+							var nonRuleDepaArr = [];
+							for(var i in resp.data.non_rule_departments) {
+								nonRuleDepaArr.push(resp.data.non_rule_departments[i].depa_name);
+							}
+							$(".non-rule .non-rule-body").html("*" + nonRuleDepaArr.join("、") + "  未设置考勤规则")
+							.attr("title","*" + nonRuleDepaArr.join("、") + "  未设置考勤规则");
+						} else {
+							$(".non-rule").hide();
+						}
+
+					}
+				});
+				isFirstLoadGridOfMyRule = false;
+			}
+			//加载不考勤人员
+			function initEmployeeNotAdcTab() {
+				if(!isFirstLoadGridOfMyNotadc) {
+					return false;
+				}
+				//grid
+				//122 = pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = ($(window).height()-14)/2 - $("#tab-employee-adc-not .search").outerHeight(true) - 135;
+				//alert($(".remark").height());
+				var colNames = ['', '姓名', '部门', '职位'];
+				var colModel = [{
+					name: 'black_id',
+					hidden: true
+				}, {
+					name: 'employee_name',
+					sortable: true
+				}, {
+					name: 'department_name'
+				}, {
+					name: 'employee_post',
+					sortable: true
+				}];
+				gridOfNotadc = $(gridSelectorOfNotadc).initJqGrid({
+					pager: pagerSelectorOfNotadc,
+					footerBtnContainer: "#grid-footer-container-notadc",
+					url: ATTENDANCERULEAPIS.unsignEmployees,
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight
+				});
+				isFirstLoadGridOfMyNotadc = false;
+			}
+			//考勤规则详情
+			function openAttendanceRuleInfoPop(action, id) {
+				var rule_department_apply_type = "";
+				var defaultCheckedIds = [];
+				var defaultCheckedArea = "";
+				var actionText = (action == "add" ? "添加" : "编辑");
+				if(action == "update" && (!$(gridOfRule).isSelectedRowForjqGrid() && !id)) {
+					$.showErrorGritter("请先选择要编辑的考勤规则。");
+					return false;
+				}
+				if(action == "update" && $("#grid-table-rule input:checked").length > 1) {
+					$.showErrorGritter("编辑时最多只能选择一个考勤规则。");
+					return false;
+				}
+				var modalId = $.modal({
+					width: 900,
+					height: $(window).height()-200
+				}).show(actionText + "考勤规则", ".pnl-adcrule-info",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var ruleFormData = ruleController.getJSON();
+						var selectDeptIds = [];
+						$(formContainer + " .form-control-dept-select span[data-dept-id]").each(function() {
+							selectDeptIds.push($(this).data("dept-id"));
+						});
+						if(selectDeptIds.length == 0) {
+							$.showErrorGritter("请先选择考勤规则适用的部门。");
+							return false;
+						}
+						ruleFormData.rule_departments = selectDeptIds;
+						//获取工作日时间
+						var workDate = [];
+						$(formContainer + " .form-control-week input[type=checkbox]").each(function(index) {
+							if($(this).is(":checked")) {
+								workDate.push($(this).val());
+							}
+						});
+						ruleFormData.rule_workdays = workDate;
+						ruleFormData.rule_department_apply_type = rule_department_apply_type;
+						var inputTime = parseInt($(formContainer + " .overtime-limit").val());
+						if(0 >= inputTime || inputTime >= 60) {
+							$.showErrorGritter("加班时长输入错误，时长介于0-60之间（不包含）");
+							return false;
+						}
+						var selectedTimeData=setOrGetDataTime("get");
+						ruleFormData.rule_summer_work_time=selectedTimeData.rule_summer_work_time;
+						ruleFormData.rule_winter_work_time=selectedTimeData.rule_winter_work_time;
+						var tmpUrl = ATTENDANCERULEAPIS.rules;
+						if(action == "update") {
+							tmpUrl += "/" + ruleData.atd_rule_id;
+						}
+						$.ajaxByAction(action, tmpUrl, ruleFormData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "考勤规则成功。");
+									modal.modal('hide');
+									$(gridOfRule).reloadGrid();
+								} else {
+									$.showErrorGritter("保存规则失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-adcrule-info";
+				//时间插件绑定
+				$.initTimePicker({
+					container: $(formContainer+" .form-control-time.form-control-time-am"),
+					format: "hh:mm",
+					hours: "0-12"
+				});
+				$.initTimePicker({
+					container: $(formContainer+" .form-control-time.form-control-time-pm"),
+					format: "hh:mm",
+					hours: "13-23"
+				});
+				//设置时间或者取值
+				function setOrGetDataTime(type,data){
+					if(type=="set"){
+						//冬季  上午
+						$(formContainer+" .form-control-time-am.winter-start select:first-child option[value='"+data.rule_winter_work_time.morning.begin.split(":")[0]+"']").attr("selected","selected");
+						$(formContainer+" .form-control-time-am.winter-start select:last-child option[value='"+data.rule_winter_work_time.morning.begin.split(":")[1]+"']").attr("selected","selected");
+						$(formContainer+" .form-control-time-am.winter-end select:first-child option[value='"+data.rule_winter_work_time.morning.end.split(":")[0]+"']").attr("selected","selected");
+						$(formContainer+" .form-control-time-am.winter-end select:last-child option[value='"+data.rule_winter_work_time.morning.end.split(":")[1]+"']").attr("selected","selected");
+						//冬季  下午
+						$(formContainer+" .form-control-time-pm.winter-start select:first-child option[value='"+data.rule_winter_work_time.afternoon.begin.split(":")[0]+"']").attr("selected","selected");
+						$(formContainer+" .form-control-time-pm.winter-start select:last-child option[value='"+data.rule_winter_work_time.afternoon.begin.split(":")[1]+"']").attr("selected","selected");
+						$(formContainer+" .form-control-time-pm.winter-end select:first-child option[value='"+data.rule_winter_work_time.afternoon.end.split(":")[0]+"']").attr("selected","selected");
+						$(formContainer+" .form-control-time-pm.winter-end select:last-child option[value='"+data.rule_winter_work_time.afternoon.end.split(":")[1]+"']").attr("selected","selected");
+						//夏季  上午
+						$(formContainer+" .form-control-time-am.summer-start select:first-child option[value='"+data.rule_summer_work_time.morning.begin.split(":")[0]+"']").attr("selected","selected");
+						$(formContainer+" .form-control-time-am.summer-start select:last-child option[value='"+data.rule_summer_work_time.morning.begin.split(":")[1]+"']").attr("selected","selected");
+						$(formContainer+" .form-control-time-am.summer-end select:first-child option[value='"+data.rule_summer_work_time.morning.end.split(":")[0]+"']").attr("selected","selected");
+						$(formContainer+" .form-control-time-am.summer-end select:last-child option[value='"+data.rule_summer_work_time.morning.end.split(":")[1]+"']").attr("selected","selected");
+						//夏季  下午
+						$(formContainer+" .form-control-time-pm.summer-start select:first-child option[value='"+data.rule_summer_work_time.afternoon.begin.split(":")[0]+"']").attr("selected","selected");
+						$(formContainer+" .form-control-time-pm.summer-start select:last-child option[value='"+data.rule_summer_work_time.afternoon.begin.split(":")[1]+"']").attr("selected","selected");
+						$(formContainer+" .form-control-time-pm.summer-end select:first-child option[value='"+data.rule_summer_work_time.afternoon.end.split(":")[0]+"']").attr("selected","selected");
+						$(formContainer+" .form-control-time-pm.summer-end select:last-child option[value='"+data.rule_summer_work_time.afternoon.end.split(":")[1]+"']").attr("selected","selected");
+					}else {
+						var rule_winter_work_time= {};
+							rule_winter_work_time.morning=
+							{
+								begin: $(formContainer+" .form-control-time-am.winter-start select:first-child option:selected").val()+":"+
+										$(formContainer+" .form-control-time-am.winter-start select:last-child option:selected").val(),
+								end: $(formContainer+" .form-control-time-am.winter-end select:first-child option:selected").val()+":"+
+										$(formContainer+" .form-control-time-am.winter-end select:last-child option:selected").val(),
+							};
+							rule_winter_work_time.afternoon=
+							{
+								begin: $(formContainer+" .form-control-time-pm.winter-start select:first-child option:selected").val()+":"+
+										$(formContainer+" .form-control-time-pm.winter-start select:last-child option:selected").val(),
+								end: $(formContainer+" .form-control-time-pm.winter-end select:first-child option:selected").val()+":"+
+										$(formContainer+" .form-control-time-pm.winter-end select:last-child option:selected").val(),
+							};
+						var rule_summer_work_time={};
+							rule_summer_work_time.morning= {
+								begin: $(formContainer+" .form-control-time-am.summer-start select:first-child option:selected").val()+":"+
+										$(formContainer+" .form-control-time-am.summer-start select:last-child option:selected").val(),
+								end: $(formContainer+" .form-control-time-am.summer-end select:first-child option:selected").val()+":"+
+										$(formContainer+" .form-control-time-am.summer-end select:last-child option:selected").val(),
+							};
+							rule_summer_work_time.afternoon={
+								begin: $(formContainer+" .form-control-time-pm.summer-start select:first-child option:selected").val()+":"+
+										$(formContainer+" .form-control-time-pm.summer-start select:last-child option:selected").val(),
+								end: $(formContainer+" .form-control-time-pm.summer-end select:first-child option:selected").val()+":"+
+										$(formContainer+" .form-control-time-pm.summer-end select:last-child option:selected").val(),
+							};
+						return {
+							rule_winter_work_time:rule_winter_work_time,
+							rule_summer_work_time:rule_summer_work_time
+						}
+					}
+				}
+				$(formContainer + " .overtime-limit").blur(function() {
+					var time = parseInt($(this).val());
+					if(0 >= time || time >= 60) {
+						$.showErrorGritter("加班时长输入错误，时长介于0-60之间（不包含）");
+						$(this).focus();
+						return false;
+					}
+				});
+				//common dom
+				var tempHtml = "<span class=\"item\" data-dept-id=\"{ID}\">{N} <i class=\"fa fa-times icon-close\" onclick=\"$(this).parent().remove();\"></i></span> ";
+				var selectDeptDom = $(formContainer + " .form-control-dept-select");
+				var ruleController = new Controller(formContainer);
+				//行数据 默认值
+				var ruleData = {
+					//工作日
+					rule_workdays: ['1', '2', '3', '4', '5'],
+					//冬季作息
+					rule_winter_work_month: {
+						begin_month: 12,
+						end_month: 4
+					},
+					rule_winter_work_time: {
+						morning: {
+							begin: "09:00",
+							end: "12:00"
+						},
+						afternoon: {
+							begin: "13:30",
+							end: "17:30"
+						}
+					},
+					//夏季作息
+					rule_summer_work_month: {
+						begin_month: 5,
+						end_month: 11
+					},
+					rule_summer_work_time: {
+						morning: {
+							begin: "09:00",
+							end: "12:00"
+						},
+						afternoon: {
+							begin: "14:00",
+							end: "18:00"
+						}
+					},
+					//签到、签退、加班 参数
+					rule_delay_late_minute: 5,
+					rule_absents_of_half_day: {
+						after_sign_in: 30,
+						before_sign_out: 30
+					},
+					rule_absents_of_whole_day: {
+						after_sign_in: 60,
+						before_sign_out: 60
+					},
+					rule_overtime: {
+						after_sign_out: 30,
+						before_sign_in: 30
+					},
+					//默认不调休
+					rule_is_transfer_holiday: 2
+				};
+				setOrGetDataTime("set",ruleData);
+				console.log(setOrGetDataTime("get"));
+				if(action == "update") {
+					var rowIndex = $(gridOfRule).getJqGridRowIndexByField("id", id) || $(gridOfRule).jqGrid('getGridParam', 'selrow');
+					if(!rowIndex) {
+						return false;
+					}
+					ruleData = JSON.parse(unescape($(gridOfRule).jqGrid('getRowData', rowIndex).__data));
+					
+					defaultCheckedArea = ruleData.rule_department_apply_type;
+					for(var i in ruleData.rule_departments) {
+						defaultCheckedIds.push(ruleData.rule_departments[i].depa_id);
+					}
+					//冬季作息时间
+					var tmpWinterWorkMonth = ruleData.rule_winter_work_month;
+					//					ruleData.rule_winter_work_month = {};
+					//					ruleData.rule_winter_work_month.begin_month = tmpWinterWorkMonth[0];
+					//					ruleData.rule_winter_work_month.end_month = tmpWinterWorkMonth[tmpWinterWorkMonth.length - 1];
+					var monthFirst = parseInt(tmpWinterWorkMonth[0]);
+					var monthLast = parseInt(tmpWinterWorkMonth[tmpWinterWorkMonth.length - 1]);
+
+					ruleData.rule_winter_work_month = {};
+					ruleData.rule_winter_work_month.begin_month = monthFirst;
+					ruleData.rule_winter_work_month.end_month = monthLast;
+
+					//夏季作息时间
+					var tmpSummerWorkMonth = ruleData.rule_summer_work_month;
+					monthFirst = parseInt(tmpSummerWorkMonth[0]);
+					monthLast = parseInt(tmpSummerWorkMonth[tmpSummerWorkMonth.length - 1]);
+
+					ruleData.rule_summer_work_month = {};
+					ruleData.rule_summer_work_month.begin_month = monthFirst;
+					ruleData.rule_summer_work_month.end_month = monthLast;
+					//console.log(ruleData.rule_summer_work_month);
+					//console.log(ruleData.rule_winter_work_month);
+					setOrGetDataTime("set",ruleData);
+					//适用部门
+					var rule_department_apply_type_cn = ruleData.rule_department_apply_type == 0 ? "所选部门" : "所选部门及其所有下属部门";
+					selectDeptDom.append("<span style='color:#999;'>生效范围：" + rule_department_apply_type_cn + "</span><br>")
+					for(var i in ruleData.rule_departments) {
+						var deptData = ruleData.rule_departments[i];
+						selectDeptDom.append(tempHtml.replace("{N}", deptData.depa_name).replace("{ID}", deptData.depa_id));
+					}
+				}
+				//填充数据
+
+				//工作日
+				$(formContainer + " .form-control-week input").each(function() {
+					if(ruleData.rule_workdays.indexOf($(this).val()) >= 0) {
+						$(this).attr("checked", "checked");
+					}
+				});
+
+				ruleController.set(ruleData);
+				//部门选择
+				$(formContainer + " .btn-dept-select").click(function() {
+					//选择部门
+					var selectDepts = [];
+					var options = {
+						url: SAASAPIS.BS.company.departments.replace("{id}", $.uuid()),
+						leftTitle: "请以部门为单位选择适用范围：",
+						rightTitle: "已选择的范围：",
+						defaultCheckedIds: getDefualtCheckedIdsArr($(formContainer+" .form-control-dept-select .item"),"data-dept-id"),
+						defaultCheckedArea: defaultCheckedArea,
+						//isNeedRightPanel: true, //是否需要右边的模块
+						areaItems: [{
+							name: "rule_department_apply_type",
+							value: 0,
+							text: "仅本部门"
+						}, {
+							name: "rule_department_apply_type",
+							value: 1,
+							text: "本部门及所有下属部门",
+							notAllowedRepeat: true
+						}],
+						linkageType: 0, //联动类型   0统计(不联动)   1（下联动） 2 （双联动）
+						//modalId: modalIdOfDeptId, //打开的modal的id
+						notNeedAutoCloseModal: true,
+						clickCallback: function(data, modalIdOfDept) { //为关闭modal时需要的数据赋值
+							selectDepts = data.selectDepts;
+							var selectedDeptIds = [];
+							defaultCheckedIds = [];
+							var selectedDomSpan = "";
+							for(var i in selectDepts) {
+								var deptData = selectDepts[i];
+								selectedDeptIds.push(deptData.dept_id);
+								defaultCheckedIds.push(deptData.dept_id);
+								selectedDomSpan += tempHtml.replace("{N}", deptData.dept_name).replace("{ID}", deptData.dept_id);
+							}
+							defaultCheckedArea = data.area_value;
+							rule_department_apply_type = data.area_value;
+							//过滤已设置部门
+							$.ajaxGet(ATTENDANCERULEAPIS.deptsIsSet + (ruleData.atd_rule_id ? "?except_rule_id=" + ruleData.atd_rule_id + "&" : "?") + "department_ids=" + selectedDeptIds + "&apply_type=" + rule_department_apply_type, function(response) {
+								if(response.code == 0) {
+									selectDeptDom.empty();
+									var areaText = data.area_value == 0 ? "所选部门" : "所选部门及其所有下属部门";
+									var deptIdsOfSeted = response.data || [];
+									var existDeptNames = [];
+									if(!response.data.check_result) {
+										//$.showErrorGritter("“" + existDeptNames.join(",") + "”或其下级部门已设置过考勤规则，请重新选择。");
+										$.showErrorGritter("您选择的部门中存在已经设置过规则的部门，请重新选择部门或者生效范围！");
+									} else {
+										selectDeptDom.append("<span style='color:#999;'>生效范围：" + areaText + "</span><br>");
+										selectDeptDom.append(selectedDomSpan);
+										$("#" + modalIdOfDept).modal('hide');
+									}
+								} else {
+									$.showErrorGritter("获取已设置部门失败：" + response.msg);
+								}
+							});
+						}
+					}
+					initDeptTreeOfTwoStep(options);
+				});
+				//调休规则
+				if(ruleData.rule_is_transfer_holiday != 1)
+					$(formContainer + " *[group='rule']").hide();
+				$(formContainer + " input[name='rdVacations']").change(function() {
+					if($(this).val() == 1) {
+						//调休
+						$(formContainer + " *[group='rule']").show();
+					} else {
+						//不调休
+						$(formContainer + " *[group='rule']").hide();
+					}
+				});
+			}
+			//删除规则
+			function openAttendanceRuleDeletePop() {
+				if(!$(gridOfRule).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要删除的考勤规则。");
+					return false;
+				}
+				$.modal().confirm("你将删除选择的考勤规则，删除后不能恢复，确认删除吗？", function() {
+					var selRowsIndex = $(gridOfRule).jqGrid('getGridParam', 'selarrrow');
+					if(selRowsIndex.length > 0) {
+						var selectRowIds = $(gridOfRule).getSelectRowIdsForjqGrid("id");
+						$.ajaxDelete(ATTENDANCERULEAPIS.rules, {
+								rule_ids: selectRowIds
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("删除考勤规则成功。");
+									//refresh data
+									var len = selRowsIndex.length;
+									for(var i = 0; i < len; i++) {
+										$(gridOfRule).jqGrid("delRowData", $(gridOfRule).jqGrid('getGridParam', 'selrow'));
+									}
+								} else if(response.code > 0 && response.data.used_roles) {
+									var cannotDelModels = response.data.used_roles;
+									var canotDelNames = [];
+									for(var i in cannotDelModels) {
+										canotDelNames.push(cannotDelModels[i].role_name);
+									}
+									//$.showErrorGritter("角色 [" + canotDelNames.join(',') + "] 已有账户使用，删除失败，本次删除操作取消。");
+								} else {
+									$.showErrorGritter("删除考勤规则失败：" + response.msg);
+								}
+							});
+					}
+				});
+			}
+			//添加不考勤人员
+			function openAddEmployeeOfNotAdcPop() {
+				$.showEmployeeSelectPop({
+					title: "选择不考勤人员",
+					subTitle: "选择不考勤人员：",
+					okCallback: function(employeesData) {
+						var employeeIds = [];
+						for(var i in employeesData) {
+							var empData = employeesData[i];
+							employeeIds.push(empData.employee_id);
+						}
+
+						$.ajaxPost(ATTENDANCERULEAPIS.unsignEmployees, {
+								employee_ids: employeeIds
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("添加不考勤人员成功。");
+									$(gridOfNotadc).reloadGrid();
+								} else {
+									$.showErrorGritter("添加失败：" + response.msg);
+								}
+							});
+					}
+				});
+			}
+			//删除不考勤人员
+			function openEmployeeNotadcDeletePop() {
+				if(!$(gridOfNotadc).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要删除的人员。");
+					return false;
+				}
+				$.modal().confirm("你将从不考勤人员列表中移除选择的人员，确认移除吗？", function() {
+					var selRowsIndex = $(gridOfNotadc).jqGrid('getGridParam', 'selarrrow');
+					if(selRowsIndex.length > 0) {
+						var selectRowIds = $(gridOfNotadc).getSelectRowIdsForjqGrid("black_id");
+						$.ajaxDelete(ATTENDANCERULEAPIS.unsignEmployees, {
+								black_ids: selectRowIds
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("移除成功。");
+									//refresh data
+									var len = selRowsIndex.length;
+									for(var i = 0; i < len; i++) {
+										$(gridOfNotadc).jqGrid("delRowData", $(gridOfNotadc).jqGrid('getGridParam', 'selrow'));
+									}
+								} else {
+									$.showErrorGritter("移除失败：" + response.msg);
+								}
+							});
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

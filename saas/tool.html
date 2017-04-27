@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>自定义工具</title>
+		<link rel="stylesheet" href="resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="resources/css/main-page.css" />
+		<style>
+			.main-wrap {
+				margin: 10px;
+			}
+			
+			.tab-pane-1 .group-html-var {}
+			
+			.tab-pane-1 .group-html-var>.title {
+				margin-bottom: 5px;
+			}
+			
+			.tab-pane-1 .group-html-var>.form-control-source,
+			.tab-pane-1 .group-html-var>.form-control-result {
+				width: 500px;
+				height: 300px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="main-wrap">
+			<div class="tabs">
+				<ul class="nav nav-tabs" role="tablist">
+					<li>
+						<a class="pref"></a>
+					</li>
+					<li role="presentation" class="active">
+						<a href="#tab-0" aria-controls="tab-0" role="tab" data-toggle="tab">AJAX工具</a>
+					</li>
+					<li role="presentation">
+						<a href="#tab-1" aria-controls="tab-1" role="tab" data-toggle="tab">HTML/JS互转</a>
+					</li>
+					<li role="presentation">
+						<a href="#tab-2" aria-controls="tab-2" role="tab" data-toggle="tab">CSS杂项</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane tab-pane-0 active" id="tab-0">
+						<div class="form-horizontal">
+							<div class="form-group form-inline">
+								<label>地址 </label>
+								<select class="form-control" bind="baseAPI">
+									<option value="http://api.saas.com">http://api.saas.com</option>
+								</select>
+								<input type="text" bind="apiUrl" class="form-control form-control-url" placeholder="URL地址" />
+								<button type="button" class="btn btn-default btn-sm btn-add-ajax"><i class="fa fa-plus"></i></button>
+								<button type="button" class="btn btn-default btn-sm btn-remove-ajax"><i class="fa fa-times"></i></button>
+								<button type="button" class="btn btn-default btn-sm btn-source" data-key="_APIDATAS">数据源1</button>
+								<button type="button" class="btn btn-default btn-sm btn-source" data-key="_APIDATAS2">数据源2</button>
+								<button type="button" class="btn btn-default btn-sm btn-source" data-key="_APIDATAS3">数据源3</button>
+								<button type="button" class="btn btn-default btn-sm btn-source" data-key="_APIDATAS4">数据源4</button>
+								<button type="button" class="btn btn-default btn-sm btn-source" data-key="_APIDATAS5">数据源5</button>
+							</div>
+							<div class="form-group form-inline">
+								<label>方法 </label>
+								<select class="form-control" bind="method">
+									<option value="GET">GET</option>
+									<option value="POST">POST</option>
+									<option value="PUT">PUT</option>
+									<option value="PATCH">PATCH</option>
+									<option value="DELETE">DELETE</option>
+								</select>
+							</div>
+							<div class="form-group form-inline">
+								<label>参数 </label>
+								<textarea bind="data" class="form-control" placeholder="自行组装: {name:'sa'}" style="width: 1700px; "></textarea>
+							</div>
+							<div class="form-group form-inline">
+								<label> </label>
+								<button type="button" class="btn btn-default btn-ajax">耐次够</button>
+								<label><input type="checkbox" class="form-control-clear-result" checked="checked"> 覆盖结果</label>
+							</div>
+							<div class="form-group form-inline">
+								<label>结果 </label>
+								<textarea class="form-control form-control-result-ajax" placeholder="这里是结果" style="width: 1700px; height: 660px;"></textarea>
+							</div>
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane tab-pane-1" id="tab-1">
+						<div class="group-html-var">
+							<p class="title">将以下HTML拼接为JS变量 <label style="margin-left: 20px;"><input type="checkbox" class="form-control-clear-blank">删除空格</label> </p>
+							<textarea class="form-control-source" placeholder="原始HTML"></textarea>
+							<textarea class="form-control-result" placeholder="转换后的JS代码"></textarea>
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="tab-2">
+						<style>
+							.group-text-align-justify {
+								padding: 10px;
+								width: 200px;
+								text-align: justify;
+								text-align-last: justify;
+								border: 1px solid #1B6D85;
+							}
+							
+							.group-text-align-justify i {
+								padding: 3px 8px;
+								display: inline-block;
+								font-style: normal;
+								background: #ddd;
+								text-align: center;
+							}
+						</style>
+						<h5>左右对齐</h5>
+						<div class="group-text-align-justify">
+							<i>1</i>
+							<i>2</i>
+							<i>3</i>
+							<i>4</i>
+							<i>5</i>
+						</div>
+						<style>
+							.group-box-triangle {
+								width: 0px;
+								height: 0px;
+								border-top: 50px solid yellowgreen;
+								border-bottom: 50px solid deeppink;
+								border-left: 50px solid bisque;
+								border-right: 50px solid chocolate;
+							}
+							
+							.group-tip-triangle {
+								position: relative;
+								margin: 20px 0;
+								width: 200px;
+								height: 50px;
+								border: 1px solid chocolate;
+								border-radius: 5px;
+							}
+							
+							.group-tip-triangle::before,
+							.group-tip-triangle::after {
+								position: absolute;
+								top: 48px;
+								left: 60px;
+								z-index: 5;
+								content: "";
+								border-top: 10px solid chocolate;
+								border-left: 10px solid transparent;
+								border-right: 10px solid transparent;
+							}
+							
+							.group-tip-triangle::before {
+								border-top: 10px solid white;
+								top: 47px;
+								z-index: 6;
+							}
+							
+							.group-tip-link a:hover i.trl {
+								position: absolute;
+								display: block;
+								margin-top: 5px;
+								margin-left: 20px;
+								content: "";
+								border-bottom: 5px solid #ddd;
+								border-left: 5px solid transparent;
+								border-right: 5px solid transparent;
+							}
+							
+							.group-tip-link a:hover::after {
+								position: absolute;
+								display: block;
+								margin-top: 10px;
+								content: attr(data-title);
+								padding: 5px;
+								border: 1px solid #ddd;
+								border-radius: 3px;
+								color: #666;
+								background-color: white;
+							}
+						</style>
+						<h5>三角形</h5>
+						<div class="group-triangle">
+							<div class="group-box-triangle"></div>
+							<div class="group-tip-triangle"></div>
+							<div class="group-tip-link">
+								<a href="javascript:;" data-title="我是出镜啊，啊啊啊啊啊">hover me</a>
+							</div>
+							<div class="group-tip-link">
+								<a href="javascript:;" data-title="我是出镜啊，啊啊啊啊啊">hover me<br>haha<br>haha <i class="trl"></i></a>
+							</div>
+						</div>
+						<style>
+							.group-diamond {
+								position: relative;
+								margin: 30px 20px;
+								width: 100px;
+								line-height: 100px;
+								text-align: center;
+								color: white;
+							}
+							
+							.group-diamond:before {
+								content: '';
+								position: absolute;
+								top: 0;
+								right: 0;
+								bottom: 0;
+								left: 0;
+								background-color: deeppink;
+								z-index: -1;
+								transform: rotateZ(45deg);
+							}
+						</style>
+						<h5>菱形</h5>
+						<div class="group-diamond">
+							翻滚吧
+						</div>
+						<h5>表单</h5>
+						<div class="group-form">
+							<input type="text" data-datasource="选项1,选项2,选项3,选项4" />
+							<p><input type="date" /></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<script>
+			var localStorageKey = "_APIDATAS";
+			var k=0;
+			$(document).ready(function() {
+				//setInterval(function(){k++;document.title="sassasa "+k},1000);
+				//				var k = 0;
+				//				setInterval(function() {
+				//					k++;
+				//					if(k == 5) {
+				//						min.Click();
+				//					}
+				//					if(k == 10) {
+				//						max.Click();
+				//					}
+				//					console.log(k);
+				//				}, 1000);
+				//HTML拼接为JS变量
+				$(".tab-pane-1 .group-html-var .form-control-source").keyup(function() {
+					var resultHtmlArr = [];
+					var sourceHtml = $(this).val();
+					var isNeedClearBlank = $(".tab-pane-1 .group-html-var .form-control-clear-blank").is(":checked");
+					// \n 换行符
+					if(sourceHtml) {
+						var sourceHtmlArr = sourceHtml.split("\n");
+						for(var i in sourceHtmlArr) {
+							var isFirstLine = i == 0;
+							var isLastLine = i == sourceHtmlArr.length - 1;
+							var sourceItemText = sourceHtmlArr[i].replace(/"/g, "\u005c\"");
+							//删除所有空格
+							if(isNeedClearBlank)
+								sourceItemText = sourceItemText.replace(/\s/g, "");
+							var itemText = "";
+							if(isFirstLine) {
+								//第一行
+								itemText = "var parm = \"" + sourceItemText + "\"";
+							} else {
+								itemText = "                   \"" + sourceItemText + "\"";
+							}
+							if(!sourceItemText) {
+								//空行
+								if(isLastLine) {
+									//最后一行为空行
+									resultHtmlArr[parseInt(i) - 1] += ";";
+								}
+								continue;
+							}
+							if(isLastLine) {
+								itemText += ";";
+							}
+							resultHtmlArr.push(itemText);
+						}
+					}
+					$(".tab-pane-1 .group-html-var .form-control-result").val(resultHtmlArr.join(" + \n"));
+				});
+				$(".tab-pane-1 .group-html-var .form-control-clear-blank").change(function() {
+					$(".tab-pane-1 .group-html-var .form-control-source").trigger("keyup");
+				});
+
+				//AJAX
+				$.token();
+				//历史接口
+				//initUrlDatas();
+				ajaxController = new Controller(".tab-pane-0");
+				$(".btn-ajax").click(function() {
+					var ajaxData = ajaxController.getJSON();
+					var url = ajaxData.baseAPI + ajaxData.apiUrl;
+					var method = ajaxData.method;
+					var data = ajaxData.data || {};
+					try {
+						data = JSON.parse(data);
+					} catch(e) {
+						alert("参数格式有误，必须JSON格式。");
+						return false;
+					}
+					if(method == "GET") {
+						url += $.toQueryString(data, true);
+						data = {};
+					}
+					$.ajaxBase(method, url, data, function(response) {
+						if(response.code > 0) {
+							appendAjaxResult(response.msg);
+							return false;
+						}
+
+						appendAjaxResult(JSON.stringify(response, null, 4));
+					})
+				});
+				$(".btn-add-ajax").click(function() {
+					var ajaxData = ajaxController.getJSON();
+					var url = ajaxData.apiUrl;
+					if(url) {
+						APIDATAS[url] = ajaxData;
+						localStorage[localStorageKey] = JSON.stringify(APIDATAS);
+
+						initUrlDatas();
+					}
+				});
+				$(".btn-remove-ajax").click(function() {
+					var ajaxData = ajaxController.getJSON();
+					var url = ajaxData.apiUrl;
+					if(url && APIDATAS[url]) {
+						delete APIDATAS[url];
+						localStorage[localStorageKey] = JSON.stringify(APIDATAS);
+
+						initUrlDatas();
+					}
+				});
+				$(".btn-source").click(function() {
+					localStorageKey = $(this).data("key");
+					initUrlDatas();
+				});
+			});
+			//functions
+			function initUrlDatas() {
+				APIDATAS = JSON.parse(localStorage[localStorageKey] || "{}");
+				var urlArr = [];
+				for(var p in APIDATAS) {
+					urlArr.push(p);
+				}
+				$(".form-control-url").attr("data-datasource", urlArr.join(","));
+				initTextboxHasDataSource(function(val) {
+					ajaxController.set(APIDATAS[val]);
+				});
+			}
+
+			function appendAjaxResult(msg) {
+				var oldVal = $(".form-control-result-ajax").val();
+				if(oldVal) {
+					oldVal += "\n";
+				}
+				if($(".form-control-clear-result").is(":checked")) {
+					oldVal = "";
+				}
+				//$.timeNow().format("hh:mm:ss") + "："
+				$(".form-control-result-ajax").val(oldVal + msg);
+			}
+		</script>
+	</body>
+
+</html>

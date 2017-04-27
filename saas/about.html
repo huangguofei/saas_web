@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>关于我们</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<link rel="stylesheet" href="resources/css/index.css" />
+		<style>
+			.img-banner {
+				position: relative;
+				margin-top: -3%;
+			}
+			
+			.img-banner .banner-text {
+				position: absolute;
+				left: 17%;
+				top: 32%;
+				color: #fff;
+			}
+			
+			.img-banner .banner-text h1 {
+				font-size: 70px;
+				font-weight: bold;
+			}
+			
+			.img-banner .banner-text h2 {
+				font-size: 40px;
+				font-weight: bold;
+			}
+			
+			.about-main-content {
+				margin: 20px 17%;
+				/*background-color: #999;*/
+				height: 500px;
+			}
+			
+			.about-main-content-nav {
+				color: #999;
+			}
+			
+			.about-main-content-nav a {
+				display: inline-block;
+				margin: 0 10px 20px 10px;
+				color: #666;
+			}
+			
+			.about-main-content-nav a:first-child {
+				margin-left: 0;
+				padding-left: 18px;
+				background-image: url(resources/images/home.png);
+				background-repeat: no-repeat;
+				background-position-y: 3px;
+			}
+			
+			.about-main-content-nav a:last-child {
+				color: #999;
+			}
+			
+			.about-main-content-detail-left {
+				width: 25%;
+				margin-right: 5%;
+				border: 1px solid #e3e3e3;
+			}
+			
+			.about-main-content-detail-left p {
+				padding: 20px;
+				border-bottom: 1px solid #e3e3e3;
+				cursor: pointer;
+			}
+			
+			.about-main-content-detail-left p.active {
+				border-left: 3px solid #ca192b;
+				padding-left: 17px;
+			}
+			
+			.about-main-content-detail-right {
+				width: 70%;
+				border: 1px solid #e3e3e3;
+				padding: 50px;
+			}
+			
+			.about-main-content-detail-left,
+			.about-main-content-detail-right {
+				float: left;
+			}
+			
+			.cmp-detail img {
+				width: 100%;
+				/*height: 200px;*/
+			}
+			
+			.about-main-content-detail-head {
+				padding: 20px;
+				margin: -50px -50px 0 -50px;
+				border-bottom: 1px solid #e3e3e3;
+			}
+			
+			.cmp-detail-content,
+			.team-detail-content {
+				padding-top: 30px;
+			}
+			
+			.team-detail-content {
+				border-bottom: 1px solid #e3e3e3;
+			}
+			
+			.cmp-detail-content>p {
+				margin-top: 20px;
+				text-indent: 2em;
+			}
+			
+			.team-detail-content>img {
+				width: 200px;
+				height: 230px;
+				vertical-align: top;
+				float: left;
+			}
+			
+			.team-detail-content>div {
+				min-height: 250px;
+				margin-left: 230px;
+			}
+			
+			.team-detail-content .leader-header {
+				font-size: 23px;
+				margin-bottom: 10px;
+			}
+			
+			.team-detail-content .leader-header span {
+				display: inline-block;
+				font-size: 16px;
+				margin-left: 10px;
+			}
+			
+			.relation-common-container {
+				width: 100%;
+				padding-top: 20px;
+			}
+			
+			.relation-common-container .relation-common {
+				float: left;
+				width: 50%;
+			}
+			
+			.relation-common-container .relation-common img {
+				float: left;
+				vertical-align: top;
+				margin-right: 10px;
+			}
+			
+			.relation-common-container .relation-common p span {
+				margin-left: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="common-header">
+
+		</div>
+		<div class="main-content">
+			<div class="img-banner">
+				<img src="resources/images/Banner_1.jpg" alt="" />
+				<div class="banner-text">
+					<h1>销秘</h1>
+					<h2>让天下没有难以管理的销售团队</h2>
+					<p>团队管理，尽在销秘</p>
+				</div>
+			</div>
+			<div class="about-main-content">
+				<div class="about-main-content-nav">
+					<a href="index.html">首页</a>>
+					<a href="about.html">关于我们</a>>
+					<a href="javascript:;">公司介绍</a>
+				</div>
+				<div class="about-main-content-detail-left">
+					<p index="cmp" class="active">公司介绍</p>
+					<p index="team">团队介绍</p>
+					<p index="us">关于我们</p>
+				</div>
+				<div class="about-main-content-detail-right">
+					<div class="about-main-content-detail cmp-detail">
+						<div class="about-main-content-detail-head">公司介绍</div>
+						<div class="cmp-detail-content">
+							<img src="resources/images/Banner_1.jpg" alt="" />
+							<p>
+								重庆销秘云技术有限公司，成立于XXXX年，位于XXXXX，是一家专注于销售管理软件研发的企业，致力于XXXXX。 重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司，成立于XXXX年，位于XXXXX，是一家专注于销售管理软件研发的企业，致力于XXXXX。 重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司，成立于XXXX年，位于XXXXX，是一家专注于销售管理软件研发的企业，致力于XXXXX。 重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司，成立于XXXX年，位于XXXXX，是一家专注于销售管理软件研发的企业，致力于XXXXX。 重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司重庆销秘云技术有限公司
+							</p>
+						</div>
+					</div>
+					<div class="about-main-content-detail team-detail hide">
+						<div class="about-main-content-detail-head">团队介绍</div>
+						<div class="team-detail-content">
+							<img src="" alt="头像" />
+							<div>
+								<p class="leader-header">
+									米红斌
+									<span>总经理</span>
+								</p>
+								<p>
+									米先生毕业于北京中医药大学，曾在美国爱尔康、沈阳兴齐任职。一线销售代表和地区经理的工作经历，让米先生积累了丰富的销售经验和人脉关系，并发现眼科药品的市场商机。2007年，米先生于重庆创立乔弘眼科（艾视医药前身），经过几年的努力，艾视医药从几个人的小公司，逐步发展成为拥有100多名员工、全国10多个办事处的高速发展企业。2007年，乔弘眼科在业界名不经传；2015年，艾视医药在眼科药品领域已经声名鹊起，拥有了很高的品牌知名度。 多年的创业经历，米先生积累了丰富的企业经营经验、团队管理经念及品牌运营理念，同时也积累了较充裕的资金，为企业多元化发展提供先决条件。2015年，由于艾视医药自身管理需要，米先生开始考查企业管理软件，并发现新的商机。通过充分的市场调查、竞品分析及可行性分析，再经过严密的风险评估，2016年初，米先生邀请张义兵先生、李长林先生一起，创立了“重庆销秘”这家互联网云计算公司，以互联网云计算技术为基础，以销售团队管理为核心，为全国乃致全球的销售型企业提供团队管理云服务。
+								</p>
+							</div>
+						</div>
+						<div class="team-detail-content">
+							<img src="" alt="头像" />
+							<div>
+								<p class="leader-header">
+									张义兵
+									<span>联合创始人</span>
+								</p>
+								<p>
+									本科毕业于北京中医药大学临床医学专业，研究生毕业于中国中医科学院药理学专业，执业医师，副教授，2007年加入艾视医药，先后任职医学专员、地区经理、市场部经理、销售总监，多年医药行业营销、培训和管理经验，能够良好结合和运用医学、药学、销售、行业和管理知识。 重庆销秘成立后，张先生作为联合创始人之一，除了提供原始运作资金以外，还给新公司带来先进的营销管理理念，以及丰富的医药销售行业领域的客户资源，为公司产品的前期市场推广贡献伟力。
+								</p>
+							</div>
+						</div>
+						<div class="team-detail-content">
+							<img src="" alt="" />
+							<div>
+								<p class="leader-header">
+									李长林
+									<span>技术总监</span>
+								</p>
+								<p>
+									17年计算机软件行业从业经验，10年以上的研发团队管理经验，10年以上技术总监任职经历，曾带领团队研发出多个软件系统，涉及企业信息化、行业信息化、医学影像、电子教务、电子政务、电子商务、SaaS云平台、互联网医疗、互联网金融等领域。熟悉软件开发团队管理和软件项目过程管理(RUP)，熟悉高并发、高性能、高可用、可扩展、可伸缩的互联网产品架构设计，对具有高并发、大数据特征的互联网平台兴趣浓厚。 李先生于2016年初加入重庆销秘，是重庆销秘的联合创始人之一，担任技术总监职位，负责研发团队的组建和管理，负责公司云计算平台各系统的研发和上线，负责云计算平台的技术前瞻性研究。
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="about-main-content-detail us-detail hide">
+						<div class="about-main-content-detail-head">关于我们</div>
+						<div class="relation-common-container">
+							<div class="relation-common">
+								<img src="resources/images/phone-relation.png" alt="电话" />
+								<p>电话<span>023-12345678</span></p>
+							</div>
+							<div class="relation-common">
+								<img src="resources/images/chuanzhen.png" alt="传真" />
+								<p>传真<span>023-12345678</span></p>
+							</div>
+							<div class="relation-common">
+								<img src="resources/images/email-relation.png" alt="邮箱" />
+								<p>邮箱<span>023-12345678</span></p>
+							</div>
+							<div class="relation-common">
+								<img src="resources/images/location-relation.png" alt="地址" />
+								<p>地址<span>023-12345678</span></p>
+							</div>
+						</div>
+						<div>
+							<div id="allmap"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="common-footer">
+
+		</div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG"></script>-->
+		<script type="text/javascript">
+			window.onload=function(){
+				var script = document.createElement("script");
+				script.src = "http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG&callback=doApi";
+				$("body").append(script);
+			};
+			$(".about-main-content-detail-left p").click(function() {
+				$(this).addClass("active").siblings().removeClass("active");
+				var index = $(this).attr("index");
+				$(".about-main-content-detail").addClass("hide");
+				$("." + index + "-detail").removeClass("hide");
+				$(".about-main-content-nav a:last-child").text($(this).text());
+			});
+			$("p[index='us']").click(function(){
+				initMap("","重庆市南岸区茶园新区东本工业园");
+			});
+			var isFirstInitMap=true;
+			var initMap = function(formContainer, cityName) {
+					formContainer="";
+					if(!isFirstInitMap) return false;
+					locationPointTmp = {};
+					if(cityName) {
+						$(" #r-result input[type='text']").attr("value", cityName);
+					}
+					var tmpId = $.uuid();
+					$(" #allmap").attr("id", tmpId);
+					$(" #" + tmpId).css("height", "500px");
+					//map
+					map = new BMap.Map(tmpId);
+					//default beijing
+					var point = new BMap.Point(116.331398, 39.897445);
+					map.centerAndZoom(point, 12);
+					map.enableScrollWheelZoom();
+					var geolocation = new BMap.Geolocation();
+					geolocation.getCurrentPosition(function(r) {
+						if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+							if(cityName) { //myLocationPoint.employee_location_lat && myLocationPoint.employee_location_lon) {
+								//point.lat = myLocationPoint.employee_location_lat;
+								//point.lng = myLocationPoint.employee_location_lon;
+								viewPointByKeyword((formContainer + " #r-result input[type='text']"), cityName);
+							} else {
+								point = r.point;
+								myLocationPoint.employee_location_lat = point.lat;
+								myLocationPoint.employee_location_lon = point.lng;
+								locationPointTmp.lat = point.lat
+								locationPointTmp.lon = point.lng;
+								setMapMarker(point, formContainer);
+								getAddressByPoint(point, (formContainer + " #r-result input[type='text']"), cityName);
+							}
+						} else {
+							//定位失败 定位到城市
+							//new BMap.LocalCity().get(function(result) {
+							//	map.setCenter(result.name);
+							//});
+							viewPointByKeyword((formContainer + " #r-result input[type='text']"), "北京");
+						}
+					}, {
+						enableHighAccuracy: false
+					});
+					isFirstInitMap=false;
+				};
+				var getAddressByPoint = function(pt, showContainer, cityNameStr) {
+					var gc = new BMap.Geocoder();
+					gc.getLocation(pt, function(rs) {
+						var addComp = rs.addressComponents;
+						var address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber.replace("、", "");
+						if(cityNameStr) {
+							//if(cityNameStr!="dragend")address=cityNameStr;
+						} else {
+							address = "";
+						}
+
+						$(showContainer).text(address).val(address);
+						city = address;
+					});
+				};
+				var viewPointByKeyword = function(formContainer, keyword) {
+					var localSearch = new BMap.LocalSearch(map);
+					localSearch.enableAutoViewport();
+					localSearch.setSearchCompleteCallback(function(searchResult) {
+						console.log(searchResult)
+						map.clearOverlays();
+						var poi = searchResult.getPoi(0);
+						var pt = poi.point;
+						//poi.point
+						setMapMarker(pt, formContainer);
+						//保存位置信息
+						locationPointTmp.lat = pt.lat
+						locationPointTmp.lon = pt.lng;
+						getAddressByPoint(pt, formContainer, keyword);
+					});
+					localSearch.search(keyword);
+				};
+				var setMapMarker = function(point, formContainer) {
+					var marker = new BMap.Marker(point);
+					marker.addEventListener("dragend", function(e) {
+						var pt = e.point;
+						myLocationPoint.employee_location_lat = pt.lat
+						myLocationPoint.employee_location_lon = pt.lng;
+						locationPointTmp.lat = pt.lat
+						locationPointTmp.lon = pt.lng;
+						getAddressByPoint(pt, formContainer + " #r-result input[type='text']", "dragend");
+					})
+					var label = new BMap.Label("拖动图标可以定位", {
+						offset: new BMap.Size(20, -10)
+					});
+					marker.setLabel(label);
+					map.addOverlay(marker);
+					map.panTo(point);
+				};
+		</script>
+	</body>
+
+</html>

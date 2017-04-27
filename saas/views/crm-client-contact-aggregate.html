@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>客户联系人统计</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.page-container,
+			.page-container .content {
+				padding-left: 0;
+			}
+			
+			.aggregate-main-body {
+				font-weight: bold;
+				border-bottom: 1px solid #f2f2f2;
+				background-color: #fafafa;
+				padding-left: 10px;
+			}
+			
+			.aggregate-main {
+				height: 112px;
+				margin-bottom: 10px;
+				padding: 10px 0 10px 10px;
+				border-bottom: 1px dashed #eee;
+			}
+			
+			.aggregate-main.last-div {
+				border: none;
+			}
+			
+			.aggregate-method-sel,
+			.aggregate-method-sel:focus {
+				width: 196px;
+			}
+			
+			.aggregate-main-contact {
+				/*margin-top: 100px;*/
+			}
+			
+			.aggregate-main-body-contact {
+				border-top: 1px solid #f2f2f2;
+			}
+			
+			.status-sel {
+				width: 90%;
+				margin: 10px 0 0 15px;
+				height: 25px;
+			}
+			
+			.page-container .content .left-menu {
+				top: 0!important;
+				position: relative;
+				width: 220px;
+				border: 1px solid #e3e3e3;
+				border-width: 1px 1px 1px 0;
+			}
+			
+			.page-container .content .main-wrap {
+				margin-left: 230px;
+			}
+			
+			.left-menu-footer {
+				width: 100%;
+				position: absolute;
+				bottom: 10px;
+				text-align: center;
+				/*padding: 10px 0 0 100px;*/
+				/*border-top: 1px solid #ccc;*/
+			}
+			
+			.left-menu-footer a {
+				width: 90px;
+				height: 30px;
+				line-height: 15px;
+			}
+			
+			.aggregate-radio {
+				/*height: 50px;*/
+			}
+			
+			.contact-count {
+				text-decoration: underline;
+			}
+			
+			.seld-emp-span,
+			.seld-dept-span {
+				display: inline-block;
+				margin-top: 10px;
+				font-size: 12px;
+				color: #aaa;
+				line-height: 20px;
+			}
+			
+			.aggregate-type,
+			.aggregate-main-status {
+				padding: 0;
+			}
+			
+			.aggregate-type p,
+			.aggregate-main-status p {
+				background-color: #fff;
+				border: none;
+				font-size: 14px;
+				color: #666;
+				font-weight: normal;
+			}
+			
+			.aggregate-type label,
+			.aggregate-main-status select {
+				font-size: 12px;
+				color: #999;
+				display: inline-block;
+				margin-top: 10px;
+				margin-left: 10px;
+			}
+			
+			.aggregate-type label input {
+				vertical-align: text-bottom;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container">
+			<div class="content">
+				<div class="left-menu" style="top: 60px;border-right: 1px solid #ccc;border-bottom: 1px solid #ccc;">
+					<div class="type-nav">
+						<a class="active" index="depa">按部门统计</a>
+						<a index="emp">按员工统计</a>
+					</div>
+					<!--统计主体00-->
+					<div class="aggregate-main">
+						<!--<p class="aggregate-main-body">统计主体</p>-->
+						<div class="aggregate-radio aggregate-radio-depa">
+							<!--<label>
+                                <input type="radio" name="aggregate-radio" index="sel-depa" checked/>按部门统计
+                            </label>-->
+							<a class="btn btn-info def-btn-info aggregate-method-sel sel-depa">
+								<img src="../resources/images/plus-icon.png" alt="" />选择部门
+							</a>
+							<br/>
+							<span class="seld-dept-span" style="color:#999;"></span>
+						</div>
+						<div class="aggregate-radio aggregate-radio-emp hide">
+							<!--<label>
+                                <input type="radio" name="aggregate-radio" index="sel-contact"/>按员工统计
+                            </label>-->
+							<a class="btn btn-info def-btn-info aggregate-method-sel sel-emp">
+								<img src="../resources/images/plus-icon.png" alt="" />选择员工
+							</a>
+							<br/>
+							<span class="seld-emp-span" style="color: #999;"></span>
+						</div>
+					</div>
+					<!--统计单位还是联系人-->
+					<div class="aggregate-main aggregate-type">
+						<p class="aggregate-main-body aggregate-main-body-contact">请选择统计类型：</p>
+						<label>
+							<input type="radio" checked="checked" value="cmp" name="sel-type" />
+							<span>客户单位</span>
+						</label>
+						<br />
+						<label>
+							<input type="radio" value="contact" name="sel-type" />
+							<span>客户联系人</span>
+						</label>
+					</div>
+					<!--客户单位状态-->
+					<div class="last-div aggregate-main aggregate-main-status status-cmp">
+						<p class="aggregate-main-body aggregate-main-body-contact">客户单位状态：</p>
+						<select class="status-sel">
+							<option value="1,2,3,4,99" selected>全部</option>
+							<option value="1">正常</option>
+							<option value="2,3,4,99">异常</option>
+						</select>
+					</div>
+					<!--联系人状态-->
+					<div class="last-div aggregate-main aggregate-main-status status-contact hide">
+						<p class="aggregate-main-body aggregate-main-body-contact">客户联系人状态：</p>
+						<select class="status-sel">
+							<option value="1,2,3,4,5,99" selected>全部</option>
+							<option value="1">正常</option>
+							<option value="2,3,4,5,99">异常</option>
+						</select>
+					</div>
+					<!--底部按钮-->
+					<div class="left-menu-footer">
+						<a class="btn btn-info def-btn-info btn-statistics">统计</a>
+						<a class="btn btn-info def-btn-info btn-reset">重置</a>
+					</div>
+				</div>
+				<div class="main-wrap">
+					<!--按部门统计客户单位-->
+					<div class="grid-wrap-dept-customer grid-wrap-container">
+						<table id="grid-table-dept-customer"></table>
+						<div id="grid-pager-dept-customer"></div>
+					</div>
+					<!--按部门统计客户联系人-->
+					<div class="grid-wrap-dept-contact grid-wrap-container hide">
+						<table id="grid-table-dept-contact"></table>
+						<div id="grid-pager-dept-contact"></div>
+					</div>
+					<!--按员工统计客户单位-->
+					<div class="grid-wrap-emp-customer grid-wrap-container hide">
+						<table id="grid-table-emp-customer"></table>
+						<div id="grid-pager-emp-customer"></div>
+					</div>
+					<!--按员工统计客户联系人-->
+					<div class="grid-wrap-emp-contact grid-wrap-container hide">
+						<table id="grid-table-emp-contact"></table>
+						<div id="grid-pager-emp-contact"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="depar-client" class="grid-footer-btn hide">
+			<a class="btn btn-danger def-btn-danger btn-print" onclick="print($('#gview_grid-table-dept-customer'));"><img src="../resources/images/print.png" alt="" />打印</a>
+			<a class="btn btn-danger def-btn-danger btn-export" onclick="exportData()"><img class="btn-export-img" src="../resources/images/export-icon.png" alt="" />导出</a>
+		</div>
+		<div id="depar-linkman" class="grid-footer-btn hide">
+			<a class="btn btn-danger def-btn-danger btn-print" onclick="print($('#gview_grid-table-dept-contact'));"><img src="../resources/images/print.png" alt="" />打印</a>
+			<a class="btn btn-danger def-btn-danger btn-export" onclick="exportData()"><img class="btn-export-img" src="../resources/images/export-icon.png" alt="" />导出</a>
+		</div>
+		<div id="emp-client" class="grid-footer-btn hide">
+			<a class="btn btn-danger def-btn-danger btn-print" onclick="print($('#gview_grid-table-emp-customer'));"><img src="../resources/images/print.png" alt="" />打印</a>
+			<a class="btn btn-danger def-btn-danger btn-export" onclick="exportData()"><img class="btn-export-img" src="../resources/images/export-icon.png" alt="" />导出</a>
+		</div>
+		<div id="emp-linkman" class="grid-footer-btn hide">
+			<a class="btn btn-danger def-btn-danger btn-print" onclick="print($('#gview_grid-table-emp-contact'));"><img src="../resources/images/print.png" alt="" />打印</a>
+			<a class="btn btn-danger def-btn-danger btn-export" onclick="exportData()"><img class="btn-export-img" src="../resources/images/export-icon.png" alt="" />导出</a>
+		</div>
+		<div class="pnl-leader-info pnl-dept-select-share hide">
+			<form class="form-horizontal model-leader-info model-dept-select-share">
+				<div class="wrap wrap-source">
+					<label>请以部门为单位选择公示范围：</label>
+					<div class="box">
+						<ul class="list-emp tree tree-dept">
+
+						</ul>
+					</div>
+				</div>
+				<div class="wrap seg">
+					<div class="box">
+						<p>
+							<a href="javascript:;" class="btn-add"><i class="fa fa-arrow-right"></i></a>
+						</p>
+						<br>
+						<p>
+							<a href="javascript:;" class="btn-remove"><i class="fa fa-arrow-left"></i></a>
+						</p>
+					</div>
+				</div>
+				<div class="wrap wrap-new">
+					<label>公示范围：</label>
+					<div class="box">
+						<ul class="list-emp list-dept-select-temp">
+
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-leader-info pnl-employee-select-share hide">
+			<form class="form-horizontal model-leader-info model-employee-select-share">
+				<div class="wrap wrap-source">
+					<label>请选择查询部门：</label>
+					<div class="box">
+						<div class="py">
+							<input type="search" placeholder="可输入“ZS”或“张三”查找" style="width: 100%;" />
+							<p>
+								<a class="active">A</a>
+							</p>
+						</div>
+						<ul class="list-emp">
+						</ul>
+					</div>
+				</div>
+				<div class="wrap seg">
+					<div class="box">
+						<p>
+							<a href="javascript:;" class="btn-add"><i class="fa fa-arrow-right"></i></a>
+						</p>
+						<br>
+						<p>
+							<a href="javascript:;" class="btn-remove"><i class="fa fa-arrow-left"></i></a>
+						</p>
+					</div>
+				</div>
+				<div class="wrap wrap-new">
+					<label>已选择的部门：</label>
+					<div class="box">
+						<ul class="list-emp">
+
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			var selectDepts = [],
+				selectDeptIds = [],
+				defaultCheckedArea,
+				selectEmps = [],
+				selectEmpIds = {},
+				with_lowers = "";
+			var deptStatisticsCmpGrid,
+				deptStatisticsContactGrid,
+				empStatisticsCmpGrid,
+				empStatisticsContactGrid;
+			var clientType = "cmp";
+			var dcBtn = "#depar-client",
+				dlBtn = "#depar-linkman",
+				ecBtn = "#emp-client",
+				elBtn = "#emp-linkman";
+			var crm_tj = { //客户统计
+				query_type: { //查询类型
+					BY_DEPA: 1, //按部门
+					BY_EMP: 2, //按员工
+				},
+				depa_area: {
+					OWN: 2, //仅本部门
+					OWN_AND_LOWER: 1, //本部门及所有下属部门
+				}
+			};
+			$(".left-menu").css({
+				"height": $(window).height() - 28 + "px",
+				"max-height": $(window).height() - 28 + "px"
+			});
+			$(document).ready(function() {
+				initRightDeptGrid("", clientType);
+				$(".aggregate-radio label").click(function() {
+					$(".aggregate-radio label").next().attr("disabled", "disabled");
+					$(this).next().removeAttr("disabled");
+					$(".aggregate-radio").find("span").hide();
+					selectDeptIds = [];
+					selectEmps = [];
+					$(".aggregate-radio").find("span").html("");
+					$(this).parent().find("span").show();
+				});
+			});
+			$(".type-nav a").click(function() {
+				$(".type-nav a").removeClass("active");
+				$(this).addClass("active");
+				$(".aggregate-radio").addClass("hide");
+				$(".aggregate-radio-" + $(this).attr("index")).removeClass("hide");
+			});
+			$(".aggregate-type input").click(function() {
+				clientType = $(this).val();
+				$(".aggregate-main-status").addClass("hide");
+				$(".status-" + clientType).removeClass("hide");
+			});
+			var isFirstInitGrid = true;
+			////按部门统计的表格
+			function initRightDeptGrid(theadUrl, tbodyUrl) {
+				console.log(arguments)
+				//初始化表格
+				if(!theadUrl) {
+					theadUrl = BSAPIURL + "/crm/statics/" + (clientType == "cmp" ? "customer" : "contacts") + "/important_level_columns";
+				}
+				if(clientType == "cmp") {
+					loadCustomerGridByDept(theadUrl, tbodyUrl);
+				} else {
+					loadContactGridByDept(theadUrl, tbodyUrl);
+				}
+			}
+			////按部门统计客户单位
+			var isFirstLoadCustomerGridByDept = true;
+
+			function loadCustomerGridByDept(theadUrl, tbodyUrl) {
+				if(!isFirstLoadCustomerGridByDept) {
+					$(deptStatisticsCmpGrid).jqGrid('setGridParam', {
+						page: 1,
+						datatype: "json",
+						rowNum: 10000000,
+						url: tbodyUrl
+					}).trigger("reloadGrid", {});
+					return;
+				}
+				$.ajaxGet(theadUrl, function(resp) {
+					var colNames = ['部门'];
+					var colModel = [{
+						name: "depa_name",
+						index: "depa_name",
+						sortable: false
+					}];
+					for(var i in resp.data) {
+						var name = resp.data[i].field;
+						colNames.push(resp.data[i].name);
+						colModel.push({
+							name: name,
+							index: name,
+							sortable: true,
+							formatter: function(cellvalue, options, rowObject) {
+								var thTxt = $(".grid-wrap-dept-customer th:eq(" + options.pos + ")").find("div").text();
+								var returnDom = "<a href='javascript:;' data-type='" + thTxt + "' class='contact-count' onclick=\"parent.openTab('" + rowObject.depa_name + "，部门，" + thTxt + "','views/crm-client-collect-info.html?contact_level=" +
+									$(".grid-wrap-dept-customer th:eq(" + options.pos + ")").attr("id").replace("grid-table-dept-customer_count_client_important_level_", "") + "&with_lowers=" + with_lowers + "&depa_name=" + rowObject.depa_name + "&depa_id=" + rowObject.depa_id + "&contact_status_data=" + (clientType=="cmp"?$(".status-cmp .status-sel option:selected").attr("value"):$(".status-contact .status-sel option:selected").attr("value")) + "&distinctionText=1&tongJiMethord=depa" + "'" + ")\" data-json='" + JSON.stringify(rowObject) + "'>" + cellvalue + "</a>";
+								return returnDom;
+							}
+						})
+					}
+					colNames.push("客户单位汇总");
+					colModel.push({
+						name: "count_total",
+						index: "count_total",
+						sortable: true,
+						formatter: function(cellvalue, options, rowObject) {
+							var thTxt = $(".grid-wrap-dept-customer th:eq(" + options.pos + ")").find("div").text();
+							var levels = [];
+							for(var i = 2; i < options.pos; i++) {
+								levels.push($(".grid-wrap-dept-customer th:eq(" + i + ")").attr("id").replace("grid-table-dept-customer_count_client_important_level_", ""));
+							}
+							var returnDom = "<a href='javascript:;' class='contact-count' onclick=\"parent.openTab('" + rowObject.depa_name + "，部门，" + thTxt + "','views/crm-client-collect-info.html?contact_level=" +
+								levels.join(",") + "&with_lowers=" + with_lowers + "&contact_status_data=" + (clientType=="cmp"?$(".status-cmp .status-sel option:selected").attr("value"):$(".status-contact .status-sel option:selected").attr("value")) + "&depa_name=" + rowObject.depa_name + "&depa_id=" + rowObject.depa_id + "&disabled=false&onlyDisabledLevel=true&distinctionText=1&tongJiMethord=depa" + "'" + ")\" data-json='" + JSON.stringify(rowObject) + "'>" + rowObject.count_total + "</a>";
+							return returnDom;
+						}
+					});
+					var gridOfClientContactTotal = $("#grid-table-dept-customer").initJqGrid({
+						datatype: "local",
+						pager: "#grid-pager-dept-customer",
+						colNames: colNames,
+						footerBtnContainer: dcBtn,
+						colModel: colModel
+					});
+					deptStatisticsCmpGrid = gridOfClientContactTotal;
+				}); ////表格表头加载完成
+				isFirstLoadCustomerGridByDept = false;
+			}
+			//按部门统计客户联系人
+			var isFirstLoadContactGridByDept = true;
+
+			function loadContactGridByDept(theadUrl, tbodyUrl) {
+				$.ajaxGet(theadUrl, function(resp) {
+					var colNames = ['部门'];
+					var colModel = [{
+						name: "depa_name",
+						index: "depa_name",
+						sortable: false
+					}];
+					for(var i in resp.data) {
+						var name = resp.data[i].field;
+						colNames.push(resp.data[i].name);
+						console.log(name)
+						colModel.push({
+							name: name,
+							index: name,
+							sortable: true,
+							formatter: function(cellvalue, options, rowObject) {
+								var thTxt = $(".grid-wrap-dept-contact th:eq(" + options.pos + ")").find("div").text();
+								var returnDom = "<a href='javascript:;' data-type='" + thTxt + "' class='contact-count' onclick=\"parent.openTab('" + rowObject.depa_name + "，部门，" + thTxt + "','views/crm-client-collect-info.html?contact_level=" +
+									$(".grid-wrap-dept-contact th:eq(" + options.pos + ")").attr("id").replace("grid-table-dept-contact_count_contact_important_level_", "") + "&depa_name=" + rowObject.depa_name + "&depa_id=" + rowObject.depa_id + "&contact_status_data=" + (clientType=="cmp"?$(".status-cmp .status-sel option:selected").attr("value"):$(".status-contact .status-sel option:selected").attr("value")) +
+									"&with_lowers=" + with_lowers + "&distinctionText=0&tongJiMethord=depa" + "'" + ")\" data-json='" + JSON.stringify(rowObject) + "'>" + cellvalue + "</a>";
+								return returnDom;
+							}
+						})
+					}
+					colNames.push("联系人汇总");
+					colModel.push({
+						name: "count_total",
+						index: "count_total",
+						sortable: true,
+						formatter: function(cellvalue, options, rowObject) {
+							var thTxt = $(".grid-wrap-dept-contact th:eq(" + options.pos + ")").find("div").text();
+							var levels = [];
+							for(var i = 2; i < options.pos; i++) {
+								levels.push($(".grid-wrap-dept-contact th:eq(" + i + ")").attr("id").replace("grid-table-dept-contact_count_contact_important_level_", ""));
+							}
+							var returnDom = "<a href='javascript:;' class='contact-count' onclick=\"parent.openTab('" + rowObject.depa_name + "，部门，" + thTxt + "','views/crm-client-collect-info.html?contact_level=" +
+								levels.join(",") + "&with_lowers=" + with_lowers + "&contact_status_data=" + (clientType=="cmp"?$(".status-cmp .status-sel option:selected").attr("value"):$(".status-contact .status-sel option:selected").attr("value")) + "&depa_name=" + rowObject.depa_name + "&depa_id=" + rowObject.depa_id + "&disabled=false&distinctionText=0&tongJiMethord=depa" + "'" + ")\" data-json='" + JSON.stringify(rowObject) + "'>" + rowObject.count_total + "</a>";
+							return returnDom;
+						}
+					});
+					var gridOfClientContactTotal = $("#grid-table-dept-contact").initJqGrid({
+						datatype: "local",
+						pager: "#grid-pager-dept-contact",
+						colNames: colNames,
+						footerBtnContainer: dlBtn,
+						colModel: colModel
+					});
+					deptStatisticsContactGrid = gridOfClientContactTotal;
+					//if(!isFirstLoadContactGridByDept) {
+					$(deptStatisticsContactGrid).jqGrid('setGridParam', {
+						page: 1,
+						datatype: "json",
+						rowNum: 10000000,
+						url: tbodyUrl
+					}).trigger("reloadGrid", {});
+					//	return;
+					//}
+				});
+				////表格表头加载完成
+				isFirstLoadContactGridByDept = false;
+			}
+			////按员工统计的表格
+			function initRightEmpGrid(theadUrl, tbodyUrl) {
+				console.log(clientType)
+				//初始化表格
+				if(!theadUrl) {
+					theadUrl = BSAPIURL + "/crm/statics/" + (clientType == "cmp" ? "customer" : "contacts") + "/important_level_columns";
+				}
+				console.log(theadUrl)
+				if(clientType == "cmp") {
+					loadCustomerGridByEmp(theadUrl, tbodyUrl);
+				} else {
+					loadContactGridByEmp(theadUrl, tbodyUrl);
+				}
+			}
+			//按员工统计客户单位
+			var isFirstLoadCmpGridByEmp = true;
+
+			function loadCustomerGridByEmp(theadUrl, tbodyUrl) {
+				$.ajaxGet(theadUrl, function(resp) {
+					var colNames = ['员工'];
+					var colModel = [{
+						name: "employee_name",
+						index: "employee_name",
+						sortable: false
+					}];
+					for(var i in resp.data) {
+						colNames.push(resp.data[i].name);
+						colModel.push({
+							name: resp.data[i].field,
+							index: resp.data[i].field,
+							sortable: true,
+							formatter: function(cellvalue, options, rowObject) { //.(resp.data[i].field)
+								var thTxt = $(".grid-wrap-emp-customer th:eq(" + options.pos + ")").find("div").text();
+								var returnDom = "<a href='javascript:;' class='contact-count' onclick=\"parent.openTab('" + rowObject.employee_name + "，员工，" + thTxt + "','views/crm-client-collect-info.html?contact_level=" +
+									$(".grid-wrap-emp-customer th:eq(" + options.pos + ")").attr("id").replace("grid-table-emp-customer_count_client_important_level_", "") + "&employee_name=" + rowObject.employee_name + "&employee_id=" + rowObject.employee_id + "&contact_status_data=" + (clientType=="cmp"?$(".status-cmp .status-sel option:selected").attr("value"):$(".status-contact .status-sel option:selected").attr("value")) + "&distinctionText=1&tongJiMethord=emp" + "'" + ")\" data-json='" + JSON.stringify(rowObject) + "'>" + cellvalue + "</a>";
+								return returnDom;
+							}
+						})
+					}
+					colNames.push("客户单位汇总");
+					colModel.push({
+						name: "count_total",
+						index: "count_total",
+						sortable: true,
+						formatter: function(cellvalue, options, rowObject) {
+							var thTxt = $(".grid-wrap-emp-customer th:eq(" + options.pos + ")").find("div").text();
+							var levels = [];
+							for(var i = 2; i < options.pos; i++) {
+								levels.push($(".grid-wrap-emp-customer th:eq(" + i + ")").attr("id").replace("grid-table-emp-customer_count_client_important_level_", ""));
+							}
+							var thTxt = $(".grid-wrap-emp-customer th:eq(" + options.pos + ")").find("div").text();
+							var returnDom = "<a href='javascript:;' class='contact-count' onclick=\"parent.openTab('" + rowObject.employee_name + "，员工，" + thTxt + "','views/crm-client-collect-info.html?contact_level=" +
+								levels.join(",") + "&contact_status_data=" + (clientType=="cmp"?$(".status-cmp .status-sel option:selected").attr("value"):$(".status-contact .status-sel option:selected").attr("value")) + "&employee_name=" + rowObject.employee_name + "&employee_id=" + rowObject.employee_id + "&disabled=false&onlyDisabledLevel=true&distinctionText=1&tongJiMethord=emp" + "'" + ")\" data-json='" + JSON.stringify(rowObject) + "'>" + cellvalue + "</a>";
+							return returnDom;
+						}
+					});
+					var gridOfClientContactTotalByEmp = $("#grid-table-emp-customer").initJqGrid({
+						datatype: "local",
+						pager: "#grid-pager-emp-customer",
+						footerBtnContainer: ecBtn,
+						colNames: colNames,
+						colModel: colModel
+					});
+					empStatisticsCmpGrid = gridOfClientContactTotalByEmp;
+					//if(!isFirstLoadCmpGridByEmp) {
+					$(empStatisticsCmpGrid).jqGrid('setGridParam', {
+						page: 1,
+						datatype: "json",
+						rowNum: 10000000,
+						url: tbodyUrl
+					}).trigger("reloadGrid", {});
+					//	return;
+					//}
+				}); ////表格表头加载完成
+				isFirstLoadCmpGridByEmp = false;
+			}
+			//按员工统计客户联系人
+			var isFirstLoadContactGridByEmp = true;
+
+			function loadContactGridByEmp(theadUrl, tbodyUrl) {
+				//				var empIds = [];
+				//				for(var i in selectEmps) {
+				//					empIds.push(selectEmps[i].employee_id);
+				//				}
+				$.ajaxGet(theadUrl, function(resp) {
+					var colNames = ['员工'];
+					var colModel = [{
+						name: "employee_name",
+						index: "employee_name",
+						sortable: false
+					}];
+					for(var i in resp.data) {
+						colNames.push(resp.data[i].name);
+						colModel.push({
+							name: resp.data[i].field,
+							index: resp.data[i].field,
+							sortable: true,
+							formatter: function(cellvalue, options, rowObject) { //.(resp.data[i].field)
+								var thTxt = $(".grid-wrap-emp-contact th:eq(" + options.pos + ")").find("div").text();
+								var returnDom = "<a href='javascript:;' class='contact-count' onclick=\"parent.openTab('" + rowObject.employee_name + "，员工，" + thTxt +
+									"','views/crm-client-collect-info.html?contact_level=" + $(".grid-wrap-emp-contact th:eq(" + options.pos +
+										")").attr("id").replace("grid-table-emp-contact_count_contact_important_level_", "") + "&contact_status_data=" +
+									(clientType=="cmp"?$(".status-cmp .status-sel option:selected").attr("value"):$(".status-contact .status-sel option:selected").attr("value")) + "&employee_name=" + rowObject.employee_name + "&employee_id=" +
+									rowObject.employee_id + "&distinctionText=0&tongJimethord=emp" + "'" + ")\" data-json='" + JSON.stringify(rowObject) + "'>" + cellvalue + "</a>";
+								return returnDom;
+							}
+						})
+					}
+					colNames.push("联系人汇总");
+					colModel.push({
+						name: "count_total",
+						index: "count_total",
+						sortable: true,
+						formatter: function(cellvalue, options, rowObject) {
+							var thTxt = $(".grid-wrap-emp-contact th:eq(" + options.pos + ")").find("div").text();
+							var levels = [];
+							for(var i = 2; i < options.pos; i++) {
+								levels.push($(".grid-wrap-emp-contact th:eq(" + i + ")").attr("id").replace("grid-table-emp-contact_count_contact_important_level_", ""));
+							}
+							var thTxt = $(".grid-wrap-emp th:eq(" + options.pos + ")").find("div").text();
+							var returnDom = "<a href='javascript:;' class='contact-count' " +
+								"onclick=\"parent.openTab('" + rowObject.employee_name + "，员工，" +
+								thTxt + "','views/crm-client-collect-info.html?contact_level=" +
+								levels.join(",") + "&employee_id=" + rowObject.employee_id + "&contact_status_data=" +
+								(clientType=="cmp"?$(".status-cmp .status-sel option:selected").attr("value"):$(".status-contact .status-sel option:selected").attr("value")) +
+								"&disabled=false&distinctionText=0&tongJimethord=emp" +
+								"&employee_name=" + rowObject.employee_name + "&employee_id=" +
+								rowObject.employee_id + "'" + ")\" data-json='" +
+								JSON.stringify(rowObject) + "'>" + cellvalue + "</a>";
+							return returnDom;
+						}
+					});
+					var gridOfClientContactTotalByEmp = $("#grid-table-emp-contact").initJqGrid({
+						datatype: "local",
+						pager: "#grid-pager-emp-contact",
+						footerBtnContainer: elBtn,
+						colNames: colNames,
+						colModel: colModel
+					});
+					empStatisticsContactGrid = gridOfClientContactTotalByEmp;
+					//if(!isFirstLoadContactGridByEmp) {
+					//var url = BSAPIURL + "/crm/statics/"+(clientType=="cmp"?"customer":"contacts")+"?employee_ids=" + empIds.join(",") + "&query_type=2&status=" + $(".status-sel option:selected").attr("value");
+					$(empStatisticsContactGrid).jqGrid('setGridParam', {
+						page: 1,
+						datatype: "json",
+						rowNum: 10000000,
+						url: tbodyUrl
+					}).trigger("reloadGrid", {});
+					//	return;
+					//}
+				}); ////表格表头加载完成
+				isFirstLoadContactGridByEmp = false;
+			}
+			//选择部门
+			$(".aggregate-main .sel-depa").click(function() {
+				$(".seld-emp-span").html("");
+				var options = {
+					url: SAASAPIS.BS.company.departments.replace("{id}", $.uuid()),
+					leftTitle: "请以部门为单位选择适用范围：",
+					rightTitle: "已选择的范围：",
+					defaultCheckedIds: selectDeptIds, //默认选中的
+					defaultCheckedArea: defaultCheckedArea,
+					//isNeedRightPanel: true, //是否需要右边的模块
+					areaItems: [{
+						name: "with_lowers",
+						value: crm_tj.depa_area.OWN,
+						text: "所选部门"
+					}, {
+						name: "with_lowers",
+						value: crm_tj.depa_area.OWN_AND_LOWER,
+						text: "所选部门及其所有下属部门"
+					}],
+					linkageType: 0, //联动类型   0统计(不联动)   1（下联动） 2 （双联动）
+					clickCallback: function(data) { //为关闭modal时需要的数据赋值
+						selectDepts = data.selectDepts;
+						with_lowers = data.area_value;
+						var areaText = "<br><span>统计范围：</span>" + (data.area_value == crm_tj.depa_area.OWN ? "所选部门" : "所选部门及其下属部门");
+						defaultCheckedArea = data.area_value;
+						selectDeptIds = [];
+						for(var i in selectDepts) {
+							if(selectDepts[i].dept_id) selectDeptIds.push(selectDepts[i].dept_id);
+						}
+						var tempHtml = "<span class=\"item\" data-dept-id=\"{ID}\">{N} <i class=\"fa fa-times icon-close\" onclick=\"$(this).parent().remove();\"></i></span> ";
+						(selectDepts.length > 0) && $(".left-menu .seld-dept-span").html("已选择" + selectDepts.length + "个部门" + areaText);
+					}
+				}
+				initDeptTreeOfTwoStep(options);
+			});
+			//选择员工
+			$(".aggregate-main .sel-emp").click(function() {
+				$(".seld-dept-span").html("");
+				var tempHtml4EmployeeSelect = "<span class=\"item\" data-employee-id=\"{ID}\">{N} <i class=\"fa fa-times icon-close\" onclick=\"$(this).parent().remove();\"></i></span> ";
+				$.showEmployeeSelectPop({
+					title: "选择员工",
+					subTitle: "请选择员工：",
+					selectedEmployeeIds: selectEmps,
+					isIncludeSelf: true,
+					isShowMe: true,
+					isShowDisabled: true,
+					isSignResign: true,
+					okCallback: function(employeesData, modalId) {
+						if(employeesData.length) {
+							$(".seld-emp-span").html("已选择" + employeesData.length + "位员工");
+						}
+						selectEmps = employeesData;
+						$("#" + modalId).modal("hide");
+					}
+				});
+			});
+			////统计按钮
+			$(".btn-statistics").click(function() {
+				var deptIds = [];
+				var index = $(".type-nav a.active").attr("index");
+				clientType = $(".aggregate-type input:checked").val();
+				console.log(index + "---" + clientType)
+				if(index == "depa") {
+					//控制表格显示隐藏
+					$(".grid-wrap-container").addClass("hide");
+					if(clientType == "cmp") $(".grid-wrap-dept-customer").removeClass("hide");
+					else $(".grid-wrap-dept-contact").removeClass("hide");
+					////拼接表格URL
+
+					for(var i in selectDepts) {
+						deptIds.push(selectDepts[i].dept_id);
+					}
+					if(deptIds.length < 1) {
+						$.showErrorGritter("请先选择需要统计的部门");
+						return false;
+					}
+					var url = BSAPIURL + "/crm/statics/" + (clientType == "cmp" ? "customer" : "contacts") + "?depa_ids=" + deptIds.join(",") +
+						"&query_type=1&with_lowers=" + with_lowers + "&status=" + (clientType == "cmp" ?$(".status-cmp .status-sel option:selected").attr("value"):$(".status-contact .status-sel option:selected").attr("value"));
+					//					$(deptStatisticsGrid).jqGrid('setGridParam', {
+					//						page: 1,
+					//						datatype: "json",
+					//						url: url
+					//					}).trigger("reloadGrid", {});
+					//alert()
+					initRightDeptGrid("", url);
+				} else {
+					//控制表格显示隐藏
+					$(".grid-wrap-container").addClass("hide");
+					if(clientType == "cmp") $(".grid-wrap-emp-customer").removeClass("hide");
+					else $(".grid-wrap-emp-contact").removeClass("hide");
+					//$(".grid-wrap-emp").removeClass("hide");
+					//$(".grid-wrap-dept").addClass("hide");
+					var empIds = [];
+					for(var i in selectEmps) {
+						empIds.push(selectEmps[i].employee_id);
+					}
+					if(empIds.length < 1) {
+						$.showErrorGritter("请先选择需要统计的员工");
+						return false;
+					}
+					var url = BSAPIURL + "/crm/statics/" + (clientType == "cmp" ? "customer" : "contacts") + "?employee_ids=" + empIds.join(",") + "&query_type=" + crm_tj.query_type.BY_EMP + "&status=" +(clientType == "cmp" ?$(".status-cmp .status-sel option:selected").attr("value"):$(".status-contact .status-sel option:selected").attr("value")) ;
+					initRightEmpGrid("", url);
+				}
+
+			});
+			//重置按钮
+			$(".btn-reset").click(function() {
+				var index = $(".type-nav a.active").attr("index");
+				if(index == "depa") {
+					$(".seld-dept-span").html("");
+					selectDepts = [];
+					with_lowers = "";
+					if(clientType == "cmp") $(deptStatisticsCmpGrid).jqGrid('clearGridData');
+					else $(deptStatisticsContactGrid).jqGrid('clearGridData');
+				} else {
+					$(".seld-emp-span").html("");
+					selectEmps = [];
+					if(clientType == "cmp") $(empStatisticsCmpGrid).jqGrid('clearGridData');
+					else $(empStatisticsContactGrid).jqGrid('clearGridData');
+				}
+			});
+			//导出
+			function exportData() {
+				var index = $(".type-nav a.active").attr("index");
+				var url = "";
+				if(index == "depa") {
+					if(selectDepts.length < 1) {
+						$.showErrorGritter("请先选择统计的部门！");
+						return false;
+					}
+					////拼接URL
+					var deptIds = [];
+					for(var i in selectDepts) {
+						deptIds.push(selectDepts[i].dept_id);
+					}
+					url = BSAPIURL + "/crm/statics/" + (clientType == "cmp" ? "customer" : "contacts") + "/excel?depa_ids=" + deptIds.join(",") + "&query_type=" + crm_tj.query_type.BY_DEPA + "&with_lowers=" + with_lowers + "&status=" + $(".status-sel option:selected").attr("value");
+				} else {
+					if(selectEmps.length < 1) {
+						$.showErrorGritter("请先选择统计的员工！");
+						return false;
+					}
+					var empIds = [];
+					for(var i in selectEmps) {
+						empIds.push(selectEmps[i].employee_id);
+					}
+					url = BSAPIURL + "/crm/statics/" + (clientType == "cmp" ? "customer" : "contacts") + "/excel?employee_ids=" + empIds.join(",") + "&query_type=" + crm_tj.query_type.BY_EMP + "&status=" + $(".status-sel option:selected").attr("value");
+				}
+				$.downloadFile(url);
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>版本销售管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/city-picker.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.fa-icon {
+				color: #666;
+				display: inline-block;
+				margin-right: 5px;
+				font-size: 20px;
+			}
+			
+			.search .form-inline {
+				min-width: 1285px;
+			}
+			
+			.node-name {
+				cursor: pointer;
+			}
+			
+			.area-active {
+				background-color: #ccc;
+			}
+			
+			.email-title {
+				margin-left: 40px;
+				width: 400px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-company">
+			<div class="remark">
+				<i class="fa fa-list-ol fa-2x"></i><span>*企业版本销售查询、企业版本开通及版本到期提醒</span>
+			</div>
+			<div class="content">
+				<div class="left-menu">
+					<div class="treeview tree-city">
+						<p>正在加载城市数据...</p>
+						<ul>
+							<li>
+
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="main-wrap">
+					<form class="search" id="formSearch">
+						<div class="form-inline" style="position: relative;">
+							<div>
+								<label>版本类型</label>
+								<select class="form-control form-control-editions" bind="edition_id">
+									<option value="">所有版本</option>
+								</select>
+								<label>版本状态</label>
+								<select class="form-control" bind="me_edition_status">
+									<option value="">所有状态</option>
+									<option value="1">未开通</option>
+									<option value="3">使用中</option>
+									<option value="7">已升级</option>
+									<option value="11">已到期</option>
+								</select>
+								<label>订单状态</label>
+								<span class="form-control">
+									<label><input type="radio" name="rdOrderStatus" class="form-control-radio" bind="order_wait_handle" value="1"> 待处理</label>
+									<label><input type="radio" name="rdOrderStatus" class="form-control-radio" checked="checked" bind="order_wait_handle" value=""> 全部</label>
+								</span>
+							</div>
+							<div style="margin-top: 10px;">
+								<label>开通日期</label>
+								<input type="text" class="form-control date-picker form-control-date-picker form-control-open-time-start" placeholder="开始日期" bind="me_start_using_date_start" data-date-format="yyyy-mm-dd">
+								<span>至</span>
+								<input type="text" class="form-control date-picker form-control-date-picker form-control-open-time-end" placeholder="结束日期" bind="me_start_using_date_end" data-date-format="yyyy-mm-dd">
+								<label>到期日期</label>
+								<input type="text" class="form-control date-picker form-control-date-picker form-control-expire-time-start" placeholder="开始日期" bind="me_end_using_date_start" data-date-format="yyyy-mm-dd">
+								<span>至</span>
+								<input type="text" class="form-control date-picker form-control-date-picker form-control-expire-time-end" placeholder="结束日期" bind="me_end_using_date_end" data-date-format="yyyy-mm-dd">
+
+								<input class="form-control" type="text" placeholder="请输入企业名称查询" bind="cmp_name" />
+								<div class="btn-group">
+									<button type="button" class="btn btn-default" onclick="reloadGrid();" role-auth="os/users|get">查 询</button>
+									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								        <span class="caret"></span>
+								        <span class="sr-only">Toggle Dropdown</span>
+								      </button>
+									<ul class="dropdown-menu">
+										<li>
+											<a href="javascript:;" group="link-expire" data-expire="7">本周内到期企业</a>
+										</li>
+										<li>
+											<a href="javascript:;" group="link-expire" data-expire="15">半个月内到期企业</a>
+										</li>
+										<li>
+											<a href="javascript:;" group="link-expire" data-expire="30">一个月内到期企业</a>
+										</li>
+									</ul>
+								</div>
+								<button type="button" class="btn btn-default" onclick="formSearch.reset();resetSearchForm();">重 置</button>
+								<button type="button" class="btn btn-default" onclick="reloadGrid('export');">导 出</button>
+							</div>
+						</div>
+					</form>
+					<div class="user-list">
+						<table id="grid-table" class="grid-module">
+						</table>
+						<div id="grid-pager">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel-contacts">
+				<div class="arrow"></div>
+				<ul class="wrap">
+					<li>
+						<label>移动电话：</label> <span class="label-mobile" bind="cmp_contact_mobile"></span>
+						<a href="javascript:;" class="btn btn-default btn-sm">发短信</a>
+					</li>
+					<li>
+						<label>QQ：</label> <span class="label-qq" bind="cmp_contact_qq"></span>
+						<a href="javascript:;" class="btn btn-default btn-sm">聊天</a>
+					</li>
+					<li>
+						<label>邮箱：</label> <span class="label-email" bind="cmp_contact_email"></span>
+						<a href="javascript:;" class="btn btn-default btn-sm">发邮件</a>
+					</li>
+					<li>
+						<label>办公电话：</label> <span class="label-tel" bind="cmp_contact_office_phone"></span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="pnl-company-edition-info hide">
+			<form class="company-info company-edition-info">
+				<div class="panel panel-default panel-top-edition">
+					<div class="panel-body">
+						<ul>
+							<li class="form-group form-inline">
+								<label>版本名称</label>
+								<span class="form-control form-control-noborder" bind="edition_name"></span>
+								<label>版本状态</label>
+								<span class="form-control form-control-noborder">
+									<span class="banben-state" style="color:#333"></span>
+								</span>
+							</li>
+							<li class="form-group form-inline">
+								<label>账户总数</label>
+								<span class="form-control form-control-noborder" bind="me_accounts_count"></span>
+								<label>总额（元）</label>
+								<span class="form-control form-control-noborder" bind="me_total_money"></span>
+								<label>开通时间</label>
+								<span class="form-control form-control-noborder" bind="me_start_using_date_cn"></span>
+								<label>到期时间</label>
+								<span class="form-control form-control-noborder" bind="me_end_using_date_cn"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>已使用时间</label>
+								<span class="form-control form-control-noborder" bind="used_days"></span>
+								<label>剩余使用时间</label>
+								<span class="form-control form-control-noborder" bind="remain_days"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-default hide">
+					<div class="panel-body">
+						<ul>
+							<li class="form-group-line">
+								<label>订单状态</label>
+								<label class="label label-warning">待支付</label>
+								<span class="form-control-status-show">
+									<button type="button" class="btn btn-default btn-sm btn-edition-open"><i class="fa fa-check-square"></i> 订单审核</button></span>
+								<hr>
+							</li>
+							<li class="form-group-line">
+								<label>订单明细</label>
+							</li>
+							<li class="form-group form-inline">
+								<label>订单类型</label>
+								<span class="form-control form-control-noborder" bind="cmp_name"></span>
+								<label>订单编号</label>
+								<span class="form-control form-control-noborder" bind="cmp_area_cn"></span>
+								<label>创建时间</label>
+								<span class="form-control form-control-noborder" bind="cmp_address"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>升级为</label>
+								<span class="form-control form-control-noborder" bind="cmp_name"></span>
+								<label>价格</label>
+								<span class="form-control form-control-noborder" bind="cmp_area_cn"></span>
+								<label>账户数</label>
+								<span class="form-control form-control-noborder" bind="cmp_address"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>购买时长</label>
+								<span class="form-control form-control-noborder" bind="cmp_name"></span>
+								<label>购买时间段</label>
+								<span class="form-control form-control-noborder" bind="cmp_area_cn"></span>
+								<label>合计（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_address"></span>
+							</li>
+							<li class="form-group-line" style="padding-left:30px ;">
+								<hr />
+							</li>
+							<li class="form-group form-inline">
+								<label>升级前版本</label>
+								<span class="form-control form-control-noborder" bind="cmp_name"></span>
+								<label>价格</label>
+								<span class="form-control form-control-noborder" bind="cmp_area_cn"></span>
+								<label>账户数</label>
+								<span class="form-control form-control-noborder" bind="cmp_address"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>购买时长</label>
+								<span class="form-control form-control-noborder" bind="cmp_name"></span>
+								<label>购买时间段</label>
+								<span class="form-control form-control-noborder" bind="cmp_area_cn"></span>
+								<label>合计（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_address"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>剩余时长</label>
+								<span class="form-control form-control-noborder" bind="cmp_name"></span>
+								<label>剩余时间段</label>
+								<span class="form-control form-control-noborder" bind="cmp_area_cn"></span>
+								<label>剩余价值（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_address"></span>
+							</li>
+							<li class="form-group-line" style="padding-left:30px ;">
+								<hr />
+							</li>
+							<li class="form-group-line">
+								<label>支付信息</label>
+							</li>
+							<li class="form-group form-inline">
+								<label>合计（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_name"></span>
+								<label>扣除（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_area_cn"></span>
+								<label>应付（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_address"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>支付方式</label>
+								<span class="form-control form-control-noborder" bind="cmp_industry_cn"></span>
+								<label>支付凭证</label>
+								<span class="form-control form-control-noborder" bind="cmp_quality_cn"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>支付时间</label>
+								<span class="form-control form-control-noborder" bind="cmp_phone_number"></span>
+								<label>实际支付（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_fax"></span>
+							</li>
+							<li class="form-group-line" style="padding-left:30px ;">
+								<hr />
+							</li>
+							<li class="form-group-line">
+								<label>使用信息</label>
+							</li>
+							<li class="form-group form-inline">
+								<label>已使用时间</label>
+								<span class="form-control form-control-noborder" bind="cmp_phone_number"></span>
+								<label>实际支付（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_fax"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>剩余使用时间</label>
+								<span class="form-control form-control-noborder" bind="cmp_phone_number"></span>
+								<label>实际支付（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_fax"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-default hide">
+					<div class="panel-body">
+						<ul>
+							<li class="form-group-line">
+								<label>订单状态</label>
+								<label class="label label-success">已支付</label>
+								<hr>
+							</li>
+							<li class="form-group-line">
+								<label>订单明细</label>
+							</li>
+							<li class="form-group form-inline">
+								<label>订单类型</label>
+								<span class="form-control form-control-noborder" bind="cmp_name"></span>
+								<label>订单编号</label>
+								<span class="form-control form-control-noborder" bind="cmp_area_cn"></span>
+								<label>创建时间</label>
+								<span class="form-control form-control-noborder" bind="cmp_address"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>版本名称</label>
+								<span class="form-control form-control-noborder" bind="cmp_name"></span>
+								<label>价格</label>
+								<span class="form-control form-control-noborder" bind="cmp_area_cn"></span>
+								<label>账户数</label>
+								<span class="form-control form-control-noborder" bind="cmp_address"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>购买时长</label>
+								<span class="form-control form-control-noborder" bind="cmp_name"></span>
+								<label>购买时间段</label>
+								<span class="form-control form-control-noborder" bind="cmp_area_cn"></span>
+								<label>合计（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_address"></span>
+							</li>
+							<li class="form-group-line" style="padding-left:30px ;">
+								<hr />
+							</li>
+							<li class="form-group-line">
+								<label>支付信息</label>
+							</li>
+							<li class="form-group form-inline">
+								<label>合计（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_name"></span>
+								<label>扣除（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_area_cn"></span>
+								<label>应付（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_address"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>支付方式</label>
+								<span class="form-control form-control-noborder" bind="cmp_industry_cn"></span>
+								<label>支付凭证</label>
+								<span class="form-control form-control-noborder" bind="cmp_quality_cn"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>支付时间</label>
+								<span class="form-control form-control-noborder" bind="cmp_phone_number"></span>
+								<label>实际支付（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_fax"></span>
+							</li>
+							<li class="form-group-line" style="padding-left:30px ;">
+								<hr />
+							</li>
+							<li class="form-group-line">
+								<label>使用信息</label>
+							</li>
+							<li class="form-group form-inline">
+								<label>已使用时间</label>
+								<span class="form-control form-control-noborder" bind="cmp_phone_number"></span>
+								<label>实际支付（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_fax"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>剩余使用时间</label>
+								<span class="form-control form-control-noborder" bind="cmp_phone_number"></span>
+								<label>实际支付（元）</label>
+								<span class="form-control form-control-noborder" bind="cmp_fax"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="form-group-line">
+							<label>操作记录</label>
+						</div>
+						<table class="table table-status table-operation-record">
+							<thead>
+								<tr>
+									<th>操作</th>
+									<th>操作内容</th>
+									<th>备注</th>
+									<th>时间</th>
+									<th>操作人员</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td rowspan="5">无操作记录。</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-company-warn hide">
+			<form class="form-horizontal model-company-warn">
+				<div class="form-group text-align-center">
+					<label>选择提醒方式</label>
+				</div>
+				<div class="form-group form-inline text-align-center select-template">
+					<label><input type="radio" data-type="email" name="rdWarnType" value="0" class="form-control-radio" /> 邮件提醒</label>
+					<label><input type="radio" data-type="system" name="rdWarnType" value="0" class="form-control-radio" /> 系统消息提醒</label>
+					<label><input type="radio" data-type="sms" name="rdWarnType" value="0" class="form-control-radio" /> 短信提醒</label>
+				</div>
+				<div class="form-group form-inline hide">
+					<label>内容模版</label>
+					<span class="form-control form-control-noborder" style="height: auto; padding: 0;">
+						<a href="javascript:;" class="btn btn-default btn-sm" group='linkTmp'> 模版1 </a>
+						<a href="javascript:;" class="btn btn-default btn-sm" group='linkTmp'> 模版2 </a>
+						<a href="javascript:;" class="btn btn-default btn-sm" group='linkTmp'> 模版3 </a>
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">提醒内容</label>
+					<textarea class="form-control form-control-content-warn" style="height: 180px;" nulltip="提醒内容"></textarea>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-company-edition-open hide">
+			<form class="form-horizontal model-company-edition-open">
+				<div class="form-group form-inline">
+					<label class="input-flag">订单支付审核</label>
+					<div class="form-control form-control-action" style="border: none;">
+						<label><input type="radio" name="action" bind="action" value="success" />通过</label>
+						<label><input type="radio" name="action" bind="action" value="cancel" />拒绝</label>
+					</div>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag" style="width: 96px;">备注信息</label>
+					<textarea class="form-control form-control-content-warn" style="height: 180px;" nulltip="备注信息" placeholder="请录入备注信息" bind="remark"></textarea>
+				</div>
+			</form>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info" onclick="openWarnPop();" role-auth="os/users|post"><i class="fa fa-bell-o"></i> 到期提醒</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.data.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			var grid_selector = "#grid-table";
+			var pager_selector = "#grid-pager";
+			var cityTree;
+			var selectCityIds = [];
+			var searchController = new Controller("#formSearch");
+			var needRefreshGrid = false;
+			var companysEditionsAPI = OSAPIURL + "/companys/editions";
+			var companysEditionDetailAPI = OSAPIURL + "/companys/edition";
+			var openEditionAPI = OSAPIURL + "/companys/edition/{id}/handle";
+			var loadConfigUrl = OSAPIURL + "/config/edition_reminder";
+			var sendInform = {
+				system: OSAPIURL + "/notice/im", //im系统提醒
+				email: OSAPIURL + "/notice/email", //邮箱
+				sms: OSAPIURL + "/notice/sms" //短信
+			}
+			var configData = {};
+			$(document).ready(function() {
+				$(".left-menu").css("top", ($(".remark").height() + 41) + "px");
+				searchController.set({
+					time_start: "",
+					time_end: "",
+					key: ""
+				});
+				//init tree
+				initTree();
+				//token
+				$.token();
+				//加载版本类型
+				$.ajaxGet(SAASAPIS.OS.editions, function(response) {
+					if(response.code != 0) {
+						$.showErrorGritter("加载版本失败：" + response.msg, {
+							time: 3000
+						});
+					} else {
+						for(var i in response.data.rows) {
+							var rowData = response.data.rows[i];
+							$(".form-control-editions").append("<option value='" + rowData.edition_id + "'>" + rowData.edition_name + "</option>");
+						}
+					}
+				});
+				//grid
+				//133 = remark 21(padding+border) + search margin-bottom 10 + pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".remark").height() - $(".search").height() - 153;
+				//alert($(".remark").height());
+				var colNames = ['', '企业名称', '城市', '版本', '账户总数', '总额', '版本状态', '开通时间', '到期时间', '上次提醒时间'];
+				var colModel = [{
+					name: 'me_id',
+					hidden: true
+				}, {
+					name: 'cmp_name',
+					index: 'cmp_name',
+					sortable: true,
+					align: "left",
+					width: 180,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var str = "";
+							if(rowObject.order_wait_handle) {
+								str = "<i class=\"fa fa-exclamation\" style=\"color:red\" aria-hidden=\"true\"></i>";
+							}
+							return "<a href='javascript:;' onclick=\"openCompanyEditionInfoPop('" + rowObject.me_id + "');\" role-auth=\"os/users/0|put\" role-auth-tip=\"你无权限修改用户信息。\">" + str + rowObject.cmp_name + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'cmp_area_cn',
+					index: 'cmp_area_cn',
+					sortable: true
+				}, {
+					name: 'edition_name',
+					index: 'edition_name',
+					sortable: true
+				}, {
+					name: 'me_accounts_count',
+					index: 'me_accounts_count',
+					sortable: true
+				}, {
+					name: 'me_total_money',
+					index: 'me_total_money',
+					sortable: true
+				}, {
+					name: 'me_edition_status_cn',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return loadState(rowObject.company_edition_status, rowObject.me_edition_status_cn);
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'me_start_using_date_cn',
+					index: 'me_start_using_date_cn',
+					sortable: true
+				}, {
+					name: 'me_end_using_date_cn',
+					index: 'me_end_using_date_cn',
+					sortable: true
+				}, {
+					name: 'prev_alert_time',
+					index: 'prev_alert_time',
+					sortable: true
+				}];
+				grid = $(grid_selector).initJqGrid({
+					grid_selector: grid_selector,
+					pager: pager_selector,
+					url: companysEditionsAPI,
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight,
+					storeRowDataInCache: true,
+					multiselect: true,
+					/*beforeSelectRow: function(rowid, e) {
+						return rowid == 1;
+					},*/
+					sortorder: "",
+					onCellSelect: function(rowid, iCol, cellcontent, e) {},
+					complete: function() {
+						$(".link-contacts-tip").unbind("click").on({
+							click: function() {
+								var thisobj = $(this);
+								var contact = JSON.parse(unescape($(this).data("contact")));
+								$(".panel-contacts").css({
+									top: (thisobj.offset().top + 16).toString() + "px",
+									left: thisobj.offset().left.toString() + "px",
+									display: "block"
+								});
+								var contactController = new Controller(".panel-contacts");
+								contactController.set(contact);
+								return false;
+							}
+						});
+					},
+					afterLoadComplete: function(data) { //数据加载完成/服务器返回数据时触发
+						if($(pager_selector + " table tr #grid-pager_left span").length != 0) return false;
+						var str = "<span>" + loadState(1, "版本使用中") + "  " + loadState(2, "无可用版本") + "  " + loadState(3, "其他版本可用") + "</span>"
+						$(pager_selector + " table tr #grid-pager_left").append(str);
+
+					}
+				});
+				$('.date-picker').datepicker({
+					autoclose: true,
+					todayHighlight: true
+				});
+				$(document).click(function() {
+					$(".panel-contacts").css({
+						display: "none"
+					});
+					return true;
+				});
+				$(".panel-contacts").click(function() {
+					$(this).css({
+						display: "block"
+					});
+					return false;
+				});
+				//快捷查询
+				$("a[group='link-expire']").click(function() {
+					var day = $(this).data("expire");
+					var now = $.timeNow();
+					$(".form-control-expire-time-start").val(now.Format("yyyy-MM-dd")).trigger("change");
+					$(".form-control-expire-time-end").val(now.addDay(day).Format("yyyy-MM-dd")).trigger("change");
+					reloadGrid();
+				});
+			});
+			//init tree
+			function initTree() {
+				$.loadCityData(function(dataSource) {
+					var cityData = dataSource.DataSource;
+					if(cityData) {
+						var treeData = [];
+						for(var i in cityData) {
+							var city = cityData[i];
+							if(city.code_tree_parent_id == 100) {
+								treeData.push({
+									id: city.code_tree_id,
+									text: city.code_name,
+									nodes: []
+								});
+							}
+						}
+						for(var i in cityData) {
+							var city = cityData[i];
+							var index = getIndexOfArray(treeData, "id", city.code_tree_parent_id)
+							if(index >= 0) {
+								treeData[index].nodes.push({
+									id: city.code_tree_id,
+									text: city.code_name
+								});
+							}
+						}
+						//init tree
+						$(".treeview").html("");
+						var ulDom = $("<ul></ul>");
+						for(var i in treeData) {
+							var tree = treeData[i];
+							var liDom = $("<li></li>").append("<i class='fa fa-caret-down fa-x fa-icon'></i><span class='node-name' nodeid=\"{id}\"> {text}</span>".replace(/{id}/g, tree.id).replace(/{text}/g, tree.text));
+							if(tree.nodes && tree.nodes.length > 0) {
+								initChildTree(liDom, tree.nodes);
+							}
+							ulDom.append(liDom);
+						}
+						$(".treeview").append(ulDom);
+						$(".treeview i").each(function() {
+							$(this).removeClass("fa-caret-down").addClass("fa-caret-right");
+						});
+						$(".treeview>ul>li li").slideUp();
+						$(".treeview i").click(function() {
+							if($(this).hasClass("fa-caret-down")) {
+								$(this).removeClass("fa-caret-down").addClass("fa-caret-right");
+								$(this).parent().find("li").slideUp();
+							} else {
+								$(this).parent().parent().find("li li").slideUp();
+								$(this).parent().parent().find("li i").removeClass("fa-caret-down").addClass("fa-caret-right");
+								$(this).removeClass("fa-caret-right").addClass("fa-caret-down");
+								$(this).parent().find(">li").slideDown();
+							}
+
+						});
+						$(".treeview .node-name").click(function() {
+							selectCityIds = [];
+							$(".node-name").removeClass("area-active");
+							$(this).addClass("area-active");
+							$(this).parent().find(".node-name").each(function() {
+								selectCityIds.push($(this).attr("nodeid"));
+							});
+							reloadGrid();
+						});
+						/*$(".treeview label").click(function(e) {
+							//if(e.target.nodeName=="LABEL") e.preventDefault();
+							if(e.target.nodeName == "INPUT") {
+								var mchecked = this.checked;
+								var inputSelector = $(this).find("input");
+								//inputSelector.prop("checked","checked")
+								if(inputSelector.is(":checked")) {
+									//选中   下级全部选中
+									inputSelector.parent().parent().find("input").each(function() {
+										$(this).prop("checked", true);
+									});
+									//判断上级是否可以选中
+									isAllChecked(inputSelector);
+								} else {
+									//取消选中   上级也取消
+									inputSelector.removeAttr("checked");
+									inputSelector.parents("li").each(function() {
+										$(this).find(">label input").removeProp("checked"); //.removeAttr("checked");
+									});
+									//取消选中   下级也取消
+									inputSelector.parent().parent().find("input").each(function() {
+										$(this).removeProp("checked");
+									});
+								}
+
+								function isAllChecked(selector) {
+									var thisLevelAllChecked = true;
+									selector.parent().parent().parent().find(">li>label input").each(function() {
+										if(!$(this).prop("checked")) {
+											thisLevelAllChecked = false;
+											return false;
+										}
+									});
+									if(thisLevelAllChecked) {
+										selector.parent().parent().parent().find(">label input").prop("checked", "checked");
+										isAllChecked(selector.parent().parent().parent().find(">label input"));
+									}
+								}
+								//							$(this).parent().parent().find("input:checkbox").each(function() {
+								//								this.checked = mchecked;
+								//							});
+								//							var pid = $(this).attr("pid");
+								//							if (pid) {
+								//								$("#ck" + pid).each(function() {
+								//									if (this.checked && $(this).parent().find("input[id!=ck" + pid + "]:checked").length > 0) {
+								//										return false;
+								//									}
+								//									this.checked = mchecked;
+								//									pid = $(this).attr("pid");
+								//									if (pid) {
+								//										$("#ck" + pid).each(function() {
+								//											this.checked = mchecked;
+								//										});
+								//									}
+								//								});
+								//							}
+								//
+
+								selectCityIds = [];
+								$(".treeview input[type='checkbox']:checked").each(function() {
+									selectCityIds.push($(this).attr("nodeid"));
+								});
+								//alert(selectNodeIds);
+								reloadGrid();
+							} else {
+								if($(this).find(">i").hasClass("fa-caret-down")) {
+									//将树收起
+									$(this).find(">i").removeClass("fa-caret-down").addClass("fa-caret-up");
+									$(this).parent().find("li").slideUp();
+								} else {
+									//打开
+									$(this).find(">i").removeClass("fa-caret-up").addClass("fa-caret-down");
+									$(this).parent().find(">li").slideDown();
+								}
+							}
+						});*/
+						//tree checked listen
+						//$(".treeview input[type='checkbox']").click(function(e) {
+
+						//});
+					}
+				});
+			}
+
+			function initChildTree(liNode, nodes) {
+				for(var i in nodes) {
+					var tree = nodes[i];
+					var liDom = $("<li class='sub-item'></li>").append((tree.nodes && tree.nodes.length > 0 ? "<i class='fa fa-caret-down fa-x fa-icon'></i>" : "") + "<span class='node-name' nodeid=\"{id}\"> {text}</span>".replace(/{id}/g, tree.id).replace(/{text}/g, tree.text));
+					if(tree.nodes && tree.nodes.length > 0) {
+						initChildTree(liDom, tree.nodes);
+					}
+					liNode.append(liDom);
+				}
+			}
+			//company edition info
+			function openCompanyEditionInfoPop(editionId) {
+				//订单Html块
+				var getHtmlOfOrderDetail = function(orderData) {
+					var panelDom = $("<div class=\"panel panel-default\"><div class=\"panel-body\"></div></div>");
+					var ulDom = $("<ul></ul>");
+					//状态
+					var liDomOfOrderStatus = $("<li class=\"form-group-line\"></li>");
+					liDomOfOrderStatus.append("<label>订单状态</label> ");
+					liDomOfOrderStatus.append("<label edition-id=\"" + orderData.detail_info.order_str + "\" class=\"label label-status label-" + (orderData.detail_info.status == 7 ? "success" : "warning") + "\">" + orderData.detail_info.status_cn + "</label> ");
+					//开通按钮（待开通）
+					if(orderData.detail_info.status == 3 && orderData.pay_info.payment_way) {
+						liDomOfOrderStatus.append("<span edition-id=\"" + orderData.detail_info.order_str + "\" class=\"form-control-btn-open\"><button type=\"button\" class=\"btn btn-default btn-sm btn-edition-open\" data-edition-id=\"" + orderData.detail_info.id + "\"><i class=\"fa fa-check-square\"></i> 订单审核</button></span>");
+						if(!orderData.pay_info.voucher_file) {
+							liDomOfOrderStatus.find(".btn-edition-open").attr("disabled", "disabled")
+						}
+					}
+					//liDomOfOrderStatus.append("<span edition-id=\"" + orderData.detail_info.id + "\" class=\"form-control-btn-open\"><button type=\"button\" class=\"btn btn-default btn-sm btn-edition-open\" data-edition-id=\"" + orderData.detail_info.id + "\"><i class=\"fa fa-check-square\"></i> 开通版本</button></span>");
+					liDomOfOrderStatus.append("<hr>");
+					ulDom.append(liDomOfOrderStatus);
+					//订单明细
+					ulDom.append("<li class=\"form-group-line\"><label>订单明细</label></li>");
+					ulDom.append("<li class=\"form-group form-inline\">" +
+						"<label>订单类型</label>" +
+						"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.type_cn + "</span>" +
+						"<label>订单编号</label>" +
+						"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.order_str + "</span>" +
+						"<label>创建时间</label>" +
+						"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.create_time_cn + "</span>" +
+						"</li>");
+					var isUpgrade = orderData.detail_info.upgrade_info.accounts_count || false;
+					if(isUpgrade) {
+						ulDom.append("<li class=\"form-group form-inline\">" +
+							"<label>升级为</label>" +
+							"<span class=\"form-control form-control-noborder\">" + orderData.edition_name + "</span>" +
+							"<label>价格</label>" +
+							"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.price + "</span>" +
+							"<label>账户数</label>" +
+							"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.accounts_count + "</span>" +
+							"</li>");
+					} else {
+						ulDom.append("<li class=\"form-group form-inline\">" +
+							"<label>版本名称</label>" +
+							"<span class=\"form-control form-control-noborder\">" + orderData.edition_name + "</span>" +
+							"<label>价格</label>" +
+							"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.price + "</span>" +
+							"<label>账户数</label>" +
+							"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.accounts_count + "</span>" +
+							"</li>");
+					}
+					//购买时间段
+					var tmpCreatTime = orderData.detail_info.buy_stage.start; //$.convertToDate(orderData.detail_info.create_time_cn);
+					var tmpEndTime = orderData.detail_info.buy_stage.end; //$.convertToDate(orderData.detail_info.create_time_cn).addMonth(orderData.detail_info.using_time_limit);
+					var buyEditionDuringTime; //购买时长
+					if(orderData.detail_info.type == 300) buyEditionDuringTime = orderData.detail_info.order_buy_days; //(new Date(tmpEndTime).getTime() - new Date(tmpCreatTime).getTime()) / (1000 * 60 * 60 * 24);
+					ulDom.append("<li class=\"form-group form-inline\">" +
+						"<label>购买时长</label>" +
+						"<span class=\"form-control form-control-noborder\">" + (buyEditionDuringTime ? buyEditionDuringTime + "天" : orderData.detail_info.using_time_limit + "个月") + "</span>" +
+						"<label>购买时间段</label>" +
+						"<span class=\"form-control form-control-noborder\">" + tmpCreatTime + " 至 " + tmpEndTime + "</span>" +
+						"<label>合计（元）</label>" +
+						"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.total_money + "</span>" +
+						"</li>");
+					ulDom.append("<li class=\"form-group-line\" style=\"padding-left:30px ;\"><hr></li>");
+					//升级前
+					if(isUpgrade) {
+						ulDom.append("<li class=\"form-group form-inline\">" +
+							"<label>升级前版本</label>" +
+							"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.upgrade_info.edition_name + "</span>" +
+							"<label>账户数</label>" +
+							"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.upgrade_info.accounts_count + "</span>" +
+							"</li>");
+						ulDom.append("<li class=\"form-group form-inline\">" +
+							"<label>购买时长</label>" +
+							"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.upgrade_info.using_time_limit + "个月</span>" +
+							"<label>购买时间段</label>" +
+							"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.upgrade_info.buy_stage.start + " 至 " +
+							orderData.detail_info.upgrade_info.buy_stage.end + "</span>" +
+							"<label>合计（元）</label>" +
+							"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.upgrade_info.total_money + "</span>" +
+							"</li>");
+						ulDom.append("<li class=\"form-group form-inline\">" +
+							"<label>剩余时长</label>" +
+							"<span class=\"form-control form-control-noborder\">" +
+							//(new Date(orderData.detail_info.upgrade_info.remain_stage.end).getTime()-new Date(orderData.detail_info.upgrade_info.remain_stage.start).getTime())/(1000*60*60*24) 
+							(orderData.detail_info.upgrade_info.remain_days +
+								"天</span>") +
+							"<label>剩余时间段</label>" +
+							"<span class=\"form-control form-control-noborder\">" + orderData.detail_info.upgrade_info.remain_stage.start + " 至 " +
+							orderData.detail_info.upgrade_info.remain_stage.end + "</span>" +
+							"<label>剩余价值（元）</label>" +
+							"<span class=\"form-control form-control-noborder\">" + (orderData.detail_info.upgrade_info.remain_money).toFixed("2") + "</span>" +
+							"</li>");
+						ulDom.append("<li class=\"form-group-line\" style=\"padding-left:30px ;\"><hr></li>");
+					}
+					//支付信息
+					ulDom.append("<li class=\"form-group-line\"><label>支付信息</label></li>");
+					ulDom.append("<li class=\"form-group form-inline\">" +
+						"<label>合计（元）</label>" +
+						"<span class=\"form-control form-control-noborder\">" + orderData.pay_info.total_money + "</span>" +
+						"<label>扣除（元）</label>" +
+						"<span class=\"form-control form-control-noborder\">" + orderData.pay_info.discount_money + "</span>" +
+						"<label>应付（元）</label>" +
+						"<span class=\"form-control form-control-noborder\">" + orderData.pay_info.total_money_should + "</span>" +
+						"</li>");
+					ulDom.append("<li class=\"form-group form-inline\">" +
+						"<label>支付方式</label>" +
+						"<span class=\"form-control form-control-noborder\">" + orderData.pay_info.payment_way_cn + "</span>" +
+						"<label>支付凭证</label>" +
+						"<span class=\"form-control form-control-noborder form-control-height-auto\">" +
+						(orderData.pay_info.voucher_file.length == 0 ? "-" : "<a href='" + orderData.pay_info.voucher_file + "' target='_blank'><img src='" + orderData.pay_info.voucher_file + "' style='max-width:100px; max-height:100px;' /></a>") +
+						"</span>" +
+						"</li>");
+					ulDom.append("<li class=\"form-group form-inline\">" +
+						"<label>支付时间</label>" +
+						"<span class=\"form-control form-control-noborder\">" + orderData.pay_info.pay_time_cn + "</span>" +
+						"<label>实际支付（元）</label>" +
+						"<span class=\"form-control form-control-noborder\">" + orderData.pay_info.total_money_real + "</span>" +
+						"</li>");
+					//ulDom.append("<li class=\"form-group-line\" style=\"padding-left:30px ;\"><hr></li>");
+					panelDom.find(".panel-body").append(ulDom);
+					return panelDom;
+				};
+				//loading
+				$.showLoadingPop("正在加载企业信息，请稍后...");
+				//load companyinfo 
+				$.ajaxGet(companysEditionDetailAPI + "/" + editionId, function(response) {
+					if(response.code != 0) {
+						$.showErrorGritter("加载企业信息失败：" + response.msg)
+						//hide
+						$.hideLoadingPop();
+						return false;
+					}
+					//show
+					var infoData = response.data;
+					infoData.used_days += "天";
+					infoData.remain_days += "天";
+					var infoController = new Controller(formContainer);
+					infoController.set(infoData);
+					//订单列表
+					for(var i in infoData.order_list) {
+						var orderData = infoData.order_list[i];
+						orderData.edition_name = infoData.edition_name;
+						$(formContainer + " .panel-top-edition").after(getHtmlOfOrderDetail(orderData));
+					}
+					//操作记录
+					if(infoData.opt_log.length > 0) {
+						$(formContainer + " .table-operation-record tbody").empty();
+						for(var i in infoData.opt_log) {
+							var opLogData = infoData.opt_log[i];
+							$(formContainer + " .table-operation-record tbody").append("<tr>" +
+								"<td>" + opLogData.type_cn + "</td>" +
+								"<td>" + opLogData.content + "</td>" +
+								"<td>" + opLogData.remark + "</td>" +
+								"<td>" + opLogData.time + "</td>" +
+								"<td>" + opLogData.operator + "</td>" +
+								"</tr>");
+						}
+					}
+					$(formContainer + " .banben-state").append(loadState(infoData.company_edition_status, infoData.me_edition_status_cn));
+					//hide
+					$.hideLoadingPop();
+					//开通
+					$(formContainer + " .btn-edition-open").click(function() {
+						openEditionOpenPop($(this).data("edition-id"), formContainer);
+					});
+				});
+				var modalId = $.modal(function() {
+					if(needRefreshGrid) {
+						reloadGrid();
+					}
+				}).showOfAuto('版本订单详情', '.pnl-company-edition-info',
+					function(modal) {}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .company-edition-info";
+
+			}
+			//开通版本
+			function openEditionOpenPop(editionId, parentFormContainer) {
+				var modalId = $.modal().show("订单处理", ".pnl-company-edition-open",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var openEditionData = {
+							remark: $(formContainer + " .form-control-content-warn").val(),
+							action: $(formContainer + " .form-control-action input:checked").val()
+						};
+						if(!openEditionData.action) {
+							$.showErrorGritter("请选择审核结果！");
+							return false;
+						}
+						$.ajaxPost(openEditionAPI.replace(/{id}/g, editionId), openEditionData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(openEditionData.action == "success" ? "开通成功。" : "拒绝成功。");
+									modal.modal('hide');
+									needRefreshGrid = true;
+									$(parentFormContainer + " .form-control-btn-open[edition-id='" + editionId + "']").hide();
+									$(parentFormContainer + " .label-status[edition-id='" + editionId + "']").addClass("label-success").text(openEditionData.action == "success" ? "已支付" : "已拒绝");
+								} else {
+									$.showErrorGritter((openEditionData.action == "success" ? "开通失败：" : "拒绝失败：") + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-company-edition-open";
+			}
+			//重置
+			var resetSearchForm = function() {
+				searchController.set({
+					cmp_industry: "",
+					cmp_quality: "",
+					cmp_auth_status: "",
+					cmp_edition_status: "",
+					cmp_status: "",
+					me_start_using_date_start: "",
+					me_start_using_date_end: "",
+					me_end_using_date_start: "",
+					me_end_using_date_end: "",
+					cmp_name: ""
+				});
+			};
+			loadConfig();
+			//到期提醒
+			function openWarnPop() {
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要提醒的企业。");
+					return false;
+				}
+				var selectStatus = "";
+				console.log()
+				console.log($(grid).getRowData4JqGrid())
+				//var editionId = $(grid).getRowData4JqGrid().me_id;
+				var modalId = $.modal().show("到期提醒", ".pnl-company-warn",
+					function(modal) {
+						var selectWarnType = $(formContainer + " input[name='rdWarnType']:checked").val();
+						if(!selectWarnType) {
+							$.showErrorGritter("请先选择提醒方式。");
+							return false;
+						}
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						if($(formContainer + " textarea").val() == "") {
+							$.showErrorGritter("提醒内容不能为空");
+							return false;
+						}
+						if($(formContainer + " .email-title").length > 0) {
+							if($(formContainer + " .email-title").val() == "") {
+								$.showErrorGritter("邮件标题不能为空");
+								return false;
+							}
+						}
+						var disData = assembleData();
+						console.log(disData)
+						$.ajaxPost(sendInform[selectStatus], disData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("提醒发送成功。");
+									modal.modal('hide');
+									$(grid).reloadGrid();
+								} else {
+									$.showErrorGritter("提醒发送失败：" + response.msg);
+								}
+							});
+					}
+				);
+				var formContainer = "#" + modalId + " .model-company-warn";
+				$(formContainer + " a[group='linkTmp']").click(function() {
+					var linkIndex = $(this).index();
+					$(formContainer + " .form-control-content-warn").val(linkIndex);
+				});
+				$(formContainer + " .select-template input:radio").change(function() {
+					selectStatus = $(this).data("type");
+					$(formContainer + " textarea").css("height", "180px").parent().prev("label").remove();
+					if(selectStatus == "email") {
+						$(formContainer + " textarea").css("height", "150px").parent().before("<label class='input-flag'>标题:<input type='text' class='email-title'></label>");
+					}
+					var txt = (configData[selectStatus] ? configData[selectStatus][0] : "");
+					if($(formContainer + " .email-title").length > 0) {
+						console.log()
+						$(formContainer + " .email-title").val(configData[selectStatus][0].subject);
+						txt =configData[selectStatus][0].body;
+					}
+					$(formContainer + " textarea").val(txt);
+				});
+				$(formContainer + " .select-template input[data-type='email']").trigger("click");
+
+				function assembleData() {
+					var returnData = {};
+					var disableNote = $(formContainer + " textarea").val();
+					var ids = $(grid).getSelectRowIdsForjqGrid("me_id");
+					if(selectStatus == "email") {
+						returnData.body = disableNote;
+						returnData.subject = $(formContainer + " .email-title").val();
+						var data = [];
+						for(var i in ids)
+							data.push($(grid).getRowData4JqGrid("me_id", ids[i]).contact_email);
+						returnData.to = data.join(",");
+					} else if(selectStatus == "sms") {
+						returnData.content = disableNote;
+						var data = [];
+						for(var i in ids)
+							data.push($(grid).getRowData4JqGrid("me_id", ids[i]).contact_mobile);
+						returnData.mobile = data.join(",");
+					} else {
+						var data = [];
+						returnData.content = disableNote;
+						for(var i in ids)
+							data.push($(grid).getRowData4JqGrid("me_id", ids[i]).cmp_id);
+						returnData.cmp_id = data.join(",");
+					}
+					return returnData;
+
+				}
+			}
+			//重新加载表格
+			function reloadGrid(action) {
+				var searchModel = searchController.getJSON();
+				searchModel.me_start_using_date = JSON.stringify({
+					start: searchModel.me_start_using_date_start,
+					end: searchModel.me_start_using_date_end
+				});
+				searchModel.me_end_using_date = JSON.stringify({
+					start: searchModel.me_end_using_date_start,
+					end: searchModel.me_end_using_date_end
+				});
+				searchModel.cmp_area_id = selectCityIds;
+				if(action == "export")
+					searchModel.is_export = 1;
+				var url = companysEditionsAPI + $.toQueryString(searchModel, true);
+				if(action == "export") {
+					//导出
+					$.downloadFile(url);
+					return false;
+				}
+				$("#grid-table").jqGrid('setGridParam', {
+					page: 1,
+					url: url
+				}).trigger("reloadGrid", {});
+				needRefreshGrid = false;
+			}
+			//加载配置
+			function loadConfig() {
+				$.ajaxGet(loadConfigUrl, function(response) {
+					if(response.code == 0) {
+						configData = response.data;
+					} else {
+						$.showErrorGritter("加载配置失败：" + response.msg);
+					}
+				});
+			}
+
+			function loadState(i, stateText) {
+				var stateStr = "<i class=\"fa fa-circle\" style=\"color:{COLOR}\" aria-hidden=\"true\"></i>";
+				var str = "";
+				switch(i) {
+					case 1:
+						str = stateStr.replace("{COLOR}", "green") + stateText;
+						break;
+					case 2:
+						str = stateStr.replace("{COLOR}", "red") + stateText;
+						break;
+					default:
+						str = stateStr.replace("{COLOR}", "yellow") + stateText;
+				}
+				return str;
+			}
+		</script>
+	</body>
+
+</html>

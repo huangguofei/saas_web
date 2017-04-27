@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>客户单位汇总</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container crm-client-collect-info">
+			<div class="content">
+				<div class="search">
+				</div>
+				<div class="role-list">
+					<table id="grid-table" class="grid-module">
+					</table>
+					<div id="grid-pager">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="grid-footer-btn-container" class="hide">
+			<a onclick="exportGrid()" class="btn btn-danger def-btn-danger btn-export"><img src="../resources/images/export-icon.png" alt="" /> 导出</a>
+		</div>
+	</body>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript" src="../resources/js/main.min.js"></script>
+	<script type="text/javascript">
+		var crm_tj={
+			source_type: {//统计资源的类型
+				CLIENT: 1,//单位
+				CONTACT: 2//联系人
+			},
+			query_type: {//统计类型
+				BY_DEPA: 1,//按部门
+				BY_EMP:  2//按员工
+			},
+			depa_area: {
+				OWN: 2,//本部门
+				OWN_AND_LOWER: 1//所选部门及其所有下属部门
+			},
+			client_status:{//客户单位状态
+				NORMAL:"1",//正常
+				CLOSED:"2",//已倒闭
+				MOVED:"3",//已迁址
+				BEEN_BUY:"4",//以收购
+				OTHER: "99",//其他
+			},
+			contact_status:{//联系人状态
+				NORMAL: "1",//正常
+				LI_ZHI: "2",//离职
+				JIN_XIU: "3",//进修
+				QU_SHI: "4",//去世
+				TUI_XIU: "5",//退休
+				OTHER: "99"//其他
+			},
+			client_classes: {//企业代码
+				CLIENT_ADMINISTRATIVE_DIVISION: 102,//客户区域
+				CLIENT_IMPORTANT_LEVEL: 102109,//客户重要等级代码
+				CLIENT_LEVEL: 102111,//客户等级代码
+				CLIENT_TYPE: 102110//客户类型代码
+			},
+			contact_classes: {//企业代码
+				CONTACT_IMPORTANT_LEVEL: 102113//联系人重要等级代码
+			}
+		}
+		var selectedTags;
+		var infoUrlForAdd;
+		$(document).ready(function() {
+			//搜索
+			var queryObj = $.getQueryObject();
+			console.log(queryObj)
+			var thisBaseUrl=window.location;
+			var with_lowers=queryObj.with_lowers?queryObj.with_lowers:"";
+			if(queryObj.distinctionText == crm_tj.source_type.CLIENT) { //单位统计
+				if(queryObj.depa_id){
+					infoUrlForAdd = BSAPIURL + "/crm/statics/customer/records?client_important_levels=" + queryObj.contact_level +"&with_lowers="+with_lowers+"&depa_id="+queryObj.depa_id+ "&client_statuses=" + queryObj.contact_status_data;
+					
+				}else{
+					infoUrlForAdd = BSAPIURL + "/crm/statics/customer/records?client_important_levels=" + queryObj.contact_level +"&employee_id="+queryObj.employee_id+ "&client_statuses=" + queryObj.contact_status_data;
+				}
+				var clientTypes = [];
+				var clientImportantLevel = [];
+				clientTypes.push({
+					key: "全部",
+					value: "",
+				});
+				clientImportantLevel.push({
+					key: "全部",
+					value: "",
+				});
+				var isDsiabledClientImportantLevel="false";
+				var isDsiabledClientStatus="false";
+				var defaultCheckedClientImportantLevel=queryObj.contact_level;
+				var defaultCheckedClientStatus=queryObj.contact_status_data;
+				if(queryObj.disabled=="false"){
+					isDsiabledClientImportantLevel="false";
+					isDsiabledClientStatus="false";
+				}else if(queryObj.onlyDisabledLevel){
+					isDsiabledClientImportantLevel="false";
+					isDsiabledClientStatus="false";
+				}
+				$.loadBasicDatasByClassId(crm_tj.client_classes.CLIENT_TYPE, function(resp) {
+					for(var i in resp) {
+						clientTypes.push({
+							key: resp[i].code_name,
+							value: resp[i].code_tree
+						});
+					}
+					$.loadBasicDatasByClassId(crm_tj.client_classes.CLIENT_IMPORTANT_LEVEL, function(resp) {
+						for(var i in resp) {
+							clientImportantLevel.push({
+								key: resp[i].code_name,
+								value: resp[i].code_tree,
+								disabled: isDsiabledClientImportantLevel,
+								isDefaultChecked:(defaultCheckedClientImportantLevel.split(",")).indexOf(resp[i].code_tree)>=0
+							});
+						}
+						initSearch(clientTypes, clientImportantLevel);
+					});
+				});
+
+				function initSearch(clientTypes, clientImportantLevel) {
+					if(queryObj.tongJiMethord == "depa") {
+						$.initSearchControls4TagMode({
+							auto: true,
+							url: BSAPIURL + "/crm/statics/customer/records?depa_id="+queryObj.depa_id+ "&with_lowers="+with_lowers,//+"&client_important_levels=" + queryObj.contact_level + "&client_statuses=" + queryObj.contact_status_data,
+							grid: "#grid-table",
+							container: ".search",
+							key_name: "key",
+							key_placeholder: "请输入客户名称、负责人进行查找",
+							onChange: function(selectTags) {
+								selectedTags=selectTags;
+							},
+							groups: [{
+								name:"",
+								text:"统计主体",
+								items: [{
+									key: "部门>"+queryObj.depa_name+" ("+(queryObj.with_lowers==crm_tj.depa_area.OWN_AND_LOWER?"统计范围为所选部门及其所有下属部门":"统计范围为所选部门")+")",
+									value: queryObj.depa_id,
+									notShowCheckbox: true,
+									disabled: "true",
+									isDefaultChecked: true
+								}]
+							},{
+								name: "client_types",
+								text: "客户单位类型",
+								items: clientTypes
+							}, {
+								name: "client_important_levels",
+								text: "客户重要等级",
+								items: clientImportantLevel
+							}, {
+								name: "client_statuses",
+								text: "客户单位状态",
+								items: [{
+									key: "全部",
+									value: "",
+									disabled: isDsiabledClientStatus
+								}, {
+									key: "正常",
+									value: crm_tj.client_status.NORMAL,
+									disabled: isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.client_status.NORMAL)>=0
+								}, {
+									key: "已倒闭",
+									value: crm_tj.client_status.CLOSED,
+									disabled: isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.client_status.CLOSED)>=0
+								}, {
+									key: "已迁址",
+									value: crm_tj.client_status.MOVED,
+									disabled: isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.client_status.MOVED)>=0
+								}, {
+									key: "被收购",
+									value: crm_tj.client_status.BEEN_BUY,
+									disabled: isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.client_status.BEEN_BUY)>=0
+								}, {
+									key: "其他",
+									value: crm_tj.client_status.OTHER,
+									disabled: isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.client_status.OTHER)>=0
+								}]
+							}]
+						});
+					} else {
+						$.initSearchControls4TagMode({
+							auto: true,
+							url: BSAPIURL + "/crm/statics/customer/records?employee_id="+queryObj.employee_id,//+"&client_important_levels=" + queryObj.contact_level + "&client_statuses=" + queryObj.contact_status_data,
+							grid: "#grid-table",
+							container: ".search",
+							key_name: "key",
+							key_placeholder: "请输入客户名称、负责人进行查找",
+							onChange: function(selectTags) {
+								selectedTags=selectTags;
+							},
+							groups: [{
+								name:"",
+								text:"统计主体",
+								items: [{
+									key: "员工>"+queryObj.employee_name,
+									value: queryObj.employee_id,
+									notShowCheckbox: true,
+									disabled: "true",
+									isDefaultChecked: true
+								}]
+							},{
+								name: "client_types",
+								text: "客户单位类型",
+								items: clientTypes
+							}, {
+								name: "client_important_levels",
+								text: "客户重要等级",
+								items: clientImportantLevel
+							}, {
+								name: "client_statuses",
+								text: "客户单位状态",
+								items: [{
+									key: "全部",
+									value: "",
+									disabled: isDsiabledClientStatus
+								}, {
+									key: "正常",
+									value: crm_tj.client_status.NORMAL,
+									disabled: isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.client_status.NORMAL)>=0
+								}, {
+									key: "已倒闭",
+									value: crm_tj.client_status.CLOSED,
+									disabled: isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.client_status.CLOSED)>=0
+								}, {
+									key: "已迁址",
+									value: crm_tj.client_status.MOVED,
+									disabled: isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.client_status.MOVED)>=0
+								}, {
+									key: "被收购",
+									value: crm_tj.client_status.BEEN_BUY,
+									disabled: isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.client_status.BEEN_BUY)>=0
+								}, {
+									key: "其他",
+									value: crm_tj.client_status.OTHER,
+									disabled: isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.client_status.OTHER)>=0
+								}]
+							}]
+						});
+					}
+				}
+				$.token();
+				var colNames = ['', '客户名称', '客户类型', '客户等级', '所在区域', '部门/科室数量', '联系人数量', '负责人', '客户状态', '发布时间', '更新时间'];
+				var colModel = [{
+					name: 'id',
+					index: 'id',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.information_id;
+					}
+				}, {
+					name: 'client_full_name',
+					index: 'client_full_name',
+				}, {
+					name: 'client_level_name',
+					index: 'client_level_name',
+					width: 90,
+				}, {
+					name: 'client_important_level_name',
+					width: 80,
+					index: 'information_title',
+				}, {
+					name: 'client_administrative_division',
+					width: 130,
+					index: 'client_administrative_division',
+				}, {
+					name: 'depa_count',
+					width: 100,
+					index: 'depa_count',
+					sortable: true,
+
+				}, {
+					name: 'contact_count',
+					width: 100,
+					index: 'contact_count',
+					sortable: true
+				}, {
+					name: 'client_responsible_persons',
+					index: 'client_responsible_persons',
+					sortable: true
+				}, {
+					name: 'client_status',
+					width: 60,
+					index: 'client_status',
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						return(cellvalue == crm_tj.client_status.NORMAL? "正常" : cellvalue == crm_tj.client_status.CLOSED ? "已倒闭" : cellvalue == crm_tj.client_status.MOVED ? "已迁址" : cellvalue == crm_tj.client_status.BEEN_BUY ? "被收购" : "其他");
+					}
+				}, {
+					name: 'client_create_time',
+					width: 120,
+					index: 'client_create_time',
+					sortable: false
+				}, {
+					name: 'client_update_time',
+					width: 120,
+					index: 'client_update_time',
+					sortable: false
+				}];
+
+			} else { /////联系人统计
+				if(queryObj.employee_id){
+					infoUrlForAdd = BSAPIURL + "/crm/statics/contacts/records?contact_important_levels=" + queryObj.contact_level + "&employee_id="+queryObj.employee_id+"&contact_statuses=" + queryObj.contact_status_data;	
+				}else{
+					infoUrlForAdd = BSAPIURL + "/crm/statics/contacts/records?contact_important_levels=" + queryObj.contact_level + "&with_lowers="+with_lowers+"&depa_id="+queryObj.depa_id+"&contact_statuses=" + queryObj.contact_status_data;
+				}
+				
+				var contactTypes = [];
+				var contactImportantLevel = [];
+				contactTypes.push({
+					key: "全部",
+					value: ""
+				});
+				contactImportantLevel.push({
+					key: "全部",
+					value: ""
+				});
+				var isDsiabledClientImportantLevel="false";
+				var isDsiabledClientStatus="false";
+				var defaultCheckedClientImportantLevel=queryObj.contact_level;
+				var defaultCheckedClientStatus=queryObj.contact_status_data;
+				if(queryObj.disabled=="true"){
+					isDsiabledClientImportantLevel="false";
+					isDsiabledClientStatus="false";
+				}else if(queryObj.onlyDisabledLevel){
+					isDsiabledClientImportantLevel="false";
+					isDsiabledClientStatus="false";
+				}
+				$.loadBasicDatasByClassId(crm_tj.client_classes.CLIENT_TYPE, function(resp) {
+					for(var i in resp) {
+						contactTypes.push({
+							key: resp[i].code_name,
+							value: resp[i].code_tree
+						});
+					}
+					$.loadBasicDatasByClassId(crm_tj.contact_classes.CONTACT_IMPORTANT_LEVEL, function(resp) {
+						for(var i in resp) {
+							contactImportantLevel.push({
+								key: resp[i].code_name,
+								value: resp[i].code_tree,
+								disabled: isDsiabledClientImportantLevel,
+								isDefaultChecked:(defaultCheckedClientImportantLevel.split(",")).indexOf(resp[i].code_tree)>=0
+							});
+						}
+						initContactSearch(contactTypes, contactImportantLevel);
+					});
+				});
+
+				function initContactSearch(contactTypes, contactImportantLevel) {
+					console.log(queryObj)
+					if(queryObj.tongJiMethord != "depa") {
+						$.initSearchControls4TagMode({
+							auto: true,
+							url: BSAPIURL + "/crm/statics/contacts/records?employee_id="+queryObj.employee_id,//+"contact_important_levels=" + queryObj.contact_level+ "&contact_statuses=" + queryObj.contact_status_data,
+							grid: "#grid-table",
+							container: ".search",
+							key_name: "search_key",
+							key_placeholder: "请输入客户联系人、客户单位、负责人进行查找",
+							onChange: function(selectTags) {
+								selectedTags=selectTags;
+							},
+							groups: [{
+								name:"",
+								text:"统计主体",
+								items: [{
+									key: "员工>"+queryObj.employee_name,
+									value: queryObj.employee_id,
+									notShowCheckbox: true,
+									disabled: "true",
+									isDefaultChecked: true
+								}]
+							},{
+								name: "contact_important_levels",
+								text: "联系人等级",
+								items: contactImportantLevel
+							}, {
+								name: "contact_statuses",
+								text: "联系人状态",
+								items: [{
+									key: "全部",
+									value: "",
+									disabled:isDsiabledClientStatus
+								}, {
+									key: "正常",
+									value: crm_tj.contact_status.NORMAL,
+									disabled:isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.contact_status.NORMAL)>=0
+								}, {
+									key: "离职",
+									value: crm_tj.contact_status.LI_ZHI,
+									disabled:isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.contact_status.LI_ZHI)>=0
+								}, {
+									key: "进修",
+									value: crm_tj.contact_status.JIN_XIU,
+									disabled:isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.contact_status.JIN_XIU)>=0
+								}, {
+									key: "离世",
+									value: crm_tj.contact_status.QU_SHI,
+									disabled:isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.contact_status.QU_SHI)>=0
+								}, {
+									key: "退休",
+									value: crm_tj.contact_status.TUI_XIU,
+									disabled:isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.contact_status.TUI_XIU)>=0
+								}, {
+									key: "其他",
+									value: crm_tj.contact_status.OTHER,
+									disabled:isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.contact_status.OTHER)>=0
+								}]
+							}]
+						});
+					} else {
+						$.initSearchControls4TagMode({
+							auto: true,
+							url: BSAPIURL + "/crm/statics/contacts/records?depa_id="+queryObj.depa_id+ "&with_lowers="+with_lowers,//+"contact_important_levels=" + queryObj.contact_level+"&contact_statuses=" + queryObj.contact_status_data,
+							grid: "#grid-table",
+							container: ".search",
+							key_name: "search_key",
+							key_placeholder: "请输入客户联系人、客户单位、负责人进行查找",
+							onChange: function(selectTags) {
+								selectedTags=selectTags;
+							},
+							groups: [{
+								name:"",
+								text:"统计主体",
+								items: [{
+									key: "部门>"+queryObj.depa_name+" ("+(queryObj.with_lowers==crm_tj.depa_area.OWN_AND_LOWER?"统计范围为所选部门及其所有下属部门":"统计范围为所选部门")+")",
+									value: queryObj.depa_id,
+									notShowCheckbox: true,
+									disabled: "true",
+									isDefaultChecked: true
+								}]
+							},{
+								name: "contact_important_levels",
+								text: "联系人等级",
+								items: contactImportantLevel
+							}, {
+								name: "contact_statuses",
+								text: "联系人状态",
+								items: [{
+									key: "全部",
+									value: "",
+									disabled:isDsiabledClientStatus
+								}, {
+									key: "正常",
+									value: crm_tj.contact_status.NORMAL,
+									disabled:isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.contact_status.NORMAL)>=0
+								}, {
+									key: "离职",
+									value: crm_tj.contact_status.LI_ZHI,
+									disabled:isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.contact_status.LI_ZHI)>=0
+								}, {
+									key: "进修",
+									value: crm_tj.contact_status.JIN_XIU,
+									disabled:isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.contact_status.JIN_XIU)>=0
+								}, {
+									key: "离世",
+									value: crm_tj.contact_status.QU_SHI,
+									disabled:isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.contact_status.QU_SHI)>=0
+								}, {
+									key: "退休",
+									value: crm_tj.contact_status.TUI_XIU,
+									disabled:isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.contact_status.TUI_XIU)>=0
+								}, {
+									key: "其他",
+									value: crm_tj.contact_status.OTHER,
+									disabled:isDsiabledClientStatus,
+									isDefaultChecked:(defaultCheckedClientStatus.split(",")).indexOf(crm_tj.contact_status.OTHER)>=0
+								}]
+							}]
+						});
+					}
+
+				}
+
+				$.token();
+				var colNames = ['', '姓名', '联系人等级', '部门/科室', '职务', '手机', '办公电话', '邮箱', '生日', '单位', '负责人', '状态', '创建时间', '更新时间'];
+				var colModel = [{
+					name: 'id',
+					index: 'id',
+					hidden: true
+				}, {
+					name: 'contact_name',
+					index: 'contact_name',
+					width: 80,
+					sortable: false
+				}, {
+					name: 'contact_level_name',
+					index: 'contact_level_name',
+					width: 80,
+					sortable: false
+				}, {
+					name: 'depa_name',
+					index: 'depa_name',
+					width: 80,
+					sortable: false
+				}, {
+					name: 'contact_job_position',
+					index: 'contact_job_position',
+					width: 80,
+					sortable: false
+				}, {
+					name: 'contact_primary_mobile_number',
+					index: 'contact_primary_mobile_number',
+					width: 100,
+					sortable: true,
+
+				}, {
+					name: 'contact_office_phone_number',
+					width: 100,
+					index: 'contact_office_phone_number',
+					sortable: true
+				}, {
+					name: 'contact_email',
+					index: 'contact_email',
+					sortable: true
+				}, {
+					name: 'contact_born_date',
+					width: 90,
+					index: 'contact_born_date',
+					sortable: false
+				}, {
+					name: 'client_full_name',
+					index: 'client_full_name',
+					sortable: false
+				}, {
+					name: "client_responsible_persons",
+					index: "client_responsible_persons",
+					sortable: false
+				}, {
+					name: "contact_status",
+					index: "contact_status",
+					width: 50,
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return cellvalue == crm_tj.contact_status.NORMAL ? "正常" : cellvalue == crm_tj.contact_status.LI_ZHI ? "离职" 
+						: cellvalue == crm_tj.contact_status.JIN_XIU ? "进修" : cellvalue == crm_tj.contact_status.QU_SHI ? "离世" :
+						cellvalue == crm_tj.contact_status.TUI_XIU ? "退休" : "其他";
+					}
+				}, {
+					name: "contact_create_time",
+					width: 130,
+					index: "contact_create_time",
+					sortable: true
+				}, {
+					name: "contact_update_time",
+					index: "contact_update_time",
+					width: 130,
+					sortable: true
+				}];
+			}
+			infoGrid = $("#grid-table").initJqGrid({
+				grid_selector: "#grid-table",
+				pager: "#grid-pager",
+				footerBtnContainer: "#grid-footer-btn-container",
+				url: infoUrlForAdd,
+				colNames: colNames,
+				colModel: colModel
+			});
+		});
+		function exportGrid(){
+			var exportUrl=selectedTags?infoUrlForAdd.split("?")[0]+$.toQueryString(selectedTags,true):infoUrlForAdd;
+			$.downloadFile(exportUrl+"&is_export=1");
+		}
+	</script>
+
+</html>

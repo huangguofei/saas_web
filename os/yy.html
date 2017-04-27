@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<script type="text/javascript">
+			//实现获取焦点位置信息基本功能
+			function getOffsetPointer(_mOffset) {
+				if(document.selection) {
+					var OffsetObject = new Object();
+					var _allText = _mOffset.value; //输入框的所有值
+					_mOffset.focus(); //输入框获得焦点
+					var s = _mOffset.scrollTop; //获得滚动条的位置
+					var _rOffset = document.selection.createRange(); //创建文档选择对象根据当前文字选择返回 TextRange 对象
+					var _tOffset = _mOffset.createTextRange(); //创建输入框文本对象
+					_tOffset.collapse(true); //将光标移到头
+					_tOffset.select(); //显示光标
+					var _nOffset = document.selection.createRange(); //为新的光标位置创建文档选择对象
+					//在这里主要介绍下TextRange对象的setEndPoint方法和compareEndPoints方法
+					//先介绍setEndPoint("[way]",oRange)方法：将当前范围的开始或结束点移动到oRange范围的开
+					//始或者结束点
+					//该方法有两个参数:[way]表示将当前范围以何种方式移动到oRange范围，有四种方式：
+					//StartToStart将当前开始位置移动到oRange的开始位置，
+					//StartToEnd将当前范围开始位置移动到oRange的结束位置，EndToStart将当前结束位置移动到
+					//oRange的开始位置，EndToEnd将当前范围的结束位置
+					//移动到oRange的结束位置，oRange该对象也是TextRange，oRange的开始和结束位置代表要移动到
+					//的目标位置
+					_rOffset.setEndPoint("StartToStart", _nOffset); //在以前的文档选择对象和新的对象之间创建对象
+					var _leftText = _rOffset.text; //获得文档选择对象的文本(从鼠标焦点到文档开头的文本)
+					var leFTPos = _leftText.length; //文档开头到鼠标焦点的文本长度
+					var _rightText = _allText.substring(leFTPos); //获取鼠标焦点到文档结束的文本
+					alert(leFTPos);
+					OffsetObject.length = leFTPos;
+					OffsetObject.scrollTop = s;
+					OffsetObject.leftValue = _leftText;
+					OffsetObject.rightValue = _rightText;
+
+					return leFTPos;
+				} else {
+					alert(_mOffset.selectionStart);
+					return _mOffset.selectionStart;
+				}
+			}
+
+			function dingwei(index) {
+				if(document.selection) {
+					var a = document.getElementById("t2").createTextRange();
+					a.moveStart('character', 3); //将开始点向前移动三个位置(每个位置就是一个字符)
+					a.collapse(true);
+					a.select();
+				} else {
+					var a = document.getElementById("t2");
+					a.selectionStart = document.getElementById('txtIndex').value;
+					a.focus();
+				}
+			}
+		</script>
+
+	</head>
+
+	<body>
+		<table>
+			<tr>
+				<td>
+					定位的地方
+				</td>
+				<td>
+					<input id="txtIndex" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<textarea rows="6" id="t2" cols="60">abcdefg</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"> <button onclick="dingwei()">
+定位</button>
+				</td>
+			</tr>
+		</table>
+
+	</body>

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>资讯详情</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+			.infodetail-popup {}
+			
+			.box-read {}
+			
+			.box-down {}
+			
+			.page-container {
+				padding-top: 20px;
+			}
+			
+			.content {
+				font-size: 20px;
+				color: #333;
+			}
+			
+			.infodetail-main {
+				width: 100%;
+				margin: 0 auto;
+			}
+			
+			.infodetail-main-list {
+				padding-bottom: 10px;
+				padding-top: 10px;
+			}
+			
+			.infodetail-main-list:first-child {
+				padding-top: 0;
+			}
+			
+			.infodetail-down .box-main-list {
+				border: 0;
+			}
+			
+			.infodetail-main-list>p {
+				margin: 0 0 20px 0;
+			}
+			
+			.infodetail-main-list ul li {
+				float: left;
+				width: 70px;
+				margin-right: 7px;
+				position: relative;
+			}
+			
+			.infodetail-main-list ul li img {
+				width: 50px;
+				height: 50px;
+				border: 1px solid #ccc;
+			}
+			
+			.infodetail-main-list ul li i {
+				position: absolute;
+				top: 10px;
+				left: 12px;
+				font-size: 30px;
+			}
+			
+			.infodetail-main-list ul li p {
+				text-align: left;
+			}
+			
+			.infodetail-bottom {
+				width: 100%;
+				height: 50px;
+				line-height: 50px;
+				text-align: center;
+			}
+			
+			.infodetail-bottom input[type=button] {
+				margin-left: 20px;
+			}
+			
+			.infodetail-main-list ul {
+				zoom: 1;
+			}
+			
+			.infodetail-main-list ul:after {
+				clear: both;
+				content: '.';
+				display: block;
+				width: 0;
+				height: 0;
+				visibility: hidden;
+			}
+			
+			.Infodeta-particular-URL ul {
+				zoom: 1;
+			}
+			
+			.Infodeta-particular-URL ul:after {
+				content: ".";
+				display: block;
+				height: 0;
+				visibility: hidden;
+				clear: both;
+			}
+			
+			.Infodeta-particular-URL ul li {
+				float: left;
+				margin-left: 10px;
+			}
+			
+			.Infodeta-particular-main img {
+				vertical-align: text-bottom;
+			}
+			
+			.css-overhidden {
+				width: 50px;
+			}
+			
+			.Infodeta-particular-menu {
+				margin-top: 15px;
+			}
+			
+			.particular-menu-type,
+			.particular-menu-happyman,
+			.particular-menu-time,
+			.particular-menu-readingman,
+			.particular-menu-collect {
+				font-size: 12px;
+				color: #999;
+				display: inline-block;
+				margin-right: 40px;
+				margin-left: 0!important;
+			}
+			
+			.particular-menu-collect.active {
+				color: orange;
+			}
+			
+			.Infodeta-particular-accessorylist li {
+				border-bottom: 1px dashed #eee;
+			}
+			
+			.Infodeta-particular-btn {
+				margin-top: 20px;
+			}
+			
+			.Infodeta-particular-accessorylist li:last-child {
+				border: 0;
+			}
+			
+			.Infodetails-particular>div:nth-child(4) {
+				border-bottom: 1px solid #e3e3e3;
+			}
+			
+			.Infodeta-particular-accessory img,
+			.Infodeta-particular-accessorylist img,
+			.Infodeta-particular-URL img {
+				margin-right: 5px;
+				vertical-align: middle;
+				margin-top: 7px;
+			}
+			
+			.Infodeta-particular-accessory span,
+			.Infodeta-particular-accessorylist span,
+			.Infodeta-particular-URL span {
+				font-size: 12px;
+			}
+			
+			.Infodeta-particular-URL ul,
+			.particular-accessory-pr {
+				margin-left: 20px;
+			}
+			
+			.particular-accessory-pr a {
+				cursor: pointer;
+			}
+			
+			.Infodeta-particular-accessorylist ul li .accessorylist-pr {
+				margin-left: 30px;
+			}
+			
+			.Infodeta-particular-URLmenu,
+			.accessorylist-pl,
+			.particular-accessory-pl {
+				width: 300px!important;
+				display: inline-block;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				vertical-align: middle;
+				height: 40px;
+			}
+			
+			.list-employee .item-employee {
+				margin: 0 17px 5px 17px;
+				width: 50px;
+				height: 70px;
+				display: inline-block;
+				overflow: hidden;
+				text-align: center;
+				border: 1px solid transparent;
+				position: relative;
+				color: #999;
+			}
+			
+			.list-employee a {
+				color: #999;
+			}
+			
+			.list-employee .item-employee img {
+				width: 48px;
+				margin: 0;
+			}
+			
+			.list-employee .item-employee.active img {
+				border-color: #009ed8;
+			}
+			
+			.list-employee .item-employee.active:before {
+				position: absolute;
+				top: 0;
+				right: 0;
+				display: inline-block;
+				width: 10px;
+				height: 9px;
+				box-sizing: border-box;
+				content: "";
+				background-image: url(../resources/images/read-status-icon.png);
+			}
+			
+			.list-employee .item-employee .head {
+				width: 48px;
+				height: 48px;
+				border: 1px solid #e3e3e3;
+			}
+			
+			.form-group-has-read {
+				margin: 20px 0 10px 0;
+				border-bottom: 1px solid #eee;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-infodetails">
+			<div class="content">
+			</div>
+			<div class="Infodetails-particular">
+				<div class="Infodeta-particular-menu">
+					<span class="particular-menu-type">【<span></span>】</span>
+					<span class="particular-menu-happyman">
+						<span>发布者：</span>
+					<span class="happyman-department"></span>
+					<span>-</span>
+					<span class="happyman-man"></span>
+					</span>
+					<span class="particular-menu-time"></span>
+					<a href="javascript:;" class="particular-menu-readingman" onclick="openreadman(this)">
+						已读<span class="menu-readman"></span> 人， 未读<span class="menu-noreadman"></span>人
+					</a>
+					<span class="particular-menu-collect" onclick="collect(this)">
+						<i class="fa fa-star-o" aria-hidden="true"></i>
+						(<span class="collect-favoriteMan"></span>)
+					</span>
+				</div>
+				<p class="Infodeta-particular-main">
+
+				</p>
+				<div class="Infodeta-particular-accessory">
+					<p class="particular-accessory-pl float-left"><img src='../resources/images/attachment-icon.png' /><span>附件(<span class="info-ccessory"></span>个)</span>
+					</p>
+					<p class="particular-accessory-pr float-left">
+						<a class="accessory-pr-downman" onclick="opendownloadman(this)">已下载<span class="count_download"></span>/<span class="count_all_download"></span>人</a>
+						<a class="accessory-pr-alldown hide">全部下载</a>
+					</p>
+					<div class="clear"></div>
+				</div>
+				<div class="Infodeta-particular-accessorylist">
+					<ul>
+					</ul>
+				</div>
+				<div class="Infodeta-particular-URL">
+					<div class="Infodeta-particular-URLmenu float-left">
+						<img src="../resources/images/earth-icon.png" /><span>网页地址(<span class="info-urllist"></span>)</span>
+					</div>
+					<ul>
+
+					</ul>
+				</div>
+				<div class="Infodeta-particular-btn">
+					<!--<input type="button" onclick="sureread(this)" value="确认已阅读" class="btn btn-default btn-sm comment-btn infodatails-readbtn " />-->
+					<a onclick="sureread(this)" class="btn btn-danger def-btn-danger comment-btn infodatails-readbtn ">确认已阅读</a>
+				</div>
+			</div>
+		</div>
+		<!--已读未读弹窗-->
+		<div class="infodetail-popup infodetail-read hide">
+			<div class="infodetail-main">
+				<div class="infodetail-main-list">
+					<p class="infodetail-main-list-top">未读<span class="infodetail-main-list-top-sp"></span>人</p>
+					<ul class="list-employee">
+					</ul>
+				</div>
+				<div class="infodetail-main-list">
+					<p class="infodetail-main-list-top form-group-has-read">已读<span class="infodetail-main-list-top-sp"></span>人</p>
+					<ul class="list-employee">
+					</ul>
+				</div>
+			</div>
+			<div class="infodetail-bottom">
+				<label><input type="checkbox" class="infodetail-bottom-selectall" />未读同事</label><input type="button" value="提醒阅读" class="btn btn-info def-btn-info btn-sm comment-btn btn-remind" />
+				<button type="button" class="btn btn-primary def-btn-primary btn-sm" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+		<!--已下载弹窗-->
+		<div class="infodetail-popup infodetail-down hide">
+			<div class="infodetail-main">
+				<div class="infodetail-main-list">
+					<p class="infodetail-main-list-top">已下载<span class="infodetails-downman"></span>/<span class="infodetails-alldownman"></span>人</p>
+					<ul class="list-employee">
+					</ul>
+				</div>
+			</div>
+			<div class="infodetail-bottom">
+				<input type="button" value="关闭" class="btn btn-primary def-btn-primary btn-sm comment-btn" data-dismiss="modal" />
+			</div>
+		</div>
+		<!--在线预览弹窗-->
+		<!--<div class="online-preview-page hide">
+			<iframe src="" width="100%" height=""></iframe>
+		</div>-->
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript">
+			var grid_selector = "#grid-table";
+			var pager_selector = "#grid-pager";
+			var modulesJSON = [];
+			var infodetails_readman, infodetails_noreadman, infodetails_downman, infodetails_alldownman;
+			var accessoryId;
+			var isCollecting = false;
+			//------------消息队列相关-----------------------
+			var publisher = parent.HHMQ.createPublisher('资讯详情', 'information');
+			//页面关闭事件
+			context.onPageClose = function() {
+				publisher.dispose();
+			};
+			//------------消息队列相关 end -------------------
+			var information_is_publisher = $.getQueryObject().information_is_publisher;
+
+			function GetRequest() {
+				//获取url中"?"符后的字串   
+				var url = location.search;
+				var theRequest = new Object();
+				if(url.indexOf("?") != -1) {
+					var str = url.substr(1);
+					strs = str.split("&");
+					for(var i = 0; i < strs.length; i++) {
+						theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+					}
+				}
+				return theRequest;
+			}
+			var Request = new Object();
+			Request = GetRequest();
+			var id;
+			id = Request["id"];
+			var onlinePreviewUrl = BSAPIURL + "/companies/" + COMPANYID + "/informations/" + id + "/attachments/{id}/preview";
+			//确认已阅读
+			function sureread(obj) {
+				infoMangenListId = id;
+				infoUrlForRedman = BSAPIURL + "/companies/" + COMPANYID + "/informations/" + infoMangenListId + "/reader";
+				$.ajaxPut(infoUrlForRedman, '', function(response) {
+					if(response.code == 0) {
+						//$.modal().alert("阅读成功");
+						$(obj).prop("disabled", "disabled");
+						obj.onclick = null;
+						$.showSuccessGritter("阅读成功");
+						//消息推送
+						publisher.publisheMsg({
+							action: "read",
+							msg: "确认阅读",
+							infoMangenListId: infoMangenListId
+						});
+						//刷新
+						//loadDataInfo();
+						$(obj).val("已阅读").text("已阅读").attr("disabled", "disabled").unbind("click");
+						$(".menu-readman").html(response.data.count_readed);
+						$(".menu-noreadman").html(response.data.count_not_read);
+					} else {
+						$.showErrorGritter("已阅读失败：" + response.msg);
+					}
+				});
+			};
+			//阅读人数弹窗
+			function openreadman(obj) {
+				infoMangenListId = id;
+				var deptListNoRead, deptListRead;
+				var infoRemindList = [];
+				var modalId = $.modal({
+					showFooter: false
+				}).show("阅读状态", ".infodetail-read",
+					function(modal) {}
+				);
+				var formContainer = "#" + modalId;
+				if(information_is_publisher == "false") {
+					$(formContainer + " .infodetail-bottom label").remove();
+					$(formContainer + " .infodetail-bottom input").remove();
+				}
+				if(!isMyPublish) {
+					$(formContainer + " .btn-remind").hide();
+				}
+				infoUrlForRedman = BSAPIURL + "/companies/" + COMPANYID + "/informations/" + infoMangenListId + "/reader/employees";
+				$.ajaxGet(infoUrlForRedman, function(response) {
+					if(response.code == 0) {
+						deptListNoRead = response.data.not_read_list;
+						deptListRead = response.data.read_list;
+						$(formContainer + " .infodetail-main-list:first-child .infodetail-main-list-top-sp").html(deptListNoRead.length);
+						$(formContainer + " .infodetail-main-list:nth-child(2) .infodetail-main-list-top-sp").html(deptListRead.length);
+						for(var i = 0; i < deptListNoRead.length; i++) {
+							var Strs = "<li class='item-employee' onclick=\"SingleSelection(this,'" + formContainer + "')\" id=\"" + deptListNoRead[i].employee_id + "\">";
+							//Strs += '<a href="#">';
+							Strs += '<img class="head" src="' + deptListNoRead[i].employee_avatar + '" alt="" />';
+							Strs += '<p title="' + deptListNoRead[i].employee_name + '" class="css-overhidden">' + deptListNoRead[i].employee_name + '</p>';
+							//Strs += '</a>';
+							Strs += '</li>';
+							$(formContainer + " .infodetail-main-list:first-child ul").append(Strs);
+						}
+						for(var i = 0; i < deptListRead.length; i++) {
+							var Strs = '<li class="item-employee">';
+							Strs += '<img class="head" src="' + deptListRead[i].employee_avatar + '" alt="" />';
+							Strs += '<p title="' + deptListRead[i].employee_name + '" class="css-overhidden">' + deptListRead[i].employee_name + '</p>';
+							Strs += '</li>';
+							$(formContainer + " .infodetail-main-list:nth-child(2) ul").append(Strs);
+						}
+					}
+				});
+				//全部选中
+				$(formContainer + " .infodetail-bottom-selectall").change(function() {
+					var isSelect = $(this).is(":checked");
+					if(isSelect) {
+						$(this).parents(".modal-content").find(".list-employee").eq(0).find("li").addClass("active");
+					} else {
+						$(this).parents(".modal-content").find(".list-employee").eq(0).find("li").removeClass("active");
+					}
+				});
+
+				//提醒阅读点击事件
+				$(formContainer + " .btn-remind").click(function() {
+					$(formContainer + " .infodetail-main-list:first-child li.active").each(function(index) {
+						infoRemindList.push($(this).attr("id"));
+					});
+					//console.log(infoRemindList.join(','))
+					if(infoRemindList.length == 0) {
+						$.showErrorGritter("提醒人员不能为空！");
+						return false;
+					}
+					var infoData = {};
+					infoData.business_type = 30;
+					infoData.data_id = id;
+					infoData.employee_id = infoRemindList.join(',');
+					infoData.message = {};
+					infoData.message.msg_content = "资讯提醒阅读";
+					infoData.message.msg_type = MtaCode.information;
+					infoData.business_type_cn = "M一下：资讯";
+					sendMtaMessage(infoData, modalId);
+				});
+
+			};
+			//下载人数弹窗
+			function opendownloadman(obj) {
+				var allemyCount = $(obj).children(".count_all_download").text();
+				infoMangenListId = id;
+				var deptListRead;
+				var modalId = $.modal({
+					showFooter: false
+				}).show("下载情况", ".infodetail-down",
+					function(modal) {}
+				);
+				var formContainer = "#" + modalId;
+				infoUrlForRedman = BSAPIURL + "/companies/" + COMPANYID + "/informations/" + infoMangenListId + "/loading/employees";
+				$.ajaxGet(infoUrlForRedman, function(response) {
+					if(response.code == 0) {
+						var deptListDown = response.data.download_list;
+						$(formContainer + " .infodetail-main-list .infodetails-downman").html(deptListDown.length);
+						$(formContainer + " .infodetail-main-list .infodetails-alldownman").html(allemyCount);
+						if(deptListDown.length == 0) {
+							$(formContainer + " .infodetail-main-list:first-child ul").append("<li>无</li>");
+						} else {
+							for(var i = 0; i < deptListDown.length; i++) {
+								var Strs = '<li class="item-employee" onclick="SingleSelection(this,"' + formContainer + '")" id="' + deptListDown[i].employee_id + '">';
+								Strs += '<a href="#">';
+								Strs += '<img class="head" src="' + deptListDown[i].employee_avatar + '" alt="" />';
+								Strs += '<p title="' + deptListDown[i].employee_name + '" class="css-overhidden">' + deptListDown[i].employee_name + '</p>';
+								Strs += '</a>';
+								Strs += '</li>';
+								$(formContainer + " .infodetail-main-list:first-child ul").append(Strs);
+							}
+						}
+
+					}
+				});
+			}
+
+			//单个选中
+			function SingleSelection(obj, formContainer) {
+				if(information_is_publisher == "false") return false;
+				$(obj).toggleClass("active");
+			}
+			//点击小星星收藏============
+			function collect(obj) {
+				//var infoMangenListId=$(obj).parents('.particular-main-box').attr("id");
+				if(isCollecting) {
+					$.showSuccessGritter("操作频繁！");
+					return;
+				};
+				isCollecting = true;
+				infoMangenListId = id;
+				//alert(infoMangenListId);
+				infoUrlForCollection = BSAPIURL + "/companies/" + COMPANYID + "/informations/" + infoMangenListId + "/favorite";
+				if(!$(obj).hasClass("active")) {
+					$(obj).addClass('active');
+					$.ajaxPut(infoUrlForCollection, "",
+						function(response) {
+							if(response.code == 0) {
+								//success
+								//refresh data
+								//var munber = parseInt($(".collect-favoriteMan").html()) + 1;
+								$(".collect-favoriteMan").html(response.data.count_favorite);
+								$.showSuccessGritter("收藏成功");
+								//消息推送
+								publisher.publisheMsg({
+									action: "collect",
+									msg: "收藏",
+									infoMangenListId: infoMangenListId
+								});
+
+							} else {
+								$.showErrorGritter("收藏失败：" + response.msg);
+							}
+							isCollecting = false;
+						});
+				} else {
+					$.ajaxDelete(infoUrlForCollection, "", function(response) {
+						if(response.code == 0) {
+							//success
+							//refresh data
+							//var munber = parseInt($(".collect-favoriteMan").html()) - 1;
+							$(".collect-favoriteMan").html(response.data.count_favorite);
+							$.showSuccessGritter("取消收藏成功");
+							//消息推送
+							publisher.publisheMsg({
+								action: "collect",
+								msg: "取消收藏",
+								infoMangenListId: infoMangenListId
+							});
+						} else {
+							$.showErrorGritter("取消收藏失败：" + response.msg);
+						}
+						isCollecting = false;
+					});
+					$(obj).removeClass("active");
+				}
+			};
+
+			$(document).ready(function() {
+				//排序解决s sd2
+				$(".infodetail-read .infodetail-main-list:first-child li:nth-child(10n)").css("margin-right", "0");
+				$(".infodetail-read .infodetail-main-list:nth-child(2) li:nth-child(10n)").css("margin-right", "0");
+				$(".infodetail-down .infodetail-main-list:first-child li:nth-child(10n)").css("margin-right", "0");
+
+				//加载
+				loadDataInfo();
+			});
+			//加载数据
+			function loadDataInfo() {
+				var infoDetailsUrl = BSAPIURL + "/companies/" + COMPANYID + "/informations/" + id;
+				$.ajaxGet(infoDetailsUrl, function(response) {
+					if(response.code == 0) {
+						var infoDetailsdata = response.data.information_info;
+						if(infoDetailsdata.information_status != 2 && infoDetailsdata.information_status != 4) {
+							$(".particular-menu-type").siblings().remove();
+							$(".particular-menu-collect").remove();
+							$(".particular-menu-readingman").remove();
+							$(".accessory-pr-downman").remove();
+							$(".infodatails-readbtn").remove();
+						}
+						window.isMyPublish = infoDetailsdata.information_publish_by_self;
+						$(".content").html(infoDetailsdata.information_title);
+						$(".particular-menu-type").html(infoDetailsdata.information_type);
+						$(".happyman-department").html(infoDetailsdata.information_publish_department_cn + " ");
+						$(".happyman-man").html(infoDetailsdata.information_publish_by_cn);
+						$(".particular-menu-time").html(infoDetailsdata.information_publish_time_cn);
+						var information_is_favorite = infoDetailsdata.information_is_favorite;
+						if(parseInt(information_is_favorite) == 1) {
+							$(".particular-menu-collect").addClass("active");
+						}
+						$(".collect-favoriteMan").html(infoDetailsdata.count_favorite);
+						$(".menu-readman").html(infoDetailsdata.count_read);
+						$(".menu-noreadman").html(infoDetailsdata.count_not_read);
+						$(".Infodeta-particular-main").html(infoDetailsdata.information_content_html);
+						var Attachment = infoDetailsdata.attachment_arr;
+						$(".info-ccessory").html(Attachment.length);
+						$(".count_all_download").html(infoDetailsdata.count_all_download);
+						infodetails_alldownman = infoDetailsdata.count_all_download;
+						$(".count_download").html(infoDetailsdata.count_download);
+						infodetails_downman = infoDetailsdata.count_download;
+						var infoUrlLists = infoDetailsdata.information_urls.length;
+						$(".info-urllist").html(infoUrlLists);
+						$(".Infodeta-particular-URL>ul").empty();
+						if(isMyPublish || infoDetailsdata.information_is_read == 1) {
+							$(".infodatails-readbtn").text("已阅读");
+							$(".infodatails-readbtn").prop("disabled", "disabled");
+						}
+						if(infoUrlLists == 0) {
+							$(".Infodeta-particular-URL").hide().hide();
+						} else {
+							for(var i in infoDetailsdata.information_urls) {
+								$(".Infodeta-particular-URL>ul").append("<li class='float-left'><a href='http://" + infoDetailsdata.information_urls[i] + "' target='_blank'>" + infoDetailsdata.information_urls[i] + "</a></li>");
+							}
+						}
+						var infoReadBtn = infoDetailsdata.information_is_read;
+						if(infoReadBtn == 1) {
+							$(".infodatails-readbtn").attr("disabled", "disabled");
+							$(".infodatails-readbtn").removeAttr("onclick");
+
+						}
+						$(".Infodeta-particular-accessorylist ul").attr("is-download", infoDetailsdata.information_is_download);
+						if($.getQueryObject().im != undefined && infoDetailsdata.information_status == 4) {
+							$.hideLoadingPop();
+							//$.showErrorGritter("公告已下架！");
+							$("body").append("<div class=\"inform hide\"><p style=\"line-height:100px;font-size:20px;text-align:center;\">资讯已下架！</p></div")
+							var modalId = $.modal().show("系统提示", ".inform", function() {
+								parent.closeCurrActiveTab();
+							}, function() {
+								parent.closeCurrActiveTab();
+							});
+							$("#" + modalId + " .close").unbind('click').click(function() {
+								parent.closeCurrActiveTab();
+							});
+							return false;
+						}
+						$(".Infodeta-particular-main a").each(function() {
+							$(this).attr("target", "_blank");
+						});
+					} else {
+						$.showErrorGritter("加载失败：" + response.msg);
+					}
+					$(".Infodeta-particular-accessorylist ul").empty();
+					if(Attachment.length == 0) {
+						$(".Infodeta-particular-accessorylist").hide().prev().hide();
+					} else {
+						for(var j = 0; j < Attachment.length; j++) {
+							accessoryId = Attachment[j].attachment_id;
+							var accessoryStr = '<li id="' + accessoryId + '">';
+							accessoryStr += '<p class="accessorylist-pl float-left">';
+							accessoryStr += '<img class="" src="../resources/images/img-icon.png">';
+							accessoryStr += '<span class="accessorylist-pl-txtname" title="' + Attachment[j].file_display_name + '">' + Attachment[j].file_display_name + '</span>';
+							//accessoryStr += '<span class="accessorylist-pl-txtsize">' + Attachment[j].file_size_cn + '</span>';
+							accessoryStr += '</p>';
+							accessoryStr += '<p class="accessorylist-pr float-left">';
+							accessoryStr += "<a href=\"#\" class=\"accessorylist-reading\" onclick=\"onlineRead('" + Attachment[j].file_display_name + "','" + Attachment[j].path + "')\">预览</a>";
+							accessoryStr += "<a href=\"#\" class=\"accessorylist-down\" onclick=\"singleDownload(this,'" + accessoryId + "')\">下载</a>";
+							accessoryStr += '</p>';
+							accessoryStr += '</li>';
+							$(".Infodeta-particular-accessorylist ul").append(accessoryStr);
+						}
+					}
+				});
+
+				//网址赋值
+				var infourl = $(".Infodeta-particular-URL a").text();
+				$(".Infodeta-particular-URL a").prop("href", "http://" + infourl);
+			}
+			//			//在线阅读
+			//			function onlineRead(obj, fileName,path) {
+			//				var modalId = $.modal().showOfAuto(fileName + "在线预览", ".online-preview-page", function() {});
+			//				$("#" + modalId + " iframe").attr("src",  OSAPIBASEURL+"/file/view?path="+encodeURI(path));
+			//				console.log(onlinePreviewUrl);
+			//				console.log($(obj).parent().parent().attr("id"));
+			//				//document.write(onlinePreviewUrl.replace("{id}", $(obj).parent().parent().attr("id")))
+			//				console.log(onlinePreviewUrl.replace("{id}", $(obj).parent().parent().attr("id")))
+			//			}
+			//单个下载
+			function singleDownload(obj, documentId) {
+				var downloadUrl = BSAPIURL + "/companies/" + COMPANYID + "/informations/" + id + "/attachments/" + documentId;
+				$.downloadFile(downloadUrl);
+				if($(obj).parents("ul").attr("is-download") == "false") {
+					loadDataInfo();
+					$(obj).parents("ul").attr("is-download", "true");
+				}
+			}
+		</script>
+	</body>
+
+</html>

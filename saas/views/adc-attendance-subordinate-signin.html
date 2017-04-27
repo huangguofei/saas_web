@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>下属工作状态</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+	</head>
+	<style type="text/css">
+		.page-container,
+		.page-container .content {
+			padding: 0;
+		}
+		
+		.page-container .content .left-menu {
+			overflow: hidden;
+		}
+		
+		.treeview {
+			overflow: auto;
+		}
+		
+		.page-container .content .main-wrap {
+			padding-top: 14px;
+		}
+		
+		.tree {
+			overflow-y: auto;
+		}
+		
+		.tree-view-title {
+			line-height: 35px;
+			padding-left: 10px;
+			background-color: #f3f3f3;
+			font-size: 14px;
+			color: #666;
+			border-bottom: 1px solid #e3e3e3;
+		}
+		
+		.page-container .content .main-wrap {
+			margin-left: 250px;
+		}
+		
+		.page-container .content .left-menu {
+			width: 240px;
+			top: 59px!important;
+			bottom: 13px!important;
+			border: 1px solid #ccc;
+			border-width: 0 1px 1px 0;
+		}
+		
+		.sel-effective-area .area-view {
+			border: 0;
+			cursor: pointer;
+			/*margin: 0;*/
+			position: relative;
+			width: 90%;
+			height: 27px;
+			/*padding: 0 13px;*/
+			float: inherit;
+			margin-bottom: 0;
+		}
+		
+		.sel-effective-area>p {
+			font-size: 14px;
+			color: #666;
+			margin-bottom: 6px;
+		}
+		
+		.sel-effective-area .area-view label {
+			margin-left: 7px;
+			font-size: 12px;
+			color: #999;
+		}
+		
+		.area-view p,
+		.area-view:last-child p {
+			width: auto;
+			line-height: 18px;
+		}
+		
+		.btn-container {
+			padding: 10px 10% 10px 50%;
+		}
+		/*.tree-dept-menu li i {
+			width: 20px;
+		}*/
+		
+		.item,
+		.item img {
+			width: auto!important;
+			max-width: 550px;
+		}
+		
+		.sel-effective-area {
+			height: 120px;
+		}
+	</style>
+
+	<body>
+		<div class="page-container page-attendance">
+			<div class="content">
+				<div class="left-menu">
+					<p class='tree-view-title'>选择统计部门</p>
+					<div class="treeview">
+						<ul class="tree tree-dept-menu">
+
+						</ul>
+					</div>
+					<hr />
+					<div class="sel-effective-area">
+						<p class="" style="margin-left: 15px;">请选择具体统计范围：</p>
+						<div class="area-view" data-area-name="with_lowers" data-area-value="2">
+							<label>
+								<input type="radio" name="with_lowers" checked="checked" value="2"/>
+								<span>所选部门</span>
+							</label>
+						</div>
+						<div class="area-view" data-area-name="with_lowers" data-area-value="1">
+							<label>
+								<input type="radio" name="with_lowers"  value="1"/>
+								<span>所选部门及其所有下属部门</span>
+							</label>
+						</div>
+					</div>
+					<!--<hr />
+					<div class="btn-container">
+						<a href="javascript:;" class="btn btn-default btn-sm btn-tj">统计</a>
+						<a href="javascript:;" class="btn btn-default btn-sm btn-cancel">重置</a>
+					</div>-->
+				</div>
+				<div class="main-wrap">
+					<div class="search">
+
+					</div>
+					<table id="grid-table" class="grid-module">
+					</table>
+					<div id="grid-pager">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-danger def-btn-danger btn-print" onclick="print($('#gview_grid-table'));"><img src="../resources/images/print.png" alt="" />打印</a>
+			<a class="btn btn-danger def-btn-danger btn-export" onclick="reloadAttendanceGrid(true)"><img class='btn-export-img' src="../resources/images/export-icon.png" alt="" />导出</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.nestable.min.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datetimepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/department.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/attendance.js"></script>
+		<script type="text/javascript">
+			//APIS
+			var ATTENDANCEAPIS = {
+				//下属工作状态
+				subordinateAdc: BSAPIURL + "/center_attendances/count_in_follow_leader"
+			};
+			var gridSelector = "#grid-table";
+			var pagerSelector = "#grid-pager";
+			var depaUrl = BSAPIURL + "/company/depas?mode=2&with_employees=0";
+			//选择的部门/职位ID
+			var selectDeptId, selectRealDeptId, selectDeptName, selectRealDeptName;
+			var selectDeptIsTopest = false;
+			//临时参数
+			var tmpSelectTags = {};
+			//def date
+			var defTime = "08:50";
+			var defMonth = $.timeNow().Format("yyyy-MM");
+			//部门数据
+			var deptsJSON = [];
+			var withLowers = "";
+			$(".left-menu").css("height", $(window).height() + "px").css("max-height", $(window).height() + "px");
+			$(".treeview").css("height", $(window).height() - 165 + "px").css("max-height", $(window).height() - 165 + "px");
+			$(".tree").css("height", $(window).height() - 180 + "px").css("max-height", $(window).height() - 180 + "px");
+			$(document).ready(function() {
+				$.showLoadingPop("正在加载部门数据，请稍候...");
+				//search
+				$.initSearchControls4TagMode({
+					auto: false,
+					url: ATTENDANCEAPIS.subordinateAdc,
+					grid: gridSelector,
+					container: ".search",
+					key_name: "key",
+					key_placeholder: "请输入员工姓名进行查询",
+					onChange: function(selectTags) {
+						tmpSelectTags = selectTags;
+						reloadAttendanceGrid();
+					},
+					groups: [{
+						type: "date",
+						mode: "time",
+						text: "签到时间",
+						items: [{
+							name: "in_time",
+							placeholder: "签到时间",
+							value: defTime
+						}, {
+							type: "text",
+							value: "前签到"
+						}]
+					}, {
+						type: "date",
+						mode: "month",
+						text: "选择日期",
+						items: [{
+							name: "attendance_begin_date",
+							placeholder: "选择日期",
+							value: defMonth
+						}, {
+							type: "text",
+							value: "至"
+						}, {
+							name: "attendance_end_date",
+							placeholder: "选择日期"
+						}]
+					}]
+				});
+				//token
+				$.token();
+				$(".module-tree").css("top", ($(".remark").height() + 41) + "px");
+				//grid
+				var colNames = ['时间段', '工号', '姓名', '部门职务', '签到次数'];
+				var colModel = [{
+					name: 'attendance_date',
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.attendance_date; //.substring(0, rowObject.attendance_date.length - 3);
+					}
+				}, {
+					name: 'employee_code'
+				}, {
+					name: 'employee_name'
+				}, {
+					name: 'depa_name',
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.depa_name + "," + rowObject.post_name;
+					}
+				}, {
+					name: '__adc_count',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var leaveCount = rowObject.in_count;
+							if(leaveCount == 0) {
+								return 0;
+							}
+							//console.log(tmpSelectTags);
+							return "<a href='javascript:;' onclick=\"openEmployeeSigninRecordsPop('" + (tmpSelectTags.attendance_begin_date || defMonth) + "','" + (tmpSelectTags.attendance_end_date || defMonth) + "','" + rowObject.employee_id + "','" + (tmpSelectTags.in_time || defTime) + "');\">" + leaveCount + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				grid = $(gridSelector).initJqGrid({
+					gridSelector: gridSelector,
+					pager: pagerSelector,
+					url: ATTENDANCEAPIS.subordinateAdc + "?attendance_begin_date=" + defMonth + "&in_time=" + defTime,
+					colNames: colNames,
+					colModel: colModel,
+					footerBtnContainer: "#grid-footer-container",
+					multiselect: false,
+					storeRowDataInCache: true,
+					afterLoadComplete: function(response) {
+						var tmpTime = tmpSelectTags.adc_time || "";
+						if(tmpTime) {
+							tmpTime += " 前"
+						}
+						$("#jqgh_grid-table_adc_count").text(tmpTime + "签到次数");
+					}
+				});
+				//部门树
+				//loadDeptTree();
+			});
+			//加载部门树
+			loadDashedDeptTree({
+				container: $(".tree-dept-menu"),
+				showIcon: true,
+				url: depaUrl,
+				onlyShowDept: true,
+				childDepaKey: "departments",
+				showDeptChildCount: true,
+				showCountKey: "depa_employees_count",
+				removeHeightForTree: $(".treeview>p").outerHeight(true) + $(".sel-effective-area").outerHeight(true),
+				loadComplete: function() {
+					$(".tree-dept-menu li label").click(function(e) {
+						$(".tree-dept-menu li label").removeClass("active");
+						$(this).addClass("active");
+						var selectDeptData = $(this).parent().parent().data("dept") || $(this).parent().data("dept");
+						if(selectDeptData) {
+							var selectData = {};
+							selectData.isTopest = $(this).data("istop");
+							selectData.deptId = selectDeptData.depa_tree_code;
+							selectData.deptType = selectDeptData.depa_type;
+							selectData.realDeptId = selectDeptId;
+							selectData.deptName = selectDeptData.depa_name;
+							selectData.realDeptName = selectDeptName;
+							//如果选择的是职务
+							if(selectDeptData.depa_type == 1) {
+								selectData.realDeptId = selectDeptData.parent_depa_tree_code;
+								selectData.realDeptName = $(this).parents("li:first").parents("li:first").data("dept").depa_name;
+							}
+							reloadAttendanceGrid();
+						}
+					});
+					$(".tree-dept-menu>li>p>label").click();
+					$(".tree-dept-menu li img").click(function(e) {
+						$(this).parents("li:first").find(".items:first").toggleClass("hide");
+					});
+					$(".tree-dept-menu>li ul img").click();
+					$(".tree-dept-menu li label[code='" + selectDeptId + "']").click();
+				}
+			});
+			//重新加载考勤状态
+			var reloadAttendanceGrid = function(isExport) {
+				//if(!$(obj).prev().hasClass("fa-caret-down")) return false;
+				selectDeptId = $(".tree-dept-menu .active").attr("code");
+				//				var depaIdArr=[];
+				//				$(".treeview input:checked").each(function(){
+				//					depaIdArr.push($(this).parent().parent().data("id"));
+				//				});
+				if(!selectDeptId) {
+					$.showErrorGritter("请先选择需要统计的部门");
+					return false;
+				}
+				tmpSelectTags.with_lowers = $(".area-view input:checked").val();
+				//}
+				if(!tmpSelectTags.with_lowers) {
+					$.showErrorGritter("请先选择具体统计的范围");
+					return false;
+				}
+				//selectDeptId=depaIdArr.join(",");
+				if(selectDeptId)
+					tmpSelectTags.depa_tree_code_arr = selectDeptId;
+				//默认月份
+				tmpSelectTags.attendance_begin_date = tmpSelectTags.attendance_begin_date || defMonth;
+				//默认签到时间
+				tmpSelectTags.in_time = tmpSelectTags.in_time || defTime;
+				exportUrl = ATTENDANCEAPIS.subordinateAdc + $.toQueryString(tmpSelectTags, true);
+				if(isExport) {
+					$.downloadFile(ATTENDANCEAPIS.subordinateAdc + $.toQueryString(tmpSelectTags, true) + "&export=1");
+					return;
+				}
+				$(grid).jqGrid('setGridParam', {
+					page: 1,
+					url: ATTENDANCEAPIS.subordinateAdc + $.toQueryString(tmpSelectTags, true)
+				}).trigger("reloadGrid", {});
+			};
+			//选择范围
+			var isFirstClick = true;
+			$(".sel-effective-area .area-view input").unbind("click").click(function() {
+				tmpSelectTags.with_lowers = $(this).val();
+				if(!isFirstClick) reloadAttendanceGrid();
+				isFirstClick = false;
+			});
+			$(".sel-effective-area .area-view input[value='2']").click();
+			//			//统计点击
+			//			$(".btn-container .btn-tj").click(function(){
+			//				reloadAttendanceGrid();
+			//			});
+			//			//重置
+			//			$(".btn-container .btn-cancel").click(function(){
+			//				tmpSelectTags={};
+			//				$(".treeview input").each(function(){
+			//					$(this).removeProp("checked");
+			//				});
+			//				$(".area-view img").remove();
+			//			});
+		</script>
+	</body>
+
+</html>

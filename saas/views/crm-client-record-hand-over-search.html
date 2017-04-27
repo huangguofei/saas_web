@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+    <head lang="zh-CN">
+        <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+        <meta charset="utf-8"/>
+        <title>移交记录查询</title>
+        <meta name="viewport" contnet="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="../resources/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css"/>
+        <link rel="stylesheet" href="../resources/css/jquery.gritter.css"/>
+        <link rel="stylesheet" href="../resources/css/ui.jqgrid.css"/>
+        <link rel="stylesheet" href="../resources/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="../resources/css/datepicker.css"/>
+        <link rel="stylesheet" href="../resources/css/main-page.css"/>
+        <style>
+			.summery-view li,
+			.detail-view li {
+				border-bottom: 1px solid #eee;
+				padding: 10px 5px;
+			}
+			
+			.summery-view li:last-child,
+			.detail-view li:last-child {
+				border: 0;
+			}
+			
+			.ui-jqgrid tr.ui-row-ltr td:nth-child(5),
+			.ui-jqgrid tr.ui-row-rtl td:nth-child(5),
+			.ui-jqgrid tr.ui-row-ltr td:nth-child(6),
+			.ui-jqgrid tr.ui-row-rtl td:nth-child(6) {
+				padding-left: 0;
+				padding-right: 0;
+			}
+        </style>
+    </head>
+    <body>
+    <div class="page-container crm-client-record-hand-over">
+        <div class="remark">
+            <img src="../resources/images/handover-icon.png" alt="" /><span>*客户移交记录查询</span>
+        </div>
+        <div class="content">
+            <!--客户移交记录查询-->
+                <div class="search">
+
+                </div>
+                <table id="grid-table-record-hand-over"></table>
+                <div id="grid-pager-record-hand-over"></div>
+        </div>
+    </div>
+        <script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+        <script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+        <script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+        <script type="text/javascript" src="../resources/js/sortable.js"></script>
+        <script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+        <script type="text/javascript" src="../resources/js/main.min.js"></script>
+        <script type="text/javascript">
+            var gridSelectorOfRecordHandOver = "#grid-table-record-hand-over",
+            	pagerSelectOfRecordHandOver = "#grid-pager-record-hand-over",
+            	isFirstInitGridOfRecordHandOver=false;
+            var crm={
+            	data_type: {//移交类型
+            		COMPANY:　1,//单位
+            		DEPA: 2,//部门
+            		CONTACT: 3//联系人
+            	}
+            }
+            ////移交记录
+            function initGridOfRecordHandOver(){
+                if(isFirstInitGridOfRecordHandOver){
+                    $(gridOfRecordHandOver).jqGrid('setGridParam', {
+                        page: 1,
+                        url: BSAPIURL+"/crm/records/transfers_to_employee?data_type="
+                    }).trigger("reloadGrid", {});
+                    return true;
+                }
+                ////移交记录  search
+                $.initSearchControls4TagMode({
+                    auto: true,
+                    url: BSAPIURL+"/crm/records/transfers_to_employee",
+                    grid: gridSelectorOfRecordHandOver,
+                    container: ".search",
+                    key_name: "key",
+                    key_placeholder: "请输入客户单位名称、移交人进行查询",
+                    onChange: function(selectTags){},
+                    groups: [
+                        {
+                            type: "date",
+                            text: "移交日期",
+                            items: [
+                                {
+                                    name: "date_begin",
+                                    placeholder: "年/月/日",
+                                    type: "date"
+                                },{
+                                    type:  "text",
+                                    value: "至"
+                                },{
+                                    name: "date_end",
+                                    placeholder: "年/月/日",
+                                    type: "date"
+                                }
+                            ]
+                        },{
+                            name: "data_type",
+                            text: "移交内容",
+                            items: [
+                                {
+                                    key: "客户单位",
+                                    value: crm.data_type.COMPANY
+                                },{
+                                    key: "科室/部门",
+                                    value: crm.data_type.DEPA
+                                },{
+                                    key: "联系人",
+                                    value: crm.data_type.CONTACT
+                                }
+                            ]
+                        }
+                    ]
+                });
+                /////移交记录的表格
+                var colNames = ['客户单位','移交人','移交日期','客户负责人','移交内容','具体内容','移交原因','接收对象'];
+                var colModel = [
+                    {
+                        name: "client_full_name",
+                        index: "client_full_name",
+                        sortable: false
+                    },{
+                        name: "transfer_employee_name",
+                        index: "transfer_employee_name",
+                        sortable: false
+                    },{
+                        name: "transfer_date",
+                        index: "transfer_date",
+                        sortable: true
+                    },{
+                    	name: "responsible_person_name",
+                    	index: "responsible_person_name",
+                    	sortable: false
+                    },{
+                        name: "transfer_content",
+                        index: "transfer_content",
+                        sortable: false,
+                        formatter: function(cellvalue,options,rowObject){
+                            if(rowObject.transfer_depas.length>0){
+                                var depasDom = "科室/部门";
+                            }
+                            if(rowObject.transfer_contacts.length>0){
+                                var contactsDom="联系人";
+                            }
+                            if(rowObject.transfer_clients.length>0){
+                                var clientsDom="客户单位";
+                            }
+                            return "<ul class='summery-view'>"+((clientsDom?"<li>"+clientsDom+"</li>":"")+(depasDom?"<li>"+depasDom+"</li>":"")+(contactsDom?"<li>"+contactsDom+"</li>":""))+"</ul>";
+                    	}
+                    },{
+                        name: "transfer_content_detail",
+                        index: "transfer_content_detail",
+                        sortable: false,
+                        formatter: function(cellvalue,options,rowObject){
+                        	var client_name="";
+                            var depasDom=[];
+                            for(var i in rowObject.transfer_depas){
+                                depasDom.push(rowObject.transfer_depas[i].client_name+">"+rowObject.transfer_depas[i].depa_name);
+                            }
+                            var contactsDom=[];
+                            var dividedContacts={};
+                            for(var i in rowObject.transfer_contacts){
+                            	client_name=rowObject.transfer_contacts[i].client_name;
+                            	if(dividedContacts[rowObject.transfer_contacts[i].depa_id]){
+                            		dividedContacts[rowObject.transfer_contacts[i].depa_id].contacts.push(rowObject.transfer_contacts[i].contact_name);
+                            	}else{
+                            		dividedContacts[rowObject.transfer_contacts[i].depa_id]={};
+                            		dividedContacts[rowObject.transfer_contacts[i].depa_id].contacts=[];
+                            		dividedContacts[rowObject.transfer_contacts[i].depa_id].depa_name=rowObject.transfer_contacts[i].depa_name;
+                            		dividedContacts[rowObject.transfer_contacts[i].depa_id].contacts.push(rowObject.transfer_contacts[i].contact_name);
+                            	}
+                            }
+                            for(var i  in dividedContacts){
+                            	contactsDom.push(client_name+">"+dividedContacts[i].depa_name+">"+dividedContacts[i].contacts.join(","));
+                            }
+                            var clientsDom=[];
+                            for(var i in rowObject.transfer_clients){
+                                clientsDom.push(rowObject.transfer_clients[i].client_name);
+                            }
+                            return "<ul class='detail-view'>"+ (clientsDom.length>0?"<li>"+clientsDom.join("<br>")+"</li>":"")+(depasDom.length>0?"<li>"+depasDom.join("<br>")+"</li>":"")+(contactsDom.length>0?"<li>"+contactsDom.join("<br>")+"</li>":"")+"</ul>";
+                        }
+                    },{
+                        name: "transfer_reason",
+                        index: "transfer_reason",
+                        sortable: false
+                    },{
+                        name: "transfer_target_name",
+                        index: "transfer_target_name",
+                        sortable: false
+                    }
+                ];
+                gridOfRecordHandOver = $(gridSelectorOfRecordHandOver).initJqGrid({
+                    pager: pagerSelectOfRecordHandOver,
+                    url: BSAPIURL+"/crm/records/transfers_to_employee?data_type="+crm.data_type.COMPANY+","+crm.data_type.CONTACT+","+crm.data_type.DEPA,
+                    colNames: colNames,
+                    multiselect: false,
+                    gridComplete: function(){
+                    	$(".ui-row-ltr").each(function(){
+                    		var _this=$(this);
+                    		$(this).find(".summery-view li").each(function(index){
+                    			$(this).css({
+                    				height: _this.find(".detail-view li:nth-child("+(parseInt(index)+1)+")").outerHeight(true)+"px",
+                    				"line-height":_this.find(".detail-view li:nth-child("+(parseInt(index)+1)+")").outerHeight(true)/1.5+"px"
+                    			});
+                    			
+                    		});
+                    	});
+                    },
+                    colModel: colModel
+                });
+                isFirstInitGridOfRecordHandOver = true;
+            }
+            initGridOfRecordHandOver();
+        </script>
+    </body>
+</html>

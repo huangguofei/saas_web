@@ -1,0 +1,3793 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>邮箱</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<link rel="stylesheet" href="../resources/css/hxj.css" />
+		<style>
+			body {
+				font-size: 15px;
+				background-color: #f3f3f3;
+				overflow: hidden;
+			}
+			
+			.page-container .content,
+			.page-container {
+				padding-top: 0;
+			}
+			
+			.page-container .left-menu {
+				border-right: none;
+				top: 59px;
+				bottom: 0;
+				width: 160px!important;
+			}
+			
+			.main-wrap {
+				margin-left: 170px!important;
+				border: 1px solid #ddd;
+				overflow-y: auto;
+			}
+			
+			.own-email-info {
+				height: 70px;
+				border: 1px solid #ddd;
+				border-top: 0;
+				padding: 10px 14px;
+				margin-bottom: 8px;
+				background-color: #fff;
+			}
+			
+			.owner-info>span {
+				display: inline-block;
+				font-size: 14px;
+				color: #333;
+				font-weight: bold;
+			}
+			
+			.box {
+				font-size: 12px;
+				color: #7f90a2;
+				display: inline-block;
+				cursor: pointer;
+			}
+			
+			.owner-info .note-font-type {
+				font-weight: normal;
+			}
+			
+			.owner-info .box {
+				margin-right: 20px;
+				font-weight: normal;
+				margin-top: 8px;
+				color: #7f90a2;
+				font-size: 12px;
+			}
+			
+			.my-Email-box-content-title .head {
+				width: 48px;
+				height: 48px;
+				border: 1px solid #eee;
+				margin-right: 10px;
+			}
+			
+			.search-Email {
+				position: relative;
+				float: right;
+			}
+			
+			.search-Email input {
+				width: 300px;
+				height: 30px;
+				border: 1px solid #eee;
+				padding-left: 14px;
+				padding-right: 30px;
+			}
+			
+			.search-Email img {
+				position: absolute;
+				right: 10px;
+				top: 8px;
+			}
+			
+			.search-result {
+				position: absolute;
+				border: 1px solid #eee;
+				padding: 10px;
+				background-color: #fff;
+				z-index: 10;
+			}
+			
+			.search-result p {
+				cursor: default;
+				color: #666;
+				font-size: 12px;
+			}
+			
+			.search-key {
+				display: inline-block;
+				margin: 3px 10px;
+				color: #CA192B;
+			}
+			
+			.my-Email-box {
+				margin-bottom: 5px;
+				border: 1px solid #ddd;
+				background-color: #fff;
+				padding-left: 15px;
+				padding-top: 3px;
+			}
+			
+			.my-Email-box>div {
+				border-bottom: 1px dashed #eee;
+				text-align: left;
+				padding: 9px 0;
+				cursor: pointer;
+			}
+			
+			.my-Email-box>div:last-child {
+				border: 0;
+			}
+			
+			.my-Email-box span {
+				font-size: 14px;
+				color: #666;
+				font-weight: bold;
+				display: inline-block;
+				margin-left: 5px;
+			}
+			
+			.edit-Email i,
+			.receive-Email i,
+			.contacts-application i {
+				color: #47B0DE;
+			}
+			
+			.Email-detail {
+				border: 1px solid #ddd;
+				background-color: #fff;
+				padding: 10px;
+			}
+			
+			.Email-detail .box {
+				display: inline-block;
+				width: 100%;
+				padding: 4px 7px;
+				margin: 1px 0;
+			}
+			
+			.Email-detail .box.hover {
+				background-color: #e0ecf9;
+			}
+			
+			.Email-detail-content {
+				padding-top: 10px;
+				/*padding-left: 20px;*/
+			}
+			
+			.Email-detail-content ul li {
+				float: left;
+				margin-right: 20px;
+				text-align: center;
+				cursor: pointer;
+			}
+			
+			.Email-detail-content ul li i {
+				color: #33A7DA;
+			}
+			
+			.Email-detail-content ul li span {
+				display: inline-block;
+				padding-top: 10px;
+			}
+			
+			.Email-box-setting {
+				margin-left: 20px;
+			}
+			
+			.Email-box-setting-title {
+				border-bottom: 2px solid #999;
+			}
+			
+			.Email-box-setting-main {
+				margin-top: 10px;
+			}
+			
+			.Email-box-setting-main label {
+				vertical-align: top;
+				min-width: 90px;
+				margin-right: 10px;
+			}
+			
+			.Email-box-setting-main .input-label-group {
+				margin-top: 10px;
+			}
+			
+			.Email-box-setting-footer {
+				border-top: 1px solid #ccc;
+				border-bottom: 1px solid #ccc;
+				padding: 5px 20px;
+				position: absolute;
+				margin-left: -20px;
+				bottom: 10px;
+				width: 100%;
+			}
+			
+			.sel-edit-Email-type {
+				padding-left: 10px;
+			}
+			
+			.sel-edit-Email-type a,
+			.sel-edit-Email-type a:hover,
+			.sel-edit-Email-type a:focus {
+				display: inline-block;
+				border: 1px solid #ccc;
+				border-bottom: none;
+				margin-left: 10px;
+				padding: 5px 8px;
+				color: #666;
+				text-decoration: none;
+			}
+			
+			.sel-edit-Email-type a.focus {
+				background-color: #F2F2F2;
+				border-bottom: 1px solid #f2f2f2;
+			}
+			
+			.edit-Email-content {
+				position: relative;
+				height: 100%;
+				padding: 0px 0px 0 20px;
+				background-color: #fff;
+			}
+			
+			.edit-Email-content-main {
+				padding-left: 20px;
+			}
+			
+			.a-btn,
+			.a-btn:hover,
+			.a-btn:active,
+			.a-btn:focus {
+				padding: 6px 14px;
+				text-align: center;
+				font-size: 12px;
+				color: #666;
+				border-color: #e3e3e3;
+				background-color: #f8f8f8;
+				border-radius: 2px;
+				cursor: pointer;
+				height: 27px;
+				line-height: 14px;
+			}
+			
+			.a-btn:hover {
+				background-color: #f0f0f0;
+			}
+			
+			.a-btn.btn-send-email,
+			.a-btn.btn-send-email:hover,
+			.a-btn.btn-send-email:active,
+			.a-btn.btn-send-email:focus {
+				color: #fff;
+				background-color: #21b5a9;
+				border-color: #169e93;
+			}
+			
+			.a-btn.btn-send-email:hover {
+				background-color: #25c4b7;
+			}
+			
+			.edit-Email-content-main-head-common-Email {
+				display: inline-block;
+				float: right;
+				color: #009ED8;
+				font-size: 12px;
+			}
+			
+			.edit-Email-content-main-head-common-Email a,
+			.edit-Email-content-main-head-common-Email a:hover,
+			.edit-Email-content-main-head-common-Email a:focus {
+				display: inline-block;
+				margin-right: 3px;
+				text-decoration: none;
+				color: #009ED8;
+				font-size: 12px;
+			}
+			
+			/*.edit-Email-content-main-body>div {
+				float: left;
+			}*/
+			
+			.edit-Email-content-main-body-left {
+				position: relative;
+				height: 100%;
+				border-right: 1px solid #ddd;
+				padding-top: 14px;
+				padding-right: 14px;
+				padding-bottom: 20px;
+			}
+			
+			.edit-Email-content-main-body-left .input-label-group {
+				margin-top: 10px;
+				border-bottom: 1px solid #ddd;
+				font-size: 12px;
+			}
+			
+			.edit-Email-content-main-body-left .input-label-group label {
+				min-width: 50px;
+				vertical-align: top;
+			}
+			
+			.edit-Email-content-main-body-left .input-label-group input {
+				width: 90%;
+				border: none;
+				margin-top: -5px;
+			}
+			
+			.edit-Email-content-main-head {
+				margin-bottom: 30px;
+			}
+			
+			.ke-container {
+				display: inline-block!important;
+				background-color: #fafafa;
+			}
+			
+			.ke-content {
+				background-color: #fafafa;
+			}
+			
+			.edit-Email-content-main-head-common-Email a {
+				cursor: pointer;
+			}
+			
+			.edit-Email-content-main-body-left-footer input {
+				vertical-align: text-top;
+			}
+			
+			.edit-Email-content-main-body-left-footer>span {
+				display: inline-block;
+				margin: 0 10px 0 5px;
+				font-size: 12px;
+			}
+			
+			.edit-Email-content-main-body-right {
+				height: 100%;
+				padding: 10px;
+				padding-bottom: 0;
+			}
+			
+			.edit-Email-content-main-body-right .sel-contacts-type {
+				margin: 10px 0 10px 9%;
+			}
+			
+			.edit-Email-content-main-body-right .sel-contacts-type a,
+			.edit-Email-content-main-body-right .sel-contacts-type a:hover,
+			.edit-Email-content-main-body-right .sel-contacts-type a:focus {
+				display: inline-block;
+				background-color: #fff;
+				border: 1px solid #ccc;
+				color: #666;
+				text-decoration: none;
+				width: 47%;
+				padding: 5px;
+			}
+			
+			.edit-Email-content-main-body-right .sel-contacts-type a.focus {
+				background-color: #f2f2f2;
+			}
+			
+			.search-dept {
+				position: relative;
+				padding-bottom: 10px;
+				margin-bottom: 10px;
+				border-bottom: 1px dashed #eee;
+			}
+			
+			.search-dept input {
+				/*border-bottom: none;*/
+			}
+			
+			.search-dept img {
+				position: absolute;
+				top: 5px;
+				right: 25px;
+			}
+			
+			.selected-type {
+				font-size: 12px;
+				color: #333;
+			}
+			
+			.margin-top-14 {
+				display: block;
+				margin-bottom: 14px;
+				height: 1px;
+			}
+			
+			.selected-type:first-child .clear-latest-contacts {
+				display: none;
+			}
+			
+			.selected-type:first-child:hover .clear-latest-contacts {
+				display: inline-block;
+			}
+			
+			.selected-type img {
+				margin-right: 5px;
+			}
+			
+			.selected-type a {
+				float: right;
+				color: #009ED8;
+				font-size: 12px;
+				margin-right: 10px;
+			}
+			
+			.selected-type[area-hidden='true']>img {
+				margin-left: 3px;
+			}
+			
+			.dept-tree {
+				min-height: 400px;
+			}
+			
+			.edit-Email-content-main-footer {
+				margin-top: 15px;
+			}
+			
+			.receive-Email-detail-head {
+				margin-top: 10px;
+				padding-left: 10px;
+				font-size: 12px;
+				color: #666;
+			}
+			
+			.receive-Email-detail-head .total-Email-num {
+				display: inline-block;
+				margin: 0 14px;
+				color: #666;
+			}
+			
+			.receive-Email-detail-head .unread-Email-num {
+				color: #009ED8;
+			}
+			
+			.email-list-container {
+				border: 1px solid #ddd;
+				border-width: 1px 0;
+				overflow-y: auto;
+				color: #666;
+				font-size: 14px;
+			}
+			
+			.receive-Email-detail {
+				position: relative;
+				background-color: #fff;
+				padding: 14px 20px;
+				padding-bottom: 55px;
+			}
+			
+			.remark-as,
+			.trash-Email-remark,
+			.from-to-Email-remark {
+				position: relative;
+			}
+			
+			.remark-as i,
+			.trash-Email-remark i,
+			.from-to-Email-remark i {
+				position: absolute;
+				top: 1px;
+				color: #999;
+			}
+			
+			.receive-Email-detail-operators {
+				padding: 0;
+			}
+			
+			.receive-Email-detail-operators-right-container,
+			.receive-Email-detail-operators-bottom {
+				float: right;
+				margin-top: -22px;
+				margin-right: 10px;
+				font-size: 12px;
+			}
+			
+			.receive-Email-detail-operators-bottom {
+				margin-top: 0;
+			}
+			
+			.jump-to-page-container {
+				margin-top: -3px;
+			}
+			
+			.jump-to-page {
+				border: 1px solid #ddd;
+				display: inline-block;
+				height: 20px;
+				line-height: 20px;
+				min-width: 26px;
+				padding: 0 3px;
+				vertical-align: bottom;
+				text-align: center;
+			}
+			
+			.history-pager {
+				color: #666;
+				margin-right: 10px;
+			}
+			
+			.history-pager {
+				
+			}
+			
+			.view-Email-history-before span,
+			.view-Email-history-after span {
+				display: inline-block;
+				color: #009ED8;
+				margin-right: 10px;
+			}
+			
+			#receive-Email-tab-head,
+			#receive-Email-box-today,
+			#receive-Email-box-yestoday,
+			#receive-Email-box-before {
+				width: 100%;
+				border-collapse: collapse;
+			}
+			
+			#receive-Email-tab-head td,
+			#receive-Email-box-today td,
+			#receive-Email-box-yestoday td,
+			#receive-Email-box-before td {
+				border-bottom: 1px dashed #eee;
+				height: 36px;
+				line-height: 36px;
+			}
+			
+			#receive-Email-tab-head i,
+			#receive-Email-box-today i,
+			#receive-Email-box-yestoday i,
+			#receive-Email-box-before i {
+				color: #169BD5;
+			}
+			
+			#receive-Email-tab-head tr td:nth-child(1),
+			#receive-Email-box-today tr td:nth-child(1),
+			#receive-Email-box-yestoday tr td:nth-child(1),
+			#receive-Email-box-before tr td:nth-child(1) {
+				width: 3%;
+				padding-left: 10px;
+			}
+			
+			#receive-Email-tab-head tr td:nth-child(2),
+			#receive-Email-box-today tr td:nth-child(2),
+			#receive-Email-box-yestoday tr td:nth-child(2),
+			#receive-Email-box-before tr td:nth-child(2) {
+				width: 5%;
+			}
+			
+			#receive-Email-tab-head tr td:nth-child(3),
+			#receive-Email-box-today tr td:nth-child(3),
+			#receive-Email-box-yestoday tr td:nth-child(3),
+			#receive-Email-box-before tr td:nth-child(3) {
+				width: 10%;
+			}
+			
+			#receive-Email-tab-head tr td:nth-child(4),
+			#receive-Email-box-today tr td:nth-child(4),
+			#receive-Email-box-yestoday tr td:nth-child(4),
+			#receive-Email-box-before tr td:nth-child(4) {
+				width: 67%;
+			}
+			
+			#receive-Email-tab-head tr td:nth-child(5),
+			#receive-Email-box-today tr td:nth-child(5),
+			#receive-Email-box-yestoday tr td:nth-child(5),
+			#receive-Email-box-before tr td:nth-child(5) {
+				width: 10%;
+				font-size: 12px;
+				color: #999;
+			}
+			
+			.receive-Email-title {
+				border-bottom: 1px solid #ccc;
+				line-height: 40px;
+				padding-left: 10px;
+			}
+			
+			.receive-Email-detail-operators .receive-Email-detail-operators-bottom {
+				position: absolute;
+				top: 20px;
+				right: 14px;
+				height: 20px;
+			}
+			
+			.receive-Email-detail-operators-bottom {
+				position: absolute;
+				bottom: 20px;
+				right: 14px;
+			}
+			
+			.receive-Email-detail-operators-bottom .view-Email-history-after,
+			.receive-Email-detail-operators-bottom .view-Email-history-before {
+				cursor: pointer;
+			}
+			
+			.contacts-application-detail {
+				background-color: #fff;
+				padding: 14px 20px;
+				position: relative;
+			}
+			
+			.input-search-inline-block {
+				width: 300px;
+				height: 30px;
+				position: relative;
+				margin-bottom: 20px;
+			}
+			
+			.input-search-inline-block input {
+				padding-left: 25px;
+				font-size: 12px;
+				height: 32px;
+				border-radius: 2px;
+				border-color: #eee;
+			}
+			
+			.input-search-inline-block img {
+				position: absolute;
+				top: 8px;
+				left: 5px;
+			}
+			
+			.selected-contacts-type {
+				margin-left: 2%;
+				margin-top: 10px;
+			}
+			
+			.selected-contacts-type a,
+			.selected-contacts-type a:hover,
+			.selected-contacts-type a:focus {
+				display: inline-block;
+				color: #666;
+				margin-right: 10px;
+				text-decoration: none;
+			}
+			
+			.selected-contacts-type a.focus {
+				font-weight: bold;
+				text-decoration: underline;
+			}
+			
+			.contacts-content-detail {
+				position: relative;
+				overflow-y: auto;
+			}
+			
+			.contacts-content-detail-tab,
+			.contacts-content-detail-tab-head {
+				border-top: none;
+				width: 100%;
+				border-collapse: collapse;
+			}
+			
+			.contacts-content-detail-tab td div table tr,
+			.contacts-content-detail-tab td div table tr td {
+				cursor: default;
+			}
+			
+			.contacts-content-detail-tab td {
+				border-bottom: 1px dashed #eee;
+				height: 38px;
+				line-height: 38px;
+				font-size: 14px;
+				color: #666;
+			}
+			
+			.contacts-content-detail-tab-head thead tr td {
+				font-weight: bold;
+				border-bottom: 1px solid #009ED8;
+				color: #333;
+			}
+			
+			.contacts-content-detail-tab tbody tr td {
+				padding: 5px 0;
+			}
+			
+			.contacts-content-detail-footer {
+				position: absolute;
+			    bottom: 0;
+			    left: 14px;
+			    right: 14px;
+			    height: 60px;
+			    line-height: 60px;
+			    background-color: #fff;
+			    border-top: 1px solid #ddd;
+			}
+			
+			.contacts-content-detail-footer .a-btn {
+				height: 25px;
+				line-height: 13px;
+			}
+			
+			.contacts-content-detail-footer>div:first-child {
+				float: left;
+			}
+			
+			.contacts-content-detail-footer>div:last-child {
+				float: right;
+			}
+			
+			.which-Email-detail {
+				background-color: #fff;
+				padding: 20px 14px;
+			}
+			
+			.which-Email-detail:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.contacts-content-detail .contacts-content-detail-footer-btn-container a,
+			.contacts-content-detail .contacts-content-detail-footer-btn-container a:hover,
+			.contacts-content-detail .contacts-content-detail-footer-btn-container a:focus,
+			.which-Email-detail-operators-btns a,
+			.which-Email-detail-operators-btns a:hover,
+			.which-Email-detail-operators-btns a:focus,
+			.which-Email-detail-operators-quickly-response a,
+			.which-Email-detail-operators-quickly-response a:hover,
+			.which-Email-detail-operators-quickly-response a:focus {
+				
+			}
+			
+			.which-Email-detail-operators-right span {
+				color: #bbb;
+				font-size: 12px;
+				display: inline-block;
+				margin-left: 10px;
+				cursor: pointer;
+			}
+			
+			.which-Email-detail-operators-right span:last-child {
+				color: #009ED8;
+			}
+			
+			.which-Email-detail-main {
+				overflow-y: auto;
+			}
+			
+			.contacts-content-detail .receive-Email-detail-operators-right-container {
+				margin-top: 0;
+			}
+			
+			.hover,
+			.selected {
+				background-color: #e0ecf9;
+				border: 0;
+			}
+			
+			.which-Email-detail {
+				margin-top: -10px;
+				/*max-height: 775px;*/
+				overflow-y: auto;
+				position: relative;
+			}
+			
+			.which-Email-detail-operators {
+				padding: 5px 10px;
+				position: absolute;
+				/*bottom: 0;*/
+				left: 0;
+				right: 0;
+			}
+			
+			.which-Email-detail-operators-footer {
+				bottom: 0;
+			}
+			
+			.which-Email-detail-operators>div:first-child {
+				float: left;
+			}
+			
+			.which-Email-detail-operators>div:last-child {
+				float: right;
+			}
+			
+			.which-Email-detail-operators-btns a {
+			}
+			
+			.which-Email-detail-main-head {
+				border-bottom: 1px solid #ddd;
+				margin-top: 50px;
+			}
+			
+			.which-Email-detail-main-head>span,
+			.which-Email-detail-main-head>div {
+				display: inline-block;
+				margin-top: 5px;
+				width: auto;
+			}
+			
+			.which-Email-detail-main-title {
+				font-size: 14px;
+				color: #333;
+				font-weight: bold;
+			}
+			
+			.which-Email-detail-main-head>div {
+				display: block;
+			}
+			
+			.which-Email-detail-main-head>span>span,
+			.which-Email-detail-main-head>div>span {
+				display: inline-block;
+				width: 50px;
+				text-align: justify;
+				text-align: justify;
+				text-justify: distribute-all-lines;
+				text-align-last: justify;
+			}
+			
+			.which-Email-detail-main-text,
+			.which-Email-detail-main-text iframe {
+				background-color: #fff;
+			}
+			
+			.which-Email-detail-main-text iframe {
+				width: 100%;
+				height: 100%;
+			}
+			
+			.which-Email-detail-main-file {
+				background-color: #fff;
+				border: 1px solid #ddd;
+			}
+			
+			.which-Email-detail-main-file-title {
+				height: 38px;
+				line-height: 38px;
+				background-color: #f8f8f8;
+				padding-left: 14px;
+				font-size: 14px;
+				color: #666;
+				font-weight: bold;
+			}
+			
+			.one-Email-file {
+				margin: 10px 0;
+			}
+			
+			.which-Email-detail-main-file-detail {
+				padding-left: 14px;
+			}
+			
+			.one-Email-file img,
+			.one-Email-file-detail {
+				float: left;
+				margin-right: 10px;
+			}
+			
+			.one-Email-file-detail a {
+				display: inline-block;
+				margin-right: 16px;
+				color: #009ED8;
+				font-size: 12px;
+			}
+			
+			.quickly-response-to-sender {
+				position: absolute;
+				bottom: 20px;
+				left: 14px;
+				right: 14px;
+				background-color: #fff;
+			}
+			
+			.send-quickly-response-success {
+				font-size: 12px;
+				color: #999;
+				margin-top: 10px;
+			}
+			
+			.send-quickly-response-success a {
+				color: #009ED8;
+			}
+			
+			.hover-view {
+				position: absolute;
+				width: 300px;
+				height: 65px;
+				left: 10%;
+				top: 20px;
+				border: 1px solid #ccc;
+				padding: 10px;
+				background-color: #fff;
+				z-index: 100000;
+			}
+			
+			.hover-view img {
+				float: left;
+				width: 50px;
+				height: 50px;
+				margin-right: 20px;
+			}
+			
+			.hover-view .hover-view-detail {
+				float: left;
+			}
+			
+			.which-Email-detail-operators-quickly-response {
+				margin-top: 10px;
+			}
+			
+			.user-Email-acount {
+				margin-top: 50px;
+				margin-left: 22%;
+			}
+			
+			.user-Email-password {
+				margin-top: 10px;
+				margin-left: 22%;
+			}
+			
+			.bind-email-box-success-panel p:first-child {
+				margin-top: 50px;
+				margin-left: 30%;
+			}
+			
+			.bind-email-box-success-panel p:last-child {
+				margin-top: 30px;
+				margin-left: 35%;
+			}
+			
+			.bind-email-box-success-panel p a {
+				display: inline-block;
+				border: 1px solid #ccc;
+				text-decoration: none;
+				border-radius: 5px;
+				padding: 2px 10px;
+				background-color: #fff;
+				margin-right: 60px;
+				color: #666;
+				width: 100px;
+				text-align: center;
+			}
+			
+			.bind-email-box-success-panel p a.btn-primary {
+				color: #fff;
+			}
+			
+			.Email-box-bind-first-step-btn,
+			.Email-box-bind-second-step-btn {
+				margin-top: 50px;
+				margin-left: 22%;
+			}
+			
+			.Email-box-bind-first-step-btn a,
+			.Email-box-bind-first-step-btn a:hover,
+			.Email-box-bind-first-step-btn a:focus,
+			.Email-box-bind-second-step-btn a,
+			.Email-box-bind-second-step-btn a:hover,
+			.Email-box-bind-second-step-btn a:focus {
+				display: inline-block;
+				/*border: 1px solid #ccc;*/
+				/*text-decoration: none;*/
+				/*border-radius: 5px;*/
+				/*padding: 2px 10px;*/
+				/*background-color: #fff;*/
+				margin-right: 60px;
+				/*color: #666;*/
+				width: 100px;
+				text-align: center;
+			}
+			
+			.modal-content {
+				margin-top: 40%;
+			}
+			
+			.Email-sender-list {
+				position: absolute;
+				background-color: #fff;
+				min-width: 250px;
+				border: 1px solid #ccc;
+				height: 250px;
+				overflow-y: auto;
+				left: 4%;
+				z-index: 10000;
+			}
+			
+			.Email-sender-list li {
+				padding: 5px;
+				cursor: default;
+			}
+			
+			.which-email-head-common {
+				display: inline-block!important;
+				margin-right: 5px;
+				width: auto!important;
+			}
+			
+			.latest-contacts ul li {
+				margin: 5px 0;
+				padding: 3px 0 3px 20px;
+				cursor: default;
+				font-size: 12px;
+				color: #666;
+			}
+			
+			.clear-latest-contacts {
+				cursor: pointer;
+				font-size: 12px;
+				color: #009ED8;
+			}
+			
+			.remark-email {
+				position: relative;
+			}
+			
+			.remark-email img {
+				margin-left: 10px;
+			}
+			
+			.remark-email-container {
+				position: absolute;
+				text-align: center;
+				background-color: #fff;
+				width: 83px;
+				border: 1px solid #ddd;
+				top: 25px;
+				right: -1px;
+			}
+			
+			.remark-email-container span {
+				display: block;
+				padding: 5px 10px;
+			}
+			
+			iframe {
+				border: none;
+				background-color: #fafafa;
+			}
+			
+			.add-extra-files {
+				margin-top: 10px;
+				position: relative;
+				margin-bottom: 14px;
+			}
+			
+			.add-extra-files>a {
+				font-size: 12px;
+				color: #009ED8;
+				cursor: pointer;
+			}
+			
+			.add-extra-files>a img {
+				vertical-align: text-top;
+				margin-top: 1px;
+				margin-right: 3px;
+			}
+			
+			.progress {
+				height: 10px;
+			}
+			
+			.upload-process {
+				width: 200px;
+				position: absolute;
+				right: 20px;
+				bottom: 0;
+				/*height: 10px;*/
+				/*background-color: #21b5a9;*/
+			}
+			
+			.add-extra-files .uploaded {
+				display: block;
+				max-height: 200px;
+				overflow-y: auto;
+			}
+			
+			.add-extra-files .uploaded>span {
+				/*border: 1px solid #ccc;*/
+				display: inline-block;
+				margin-left: 5px;
+				min-width: 100px;
+				max-width: 80%;
+				height: 28px;
+				line-height: 28px;
+				padding: 0 5px;
+				background-color: #f3f3f3;
+				font-size: 12px;
+				color: #666;
+				margin-top: 10px;
+				margin-bottom: 10px;
+			}
+			
+			.email-unread-icon {
+				margin-right: -18px;
+			}
+			
+			.email-hury-icon {
+				margin-left: 22px;
+			}
+			
+			.add-extra-files .uploaded>span span {
+				display: inline-block;
+				font-size: 12px;
+				color: #ccc;
+			}
+			
+			.add-extra-files .uploaded span img {
+				margin-right: 3px;
+			}
+			
+			.add-extra-files .uploaded span a {
+				display: inline-block;
+				margin-left: 20px;
+			}
+			
+			.common-dept-tree>ul>li li {
+				margin-left: 15px;
+			}
+			
+			.common-dept-tree li img {
+				margin-top: -4px;
+				margin-right: 5px;
+			}
+			
+			.all-contacts-container {
+				overflow-y: auto;
+			}
+			
+			.contacts-container-header {
+			}
+			
+			.send-callback p {
+				width: 260px;
+				margin: 0 auto;
+				line-height: 100px;
+			}
+			
+			.common-dept-tree {
+				min-height: 240px;
+				display: none;
+			}
+			
+			.uploaded .item a {
+				cursor: pointer;
+			}
+			
+			.css-overhidden {
+				padding: 0;
+				display: inline-block;
+				max-width: 90px;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				vertical-align: middle;
+				/*min-height: 20px;*/
+				/*min-width: 51px;*/
+			}
+			
+			.move-email-to-container {
+				position: relative;
+			}
+			
+			.move-email-to {
+				position: absolute;
+				top: 100%;
+				right: 0;
+				background-color: #fff;
+				border: 1px solid #ccc;
+				border-radius: 3px;
+				width: 75px;
+			}
+			
+			.receive-Email-detail-operators-bottom .move-email-to {
+				top: -513%;
+			}
+			
+			.move-email-to span {
+				padding: 5px 10px;
+				display: block;
+			}
+			
+			.own-company-contact {
+				margin-left: 20px;
+				color: #666;
+				font-size: 12px;
+			}
+			.own-company-contact li {
+				margin-top: 10px;
+			}
+			
+			.own-company-contact .company-li {
+				font-weight: bold;
+			}
+			
+			.own-company-contact .company-li li {
+				font-weight: normal;
+			}
+			
+			.own-company-contact .dept-li {
+			}
+			
+			.own-company-contact .contact-li {
+				margin-top: 2px;
+			}
+			
+			.own-company-contact .contact-span {
+				padding: 5px;
+				padding-left: 5px;
+				display: inline-block;
+				cursor: pointer;
+			}
+			
+			.own-company-contact>li li {
+				display: none;
+			}
+			
+			.dept-contact-div {
+				margin-bottom: 5px;
+			}
+			
+			.dept-contact-div .css-overhidden {
+				max-width: 100%;
+				color: #666;
+				font-size: 14px;
+			}
+			
+			.detail-container {
+				cursor: pointer;
+			}
+			
+			.ke-toolbar span[data-name="insertorderedlist"],
+			.ke-toolbar span[data-name="insertunorderedlist"] {
+				display: none;
+			}
+			
+			.label-name {
+				display: inline-block;
+				width: 70px;
+				text-align: right;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container">
+			<div class="own-email-info at">
+				<!--我的邮箱-->
+				<div class="my-Email-box-content at lt">
+					<div class="my-Email-box-content-title at">
+					</div>
+				</div>
+				<div class="search-Email search-input-container rt">
+					<input type="text" placeholder="邮件全文搜索" />
+					<img src="../resources/images/email-search-icon.png" alt="" />
+					<div class="search-result" style="width:100%;display: none;">
+						<p class="search-in-all" index="all">全文搜索 <span class="search-key"></span></p>
+						<p class="search-in-send-people" index="send-people">包含<span class="search-key">123</span>的发件人</p>
+						<p class="search-in-receive-people" index="receive-people">包含<span class="search-key">123</span>的收件人</p>
+						<p class="search-in-subject" index="subject">包含<span class="search-key">123</span>的主题</p>
+					</div>
+				</div>
+			</div>
+			<div class="content">
+				<div class="left-menu">
+					<!--我的邮箱-->
+					<div class="my-Email-box">
+						<div class="edit-Email" index="edit">
+							<img src="../resources/images/edit-email-icon.png" alt="" />
+							<span>写信</span>
+						</div>
+						<div class="receive-Email" index="receive">
+							<img src="../resources/images/receive-icon.png" alt="" />
+							<span>收信</span>
+						</div>
+						<div class="contacts-application" index="contacts">
+							<img src="../resources/images/contacts-book-icon.png" alt="" />
+							<span>通讯录</span>
+						</div>
+					</div>
+					<!--收件箱等-->
+					<div class="Email-detail">
+						<span class="box receive-box" index="receive-box">收件箱（）</span>
+						<!--<span index="group-Email">群邮件（）</span>-->
+						<span class="box trash-box" index="draft-box">草稿箱（）</span>
+						<span class="box" index="already-send">已发送</span>
+						<span class="box" index="already-delete">已删除</span>
+						<span class="box" index="trash-box">垃圾箱</span>
+					</div>
+				</div>
+				<div class="main-wrap">
+					<!--邮箱设置-->
+					<!--<div class="Email-box-setting hide">
+						<div class="Email-box-setting-title">
+							<span>邮箱设置</span>
+						</div>
+						<div class="Email-box-setting-main">
+							<div class="input-label-group">
+								<label>账号昵称</label>
+								<input type="text" nulltip="账号昵称" bind="" style="width:460px;">
+							</div>
+							<div class="input-label-group">
+								<label>个性签名</label>
+								<textarea name="gxqm" rows="15" cols="60" placeholder="个性签名"></textarea>
+							</div>
+							<div class="input-label-group">
+								<label>邮件阅读回执</label>
+								<select name="read-back" style="width: 100px;">
+									<option value="0">关闭</option>
+									<option value="1">开启</option>
+								</select>
+							</div>
+						</div>
+						<div class="Email-box-setting-footer">
+							<a href="#" class="a-btn btn-save-settings">保存更改</a>
+							<a href="#" class="a-btn btn-cancel-settings">取消</a>
+						</div>
+					</div>-->
+					<!--写信-->
+					<div class="edit-Email-content clear-float hide">
+						<div class="edit-Email-content-main-body-left lt" style="width:85%;">
+							<div class="edit-Email-content-main-head">
+								<a href="#" class="a-btn btn-send-email">
+									<img src="../resources/images/send-icon.png" alt="" />
+									发送
+								</a>
+								<!--<a href="#" class="a-btn">定时发送</a>-->
+								<a href="#" class="a-btn">存草稿</a>
+								<div class="edit-Email-content-main-head-common-Email">
+									<a data-has-been-selected="false" index="copy-send">抄送-</a>
+									
+									<a data-has-been-selected="false" index="secrit-send">密送|</a>
+									
+									<a data-has-been-selected="false" index="depart-send">分别发送</a>
+								</div>
+							</div>
+							<!--邮件编辑主体-->
+							<div class="edit-email-body edit-Email-content-main-body">
+								<div class="input-label-group common-send" style="position: relative;">
+									<label>收件人：</label>
+									<input type="text" nulltip="收件人" class="Email-sender" maxlength="800" data-click-email-to-this="false" bind="">
+									<div class="common-send-ul Email-sender-list hide">
+										<ul>
+
+										</ul>
+									</div>
+								</div>
+								<div class="input-label-group copy-send hide" style="position: relative;">
+									<label>抄&nbsp;&nbsp;&nbsp;送：</label>
+									<input type="text" nulltip="抄送" bind="" class="Email-sender" data-click-email-to-this="false" placeholder="">
+									<div class="copy-send-ul Email-sender-list hide">
+										<ul>
+
+										</ul>
+									</div>
+								</div>
+								<div class="input-label-group secrit-send hide" style="position: relative;">
+									<label>密&nbsp;&nbsp;&nbsp;送：</label>
+									<input type="text" nulltip="密送" bind="" class="Email-sender" data-click-email-to-this="false" placeholder="">
+									<div class="secrit-send-ul Email-sender-list hide">
+										<ul>
+
+										</ul>
+									</div>
+								</div>
+								<div class="input-label-group">
+									<label>主&nbsp;&nbsp;&nbsp;题：</label>
+									<input type="text" class="email-subject" nulltip="主题" bind="">
+								</div>
+								<!--添加附件-->
+								<div class="add-extra-files">
+									<a class="add-picture btn-upload-anx-file" id="addfile">
+										<img src="../resources/images/fujian-icon.png" alt="" />添加附件
+									</a>
+									<div class="uploaded"></div>
+									<div class="upload-process lt"></div>
+								</div>
+								<textarea class="Email-main-text form-control" style="width: 100%;"></textarea>
+								<div class="edit-Email-content-main-body-left-footer">
+									<input class="send-email-critical" type="checkbox" /><span>紧急</span>
+									<input class="send-email-read-back" type="checkbox" /><span>阅读回执</span>
+									<span class="my-eamil-addr rt">发件人：<span class="note-font-type"></span></span>
+								</div>
+							</div>
+							<!--邮件编辑尾部-->
+							<div class="edit-Email-content-main-footer">
+								<a class="a-btn btn-send-email">
+									<img src="../resources/images/send-icon.png" alt="" />
+									发送
+								</a>
+								<!--<a href="#">定时发送</a>-->
+								<a class="a-btn">存草稿</a>
+							</div>
+						</div>
+						<!--普通邮件-->
+						<div class="edit-Email-content-main-body-right lt edit-Email-content-main-body-right-common clear-float" style="width:15%;">
+							<div class="contacts-container-header">
+								<div class="search-dept input-search search-input-container">
+									<input type="text" placeholder="请输入姓名进行查找" />
+									<img src="../resources/images/email-search-icon.png" alt="" />
+								</div>
+							</div>
+							<div class="all-contacts-container">
+								<div class="selected-type" area-hidden="false">
+									<img src="../resources/images/email-down-icon.png" data-trans-src="../resources/images/email-up-icon.png" alt="" />
+									最近联系人 <span>（）</span>
+									<a class="clear-latest-contacts">清空</a>
+								</div>
+								<div class="latest-contacts">
+									
+								</div>
+								<i class="margin-top-14"></i>
+								<div class="selected-type" area-hidden="true">
+									<img src="../resources/images/email-up-icon.png" data-trans-src="../resources/images/email-down-icon.png" alt="" />
+									联系人 <span class="common-dept-tree-count">（）</span>
+								</div>
+								<div class="common-dept-tree">
+									<ul class='topest-ul own-company-contact'></ul>
+									<!--<ul class='topest-ul client-company-contact'></ul>-->
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--收信-->
+					<div class="receive-Email-detail hide" data-type="receive-box">
+						<!--操作-->
+						<div class="receive-Email-detail-operators">
+							<div class="receive-Email-detail-operators-btns-container">
+								<a class="delete-Email a-btn">删除</a>
+								<a class="delete-Email-knew a-btn">彻底删除</a>
+								<a class="transfer-Email a-btn">转发</a>
+								<a class="remark-as a-btn">标记为<img src='../resources/images/email-angle-down.png' /></a>
+							</div>
+							<div class="receive-Email-detail-operators-bottom at">
+								<div class="lt history-pager">
+									<span class="history-curr-pager">1</span>/
+									<span class="history-total-pager">2</span>页
+								</div>
+								<div class="view-Email-history-before lt">
+									<span>上一页</span>
+								</div>
+								<div class="view-Email-history-after lt">
+									<span>下一页</span>
+								</div>
+								<div class="jump-to-page-container lt">
+									到
+									<span class="jump-to-page" contenteditable="true"></span>
+									页
+								</div>
+							</div>
+						</div>
+						<div class="receive-Email-detail-head">
+							<input name="email-checkbox" class="receive-Email-tab-btn-selected-all" type="checkbox">
+							<a href="#" class="total-Email-num">共123封</a>
+							<a href="#" class="unread-Email-num">有2封未阅读</a>
+						</div>
+						<!--表头-->
+						<!--<table id="receive-Email-tab-head" class="receive-Email-tab-head">
+							<tbody>
+								<tr>
+									<td style="">
+										
+									</td>
+									<td>
+										<i class="fa fa-envelope-o fa-x"></i>
+										<i class="fa fa-paperclip fa-x"></i>
+									</td>
+									<td>发件人</td>
+									<td>主题</td>
+									<td>时间</td>
+								</tr>
+							</tbody>
+						</table>-->
+
+						<div class="email-list-container">
+							<!--今天表格主体-->
+							<!--题目-->
+							<table id="receive-Email-box-today" class="receive-Email-box-today">
+								<tbody>
+								</tbody>
+							</table>
+							<!--昨天表格主体-->
+							<!--题目-->
+							<table id="receive-Email-box-yestoday" class="receive-Email-box-yestoday">
+								<tbody>
+								</tbody>
+							</table>
+							<!--更早表格主体-->
+							<!--题目-->
+							<table id="receive-Email-box-before" class="receive-Email-box-before">
+								<tbody>
+								</tbody>
+							</table>
+
+						</div>
+						<div class="receive-Email-detail-operators receive-Email-detail-operators-bottom at">
+							<div class="lt history-pager">
+								<span class="history-curr-pager">1</span>/
+								<span class="history-total-pager">2</span>页
+							</div>
+							<div class="view-Email-history-before lt">
+								<span>上一页</span>
+							</div>
+							<div class="view-Email-history-after lt">
+								<span>下一页</span>
+							</div>
+							<div class="jump-to-page-container lt">
+								到
+								<span class="jump-to-page" contenteditable="true"></span>
+								页
+							</div>
+						</div>
+					</div>
+					<!--通讯录-->
+					<div class="contacts-application-detail hide">
+						<div class="input-search-inline-block">
+							<input class='search-in-all-contacts' type="text" placeholder="查找所有联系人" />
+							<img src="../resources/images/email-search-icon.png" alt="" />
+						</div>
+						<!--<div class="selected-contacts-type">
+							<a class="focus" index="company-employee">企业员工</a>
+							<a href="#" class="hide" index="client-contacts">客户联系人</a>
+						</div>-->
+						<table class="contacts-content-detail-tab-head">
+							<thead>
+								<tr>
+									<td style="width: 2%;">
+										<input type="checkbox" />
+									</td>
+									<td style="width: 10%;">
+										姓名
+									</td>
+									<td style="width: 20%;">
+										部门
+									</td>
+									<td style="width: 66%;">
+										邮箱
+									</td>
+								</tr>
+							</thead>
+						</table>
+						<div class="contacts-content-detail">
+							<table class="contacts-content-detail-tab">
+								<thead>
+									<!--<tr>
+
+										<td style="width: 2%;">
+											<input type="checkbox" />
+										</td>
+										<td style="width: 10%;">
+											姓名
+										</td>
+										<td style="width: 20%;">
+											部门
+										</td>
+										<td style="width: 66%;">
+											邮箱
+										</td>
+									</tr>-->
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+						<div class="contacts-content-detail-footer clear-float">
+							<!--btns-->
+							<div class="contacts-content-detail-footer-btn-container">
+								<a class="send-Email a-btn">发邮件</a>
+								<a class="view-from-and-to a-btn">查看往来邮件</a>
+							</div>
+							<!--底部操作按钮-->
+							<div class="receive-Email-detail-operators-right-container clear-float hide">
+
+								<div class="view-Email-history-before" style="float:left;">
+									<i style="color: #999;display: inline-block;margin-right: 8px;" class="fa fa-fast-backward fa-x"></i>
+									<i style="color: #999;display: inline-block;margin-right: 4px;" class="fa fa-backward fa-x"></i>
+								</div>
+								<div style="border-left: 2px solid #ccc;border-right: 2px solid #ccc;padding: 0 5px;float:left;">
+									第
+									<span style="display: inline-block;width: 20px;line-height:20px;text-align:center;border: 1px solid #ccc;" class="history-curr-pager" contenteditable="true">1</span>/
+									<span class="history-total-pager">2</span>页，
+									<span class="history-total-record">40</span>条
+								</div>
+								<div class="view-Email-history-after" style="float:left;">
+									<i style="color: #999;display: inline-block;margin-left: 4px;" class="fa fa-forward fa-x"></i>
+									<i style="color: #999;display: inline-block;margin-left: 8px;" class="fa fa-fast-forward fa-x"></i>
+								</div>
+								<div onclick="refreshPanel()" class="refresh-Email" style="float:left;border-left: 2px solid #ccc;margin-left: 5px;">
+									<i style="color: #999;display: inline-block;margin-left: 4px;" class="fa fa-refresh fa-x"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--发送邮件成功-->
+					<div class="send-email-successful hide">
+						<div class="send-email-successful-head">
+							<i class="fa fa-check-circle fa-2x" style="color:#D7F2BA;"></i>
+							<span style="color:#008000;">邮件发送成功</span>
+						</div>
+						<div class="send-email-successful-btns">
+							<a href="#">查看此邮件</a>
+						</div>
+					</div>
+					<!--邮件详情-->
+					<div class="which-Email-detail hide">
+						<!--操作-->
+						<div class="which-Email-detail-operators clear-float">
+							<!--左侧按钮-->
+							<div class="which-Email-detail-operators-btns">
+								<a class="a-btn"><img src="../resources/images/back-icon.png" alt="" />返回</a>
+								<a class="a-btn">回复</a>
+								<a class="a-btn">回复全部</a>
+								<a class="a-btn">转发</a>
+								<a class="a-btn" class="email-detail-delete">删除</a>
+								<a class="a-btn">彻底删除</a>
+								<a class="a-btn">标记为<img src='../resources/images/email-angle-down.png' /></a>
+							</div>
+							<!--上一封  下一封-->
+							<div class="which-Email-detail-operators-right rt">
+								<span class="which-Email-detail-operators-right-prev">上一封</span>
+								<span class="which-Email-detail-operators-right-next">下一封</span>
+							</div>
+						</div>
+						<div class="which-Email-detail-main-head">
+							<span class="which-Email-detail-main-title">工作资料培训</span><br>
+							<div class="which-Email-detail-main-sender" style="position:relative;">
+								<span class=" note-font-type">发件人：</span><span class="which-email-sender note-font-type which-email-head-common"></span>
+								<div class='hover-view hide'>
+									<img src='' class="hide" alt='头像暂无'>
+									<div class='hover-view-detail'>
+										<p><b>王五</b></p>
+										<p>132132@163.com
+											<a href='#' class="view-from-and-to">往来邮件</a>
+										</p>
+									</div>
+								</div>
+							</div>
+							<span class="which-Email-detail-main-send-time note-font-type"><span>时间</span>：2016年8月2日（星期二） 16:36</span><br>
+							<div class="which-Email-detail-main-receiver note-font-type" style="position:relative;">
+								<span>收件人</span>：
+								<!--<span class="which-email-receiver which-email-head-common">张三&lt;1321321@163.com&gt;</span>-->
+								<div class='hover-view hide'>
+									<img src='' class="hide" alt='头像暂无'>
+									<div class='hover-view-detail'>
+										<p><b>王五</b></p>
+										<p>132132@163.com
+											<a href='#' class="view-from-and-to">往来邮件</a>
+										</p>
+									</div>
+								</div>
+							</div>
+							<div class="which-Email-detail-main-coper note-font-type" style="position:relative;">
+								<span>抄 送</span>：
+								<!--<span class="which-email-copy-receiver which-email-head-common">张三&lt;1321321@163.com&gt;</span>-->
+								<div class='hover-view hide'>
+									<img src='' class="hide" alt='头像暂无'>
+									<div class='hover-view-detail'>
+										<p><b>王五</b></p>
+										<p>132132@163.com
+											<a href='#'>往来邮件</a>
+										</p>
+									</div>
+								</div>
+							</div>
+							<div class="which-Email-detail-main-bcc note-font-type" style="position:relative;">
+								<span>密 送</span>：
+								<!--<span class="which-email-copy-receiver which-email-head-common">张三&lt;1321321@163.com&gt;</span>-->
+								<div class='hover-view hide'>
+									<img src='' class="hide" alt='头像暂无'>
+									<div class='hover-view-detail'>
+										<p><b>王五</b></p>
+										<p>132132@163.com
+											<a href='#'>往来邮件</a>
+										</p>
+									</div>
+								</div>
+							</div>
+							<span class="which-Email-detail-main-extra-file note-font-type"><span>附件</span>：2个</span>
+						</div>
+						<!--邮件内容-->
+						<div class="which-Email-detail-main">
+							<!--邮件正文-->
+							<div class="which-Email-detail-main-text">
+								<iframe id="which-Email-detail-main-text-iframe" src="e-mail-body.html">
+									
+								</iframe>
+							</div>
+							<!--邮件附件-->
+							<div class="which-Email-detail-main-file">
+								<div class="which-Email-detail-main-file-title">
+									<img src="../resources/images/fujian-icon.png" alt="" />附件
+									<span class="which-Email-detail-main-file-title-num note-font-type">（3个）</span>
+									<a class="btn-a-default">全部下载</a>
+								</div>
+								<div class="which-Email-detail-main-file-detail">
+								</div>
+							</div>
+						</div>
+						<!--快捷回复-->
+						<div class="quickly-response-to-sender">
+							<input type="text" style="width:100%;" placeholder="快捷回复给发件人：张三" />
+							<div class="which-Email-detail-operators-quickly-response hide">
+								<a class="send-quickly-response a-btn btn-send-email"><img src="../resources/images/send-icon.png" alt="">发送</a>
+								<a class="cancel-quickly-response a-btn">取消</a>
+							</div>
+							<div class="send-quickly-response-success hide">
+								<span>邮件发送成功。</span>
+								<a href="#" class="response-Email-again">再回一封邮件</a>
+							</div>
+						</div>
+						<!--底部操作-->
+						<!--<div class="which-Email-detail-operators which-Email-detail-operators-footer clear-float">
+							<div class="which-Email-detail-operators-btns">
+								<a href="#">&lt;返回</a>
+								<a href="#">回复</a>
+								<a href="#">回复全部</a>
+								<a href="#">转发</a>
+								<a href="#" class="email-detail-delete">删除</a>
+								<a href="#">彻底删除</a>
+								<a href="#">标记为<i class="fa fa-caret-down fa-x"></i></a>
+							</div>
+							<div class="which-Email-detail-operators-right">
+								<span class="which-Email-detail-operators-right-prev">上一封</span>
+								<span class="which-Email-detail-operators-right-next">下一封</span>
+							</div>
+						</div>-->
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="Email-box-bind-first-step hide">
+			<p>请完成邮箱的绑定</p>
+			<p class="user-Email-acount">账号：15564156435413415@163.com</p>
+			<p></p>
+			<div class="Email-box-bind-first-step-btn">
+				<a class="btn btn-danger def-btn-danger Email-box-bind-next-step">下一步</a>
+				<a class="btn btn-primary def-btn-primary Email-box-bind-cancle">关闭</a>
+			</div>
+		</div>
+		<div class="Email-box-bind-second-step hide">
+			<p class="user-Email-acount">15564156435413415@163.com</p>
+			<p class="user-Email-password"><span class="label-name">授权码：</span> <input type="text" class="user-Email-password-input" /></p>
+			<div class="Email-box-bind-second-step-btn">
+				<a class="btn btn-danger def-btn-danger Email-box-bind-test">验证</a>
+				<a class="btn btn-info def-btn-info Email-box-bind-prev-step">上一步</a>
+			</div>
+		</div>
+		<!--验证成功-->
+		<div class="bind-email-box-success hide">
+			<div class="bind-email-box-success-panel">
+				<p><i class="fa fa-check fa-2x" style="color:#D7F2BA;"></i>邮箱绑定成功，欢迎使用！</p>
+				<p>
+					<a class="btn btn-primary def-btn-primary close-bind-email">关闭</a>
+				</p>
+			</div>
+		</div>
+		<!--是否发送回执-->
+		<div class="send-callback-container hide">
+			<div class="send-callback">
+				<p>发件人希望得到您的回执，是否发送？</p>
+				<!--<div class="send-callback-btn-container">-->
+				<!--<a href="#">发送</a><a href="#">不发送</a>-->
+				<!--</div>-->
+			</div>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/pinyin.js"></script>
+		<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			//------------消息队列相关-----------------------
+			var publisher = parent.HHMQ.createPublisher('审批详情', 'email');
+			//页面关闭事件
+			context.onPageClose = function() {
+				publisher.dispose();
+			};
+			//------------消息队列相关 end -------------------
+			$.showLoadingPop("正在加载......");
+			$.token();
+			var queryObj = $.getQueryObject();
+			var tempUrl = "";
+			//储存首页信息
+			var indexData;
+			var bindEmailBoxFirstStepMoalId, bindEmailBoxFirstStepMoalId;
+			var MAILAPIURL = BASEAPIURL + "/";
+			var PAGESIZE = 18;
+			//先验证邮箱是否绑定
+			$.ajaxGet(MAILAPIURL + "mail/verify_status", function(resp) {
+				if(resp.code == 0) {
+					$.hideLoadingPop();
+					if(resp.data.status == 1) {
+						//未验证
+						emailBindFirstStep(resp.data);
+					} else {
+						loadMyEmailBox("selector");
+					}
+				} else {
+					$.showErrorGritter("服务器返回失败：" + resp.msg);
+					return false;
+				}
+			});
+			//第一步验证
+			function emailBindFirstStep(data) {
+				//第一步
+				bindEmailBoxFirstStepMoalId = $.modal({
+					showFooter: false
+				}).show("绑定邮箱", ".Email-box-bind-first-step", function() {
+					$("#" + bindEmailBoxFirstStepMoalId).modal("hide");
+
+				});
+				$("#" + bindEmailBoxFirstStepMoalId + " .user-Email-acount").html("<span class='label-name'>账号：</span>" + data.mail);
+				$("#" + bindEmailBoxFirstStepMoalId + " .Email-box-bind-next-step").click(function() {
+					emailBindSecondStep(data);
+					$("#" + bindEmailBoxFirstStepMoalId).modal("hide");
+				});
+				//第一步取消按钮
+				$("#" + bindEmailBoxFirstStepMoalId + " .Email-box-bind-cancle").click(function() {
+					$("#" + bindEmailBoxFirstStepMoalId).modal('hide');
+					parent.closeCurrActiveTab();
+				});
+			}
+			//第二步验证
+			function emailBindSecondStep(data) {
+				//第二步
+				bindEmailBoxSecondStepMoalId = $.modal({
+					showFooter: false
+				}).show("绑定邮箱", ".Email-box-bind-second-step", function() {
+					$("#" + bindEmailBoxFirstStepMoalId).modal("hide");
+				});
+				$("#" + bindEmailBoxSecondStepMoalId + " .user-Email-acount").html("<span class='label-name'>账号：</span>" + data.mail)
+				//验证按钮
+				$("#" + bindEmailBoxSecondStepMoalId + " .Email-box-bind-test").click(function() {
+					var mailData = {};
+					mailData.mail = data.mail;
+					mailData.pwd = $("#" + bindEmailBoxSecondStepMoalId + " .user-Email-password-input").val();
+					if(!mailData.pwd) {
+						$.showErrorGritter("请输入邮箱授权码！");
+						$("#" + bindEmailBoxSecondStepMoalId + " .user-Email-password-input").focus();
+						return false;
+					}
+					$.showLoadingPop("正在验证，请稍后....");
+					$.ajaxPost(MAILAPIURL + "mail/verify_account", mailData, function(response) {
+						//console.log(response)
+						$.hideLoadingPop();
+						if(response.code == 0) {
+							console.log(response);
+							//$.showSuccessGritter("验证成功，欢迎使用！");
+							var bindEmailSuccessModalId = $.modal({
+								showFooter: false
+							}).show("绑定邮箱", ".bind-email-box-success", function() {});
+							$("#" + bindEmailSuccessModalId + " .close-bind-email").click(function() {
+								$("#" + bindEmailSuccessModalId).modal('hide');
+							})
+							$("#" + bindEmailBoxSecondStepMoalId).modal('hide');
+							loadMyEmailBox("selector");
+						} else {
+							$.showErrorGritter("服务器返回失败：" + response.msg);
+							return false;
+						}
+					});
+				});
+				//上一步
+				$("#" + bindEmailBoxSecondStepMoalId + " .Email-box-bind-prev-step").click(function() {
+					emailBindFirstStep(data);
+					$("#" + bindEmailBoxSecondStepMoalId).modal('hide');
+				});
+			}
+			//editor
+			var editor, KEditor;
+			//KindEditor
+			KindEditor.ready(function(K) {
+				KEditor = K;
+			});
+			var prevEditorId;
+			$(document).ready(function() {
+				$(".left-menu").css({
+					"height": $(window).height()-$(".own-email-info").outerHeight(true)-10+"px",
+					"max-height": $(window).height()-$(".own-email-info").outerHeight(true)-10+"px"
+				});
+				
+				$(".main-wrap").css({
+					"height": $(".left-menu").outerHeight(true)-10+"px",
+					"max-height": $(".left-menu").outerHeight(true)-10+"px"
+				});
+				$(".main-wrap>div").css({
+					"height": $(".left-menu").outerHeight(true)-12+"px",
+					"max-height": $(".left-menu").outerHeight(true)-12+"px"
+				});
+				$(".Email-detail").css({
+					"height": $(".left-menu").outerHeight(true)-$(".my-Email-box").outerHeight(true)-10+"px",
+					"max-height": $(".left-menu").outerHeight(true)-$(".my-Email-box").outerHeight(true)-10+"px"
+				});
+				$(".edit-email-body").css({
+					height: $(".main-wrap").outerHeight(true)-$(".edit-Email-content-main-head").outerHeight(true)-$(".edit-Email-content-main-footer").outerHeight(true)-100+"px"
+				});
+				$(".edit-Email-content-main-body-right").css({
+					height: $(".main-wrap").outerHeight(true)-5+"px"
+				});
+				$(".all-contacts-container").css({
+					height: $(".edit-Email-content-main-body-right").outerHeight(true)-$(".contacts-container-header").outerHeight(true)-70+"px"
+				});
+				$(".my-Email-box>div").click(function() {
+					onLeftMenuClick(this);
+				});
+				$(".search-Email input").click(function() {
+					var keyWord = $(this).val();
+					if(!keyWord) return false;
+					$(".search-result").slideDown();
+				});
+				$(".search-Email input").keyup(function() {
+					var keyWord = $(this).val();
+					if(!keyWord) return false;
+					$(".search-result").slideDown();
+					$(this).parent().find(".search-key").html(keyWord);
+					//$(".search-result").slideDown();
+					$(".search-result p").unbind("click").click(function() {
+						var data = {};
+						data.key = keyWord;
+						data.query_type = $(this).hasClass("search-in-all") ? "" : $(this).hasClass("search-in-send-people") ? 1 : $(this).hasClass("search-in-receive-people") ? 3 : 5;
+						//data.rows = 18;
+						console.log(data)
+						loadDiffrentPanel("search-result", data);
+					});
+				});
+				$(".search-Email").mouseleave(function() {
+					$(".search-result").slideUp();
+				});
+			});
+			//左侧操作列表点击事件
+			function onLeftMenuClick(obj) {
+				var index = $(obj).attr("index");
+				switch(index) {
+					case "title":
+						loadMyEmailBox($(this));
+						break;
+					case "edit":
+						loadEditEmailPanel();
+						break;
+					case "receive":
+						loadDiffrentPanel("receive-box");
+						break;
+					case "contacts":
+						initContacts();
+						break;
+					default:
+						loadMyEmailBox($(this));
+				}
+			}
+			//加载我的邮箱
+			var isFirstloadMyEmailBox = true;
+
+			function loadMyEmailBox(selector) {
+				if(isFirstloadMyEmailBox) {
+					$.showLoadingPop("正在加载邮箱信息，请稍候......");
+					$.ajaxGet(MAILAPIURL + "mail/synchronize", function() {});
+					isFirstloadMyEmailBox = false;
+				}
+				$(".my-Email-box-content").removeClass("hide");
+				//$(".my-Email-box-content").siblings().addClass("hide");
+				$.ajaxGet(MAILAPIURL + "mail/index", function(resp) {
+					$.hideLoadingPop();
+					if(resp.code != 0) {
+						$.showErrorGritter("服务器返回失败：" + resp.msg);
+					}
+					indexData = resp.data;
+					$(".my-Email-box>div:first-child").trigger("click");
+					$(".Email-detail .receive-box").html("收件箱（" + resp.data.count_inbox + "）");
+					//$(".receive-Email-detail .group-Email").html("群邮件（" + "" + "）");
+					$(".Email-detail .trash-box").html("草稿箱（" + resp.data.count_draft + "）");
+					$(".my-Email-box-ul li.receive-box span").html("收件箱（" + resp.data.count_inbox + "）");
+					//$(".my-Email-box-ul li.group-Email span").html("群邮件（" + "" + "）");
+					$(".my-Email-box-ul li.trash-box span").html("草稿箱（" + resp.data.count_draft + "）");
+					//先获得当前时间是上午还是下午
+					var halfText = (new Date()).getHours() >= 12 ? "下午" : "上午";
+					$(".my-Email-box-content-title").html(
+						"<img class='head lt' src='"+resp.data.employee_avatar+"' />"
+						+"<div class='owner-info lt'>"
+						+"	<span>"+halfText + "好，" + resp.data.employee_name + "<span class='note-font-type'><" + resp.data.mail + "></span>"+"</span>"
+						+"	<br><span class='box receive-box'>收件箱（ "+resp.data.count_inbox+" ）</span>"
+						+"	<span class='box draft-box'>草稿箱（ "+resp.data.count_draft+" ）</span>"
+						+"</div>"
+					);
+					$(".my-eamil-addr span").html("<"+resp.data.mail+">");
+					$(".owner-info .box").unbind("click").click(function(){
+						if($(this).hasClass("receive-box")){
+							$(".Email-detail .receive-box").trigger("click");
+						}else{
+							$(".Email-detail .trash-box").trigger("click");
+						}
+					});
+					if(queryObj.email) loadEditEmailPanel(queryObj, "new");
+				});
+			}
+			//我的邮箱界面li点击
+			$(".Email-detail-content ul li").click(function() {
+				var index = $(this).attr("index");
+				var type = index == "receive-box" ? "receive-box" : index == "group-Email" ? "group-Email" : "draft-box";
+				loadDiffrentPanel(type);
+			});
+			////点击设置
+			$(".my-Email-box-content .my-Email-box-content-title i").click(function() {
+				$(this).parent().parent().addClass("hide");
+				$(".Email-box-setting").removeClass("hide");
+			});
+
+			//文件上传
+			var formContainer = ".add-extra-files";
+			var isUploadPicture = true;
+			$(formContainer + " .btn-upload-anx-file").attr("id", "btnUploadAnxFile");
+			$("#btnUploadAnxFile").initUploader({
+				url: MAILAPIURL + "mail/upload",
+				up_container: formContainer + " .upload-process",
+				FilesAdded: function(up, files) {
+					//console.log(arguments)
+					return true;
+				},
+				FileUploaded: function(up, file, response) {
+					var resp = JSON.parse(response.response);
+					console.log(resp)
+					if(resp.code == 0) {
+						var fileName = resp.data.name;
+						//success
+						var fileContainerDom = "";
+						fileContainerDom +=
+							"<span class=\"item\" data-file-path=\"" + resp.data.path + "\" data-file-name=\"" + resp.data.name + "\"><img src='../resources/images/fujian-icon.png'>" + resp.data.name +
+							"<span>（"+(resp.data.size/1024).toFixed(2)+"KB）</span><a class=\"\" onclick=\"$(this).parent().remove();\">删除</a>" +
+							"</span>";
+						if($(formContainer + " .uploaded").find("span[data-file-name='" + resp.data.name + "']").length > 0) {
+							$.showErrorGritter("您已添加过该附件！");
+						} else {
+							$(formContainer + " .uploaded").append(fileContainerDom);
+						}
+						$(".ke-container").css({
+							height: $(".edit-email-body").outerHeight(true)-getEditPanelInputLabelHeight()-
+									$(".add-extra-files").outerHeight(true)-20+"px"
+						});
+					} else {
+						$.showErrorGritter("上传失败：" + resp.msg);
+					}
+				}
+			});
+			////写 邮件
+			function loadEditEmailPanel(data, type) {
+				$(".edit-Email-content").removeClass("hide");
+				$(".edit-Email-content").siblings().addClass("hide");
+				$(".send-eamil-people").html("发件人：\"" + indexData.employee_name + "\"<" + indexData.mail + ">");
+				$(".uploaded").empty();
+				$(".edit-Email-content-main-body-left-footer input").removeProp("checked");
+				if(prevEditorId) editor.remove(prevEditorId);
+				//初始化编辑器
+				var tmpId = $.uuid();
+				prevEditorId = tmpId;
+				$('.Email-main-text').attr("id", tmpId);
+				editor = KEditor.create("#" + tmpId, {
+					minWidth: '400px',
+					resizeType: 1,
+					height: $(".edit-email-body").outerHeight(true)-getEditPanelInputLabelHeight()-
+									$(".add-extra-files").outerHeight(true)-20+"px",
+					allowPreviewEmoticons: false,
+					allowImageUpload: false,
+					allowFileManager: true,
+					items: [
+						'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+						'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+						'insertunorderedlist', '|', 'link'
+					],
+					afterCreate: function(editor) {
+						$('.Email-main-text' + " .ke-container").css("width", "400px").css("display", "inline-block");
+					}
+				});
+				//数据绑定
+				editEmailPanelDataBind(data, type);
+				$(".edit-Email-content-main-body .Email-sender").focus();
+				//事件绑定
+				bindEditEmailPanelEvents();
+				////最近联系人
+				$.ajaxGet(MAILAPIURL + "mail/contact/recent", function(resp) {
+					var latestContacts = "";
+					$(".selected-type").unbind("click").click(function(){
+						if($(this).attr("area-hidden")=="false"){
+							$(this).attr("area-hidden",true);
+							$(this).next().slideUp();
+						}else {
+							$(this).attr("area-hidden",false);
+							$(this).next().slideDown();
+						}
+						transImgSrc($(this).find("img"))
+					});
+					$(".selected-type span").text("（"+(resp.data.rows.length||0)+"）");
+					latestContacts += "<ul>";
+					$.each(resp.data.rows, function(index, item) {
+						latestContacts += "<li data-name='" + item.name + "' data-mail='" + item.mail + "'>" + item.name + "</li>";
+					});
+					latestContacts += "</ul>";
+					$(".edit-Email-content-main-body-right .latest-contacts").html(latestContacts);
+					////鼠标移入移除  或者点击事件加背景色
+					bindTransBackgroundEvent((".latest-contacts li"), "hover");
+					$(".latest-contacts li").click(function() {
+						var me = this;
+						$(this).toggleClass("selected");
+						//点击添加邮件地址到对应输入框
+						$(".Email-sender").each(function() {
+							if($(this).attr("data-click-email-to-this") == "true") {
+								if($(this).val().indexOf($(me).attr("data-mail")) < 0) $(this).val($(this).val() + $(me).attr("data-mail") + ";");
+								$(this).focus();
+							}
+						});
+					});
+					$(".clear-latest-contacts").unbind("click").click(function(e){
+						var e = window.event || event;
+						if(e.stopPropagation) { //如果提供了事件对象，则这是一个非IE浏览器 
+							e.stopPropagation();
+						} else {
+							//兼容IE的方式来取消事件冒泡 
+							window.event.cancelBubble = true;
+						}
+						$.ajaxDelete(BSAPIURL+"mail/contact/recent",function(resp){
+							if(resp.code!=0) {
+								$.showErrorGritter("清空最近联系人失败："+resp.msg);
+								return false;
+							}
+							$.showSuccessGritter("清空最近联系人成功！");
+							$(".latest-contacts ul").empty();
+						});
+					});
+				});
+				$(".topest-ul").html("");
+				$(".edit-Email-content-main-body-right .contacts-container-header .search-dept input").unbind("keydown").keydown(function(e) {
+					var index = $(".edit-Email-content-main-body-right-common .sel-contacts-type a.focus").attr("index");
+					if(e.keyCode == 13) {
+						var keyWordsOfContact = $(this).val();
+						if(!keyWordsOfContact) {
+							loadCompanyContactsTree();
+						} else {
+							loadCompanyContactsByKey(keyWordsOfContact);
+						}
+						/*if(index == "dept") {} else {
+							if(!keyWordsOfContact) {
+								loadClientContactsTree();
+							} else {
+								loadCustomerContactsByKey(keyWordsOfContact);
+							}
+						}*/
+					}
+				});
+				loadCompanyContactsTree();
+				//loadClientContactsTree();
+			}
+			//写信界面数据绑定   没有数据则恢复默认
+			function editEmailPanelDataBind(data, type) {
+				console.log(arguments);
+				if(data) {
+					if(type == "again" || type == "againAll") {
+						//回复邮件发件人变为收件人
+						$(".edit-Email-content-main-body .edit-Email-content-main-body-left>div:first-child input").val(data.from.mail + ";");
+						//回复邮件   如果是回复全部抄送人不变    
+						var ccText = "";
+						if(data.cc && data.cc.length > 0) {
+							$(".edit-Email-content-main-head-common-Email a:first-child").html("删除抄送-").attr("data-has-been-selected", "true");
+							$(".edit-Email-content-main-body .edit-Email-content-main-body-left>div:nth-child(2)").removeClass("hide");
+							$.each(data.cc, function(index, item) {
+								ccText += item.mail + ";";
+							});
+							$(".edit-Email-content-main-body .edit-Email-content-main-body-left>div:nth-child(2) input").val(ccText);
+						}
+						$(".edit-Email-content-main-body .email-subject").val("回复：" + data.subject);
+						if(type == "again") { //草稿箱的再次 编辑
+							if(!data.alone) {
+								if(data.bcc && data.bcc.length > 0) {
+									$(".edit-Email-content-main-head-common-Email a:eq(1)").html("删除密送|").attr("data-has-been-selected", "true");
+									$(".edit-Email-content-main-body .edit-Email-content-main-body-left>div:nth-child(3)").removeClass("hide");
+									var bccText = "";
+									$.each(data.bcc, function(index, item) {
+										bccText += item.mail + ";";
+									});
+									$(".edit-Email-content-main-body .edit-Email-content-main-body-left>div:nth-child(3) input").val(bccText);
+								}
+							} else {
+								$(".edit-Email-content-main-head-common-Email a:eq(2)").html("删除分别发送").attr("data-has-been-selected", "true");
+							}
+							var toName = "";
+							for(var i in data.to) {
+								toName += data.to[i].mail + ";";
+							}
+							$(".edit-Email-content-main-body .edit-Email-content-main-body-left>div:first-child input").val(toName || "");
+							//紧急   回执
+							if(data.reply > 0) $(".edit-Email-content-main-body-left-footer .send-email-read-back").prop("checked", "checked");
+							if(data.priority == 1) $(".edit-Email-content-main-body-left-footer .send-email-critical").prop("checked", "checked");
+						}
+					}
+					if(type == "new") {
+						if(data.email) {
+							$(".edit-Email-content-main-body .Email-sender").val(data.email+";");
+						} else {
+							var emails = "";
+							for(var i in data) {
+								emails += data[i].email + ";";
+							}
+							$(".edit-Email-content-main-body .Email-sender").val(emails);
+						}
+					}
+					if(type == "again" || (type !== "new" || type !== "againAll")) {
+						type == "again" && $(".edit-Email-content-main-body .email-subject").val(data.subject);
+						//data.body = data.body.replaceAll(/<a(.*)>(.*)<\/a>/g, "<a$1 target='_blank'>$2</a>");
+						if(data.body) editor.html(data.body);
+						//正文
+						//var doc = document.getElementById("which-Email-detail-main-text-iframe").contentDocument || document.frames["which-Email-detail-main-text-iframe"].document;
+						//resp.data.body=resp.data.body.replace(/<a(.*)>(.*)[<\/a>]?/g,"<a$1 target='_blank'>$2</a>");
+						//doc.body.innerHTML = resp.data.body;
+						$(".ke-container a").each(function() {
+							$(this).attr("target", "_blank");
+						});
+						//附件
+						var attachmentsDom = "";
+						if(data.attachments) {
+							$.each(data.attachments, function(index, item) {
+								attachmentsDom +=
+									"<span class=\"item\" data-file-path=\"" + item.path + "\" data-file-name=\"" + item.name + "\">" +
+									"<i class=\"fa fa-paperclip fa-x\" style=\"color:#338ECF;\"></i>" +
+									item.name +
+									"<a class=\"\" onclick=\"$(this).parent().remove();\">删除</a>" +
+									"</span>";
+							});
+							$(".add-extra-files .uploaded").html(attachmentsDom);
+						}
+					}
+				} else {
+					//恢复默认状态
+					$(".edit-Email-content-main-body input").val("");
+					var defaultADom = "";
+					$(".edit-Email-content-main-head .edit-Email-content-main-head-common-Email a:nth-child(1)").html("抄送-");
+					$(".edit-Email-content-main-head .edit-Email-content-main-head-common-Email a:nth-child(2)").html("密送|");
+					$(".edit-Email-content-main-head .edit-Email-content-main-head-common-Email a:nth-child(3)").html("分别发送");
+					$(".copy-send").addClass("hide");
+					$(".secrit-send").addClass("hide");
+					editor.html("");
+				}
+				$(".ke-container").css({
+					height: $(".edit-email-body").outerHeight(true)-getEditPanelInputLabelHeight()-
+							$(".add-extra-files").outerHeight(true)-20+"px"
+				});
+			}
+
+			function bindEditEmailPanelEvents() {
+				//写邮件页面企业员工  客户联系人点击事件
+				// 企业员工   客户联系人  点击事件
+				$(".sel-contacts-type a").unbind("click").click(function() {
+					var index = $(this).attr("index");
+					$(this).addClass("focus");
+					$(this).siblings().removeClass("focus");
+					$(".topest-ul").addClass("hide");
+					if(index == "dept") {
+						//企业员工
+						$(".own-company-contact").removeClass("hide");
+					} else {
+						//客户联系人
+						$(".client-company-contact").removeClass("hide");
+					}
+				});
+				//收件人  密送   抄送  输入框失去焦点事件
+				$(".input-label-group").unbind("mouseleave").mouseleave(function() {
+					$(this).find("input").next().addClass("hide");
+					$(this).find("input").next().find("ul").html("");
+					//$(this).attr("data-click-email-to-this","false");
+					//、@后面匹配邮箱格式加;
+					var emails = $(this).find("input").val();
+					if(!emails) return false;
+					var tempArr = emails.split("@");
+					for(var i in tempArr) {
+						if(i != 0) tempArr[i] = "@" + tempArr[i];
+						if(/(^@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3});/g.test(tempArr[i])) continue;
+						tempArr[i] = tempArr[i].replace(/(^@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3})/g, "$1;");
+					}
+					emails = tempArr.join("");
+					$(this).find("input").val(emails);
+				});
+				//收件人  密送   抄送  输入框获得焦点事件
+				$(".Email-sender").unbind("focus").focus(function() {
+					$(".Email-sender").attr("data-click-email-to-this", "false");
+					$(this).attr("data-click-email-to-this", "true");
+				});
+				//收件人  密送   抄送  输入框改变事件
+				$(".Email-sender").unbind("keyup").keyup(function() {
+					var me = this;
+					if(!$(me).val()) {
+						$(me).next().addClass("hide");
+						$(me).next().find("ul").html("");
+						return false;
+					} else {
+						var emails = $(me).val();
+						if(emails.substring(emails.length - 1, emails.length) == "；") {
+							emails = emails.substring(0, emails.length - 1) + ";";
+							$(me).val(emails);
+						}
+						var keyWord = "";
+						var emailsArr = emails.split(";");
+						keyWord = emailsArr[emailsArr.length - 1];
+						if(emails.substring(emails.length - 1, emails.length) != ";") emailsArr.splice(emailsArr.length - 1, 1);
+						///关键词搜索
+						$.ajaxGet(MAILAPIURL + "mail/address?key=" + keyWord, function(resp) {
+							$(me).next().find("ul").html("");
+							if(!resp.data.rows || resp.data.rows.length < 1) return false;
+							var emailListLiDom = "";
+							$.each(resp.data.rows, function(index, item) {
+								emailListLiDom += "<li data-email='" + item.employee_email + "'>" + item.employee_name + "<" + item.employee_email + ">" + "</li>"
+							});
+							$(me).next().removeClass("hide");
+							////鼠标移入移除  或者点击事件加背景色
+							bindTransBackgroundEvent($(me).next().find("li"), "hover");
+							$(me).next().find("ul").html(emailListLiDom);
+							$(".Email-sender-list ul li").click(function() {
+								$(me).val(emailsArr.join(";") + (emailsArr.length > 0 ? ";" : "") + $(this).attr("data-email") + ";");
+								$(me).focus();
+								emailsArr = $(me).val().split(";");
+							});
+						});
+					}
+				});
+				/*//写邮件类型切换
+				$(".edit-Email-content .sel-edit-Email-type>a").unbind("click").click(function() {
+					var index = $(this).attr("index");
+					$(this).addClass("focus");
+					$(this).siblings().removeClass("focus");
+					if(index == "edit-common-Email") {
+						//普通邮件
+						$(".edit-Email-content .edit-Email-content-main-head-common-Email").removeClass("hide");
+						$(".edit-Email-content .edit-Email-content-main-head-common-Email .edit-Email-content-main-body-left .copy-send").addClass("hide");
+						$(".edit-Email-content .edit-Email-content-main-head-common-Email .edit-Email-content-main-body-left .secrit-send").addClass("hide");
+						$(".edit-Email-content .edit-Email-content-main-body-left .edit-Email-content-main-body-left-footer").children().each(function(i) {
+							if(i != 0) $(this).removeClass("hide");
+						});
+						$(".edit-Email-content .edit-Email-content-main-body-right").removeClass("hide");
+						$(".edit-Email-content .edit-Email-content-main-body-right-group").addClass("hide");
+					} else {
+						//群邮件
+						$(".edit-Email-content .edit-Email-content-main-head-common-Email").addClass("hide");
+						$(".edit-Email-content .edit-Email-content-main-head-common-Email .edit-Email-content-main-body-left .copy-send").addClass("hide");
+						$(".edit-Email-content .edit-Email-content-main-head-common-Email .edit-Email-content-main-body-left .secrit-send").addClass("hide");
+						$(".edit-Email-content .edit-Email-content-main-body-left .edit-Email-content-main-body-left-footer").children().each(function(i) {
+							if(i != 0) $(this).addClass("hide");
+						});
+						$(".edit-Email-content .edit-Email-content-main-body-right").addClass("hide");
+						$(".edit-Email-content .edit-Email-content-main-body-right-group").removeClass("hide");
+
+					}
+				});*/
+			}
+			////企业联系人
+			function loadCompanyContactsTree() {
+				$.ajaxGet(MAILAPIURL + "mail/company/contacts", function(resp) {
+					$(".own-company-contact").empty();
+					$(".common-dept-tree-count").text("（"+(resp.data.records||0)+"）");
+					$.each(resp.data.rows, function(index, item) {
+						var liDom = "<li class='company-li' data-depa-id='" + item.depa_id + "' data-depa-name='" + item.depa_name + "'><div class='detail-container'><img area-hidden='true' src='../resources/images/plus-o-icon.png' data-trans-src='../resources/images/minus-o-icon.png'>" + item.depa_name + "</div></li>";
+						$(".own-company-contact").append(liDom);
+						if(item.depas) {
+							appendChildDepa(item.depas, item.depa_id);
+						} else if(item.employees) {
+							appendChildEmp(item.employees, item.depa_id);
+						}
+					});
+					$(".own-company-contact ul").addClass("hide");
+					$(".own-company-contact>li li").slideUp();
+					$(".own-company-contact li .detail-container").click(function(e) {
+						e.stopPropagation();
+						if($(this).find(">img").attr("area-hidden")=="true") {
+							$(this).find(">img").attr("area-hidden",false);
+							//关闭状态
+							$(this).parent().find(">li").slideDown("hide");
+						} else {
+							$(this).find(">img").attr("area-hidden",true);
+							$(this).parent().find(">li").slideUp("hide");
+						}
+						transImgSrc($(this).find(">img"));
+					});
+					//人点击事件
+					bindTransBackgroundEvent(".own-company-contact .contact-li span","hover");
+					bindTransBackgroundEvent((".depa-contact"), "hover");
+					$(".contact-span").click(function() {
+						var me = this;
+						$(this).toggleClass("selected");
+						//点击添加邮件地址到对应输入框
+						$(".Email-sender").each(function() {
+							if($(this).attr("data-click-email-to-this") == "true") {
+								if($(this).val().indexOf($(me).attr("data-email")) < 0) $(this).val($(this).val() + $(me).parent().attr("data-email") + ";");
+								$(this).focus();
+							}
+						});
+					});
+				});
+			}
+			//客户联系人
+			function loadClientContactsTree() {
+				$.ajaxGet(BSAPIURL + "/crm/customers/my", function(resp) {
+					$(".client-company-contact").empty();
+					$.each(resp.data, function(index, item) {
+						var liDom = "<li data-depa-id='" + item.client_id + "' data-depa-name='" + item.client_name + "'><img area-hidden='true' src='../resources/images/plus-o-icon.png' data-trans-src='../resources/images/minus-o-icon.png'>" + item.client_name + "</li>";
+						$(".client-company-contact").append(liDom);
+						if(item.depas) {
+							appendChildDepa(item.depas, item.client_id);
+						} else if(item.employees) {
+							appendChildEmp(item.employees, item.client_id);
+						}
+					});
+					$(".common-dept-tree>ul ul").addClass("hide");
+					$(".client-company-contact li").click(function(e) {
+						e.stopPropagation();
+						if($(this).find(">i").hasClass("fa-plus-square-o")) {
+							//关闭状态
+							$(this).find(">i").removeClass("fa-plus-square-o").addClass("fa-minus-square-o");
+							$(this).find(">ul").removeClass("hide");
+						} else {
+							$(this).find(" i").removeClass("fa-minus-square-o").addClass("fa-plus-square-o");
+							$(this).find("ul").addClass("hide");
+						}
+					});
+					//人点击事件
+					bindTransBackgroundEvent((".depa-contact"), "hover");
+					$(".contact-span").click(function() {
+						var me = this;
+						$(this).toggleClass("selected");
+						//点击添加邮件地址到对应输入框
+						$(".Email-sender").each(function() {
+							if($(this).attr("data-click-email-to-this") == "true") {
+								if($(this).val().indexOf($(me).attr("data-email")) < 0) $(this).val($(this).val() + $(me).parent().attr("data-email") + ";");
+								$(this).focus();
+							}
+						});
+					});
+				});
+			}
+			//关键字搜索企业联系人
+			function loadCompanyContactsByKey(keyword) {
+				//if(keyWord) {
+					$(".common-dept-tree ul .cantact-li").each(function(){
+						
+					});
+					transImgSrc($(".common-dept-tree ul li img[area-hidden='true']"));
+					if($(".common-dept-tree").prev().attr("area-hidden")=="true") {
+						transImgSrc($(".common-dept-tree").prev().find("img"));
+					}
+				//	return false;
+				//}
+				$.ajaxGet(MAILAPIURL + "/mail/company/contacts?is_list=1&key=" + keyword, function(resp) {
+					if(resp.code !== 0) {
+						$.showErrorGritter("搜索联系人失败：" + resp.msg);
+						return false;
+					}
+					var contactsTrDom = "";
+					$(".own-company-contact").empty();
+					$(".own-company-contact").html("<li></li>");
+					$.each(resp.data, function(i, item) {
+						contactsTrDom +=
+						"<div class='dept-contact-div' title='"+(item.employee_name+"("+item.employee_email+")")+"' data-name='" + item.employee_name + "' data-email='" + item.employee_email + "'>" +
+						"	<span class='contact-span css-overhidden'>" + item.employee_name+ "<span class='note-font-type'>（"+ item.employee_email+"）</span>"+ "</span>" +
+						"</div>";
+					});
+					$(".own-company-contact li").append(contactsTrDom);
+					$(".common-dept-tree").slideDown();
+					//$(".common-dept-tree ul li img[area-hidden]").slideDown();
+					$(".common-dept-tree ul").slideDown();
+					$(".common-dept-tree ul li").slideDown();
+					$(".own-company-contact .dept-contact-div .contact-span").click(function() {
+						var me = this;
+						$(this).toggleClass("selected");
+						//点击添加邮件地址到对应输入框
+						$(".Email-sender").each(function() {
+							if($(this).attr("data-click-email-to-this") == "true") {
+								if($(this).val().indexOf($(me).attr("data-email")) < 0) $(this).val($(this).val() + $(me).parent().attr("data-email") + ";");
+								$(this).focus();
+							}
+						});
+					});
+					bindTransBackgroundEvent((".dept-contact-div"), "hover");
+				});
+			}
+			//关键字搜索客户联系人
+			function loadCustomerContactsByKey(keyword) {
+				$.ajaxGet(BSAPIURL + "/crm/customers/my?is_list=1&key=" + keyword, function(resp) {
+					if(resp.code !== 0) {
+						$.showErrorGritter("搜索联系人失败：" + resp.msg);
+						return false;
+					}
+					var contactsTrDom = "";
+					$(".client-company-contact").empty();
+					$(".client-company-contact").html("<li><table></table></li>");
+					$.each(resp.data, function(i, item) {
+						contactsTrDom +=
+							"<tr class='dept-contact-tr' data-name='" + item.contact_name + "' data-email='" + item.contact_email + "'>" +
+							"<td style='border-bottom: 1px solid #ccc;width: 190px;'>" +
+							"<p>" + item.contact_name + (item.depa_name ? "(" + item.depa_name + ")" : "") + "</p>" +
+							"<p style='color:#999;font-size=14px;'>" + item.contact_email + "</p>" +
+							"</td>" +
+							//								"<td style='width:20%'>" + (item.client_full_name + "，" + item.depa_name) + "</td>" +
+							//								"<td style='width:80%'>" + item.contact_email + "</td>" +
+							"</tr>";
+					});
+					$(".client-company-contact li table").append(contactsTrDom);
+					$(".client-company-contact .depa-contact-tr").click(function() {
+						var me = this;
+						$(this).toggleClass("selected");
+						//点击添加邮件地址到对应输入框
+						$(".Email-sender").each(function() {
+							if($(this).attr("data-click-email-to-this") == "true") {
+								if($(this).val().indexOf($(me).attr("data-email")) < 0) $(this).val($(this).val() + $(me).attr("data-email") + ";");
+								$(this).focus();
+							}
+						});
+					});
+					bindTransBackgroundEvent((".client-contacts-detail table tr[data-name]"), "hover");
+				});
+			}
+			//递归子部门
+			function appendChildDepa(data, parentDepaId) {
+				//var depaUlDom = "<ul data-parent-depa-id='" + parentDepaId + "'></ul>";
+				//$("li[data-depa-id='" + parentDepaId + "']").append(depaUlDom);
+				$.each(data, function(index, item) {
+					var liDom = "<li class='dept-li' data-parent-depa-id='" + parentDepaId + "' data-depa-id='" + item.depa_id + "' data-depa-name='" + item.depa_name + "'><div class='detail-container'><img area-hidden='true' src='../resources/images/plus-o-icon.png' data-trans-src='../resources/images/minus-o-icon.png'>" + item.depa_name + "</div></li>";
+					$("li[data-depa-id='" + parentDepaId + "']").append(liDom);
+					if(item.depas) {
+						appendChildDepa(item.depas, item.depa_id);
+					} else if(item.employees) {
+						appendChildEmp(item.employees, item.depa_id);
+					} else if(item.contacts) {
+						appendChildEmp(item.contacts, item.depa_id);
+					}
+				});
+			}
+			//递归部门下面的人
+			function appendChildEmp(data, parentDepaId) {
+//				var empUlDom = "<ul data-parent-depa-id='" + parentDepaId + "'></ul>";
+//				$("li[data-depa-id='" + parentDepaId + "']").append(empUlDom);
+				$.each(data, function(index, item) {
+					var liDom = "<li class='contact-li' data-parent-depa-id='" + parentDepaId + "' class='depa-contact' data-email='" + (item.employee_email ? item.employee_email : item.contact_email) 
+					+ "'  data-employee-name='" + (item.employee_name ? item.employee_name : item.contact_name) 
+					+ "' data-employee-id='" + (item.employee_id ? item.employee_id : item.contact_id) + "'>"
+					+"<span class='contact-span'>"+ (item.employee_name ? item.employee_name : item.contact_name) + "</span></li>"
+					$("li[data-depa-id='" + parentDepaId + "']").append(liDom);
+				});
+			}
+			//抄送、密送、分别发送点击事件
+			$(".edit-Email-content-main-head-common-Email a").click(function() {
+				var index = $(this).attr("index");
+				if(index == "copy-send") {
+					//抄送
+					if($(this).attr("data-has-been-selected") == "false") {
+						$(this).html("删除抄送-");
+						$(this).attr("data-has-been-selected", "true");
+						$(".edit-Email-content-main-body-left .copy-send").removeClass("hide");
+					} else {
+						$(this).html("抄送-");
+						$(this).attr("data-has-been-selected", "false");
+						$(".edit-Email-content-main-body-left .copy-send").addClass("hide");
+					}
+				} else if(index == "secrit-send") {
+					//密送
+					if($(this).attr("data-has-been-selected") == "false") {
+						$(this).html("删除密送|");
+						$(this).attr("data-has-been-selected", "true");
+						$(".edit-Email-content-main-body-left .secrit-send").removeClass("hide");
+					} else {
+						$(this).html("密送|");
+						$(this).attr("data-has-been-selected", "false");
+						$(".edit-Email-content-main-body-left .secrit-send").addClass("hide");
+					}
+				} else {
+					//分别发送
+					if($(this).attr("data-has-been-selected") == "false") {
+						$(this).html("删除分别发送");
+						$(this).attr("data-has-been-selected", "true");
+						//分别发送时取消抄送和密送
+						$(this).prev().html("");
+						$(this).prev().prev().html("");
+						$(".edit-Email-content-main-body-left .secrit-send").addClass("hide");
+						$(".edit-Email-content-main-body-left .copy-send").addClass("hide");
+					} else {
+						$(this).html("分别发送");
+						$(this).attr("data-has-been-selected", "false");
+						$(".edit-Email-content-main-body-left .copy-send").addClass("hide");
+						//取消分别发送时恢复抄送和密送之前状态
+						$(this).prev().html("密送|");
+						$(this).prev().prev().html("抄送-");
+						if($(this).prev().attr("data-has-been-selected") == "true") {
+							$(this).prev().html("取消密送|");
+							$(".edit-Email-content-main-body-left .secrit-send").removeClass("hide");
+						} else {
+							$(this).prev().html("密送|");
+							$(".edit-Email-content-main-body-left .secrit-send").addClass("hide");
+						}
+						if($(this).prev().prev().attr("data-has-been-selected") == "true") {
+							$(this).prev().prev().html("取消抄送-");
+							$(".edit-Email-content-main-body-left .copy-send").removeClass("hide");
+						} else {
+							$(this).prev().prev().html("抄送-");
+							$(".edit-Email-content-main-body-left .copy-send").addClass("hide");
+						}
+					}
+				}
+				$(".ke-container").css({
+					height:$(".edit-email-body").outerHeight(true)-getEditPanelInputLabelHeight()-
+							$(".add-extra-files").outerHeight(true)-20+"px"
+					});
+			});
+			//写信面板搜索框
+			////收信
+			function initReceiveEmail() {
+				$(".receive-Email-detail").removeClass("hide");
+				$(".receive-Email-detail").siblings().addClass("hide");
+			}
+			$(".edit-Email-content-main-body-right-common .sel-contacts-type a").click(function() {
+				var index = $(this).attr("index");
+				$(this).addClass("focus");
+				$(this).siblings().removeClass("focus");
+				if(index == "dept") {
+					$(".own-company-contact").addClass("hide");
+					$(".client-company-contact").removeClass("hide");
+				} else {
+					$(".client-company-contact").addClass("hide");
+					$(".own-company-contact").removeClass("hide");
+				}
+			});
+			//收信页面全选按钮
+			bindSelectAllBtn(".receive-Email-tab-btn-selected-all", ".receive-Email-detail input[name='email-checkbox']");
+			//发送邮件按钮
+			$(".edit-Email-content .edit-Email-content-main-footer a,.edit-Email-content .edit-Email-content-main-head>a").click(function() {
+				var me = this;
+				var needVali = $(this).hasClass("btn-send-email") ? true : false;
+				var url = MAILAPIURL + ($(this).hasClass("btn-send-email") ? "mail/send" : "mail/save");
+				var reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+				var sendEmailData = {};
+				//是否分别发送
+				sendEmailData.alone = $(".edit-Email-content-main-head-common-Email a[index='depart-send']").attr("data-has-been-selected") == "false" ? 0 : 1;
+				//密件抄送
+				if(sendEmailData.alone) {
+					sendEmailData.bcc = [];
+				} else {
+					var bcc = $(".edit-Email-content .secrit-send input").val();
+					bcc = bcc.split(";");
+					console.log(bcc)
+					for(var i in bcc) {
+						if(bcc[i] == "") {
+							bcc.splice(i, 1);
+							continue;
+						}
+						if(!reg.test(bcc[i]) && needVali) {
+							$.showErrorGritter("密送人中有邮箱格式不对，请检查！");
+							return false;
+						}
+					}
+					sendEmailData.bcc = bcc;
+				}
+				//正文
+				sendEmailData.body = editor.html()
+				//抄送
+				if(sendEmailData.alone) {
+					sendEmailData.cc = [];
+				} else {
+					var cc = $(".edit-Email-content .copy-send input").val();
+					cc = cc.split(";");
+					for(var i in cc) {
+						if(cc[i] == "") {
+							cc.splice(i, 1);
+							continue;
+						}
+						if(!reg.test(cc[i]) && needVali) {
+							$.showErrorGritter("抄送人中有邮箱格式不对，请检查！");
+							return false;
+						}
+					}
+					sendEmailData.cc = cc;
+				}
+
+				//主题
+				sendEmailData.subject = $(".edit-Email-content .email-subject").val();
+				//收件人
+				var to = $(".edit-Email-content .common-send input").val();
+				if(!to && needVali) {
+					$.showErrorGritter("收件人不能为空，请填写！");
+					return false;
+				}
+				to = to.split(";");
+				for(var i in to) {
+					if(to[i] == "") {
+						to.splice(i, 1);
+						continue;
+					}
+					if(!reg.test(to[i]) && needVali) {
+						$.showErrorGritter("收件人中有邮箱格式不对，请检查！");
+						return false;
+					}
+				}
+				sendEmailData.to = to;
+				//附件
+				sendEmailData.attachments = [];
+				$(".add-extra-files .uploaded .item").each(function() {
+					sendEmailData.attachments.push({
+						name: $(this).attr("data-file-name"),
+						path: $(this).attr("data-file-path")
+					});
+				});
+				////是否为紧急邮件
+				sendEmailData.priority = $(".send-email-critical").is(":checked") ? 1 : 0;
+				//是否阅读回执
+				sendEmailData.reply = $(".send-email-read-back").is(":checked") ? 1 : 0;
+				$.showLoadingPop(($(me).hasClass("btn-send-email") ? "正在发送，请稍候......" : "正在保存，请稍候......"));
+				$.ajaxPost(url, sendEmailData, function(resp) {
+					$.hideLoadingPop();
+					if(resp.code != 0) {
+						$.showErrorGritter(($(me).hasClass("btn-send-email") ? "邮件发送失败：" : "邮件保存失败：") + resp.msg);
+					} else {
+						$.showSuccessGritter(($(me).hasClass("btn-send-email") ? "邮件发送成功！" : "邮件保存成功！"));
+						loadEditEmailPanel();
+					}
+				});
+			});
+			//企业部门   聊天群组点击事件
+			$(".edit-Email-content-main-body-right-group .sel-contacts-type a").click(function() {
+				var index = $(this).attr("index");
+				$(this).addClass("focus");
+				$(this).siblings().removeClass("focus");
+				if(index == "dept") {
+					$(".edit-Email-content-main-body-right-group .search-dept input").attr("placeholder", "请输入部门名称进行查找");
+					$(".edit-Email-content-main-body-right-group .selected-type").html("部门");
+				} else {
+					$(".edit-Email-content-main-body-right-group .search-dept input").attr("placeholder", "请输入群组名称进行查找");
+					$(".edit-Email-content-main-body-right-group .selected-type").html("群组");
+				}
+			});
+			//通讯录  
+			function initContacts() {
+				$(".contacts-application-detail").css({
+					"height": $(".main-wrap").outerHeight(true)-3+"px",
+					"max-height": $(".main-wrap").outerHeight(true)-3+"px"
+				});
+				$(".contacts-content-detail").css({
+					"height": $(".contacts-application-detail").outerHeight(true)-$(".input-search-inline-block").outerHeight(true)-$(".contacts-content-detail-footer").outerHeight(true)-15+"px",
+					"max-height": $(".contacts-application-detail").outerHeight(true)-$(".input-search-inline-block").outerHeight(true)-$(".contacts-content-detail-footer").outerHeight(true)-15+"px"
+				});
+				$(".contacts-application-detail").siblings().addClass("hide");
+				$(".contacts-application-detail").removeClass("hide");
+				var keyWordOfContact = "";
+				// 企业员工   客户联系人  点击事件
+				$(".selected-contacts-type a").click(function() {
+					var index = $(this).attr("index");
+					$(this).addClass("focus");
+					$(this).siblings().removeClass("focus");
+					$(".contacts-content-detail-tab td div").addClass("hide");
+					if(index == "company-employee") {
+						//企业员工
+						$(".contacts-content-detail-tab td .company-contacts-detail").removeClass("hide");
+						loadCompanyContacts(keyWordOfContact);
+					} else {
+						//客户联系人
+						$(".contacts-content-detail-tab td .client-contacts-detail").removeClass("hide");
+						//loadCustomerContacts(keyWordOfContact);
+					}
+				});
+				$(".search-in-all-contacts").unbind("keyup").keyup(function(e) {
+					//if(e.keyCode == 13) {
+						var index = $(".selected-contacts-type a.focus").attr("index");
+						keyWordOfContact = $(this).val();
+						if(index == "company-employee") {
+							addressBookSearch("company");
+							//loadCompanyContacts(keyWordOfContact);
+						} else {
+							addressBookSearch("client");
+							//loadCustomerContacts(keyWordOfContact);
+						}
+					//}
+				});
+				//发邮件按钮
+				$(".contacts-application-detail .contacts-content-detail-footer .send-Email").click(function() {
+					var params = [];
+					$(".contacts-application-detail .contacts-content-detail .contacts-content-detail-tab tbody>tr>td:first-child>input").each(function() {
+						if($(this).prop("checked")) {
+							//$(this).find("input:checked").each(function() {
+							var uEmail = $(this).parent().parent().attr("data-email");
+							var uName = $(this).parent().parent().attr("data-name");
+							if(uEmail) params.push({
+								name: uName,
+								email: uEmail
+							});
+							//});
+						}
+					});
+					loadEditEmailPanel(params, "new");
+				});
+				//查看往来邮件按钮
+				$(".contacts-application-detail .contacts-content-detail-footer .view-from-and-to").click(function() {
+					var params = [];
+					$(".contacts-application-detail .contacts-content-detail .contacts-content-detail-tab tbody>tr>td:first-child>input").each(function() {
+						if($(this).prop("checked")) {
+							//$(this).find("input:checked").each(function() {
+							var uEmail = $(this).parent().parent().attr("data-email");
+							var uName = $(this).parent().parent().attr("data-name");
+							params.push({
+								email: uEmail,
+								name: uName
+							});
+							//});
+						}
+					});
+					if(params.length > 1) {
+						$.showErrorGritter("该操作只能选择一个联系人");
+						return false;
+					}
+					if(params.length < 1 && !params[0].name) {
+						$.showErrorGritter("请先选择一个联系人");
+						return false;
+					}
+					if(params.length == 1 && !params[0].email) {
+						$.showErrorGritter("您选择的联系人没有绑定邮箱账号");
+						return false;
+					}
+					loadDiffrentPanel("view-from-and-to", {
+						type: "",
+						ex_mail: params[0].email,
+						name: params[0].name
+					});
+				});
+				loadCompanyContacts("");
+				//loadCustomerContacts("");
+			}
+			var companyPage = 1;
+			var clientPage = 1;
+			//通讯录搜索
+			function addressBookSearch(type) {
+				var searchTxt=$(".search-in-all-contacts").val();
+				var contentDom = $(".company-contacts-detail tr:first-child~tr");
+				if(type == "client") {
+					contentDom = $(".client-contacts-detail tr:first-child~tr");
+				}
+				contentDom.each(function(o){
+					var searchText=[$(this).data("name"),$(this).data("email")];
+					if(!pinyinSearch(searchTxt,searchText)){
+						$(this).hide();
+					}else{
+						$(this).show();
+					}
+				});
+			}
+
+			function loadCompanyContacts(keyword) {
+				$.ajaxGet(MAILAPIURL + "/mail/company/contacts?is_list=1&key=" + keyword + "&page=" + companyPage, function(resp) {
+					var contactsTrDom = "";
+					$(".contacts-content-detail-tab tbody").empty();
+					$.each(resp.data.rows, function(i, item) {
+						contactsTrDom +=
+							"<tr data-name='" + item.employee_name + "' data-email='" + item.employee_email + "'>" +
+							"<td style='width:2%'>" +
+							"<input type=\"checkbox\" />" +
+							"</td>" +
+							"<td style='width:10%'>" + item.employee_name + "</td>" +
+							"<td style='width:20%'>" + item.depa_name + "</td>" +
+							"<td style='width:66%'>" + item.employee_email + "</td>" +
+							"</tr>";
+					});
+					$(".contacts-application-detail .search-in-all-contacts").unbind("keydown").keydown(function(e){
+						loadCompanyContacts($(this).val());
+					});
+					$(".contacts-content-detail-tab tbody").append(contactsTrDom);
+					$(".contacts-content-detail-tab tbody tr").click(function() {
+						clickToEditEmailPanel(this);
+					});
+					$(".contacts-content-detail-tab tbody tr td:first-child").unbind("click").click(function(event) {
+						//e.preventDefault();
+						var e = window.event || event;
+						if(e.stopPropagation) { //如果提供了事件对象，则这是一个非IE浏览器 
+							e.stopPropagation();
+						} else {
+							//兼容IE的方式来取消事件冒泡 
+							window.event.cancelBubble = true;
+						}
+						//							alert($(this).find("input").prop("checked"));
+						//							if($(this).find("input").prop("checked")=="checked"){
+						//								alert("1")
+						//								$(this).find("input").removeProp("checked");
+						//								return false;
+						//							}else{
+						//								alert(2)
+						//								$(this).find("input").prop("checked", "checked");
+						//							}
+
+					});
+					bindTransBackgroundEvent((".contacts-content-detail-tab tbody tr[data-name]"), "hover");
+//					$(".contacts-content-detail-tab").css({
+//						width: $(".contacts-content-detail").outerWidth(true)-20+"px"
+//					})
+					bindSelectAllBtn($(".contacts-content-detail-tab-head thead tr td:first-child>input"),$(".contacts-application-detail .contacts-content-detail .contacts-content-detail-tab tbody>tr>td:first-child>input"));
+					$(".contacts-content-detail-tab-head tr td:eq(0)").css({
+						width: $(".contacts-content-detail-tab tbody tr:first-child td:eq(0)").outerWidth(true)+"px"
+					});
+					$(".contacts-content-detail-tab-head tr td:eq(1)").css({
+						width: $(".contacts-content-detail-tab tbody tr:first-child td:eq(1)").outerWidth(true)+"px"
+					});
+					$(".contacts-content-detail-tab-head tr td:eq(2)").css({
+						width: $(".contacts-content-detail-tab tbody tr:first-child td:eq(2)").outerWidth(true)+"px"
+					});
+					$(".contacts-content-detail-tab-head tr td:eq(3)").css({
+						width: $(".contacts-content-detail-tab tbody tr:first-child td:eq(3)").outerWidth(true)+"px"
+					});
+				});
+			}
+
+			function loadCustomerContacts(keyword) {
+				$.ajaxGet(BSAPIURL + "/crm/customers/my?is_list=1&key=" + keyword + "&page=" + clientPage, function(resp) {
+					var contactsTrDom = "";
+					//$(".contacts-content-detail-tab td .client-contacts-detail table tbody").empty();
+					$(".contacts-content-detail-tab tbody").empty();
+					$.each(resp.data, function(i, item) {
+						contactsTrDom +=
+							"<tr data-name='" + item.contact_name + "' data-email='" + item.contact_email + "'>" +
+							"<td style='width:2%'>" +
+							"<input type=\"checkbox\" />" +
+							"</td>" +
+							"<td style='width:10%'>" + item.contact_name + "</td>" +
+							"<td style='width:20%'>" + (item.client_full_name + "，" + item.depa_name) + "</td>" +
+							"<td style='width:66%'>" + item.contact_email + "</td>" +
+							"</tr>";
+					});
+					$(".contacts-content-detail-tab tbody").append(contactsTrDom);
+					$(".contacts-content-detail-tab tbody tr").click(function() {
+						clickToEditEmailPanel(this);
+					});
+					$(".contacts-content-detail-tab tbody tr td:first-child").unbind("click").click(function(event) {
+						var e = window.event || event;
+						if(e.stopPropagation) { //如果提供了事件对象，则这是一个非IE浏览器 
+							e.stopPropagation();
+						} else {
+							//兼容IE的方式来取消事件冒泡 
+							window.event.cancelBubble = true;
+						}
+						//							alert(0)
+						//							$(this).find("input").prop("checked", "checked");
+					});
+					bindTransBackgroundEvent((".contacts-content-detail-tab tbody tr[data-name]"), "hover");
+				});
+			}
+			//通讯录界面点击联系人的tr进入写邮件的界面
+			function clickToEditEmailPanel(obj) {
+				if(!$(obj).attr("data-email")) {
+					$.showErrorGritter("没有填写该联系人的邮箱信息，请填写！");
+				}
+				loadEditEmailPanel({
+					name: $(obj).attr("data-name"),
+					email: $(obj).attr("data-email")
+				}, "new");
+			}
+			////通讯录界面全选按钮
+			bindSelectAllBtn(".contacts-content-detail-tab thead td input", ".contacts-content-detail-tab tbody input");
+			$(".Email-detail span").click(function() {
+				$(this).addClass("selected");
+				$(this).siblings().removeClass("selected");
+				var index = $(this).attr("index");
+				loadDiffrentPanel(index);
+			});
+			bindTransBackgroundEvent((".Email-detail span"), "hover");
+
+			function loadDiffrentPanel(type, data) {
+				//console.log(arguments)
+				setPanelBtnsDom(type, data);
+				////筛选未读邮件
+				$(".unread-Email-num").unbind("click");
+				$(".unread-Email-num").click(function() {
+					loadDiffrentPanel(type, {
+						isUnread: 1
+					});
+				});
+				//查看全部
+				$(".total-Email-num").unbind("click");
+				$(".total-Email-num").click(function() {
+					loadDiffrentPanel(type);
+				});
+				var params = {};
+				params.type = type;
+				requestEmailList(params, data);
+				////邮件搜索
+				//跳转到第n页
+				$(".receive-Email-detail-operators-bottom div span,receive-Email-detail-operators-right-container div span")
+				.unbind("click").click(function() {
+					var currPage;
+					if($(this).parent().hasClass("view-Email-history-before")) { //跳转到前一页
+						if(parseInt($(".history-curr-pager").html()) <= 1) {
+							$.showErrorGritter("当前页已经是第一页！");
+							return false;
+						}
+						currPage = parseInt($(".history-curr-pager").html()) - 1;
+					} else if($(this).parent().hasClass("view-Email-history-after")) { //跳转到后一页
+						if(parseInt($(".history-curr-pager").html()) >= parseInt($(".history-total-pager").html())) {
+							$.showErrorGritter("当前页已经是最后一页！");
+							return false;
+						}
+						currPage = parseInt($(".history-curr-pager").html()) + 1;
+					} else {
+						//刷新
+					}
+					$(".history-curr-pager").html(currPage);
+					var params = {};
+					params.page = $(".history-curr-pager").html();
+					params.type = type;
+					requestEmailList(params);
+				});
+				//手动输入页数查询
+				$(".receive-Email-detail-operators-bottom .jump-to-page,receive-Email-detail-operators-right-container .jump-to-page")
+				.unbind("keydown").keydown(function(e) {
+					if(e.keyCode == 13) {
+						e.preventDefault();
+						if(parseInt($(this).text()) < 1) {
+							$.showErrorGritter("页数不能小于1，请重新输入！");
+						} else if(parseInt($(this).text()) > parseInt($(".history-total-pager").html())) {
+							$.showErrorGritter("页数不能大于最大页数，请重新输入！");
+						} else {
+							var params = {};
+							params.type = type;
+							params.page = $(this).text();
+							$(".history-curr-pager").html($(this).text());
+							requestEmailList(params);
+						}
+					}
+				});
+			}
+			//不同界面按钮设置
+			function setPanelBtnsDom(type, data) {
+				var remarkReadOrUnreadDom =
+					"<span class='remark-email-container hide'>" +
+					"<span class='remark-email-read'>已读邮件</span>" +
+					"<span class='remark-email-unread'>未读邮件</span>" +
+					"</span>";
+				$(".receive-Email-detail").removeClass("hide");
+				$(".receive-Email-detail").attr("data-type", type);
+				$(".receive-Email-detail").siblings().addClass("hide");
+				if(type == "receive-box") {
+					//收件箱
+					$(".receive-Email-detail-head span").html("收件箱");
+					$(".receive-Email-detail-head .unread-Email-num").removeClass("hide");
+					$(".receive-Email-detail-head .total-Email-num").removeClass("hide");
+					var draftBoxDom = "<a class=\"delete-Email a-btn\">删除</a>" +
+						"<a onclick='deleteEmailsKnew(\"list\",\"" + type + "\")' class=\"delete-Email-knew a-btn\">彻底删除</a>" +
+						"<a onclick='transferEmails(\"\")' class=\"transfer-Email a-btn\">转发</a>" +
+						"<a class=\"remark-as remark-email a-btn\">标记为<img src='../resources/images/email-angle-down.png' />" + remarkReadOrUnreadDom + "</a>";
+					$(".receive-Email-detail-operators-btns-container").html(draftBoxDom);
+					$(".receive-Email-tab-head td:nth-child(3)").html("发件人");
+				} else if(type == "group-Email") {
+					//群邮件
+					$(".receive-Email-detail-head .unread-Email-num").removeClass("hide");
+					$(".receive-Email-detail-head .total-Email-num").removeClass("hide");
+					$(".receive-Email-tab-head td:nth-child(3)").html("群组");
+					$(".receive-Email-detail-head span").html("群邮件");
+				} else if(type == "draft-box") {
+					//草稿箱
+					$(".receive-Email-detail-head span").html("草稿箱");
+					$(".receive-Email-detail-head .unread-Email-num").addClass("hide");
+					$(".receive-Email-detail-head .total-Email-num").removeClass("hide");
+					var draftBoxDom = "<a class='delete-Email delete-draft-Email a-btn'>删除草稿</a><a onclick='transferEmails(\"\")' class='transfer-draft-Email a-btn'>转发</a>"
+					$(".receive-Email-detail-operators-btns-container").html(draftBoxDom);
+					$(".receive-Email-tab-head td:nth-child(3)").html("收件人/群组");
+				} else if(type == "already-send") {
+					//已发送
+					$(".receive-Email-detail-head span").html("已发送");
+					$(".receive-Email-detail-head .unread-Email-num").addClass("hide");
+					$(".receive-Email-detail-head .total-Email-num").removeClass("hide");
+					var draftBoxDom = "<a class='delete-Email delete-sended-Email a-btn'>删除</a><a onclick='deleteEmailsKnew(\"list\",\"" + type + "\")' class='delete-sended-Email-knew a-btn'>彻底删除</a><a onclick='transferEmails(\"\")' class='transfer-sended-Email a-btn'>转发</a>"
+					$(".receive-Email-detail-operators-btns-container").html(draftBoxDom);
+					$(".receive-Email-tab-head td:nth-child(3)").html("收件人");
+				} else if(type == "already-delete") {
+					//已删除
+					$(".receive-Email-detail-head span").html("已删除");
+					$(".receive-Email-detail-head .total-Email-num").removeClass("hide");
+					var draftBoxDom = "<a onclick='deleteEmailsKnew(\"list\",\"" + type + "\")' class='delete-Email-knew a-btn'>彻底删除</a><a onclick='transferEmails(\"\")' class='delete-Email-transfer a-btn'>转发</a><a onclick=\"deletedEmailsResume(\'list\',\'" + type + "\',this)\" class='delete-Email-resume move-email-to-container a-btn'>" +
+						"移动到∨<span class='move-email-to hide'>" +
+						"<span index='1'>收件箱</span><span index='5'>草稿箱</span><span index='9'>已发送</span><span index='17'>垃圾箱</span>" +
+						"</span>" +
+						"</a>"
+					$(".receive-Email-detail-operators-btns-container").html(draftBoxDom);
+					$(".receive-Email-tab-head td:nth-child(3)").html("发件人");
+				} else if(type == "view-from-and-to") {
+					//查看往来邮件
+					$(".receive-Email-detail-head span").html("与“" + data.name + "<" + data.mail + ">”的往来邮件");
+					$(".receive-Email-detail-head .unread-Email-num").addClass("hide");
+					$(".receive-Email-detail-head .total-Email-num").addClass("hide");
+					var draftBoxDom = "<a class='delete-Email delete-from-to-Email a-btn'>删除</a><a onclick='deleteEmailsKnew(\"list\",\"" + type + "\")' class='from-to-Email-knew a-btn'>彻底删除</a><a onclick='transferEmails(\"\")' class='from-to-Email-trust a-btn'>转发</a><a class='remark-email from-to-Email-remark a-btn'>标记为<img src='../resources/images/email-angle-down.png' />" + remarkReadOrUnreadDom + "</a>"
+					$(".receive-Email-detail-operators-btns-container").html(draftBoxDom);
+					$(".receive-Email-tab-head td:nth-child(3)").html("发件人");
+				} else if(type == "search-result") {
+					//搜索
+					$(".receive-Email-detail-head span").html("查找结果");
+					$(".receive-Email-detail-head .unread-Email-num").addClass("hide");
+					$(".receive-Email-detail-head .total-Email-num").addClass("hide");
+					var searchResultBoxDom = "<a onclick='deleteEmailsKnew(\"list\",\"" + type + "\")' class='delete-trash-Email-knew a-btn'>彻底删除</a><a onclick='transferEmails(\"\")' class='trash-Email-transfer a-btn'>转发</a><a class='trash-Email-trust a-btn'>信任</a><a class='remark-email trash-Email-remark a-btn'>标记为<img src='../resources/images/email-angle-down.png' />" + remarkReadOrUnreadDom + "</a>"
+					$(".receive-Email-detail-operators-btns-container").html(searchResultBoxDom);
+					$(".receive-Email-tab-head td:nth-child(3)").html("发件人");
+				} else {
+					//垃圾箱deleteEmailsKnew(mailIds)
+					$(".receive-Email-detail-head span").html("垃圾箱");
+					$(".receive-Email-detail-head .unread-Email-num").removeClass("hide");
+					$(".receive-Email-detail-head .total-Email-num").removeClass("hide");
+					var draftBoxDom = "<a onclick='deleteEmailsKnew(\"list\",\"" + type + "\")' class='delete-trash-Email-knew a-btn'>彻底删除</a><a onclick='transferEmails(\"\")' class='trash-Email-transfer a-btn'>转发</a><a class='trash-Email-trust a-btn'>信任</a><a class='remark-email trash-Email-remark a-btn'>标记为<img src='../resources/images/email-angle-down.png' />" + remarkReadOrUnreadDom + "</a>"
+					$(".receive-Email-detail-operators-btns-container").html(draftBoxDom);
+					$(".receive-Email-tab-head td:nth-child(3)").html("发件人");
+				}
+			}
+			//请求邮件列表
+			function requestEmailList(params, data) {
+				$(".email-list-container").css({
+					"height": $(".receive-Email-detail").outerHeight(true)-$(".receive-Email-detail-operators").outerHeight(true)-$(".receive-Email-detail-head").outerHeight(true)-$(".receive-Email-detail-operators receive-Email-detail-operators-bottom").outerHeight(true)-70+"px",
+					"max-height": $(".receive-Email-detail").outerHeight(true)-$(".receive-Email-detail-operators").outerHeight(true)-$(".receive-Email-detail-head").outerHeight(true)-$(".receive-Email-detail-operators receive-Email-detail-operators-bottom").outerHeight(true)-70+"px"
+				});
+				//console.log(arguments)
+				var url = MAILAPIURL + "mail/" + (params.type == "receive-box" ? "list/inbox" :
+					params.type == "group-Email" ? "" :
+					params.type == "draft-box" ? "list/draft" :
+					params.type == "already-send" ? "list/sented" :
+					params.type == "already-delete" ? "list/deleted" :
+					params.type == "view-from-and-to" ? ("query?ex_mail=" + data.ex_mail) :
+					params.type == "search-result" ? "query" : "list/junk");
+				url += (data && data.isUnread && data.isUnread == 1) ? ("?rows=" + PAGESIZE + "&unread=" + data.isUnread) : (url.indexOf("?") >= 0 ? "&rows=" + PAGESIZE : "?rows=" + PAGESIZE);
+				url = url + (data && data.query_type != undefined ? "&key=" + data.key + "&query_type=" + data.query_type : "");
+				url = url + (params ? ("&page=" + (params.page||1)):"");
+				if(params.type == "refresh") url = tempUrl;
+				tempUrl = url;
+				$.ajaxGet(url, function(resp) {
+					console.log(resp);
+					if(resp.code != 0) {
+						$.showErrorGritter("服务器返回 失败：" + resp.msg);
+						return false;
+					}
+					$(".receive-Email-detail .receive-Email-detail-head .total-Email-num").html("共" + resp.data.records + "封");
+					$(".receive-Email-detail .receive-Email-detail-head .unread-Email-num").html("有" + resp.data.count_unread + "封未阅读");
+					$(".receive-Email-detail .history-total-record").html(resp.data.records);
+					$(".receive-Email-detail .history-curr-pager").html(resp.data.papge);
+					$(".receive-Email-detail .history-total-pager").html(Math.ceil(parseInt(resp.data.records) / PAGESIZE));
+					var now = new Date();
+					var todayTrDomArr = [],
+						yestodayTrDomArr = [],
+						beforeTrDomArr = [];
+					$.each(resp.data.rows, function(index, item) {
+						var different = $.compareTwoTimeDifference(now, item.date);
+						var emailDate = new Date(item.date);
+						var trDom = "";
+						var toName = [];
+						for(var i in item.to) {
+							toName.push(item.to[i].name);
+						}
+						trDom =
+							"<tr data-mail-id='" + item.mail_id + "' data-mail-subject='" + item.subject + "' data-is-read='" + item.unread + "'>" +
+							"<td><input class='email-checkbox' name='email-checkbox' type='checkbox'></td>" +
+							"<td>" + (item.unread == 1 ? "<img class='email-unread-icon' src='../resources/images/email-unread-icon.png' />" : "")+ (item.priority == 1 ? "<img class='email-hury-icon' src='../resources/images/email-ji-icon.png'>" : "")  + "</td>" +
+							"<td><span class='" + (params.type == "draft-box" ? "css-overhidden" : "") + "' title='" + (params.type == "draft-box" ? toName.join(";") : item.from.name) + "'>" + (params.type == "draft-box" ? toName.join(";") : item.from.name) + "</span></td>" +
+							"<td>" + item.subject + "</td>" +
+							"<td>" + (different == 0 ? "今天  " + ((emailDate.getHours() > 9 ? emailDate.getHours() : "0" + emailDate.getHours()) + ":" + (emailDate.getMinutes() > 9 ? emailDate.getMinutes() : "0" + emailDate.getMinutes())) : different == 1 ?
+								"昨天  " + ((emailDate.getHours() > 9 ? emailDate.getHours() : "0" + emailDate.getHours()) + ":" + (emailDate.getMinutes() > 9 ? emailDate.getMinutes() : "0" + emailDate.getMinutes())) :
+								"" + (emailDate.getFullYear() + "-" + (emailDate.getMonth() + 1 > 9 ? emailDate.getMonth() + 1 : "0" + (emailDate.getMonth() + 1)) + "-" + (emailDate.getDate() > 9 ? emailDate.getDate() : "0" + emailDate.getDate()) + "  " + (emailDate.getHours() > 9 ? emailDate.getHours() : "0" + emailDate.getHours()) + ":" + (emailDate.getMinutes() > 9 ? emailDate.getMinutes() : "0" + emailDate.getMinutes()))) + "</td>" +
+							"</tr>"
+						if(different == 0) {
+							todayTrDomArr.push(trDom);
+						} else if(different == 1) {
+							yestodayTrDomArr.push(trDom);
+						} else {
+							beforeTrDomArr.push(trDom);
+						}
+					});
+					$("table.receive-Email-box-today tbody").html(todayTrDomArr.join(""));
+					$("table.receive-Email-box-yestoday tbody").html(yestodayTrDomArr.join(""));
+					$("table.receive-Email-box-before tbody").html(beforeTrDomArr.join(""));
+					if(todayTrDomArr.length > 0) {
+						$(".receive-Email-title-today").removeClass("hide");
+						$(".receive-Email-title-today").text("今天（" + todayTrDomArr.length + "封）");
+					} else {
+						$(".receive-Email-title-today").addClass("hide");
+					}
+					if(yestodayTrDomArr.length > 0) {
+						$(".receive-Email-title-yestoday").removeClass("hide");
+						$(".receive-Email-title-yestoday").text("昨天（" + yestodayTrDomArr.length + "封）");
+					} else {
+						$(".receive-Email-title-yestoday").addClass("hide");
+					}
+					if(beforeTrDomArr.length > 0) {
+						$(".receive-Email-title-before").removeClass("hide");
+						$(".receive-Email-title-before").text("更早（" + beforeTrDomArr.length + "封）");
+					} else {
+						$(".receive-Email-title-before").addClass("hide");
+					}
+					////鼠标移入移除  或者点击事件加背景色
+					bindTransBackgroundEvent(("table tr"), "hover");
+					//tr点击查看邮件详情事件
+					$("table tr").unbind("click").click(function(e) {
+						viewWhichEmailDetail($(this).attr("data-mail-id"), params.type);
+					});
+					$("table tr td:first-child").click(function(event) {
+						var e = window.event || event;
+						if(e.stopPropagation) { //如果提供了事件对象，则这是一个非IE浏览器 
+							e.stopPropagation();
+						} else {
+							//兼容IE的方式来取消事件冒泡 
+							window.event.cancelBubble = true;
+						}
+					});
+					//标记为
+					$(".remark-email").click(function() {
+						if($(this).find(".remark-email-container").hasClass("hide"))
+							$(this).find(".remark-email-container").removeClass("hide");
+						else $(this).find(".remark-email-container").addClass("hide");
+					});
+					$(document).click(function(e){
+						var _con = $('.remark-email');   // 设置目标区域
+						if(!_con.is(e.target) && _con.has(e.target).length === 0){ // Mark 1
+							$(this).find(".remark-email-container").addClass("hide");
+						}
+					});
+					////鼠标移入移除  或者点击事件加背景色
+					bindTransBackgroundEvent((".remark-email-container span"), "hover");
+					////标记为里面的按钮点击事件
+					$(".remark-email-container span").unbind("click").click(function(e) {
+						var e = window.event || event;
+						if(e.stopPropagation) { //如果提供了事件对象，则这是一个非IE浏览器 
+							e.stopPropagation();
+						} else {
+							//兼容IE的方式来取消事件冒泡 
+							window.event.cancelBubble = true;
+						}
+						var mailIds = [];
+						$(".receive-Email-detail input").each(function() {
+							if($(this).is(":checked")) {
+								var mailId = $(this).parent().parent().attr("data-mail-id");
+								if(mailId) mailIds.push(mailId);
+							}
+						});
+						var markType = $(this).hasClass("remark-email-read") ? "read" : "unread";
+						markEmailsReadOrUnread(mailIds, markType, true, function() {
+							requestEmailList(params);
+						});
+					});
+					//删除按钮点击事件
+					$(".delete-Email").unbind("click").click(function() {
+						var mailIds = [];
+						$(".receive-Email-detail input").each(function() {
+							if($(this).is(":checked")) {
+								var mailId = $(this).parent().parent().attr("data-mail-id");
+								if(mailId) mailIds.push(mailId);
+							}
+
+						});
+						deleteEmails(mailIds, function() {
+							requestEmailList(params);
+						});
+
+					});
+				});
+			}
+			//查看邮件详情
+			function viewWhichEmailDetail(id, type) {
+				if(!id) return false;
+				if(type == "draft-box") {
+					editEmailAgain(id, "again")
+					return false;
+				}
+				$(".which-Email-detail").css({
+					"height": $(".main-wrap").outerHeight(true)+8+"px",
+					"max-height": $(".main-wrap").outerHeight(true)+8+"px"
+				});
+				$.showLoadingPop("正在加载邮件详情，请稍候......");
+				//按钮绑定
+				setEmailDetailPanelBtns(id, type);
+				$.ajaxGet(MAILAPIURL + "mail/message/" + id, function(resp) {
+					if(resp.code != 0) {
+						$.showErrorGritter("服务器返回失败：" + resp.msg);
+						return false;
+					}
+					$.hideLoadingPop();
+					$(".which-Email-detail").removeClass('hide');
+					$(".which-Email-detail").siblings().addClass('hide');
+					$(".which-Email-detail").attr("data-mail-id", id);
+					//console.log(resp);
+					if(type == "receive-box" && resp.data.reply == 1) {
+						sendEmailReadBack(resp.data.subject, resp.data.reply_to.mail);
+					}
+					//将此邮件标记为已读
+					var mailIds = [id];
+
+					if(resp.data.unread == 1) markEmailsReadOrUnread(mailIds, "read", false);
+					//主题
+					$(".which-Email-detail-main-head .which-Email-detail-main-title").html(resp.data.subject);
+					//发送人
+					$(".which-Email-detail-main-head .which-Email-detail-main-sender .which-email-sender").replaceWith("<span class='which-email-sender note-font-type which-email-head-common' data-name='" + resp.data.from.name + "' data-mail='" + resp.data.from.mail + "'>" + resp.data.from.name + "&lt;" + resp.data.from.mail + "&gt;;" + "</span>");
+					$(".quickly-response-to-sender input").attr("placeholder","快捷回复给发件人："+resp.data.from.name);
+					$(".quickly-response-to-sender input").attr("mail-addr",resp.data.from.mail);
+					$(".quickly-response-to-sender input").attr("mail-subject",resp.data.subject);
+					//发送时间
+					$(".which-Email-detail-main .which-Email-detail-main-send-time").html("<span>时间</span>：" + resp.data.date);
+					//收件人
+					var receiverDom = "";
+					$.each(resp.data.to, function(index, item) {
+						receiverDom += "<span data-mail='" + item.mail + "' data-name='" + item.name + "' class='which-email-receiver which-email-head-common'>" + item.name + "<" + item.mail + ">;" + "</span>";
+					});
+					$(".which-Email-detail-main-receiver .which-email-receiver").remove();
+					$(".which-Email-detail-main-receiver .hover-view").before(receiverDom);
+					//抄送
+					var copyReceiverDom = "";
+					if(resp.data.cc) {
+						$.each(resp.data.cc, function(index, item) {
+							copyReceiverDom += "<span data-mail='" + item.mail + "' data-name='" + item.name + "' class='which-email-copy-receiver which-email-head-common'>" + item.name + "<" + item.mail + ">;" + "</span>";
+						});
+						$(".which-Email-detail-main-receiver .hich-email-copy-receiver").remove();
+						if(copyReceiverDom) {
+							$(".which-Email-detail-main-coper .hover-view").before(copyReceiverDom);
+						} else {
+							$(".which-Email-detail-main-coper").remove();
+						}
+					} else {
+						$(".which-Email-detail-main-coper").remove();
+					}
+					//密送
+					//抄送
+					var copyBccDom = "";
+					if(resp.data.bcc) {
+						$.each(resp.data.bcc, function(index, item) {
+							copyBccDom += "<span data-mail='" + item.mail + "' data-name='" + item.name + "' class='which-email-copy-receiver which-email-head-common'>" + item.name + "<" + item.mail + ">;" + "</span>";
+						});
+						//$(".which-Email-detail-main-receiver .hich-email-copy-receiver").remove();
+						if(copyBccDom) {
+							$(".which-Email-detail-main-bcc .hover-view").before(copyBccDom);
+						} else {
+							$(".which-Email-detail-main-bcc").next().remove();
+							$(".which-Email-detail-main-bcc").remove();
+						}
+					} else {
+						$(".which-Email-detail-main-bcc").next().remove();
+						$(".which-Email-detail-main-bcc").remove();
+					}
+					//正文
+					var doc = document.getElementById("which-Email-detail-main-text-iframe").contentDocument || document.frames["which-Email-detail-main-text-iframe"].document;
+					doc.body.innerHTML = resp.data.body;
+					var links = doc.body.getElementsByTagName("a");
+					for(var i = 0; i < links.length; i++) {
+						var link = links[i];
+						link.target = "_blank";
+					}
+					var iframeHeight = getComputedStyle(doc.body).height;
+					document.getElementById("which-Email-detail-main-text-iframe").height = parseInt(iframeHeight) + 40 + "px";
+					//附件
+					if(resp.data.attachments && resp.data.attachments.length > 0) {
+						$(".which-Email-detail-main-extra-file").html("<span>附件</span>" + "：" + (resp.data.attachments.length + "个"));
+					} else {
+						$(".which-Email-detail-main-extra-file").prev().remove();
+						$(".which-Email-detail-main-extra-file").remove();
+					}
+					if(!resp.data.attachments) {
+						$(".which-Email-detail-main-file").addClass("hide");
+					} else {
+						$(".which-Email-detail-main-file-title-num").text("（" + resp.data.attachments.length + "）");
+						var attachmentsDom = "";
+						$.each(resp.data.attachments, function(index, item) {
+							var fileType = /\.[^\.]+$/.exec(item.name)[0];
+							fileType = fileType.substring(1, fileType.length);
+							attachmentsDom +=
+								"<div class=\"one-Email-file clear-float\">" +
+								"<img style=\"width: 40px;height:40px;\" src=\"" + BASEAPIURL + "/icons/" + fileType + ".png\" alt=\"文件图标\">" +
+								"<div class=\"one-Email-file-detail\">" +
+								"<p class='note-font-type'>" + item.name + "<span style='color: #ccc;'>(" + parseInt(item.size / 1024) + "K)</span>" + "</p>" +
+								"<p>" +
+								"<a class='download-file' href=\"" + MAILAPIURL + "mail/annex/download/" + resp.data.mail_id + "/" + index + "\" >下载</a>" +
+								"<a class='preview-file' href=\"#\">预览</a>" +
+								"</p>" +
+								"</div>" +
+								"</div>";
+						});
+						$(".which-Email-detail-main-file-detail").html(attachmentsDom);
+						//全部下载
+						$(".which-Email-detail-main-file-title a").click(function() {
+							$(this).parent().parent().find(".one-Email-file").each(function() {
+								window.open($(this).find("a.download-file").attr("href"));
+								//$(".download-file").click();
+							});
+						});
+					}
+					
+					//高度计算
+					$(".which-Email-detail-main").css({
+						"height": $(".which-Email-detail").outerHeight(true)-$(".which-Email-detail-operators").outerHeight(true)-$(".which-Email-detail-main-head").outerHeight(true)-$(".quickly-response-to-sender").outerHeight(true)+"px",
+						"max-height": $(".which-Email-detail").outerHeight(true)-$(".which-Email-detail-operators").outerHeight(true)-$(".which-Email-detail-main-head").outerHeight(true)-$(".quickly-response-to-sender").outerHeight(true)+"px"
+					});
+					$(".which-Email-detail-main-text").css({
+						"height": $(".which-Email-detail-main").outerHeight(true)-$(".which-Email-detail-main-file").outerHeight(true)-5+"px",
+						"max-height": $(".which-Email-detail-main").outerHeight(true)-$(".which-Email-detail-main-file").outerHeight(true)-5+"px"
+					});
+					//回复
+					$(".response-sender").click(function() {
+						editEmailAgain(id, "again");
+					});
+					//回复全部
+					$(".response-all").click(function() {
+						editEmailAgain(id, "againAll");
+					});
+					$(".which-Email-detail-main-head .which-email-head-common").mouseenter(function() {
+						$(this).parent().find(".hover-view").removeClass("hide");
+						$(this).parent().find(".hover-view-detail p:first-child b").html($(this).attr("data-name"));
+						$(this).parent().find(".hover-view-detail p:last-child").html($(this).attr("data-mail") + "&nbsp;&nbsp;&nbsp;<a href='#' class='view-from-and-to'>往来邮件</a>");
+					});
+					//点击查看往来邮件
+					$(".hover-view-detail .view-from-and-to").unbind("click");
+					$(document).on("click", ".hover-view-detail .view-from-and-to", function() {
+						var data = {};
+						data.type = "";
+						//data.name = $(this).parent().parent().parent().parent().attr("data-name");
+						data.ex_mail = $(this).parent().parent().parent().prev().attr("data-mail");
+						data.name = $(this).parent().parent().parent().prev().attr("data-name");
+						loadDiffrentPanel("view-from-and-to", data);
+					});
+					$(".which-Email-detail-main-head .which-email-head-common").parent().mouseleave(function(e) {
+						$(this).find(".hover-view").addClass("hide");
+					});
+					////邮件详情里面的删除
+					$(".email-detail-delete").unbind("click").click(function() {
+						var mailIds = [];
+						mailIds.push($(this).parents(".which-Email-detail").attr("data-mail-id"));
+						deleteEmails(mailIds, function() {
+							requestEmailList({
+								type: type
+							});
+						});
+					});
+					/////上一封   下一封数据
+					$(".which-Email-detail-operators-right-prev").attr("data-mail-id", resp.data.prev_mail_id);
+					$(".which-Email-detail-operators-right-next").attr("data-mail-id", resp.data.next_mail_id);
+					//上一封下一封点击事件
+					////上一封下一封
+					$(".which-Email-detail .which-Email-detail-operators-right span").unbind("click").click(function() {
+						viewWhichEmailDetail($(this).attr("data-mail-id"), type);
+					});
+				});
+			}
+			//邮件详情界面按钮绑定
+			function setEmailDetailPanelBtns(id, type) {
+				////切换按钮
+				var btnsDom = "";
+				if(type == "receive-box") {
+					btnsDom =
+						"<a class='a-btn' onClick='loadDiffrentPanel(\"" + type + "\")'><img src=\"../resources/images/back-icon.png\" alt=\"\" />返回</a>" +
+						"<a class='a-btn response-sender'>回复</a>" +
+						"<a class='a-btn response-all'>回复全部</a>" +
+						"<a class='a-btn' onClick='transferEmails(\"" + id + "\")'>转发</a>" +
+						"<a class=\"a-btn email-detail-delete\">删除</a>" +
+						"<a class='a-btn' onclick=\"deleteEmailsKnew('detail',\'" + type + "\')\">彻底删除</a>" +
+						"<a class='a-btn'>标记为<img src='../resources/images/email-angle-down.png' /></a>";
+				} else if(type == "group-Email") {
+					btnsDom =
+						"<a class='a-btn' onClick='loadDiffrentPanel(\"" + type + "\")'><img src=\"../resources/images/back-icon.png\" alt=\"\" />返回</a>" +
+						"<a class='a-btn response-sender'>回复</a>" +
+						"<a class='a-btn' onClick='transferEmails(\"" + id + "\")'>转发</a>" +
+						"<a class=\"a-btn email-detail-delete\">删除</a>" +
+						"<a class='a-btn' onclick=\"deleteEmailsKnew('detail',\'" + type + "\')\">彻底删除</a>" +
+						"<a class='a-btn'>标记为<img src='../resources/images/email-angle-down.png' /></a>";
+				} else if(type == "draft-box") {
+					btnsDom =
+						"<a class='a-btn' onClick='loadDiffrentPanel(\"" + type + "\")'><img src=\"../resources/images/back-icon.png\" alt=\"\" />返回</a>" +
+						"<a class='a-btn response-sender'>回复</a>" +
+						"<a class='a-btn response-all'>回复全部</a>" +
+						"<a class='a-btn' onClick='transferEmails(\"" + id + "\")'>转发</a>" +
+						"<a class=\"a-btn email-detail-delete\">删除</a>" +
+						"<a class='a-btn' onclick=\"deleteEmailsKnew('detail',\'" + type + "\')\">彻底删除</a>" +
+						"<a class='a-btn'>标记为<img src='../resources/images/email-angle-down.png' /></a>";
+				} else if(type == "already-send") { //已发送
+					btnsDom =
+						"<a class='a-btn' onClick='loadDiffrentPanel(\"" + type + "\")'><img src=\"../resources/images/back-icon.png\" alt=\"\" />返回</a>" +
+						"<a class='a-btn' onclick='editEmailAgain(\"" + id + "\")'>再次编辑</a>" +
+						"<a class='a-btn' onClick='transferEmails(\"" + id + "\")'>转发</a>" +
+						"<a class=\"a-btn email-detail-delete\">删除</a>" +
+						"<a class='a-btn' onclick=\"deleteEmailsKnew('detail',\'" + type + "\')\">彻底删除</a>"
+				} else if(type == "already-delete") { //已删除
+					btnsDom =
+						"<a class='a-btn' onClick='loadDiffrentPanel(\"" + type + "\")'><img src=\"../resources/images/back-icon.png\" alt=\"\" />返回</a>" +
+						"<a class='a-btn' onclick=\"deleteEmailsKnew('detail',\'" + type + "\')\">彻底删除</a>" +
+						"<a class='a-btn' onClick='transferEmails(\"" + id + "\")'>转发</a>" +
+						"<a class='a-btn move-email-to-container' onclick='deletedEmailsResume(\"detail\",\"" + type + "\",this)'>移动到∨" +
+						"<span class='a-btn move-email-to hide'>" +
+						"<span index='1'>收件箱</span><span index='5'>草稿箱</span><span index='9'>已发送</span><span index='17'>垃圾箱</span>" +
+						"</span>" +
+						"</a>";
+
+				} else if(type == "view-from-and-to") {
+					btnsDom =
+						"<a class='a-btn' onClick='loadDiffrentPanel(\"" + type + "\")'><img src=\"../resources/images/back-icon.png\" alt=\"\" />返回</a>" +
+						"<a class='a-btn response-sender'>回复</a>" +
+						"<a class='a-btn response-all'>回复全部</a>" +
+						"<a class='a-btn' onClick='transferEmails(\"" + id + "\")'>转发</a>" +
+						"<a class=\"a-btn email-detail-delete\">删除</a>" +
+						"<a class='a-btn' onclick=\"deleteEmailsKnew('detail',\'" + type + "\')\">彻底删除</a>" +
+						"<a class='a-btn'>标记为<img src='../resources/images/email-angle-down.png' /></a>";
+				} else if(type == "search-result") {
+					btnsDom =
+						"<a class='a-btn' onClick='loadDiffrentPanel(\"" + type + "\")'><img src=\"../resources/images/back-icon.png\" alt=\"\" />返回</a>" +
+						"<a class='a-btn response-sender'>回复</a>" +
+						"<a class='a-btn response-all'>回复全部</a>" +
+						"<a class='a-btn' onClick='transferEmails(\"" + id + "\")'>转发</a>" +
+						"<a class=\"a-btn email-detail-delete\">删除</a>" +
+						"<a class='a-btn' onclick=\"deleteEmailsKnew('detail',\'" + type + "\')\">彻底删除</a>" +
+						"<a class='a-btn'>标记为<img src='../resources/images/email-angle-down.png' /></a>";
+				} else { //垃圾箱
+					btnsDom =
+						"<a class='a-btn' onClick='loadDiffrentPanel(\"" + type + "\")'><img src=\"../resources/images/back-icon.png\" alt=\"\" />返回</a>" +
+						"<a class='a-btn' onclick=\"deleteEmailsKnew('detail',\'" + type + "\')\">彻底删除</a>" +
+						"<a class='a-btn' onClick='transferEmails(\"" + id + "\")'>转发</a>" +
+						"<a class='a-btn'>信任</a>" +
+						"<a class='a-btn'>标记为<img src='../resources/images/email-angle-down.png' /></a>";
+				}
+				$(".which-Email-detail .which-Email-detail-operators-btns").html(btnsDom);
+			}
+			//发送邮件回执
+			function sendEmailReadBack(subject, reply_to_mail) {
+				var modalId = $.modal({
+					okButtonText: "发送",
+					cancelButtonText: "不发送",
+					height: 200
+				}).show("提示", ".send-callback-container", function(modal) {
+					window.isSending = false;
+					if(isSending) return false;
+					var sendCallbackData = {};
+					sendCallbackData.alone = 0;
+					sendCallbackData.attachments = [];
+					sendCallbackData.bcc = [];
+					sendCallbackData.body = "您发送的这封邮件已经被打开";
+					sendCallbackData.priority = 0;
+					sendCallbackData.reply = 0;
+					sendCallbackData.subject = "邮件回执：" + subject;
+					sendCallbackData.to = [reply_to_mail];
+					isSending = true;
+					$.ajaxPost(MAILAPIURL + "mail/send", sendCallbackData, function(resp) {
+						isSending = false;
+						if(resp.code != 0) {
+							$.showErrorGritter("回执发送失败：" + resp.msg);
+						} else {
+							$.showSuccessGritter("回执发送成功！");
+							$("#" + modalId).modal('hide');
+						}
+					});
+				});
+			}
+			////文件下载
+			function fileDownLoadAll() {
+				$.ajaxGet(MAILAPIURL + "mail/annex/download/" + mailId + "/" + index, function(resp) {
+					if(resp.code != 0) {
+						$.showErrorGritter("下载失败：" + resp.msg);
+					}
+				});
+			}
+
+			//删除邮件
+			function deleteEmails(mailIds, reviewCallback) {
+				if(mailIds.length < 1) {
+					$.showErrorGritter("请先选择要删除邮件");
+					return false;
+				}
+				$.ajaxDelete(MAILAPIURL + "mail/delete", {
+					mail_ids: mailIds
+				}, function(resp) {
+					if(resp.code == 0) {
+						$.showSuccessGritter("删除邮件成功！");
+						reviewCallback();
+					} else {
+						$.showSuccessGritter("删除邮件失败：" + resp.msg);
+					}
+				});
+			}
+			////彻底删除邮件
+			function deleteEmailsKnew(type, prevType) {
+				var mailIds = [];
+				if(type == "list") {
+					$(".receive-Email-detail input").each(function() {
+						if($(this).is(":checked")) {
+							var mailId = $(this).parent().parent().attr("data-mail-id");
+							if(mailId) mailIds.push(mailId);
+						}
+					});
+				} else {
+					mailIds.push($(".which-Email-detail").attr("data-mail-id"));
+				}
+				$.ajaxDelete(MAILAPIURL + "mail/expunge", {
+					mail_ids: mailIds
+				}, function(resp) {
+					if(resp.code == 0) {
+						$.showSuccessGritter("彻底删除邮件成功！");
+						loadDiffrentPanel(prevType);
+					} else {
+						$.showErrorGritter("彻底删除邮件失败：" + resp.msg);
+					}
+				});
+			}
+
+			////转发邮件
+			function transferEmails(mailIds) {
+				if(!mailIds) {
+					var mailIds = [];
+					$(".receive-Email-detail input").each(function() {
+						if($(this).is(":checked")) {
+							var mailId = $(this).parent().parent().attr("data-mail-id");
+							if(mailId) mailIds.push(mailId);
+						}
+					});
+					if(mailIds.length < 1) {
+						$.showErrorGritter("请先选择一封邮件再转发！");
+						return false;
+					} else if(mailIds.length > 1) {
+						$.showErrorGritter("最多只能选择一封邮件转发！");
+						return false;
+					}
+				}
+				$.ajaxGet(MAILAPIURL + "mail/message/" + mailIds, function(resp) {
+					loadEditEmailPanel(resp.data);
+				});
+			}
+
+			//标记为信任邮件
+			function markEmailAsTrast(mailIds) {
+
+			}
+
+			//标记为   已读或者未读
+			function markEmailsReadOrUnread(mailIds, type, isNeedTip, callback) {
+				if(mailIds.length < 1) {
+					$.showErrorGritter("请先选择需要标记的邮件！");
+					return false;
+				}
+				$(".remark-email-container").addClass("hide");
+				$.ajaxPut(MAILAPIURL + "mail/" + type, {
+					mail_ids: mailIds
+				}, function(resp) {
+					if(resp.code == 0) {
+						isNeedTip && $.showSuccessGritter(type == "read" ? "标记已读成功！" : "标记未读成功！");
+						$(".receive-Email-tab-btn-selected-all").prop("checked");
+						//消息推送
+						publisher.publisheMsg({
+							action: "need-reqest-email",
+							msg: "邮件被标记了。",
+							readNum: mailIds.length
+						});
+						if(callback) callback();
+					} else {
+						isNeedTip && $.showErrorGritter((type == "read" ? "标记已读失败：" : "标记未读失败：") + resp.msg);
+					}
+				});
+			}
+
+			//误删恢复
+			function deletedEmailsResume(type, prevType, obj) {
+				var mailIds = [];
+				if(type == "list") {
+					$(".receive-Email-detail input").each(function() {
+						if($(this).is(":checked")) {
+							var mailId = $(this).parent().parent().attr("data-mail-id");
+							if(mailId) mailIds.push(mailId);
+						}
+					});
+				} else {
+					mailIds.push($(".which-Email-detail").attr("data-mail-id"));
+				}
+				if(mailIds.length < 1) {
+					$.showErrorGritter("请先选择需要移动的邮件");
+					return false;
+				}
+				$(obj).find(">span.move-email-to").removeClass("hide");
+				bindTransBackgroundEvent($(obj).find(">span.move-email-to span"), "hover");
+				$("body").click(function(event) {
+					if($(event.target).parents(".receive-Email-detail-operators-btns-container").length < 1) {
+						$(obj).find(">span.move-email-to").addClass("hide");
+					}
+				});
+				$(obj).find(">span.move-email-to span").unbind("click").click(function() {
+					$.ajaxPut(MAILAPIURL + "mail/move", {
+						mail_ids: mailIds,
+						mailbox: $(this).attr("index")
+					}, function(resp) {
+						if(resp.code == 0) {
+							$.showSuccessGritter("移动邮件成功！");
+							$(obj).find(">span.move-email-to").addClass("hide");
+							loadDiffrentPanel(prevType);
+						} else {
+							$.showErrorGritter("移动邮件失败：" + resp.msg);
+						}
+					});
+				});
+
+			}
+
+			//再次编辑
+			function editEmailAgain(mailId, type) {
+				console.log(mailId)
+				$.ajaxGet(MAILAPIURL + "mail/message/" + mailId, function(resp) {
+					loadEditEmailPanel(resp.data, type);
+				});
+
+			}
+
+			//刷新
+			function refreshPanel() {
+				requestEmailList({ type: "refresh" })
+			}
+
+			//返回按钮
+			function backPrevPanel() {
+
+			}
+
+			//快捷回复点击事件
+			$(".quickly-response-to-sender input").click(function() {
+				$(".which-Email-detail-operators-footer").addClass("hide");
+				$(".which-Email-detail-operators-quickly-response").removeClass("hide");
+			});
+			////快捷回复取消按钮点击事件
+			$(".which-Email-detail-operators-quickly-response .cancel-quickly-response").click(function() {
+				$(".which-Email-detail-operators-footer").removeClass("hide");
+				$(".which-Email-detail-operators-quickly-response").addClass("hide");
+			});
+			////快捷回复发送按钮点击事件
+			$(".which-Email-detail-operators-quickly-response .send-quickly-response").click(function() {
+				var postData={};
+				postData.body=$(".quickly-response-to-sender input").val();
+				postData.to=[$(".quickly-response-to-sender input").attr("mail-addr")];
+				postData.subject="邮件<"+$(".quickly-response-to-sender input").attr("mail-subject")+">的回复：";
+				if(!postData.body) {
+					$.showErrorGritter("回复内容不能为空！");
+					return false;
+				}
+				if(!postData.to||!postData.subject) {
+					$.showErrorGritter("参数错误，请重新打开此邮件！");
+					return false;
+				}
+				$.showLoadingPop("正在发送");
+				$.ajaxPost(MAILAPIURL+"mail/send",postData,function(resp){
+					$.hideLoadingPop();
+					if(resp.code!=0) {
+						$.showErrorGritter("邮件回复失败："+resp.msg);
+						return false;
+					}
+					$(".which-Email-detail-operators-quickly-response").addClass("hide");
+					$(".send-quickly-response-success").removeClass("hide");
+					$(".quickly-response-to-sender input").val("");
+					$.showSuccessGritter("回复成功！");
+				});
+			});
+			////快捷回复再回一封
+			$(".response-Email-again").click(function() {
+				$(".which-Email-detail-operators-footer").addClass("hide");
+				$(".which-Email-detail-operators-quickly-response").removeClass("hide");
+				$(".send-quickly-response-success").addClass("hide");
+				$(".quickly-response-to-sender input").val("");
+			});
+			//获取写信界面的收件人、主题等的高度
+			function getEditPanelInputLabelHeight(){
+				var allHeight=0;
+				$(".input-label-group").each(function(){
+					if($(this).hasClass("hide")) return true;
+					allHeight+=$(this).outerHeight(true);
+				});
+				return allHeight;
+			}
+		</script>
+	</body>
+
+</html>

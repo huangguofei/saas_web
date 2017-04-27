@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>工作周计划、总结审核</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/hgf.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			body,
+			textarea {
+				color: #666;
+			}
+			
+			body {
+				background-color: #f1f1f1;
+			}
+			
+			.page-container {
+				padding: 0;
+			}
+			
+			.work-plan-filter {
+				height: 160px;
+				background-color: #fff;
+				padding: 14px 0 14px 0px;
+				border: 1px solid #ddd;
+				margin-bottom: 14px;
+				margin-left: 20px;
+			}
+			
+			.work-plan-filter>div {
+				padding-left: 13px;
+			}
+			
+			.sel-year-month {
+				height: 45px;
+				border-bottom: 1px solid #eee;
+				margin-bottom: 14px;
+			}
+			
+			.work-plan-year-filter {
+				width: 120px;
+				height: 30px;
+				border: 1px solid #e3e3e3;
+				padding-left: 10px;
+				margin-right: 7px;
+			}
+			
+			.week-filter {
+				height: 30px;
+			}
+			
+			.week-filter a {
+				display: inline-block;
+				height: 24px;
+				width: 54px;
+				line-height: 24px;
+				margin: 3px 9px;
+				text-align: center;
+				font-size: 14px;
+				color: #666;
+				cursor: pointer;
+			}
+			
+			.week-filter a.active {
+				color: #fff!important;
+				background-color: #ca192b;
+			}
+			
+			.week-filter a:hover {
+				color: #CA192B;
+				text-decoration: none;
+			}
+			
+			.week-filter a.curr-week {
+				border: 1px solid #f4d1d5;
+			}
+			
+			.work-plan-filter .sel-search-type {
+				height: 88px;
+				padding-bottom: 14px;
+				padding-left: 55px;
+			}
+			
+			.work-plan-filter .sel-search-type>div {
+				margin-bottom: 10px;
+			}
+			
+			.condition-title {
+				color: #333;
+				font-weight: bold;
+				display: inline-block;
+				margin-right: 20px;
+			}
+			
+			.condition-item {
+				display: inline-block;
+				padding: 3px 8px;
+				color: #666;
+				margin-right: 18px;
+				cursor: pointer;
+			}
+			
+			.condition-item.active {
+				background-color: #CA192B;
+				color: #fff;
+			}
+			
+			.key-word-search-group {
+				margin-right: 20px;
+			}
+			
+			.sel-search-type {
+				position: relative;
+			}
+			
+			.search-btns-container {
+				position: absolute;
+				right: 20px;
+				top: 0;
+				text-align: right;
+			}
+			
+			.search-btns-container .btn-a-default {
+				display: block;
+				margin-top: 15px;
+			}
+			
+			.week-plan-pack-container {
+				overflow-y: auto;
+				padding-left: 20px;
+			}
+			
+			.plan-pack {
+				min-width: 300px;
+				max-width: 320px;
+				min-height: 505px;
+				border: 1px solid #e9e9e9;
+				background-color: #fff;
+				margin-right: 15px;
+				margin-bottom: 14px;
+				box-shadow: 0px 2px 5px rgba(0,0,0,.08);
+				cursor: pointer;
+				position:relative;
+			}
+			
+			.plan-pack:hover {
+				box-shadow: 0px 2px 15px rgba(0,0,0,.25);
+			}
+			.plan-pack:hover .group-icon{
+				display: inline-block;
+			}
+			.plan-pack:last-child {
+				margin-right: 0;
+			}
+			
+			.plan-pack:first-child {
+				margin-left: 0;
+			}
+			
+			.plan-pack .pack-head {
+				height: 60px;
+				border-bottom: 1px solid #e3e3e3;
+				padding: 10px 14px;
+			}
+			
+			.plan-pack .pack-head .pack-head-real {
+			}
+			
+			.employee-name {
+				font-size: 18px;
+				color: #333;
+				display: inline-block;
+				max-width: 100px;
+				min-width: 20px;
+			}
+			
+			.name-depa {
+				color: #999;
+			}
+			
+			.employee-depa-name {
+				max-width: 100px;
+				min-width: 20px;
+				line-height: 24px;
+			}
+			
+			.employee-depa-name.note-font-type {
+				font-size: 14px;
+			}
+			
+			.pack-week-num {
+				color: #999;
+				font-size: 12px;
+			}
+			
+			.plan-pack .pack-head .pack-head-real .week-remark {
+				font-size: 12px;
+				color: #fff;
+				display: inline-block;
+				height: 18px;
+				width: 42px;
+				text-align: center;
+				line-height: 18px;
+				border-radius: 10px;
+				margin-left: 10px;
+			}
+			
+			.plan-pack .pack-head .pack-head-real .next-week-remark  {
+				background-color: #fa7a71;
+			}
+			
+			.plan-pack .pack-head .pack-head-real .curr-week-remark {
+				background-color: #ca192b;
+			}
+			
+			.plan-pack .pack-head .pack-head-real .pack-submit-status {
+				color: #CA192B;
+				font-size: 16px;
+				display: inline-block;
+				margin-top: -20px;
+			}
+			
+			.plan-pack .pack-head .pack-head-real .pack-submit-status.plan-passed {
+				color: #21b5a9;
+			}
+			
+			.plan-pack .all-item-num {
+				height: 65px;
+				line-height: 65px;
+				border-bottom: 1px solid #eee;
+				margin-left: 14px;
+				padding-right: 15px;
+				font-size: 14px;
+			}
+			
+			.plan-pack .all-item-num .note-font-type {
+				font-size: 14px;
+			}
+			
+			.plan-pack .item-complete-status {
+				height: 195px;
+				border-bottom: 1px solid #eee;
+				margin-left: 14px;
+				padding-left: 14px;
+			}
+			
+			.plan-pack .item-complete-status .complete-container {
+				height: 65px;
+				line-height: 65px;
+				border-bottom: 1px dashed #eee;
+				font-size: 12px;
+			}
+			
+			.plan-pack .submit-time-container {
+				height: 90px;
+				padding: 10px 0 10px 14px;
+				border-bottom: 1px solid #f1f1f1;
+			}
+			
+			.plan-pack .submit-time-container>div {
+				height: 31px;
+				line-height: 31px;
+			}
+			
+			.plan-pack .submit-time-container .summer-submit-time {
+				height: 20px;
+				line-height: 20px;
+			}
+			
+			.plan-pack .submit-time-container>div .summer-submit-status {
+				color: #CA192B;
+				display: inline-block;
+				margin-top: 0;
+				height: 14px;
+				line-height: 14px;
+			}
+			
+			.plan-pack .submit-time-container>div .summer-submit-status.status-submited {
+				color: #21b5a9;
+			}
+			
+			.plan-pack .leader-note {
+				height: 150px;
+				background-color: #f8f8f8;
+				color: #9e7e6b;
+				font-size: 12px;
+				padding: 14px;
+				padding-top: 9px;
+				padding-bottom: 9px;
+			}
+			
+			.plan-pack .leader-note span {
+				line-height: 18px;
+			}
+			
+			.non-list-note {
+				display: inline-block;
+				color: #666;
+				font-size: 16px;
+			}
+			
+			.outer-plan-complete-status {
+				color: #3db4ba;
+			}
+			
+			.btn-export img {
+				margin-right: 0;
+				vertical-align: text-top;
+				margin-top: 2px;
+			}
+			
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container ws-emp-work-plan-and-summer">
+			<!--筛选部分-->
+			<div class="work-plan-filter at">
+				<div class="sel-year-month at">
+					<input type="text" class="work-plan-year-filter date-picker lt">
+					<div class="week-filter lt">
+						
+					</div>
+					<div class="key-word-search-group rt">
+						<input type="text" class="key-word-search" placeholder="输入部门、姓名查找" />
+						<img src="../resources/images/key-word-search-icon.png" class="key-word-search-icon" alt="" />
+					</div>
+					
+				</div>
+				<!--筛选-->
+				<div class="sel-search-type">
+					<div class="sel-week-plan">
+						<span class="condition-title">周计划 ：</span>
+						<span class="condition-item active" data-value="">全部</span>
+						<span class="not-submit condition-item" data-value="1">待提交</span>
+						<span class="condition-item" data-value="2">待审核</span>
+						<span class="condition-item" data-value="3">已通过</span>
+						<span class="condition-item" data-value="4">未通过</span>
+						<span class="condition-item" data-value="5">待复审</span>
+						<span class="not-submit condition-item" data-value="8">提交超时</span>
+						<span class="condition-item" data-value="6">审核超时</span>
+					</div>
+					<div class="sel-plan-summer">
+						<span class="condition-title">周总结 ：</span>
+						<span class="condition-item active" data-value="">全部</span>
+						<span class="not-submit condition-item" data-value="1">未提交</span>
+						<span class="condition-item" data-value="2">未阅读</span>
+						<span class="condition-item" data-value="3">已阅读</span>
+						<span class="not-submit condition-item" data-value="4">提交超时</span>
+					</div>
+					<div class="search-btns-container rt">
+						<a class="btn btn-info def-btn-info btn-sm btn-export">
+							<img src="../resources/images/export-icon.png" alt="" />
+							导出
+						</a>
+						<a class="btn-a-default open-detail-html">计划、总结提交明细</a>
+					</div>
+				</div>
+			</div>
+			<!--周块部分-->
+			<div class="week-plan-pack-container at">
+				
+			</div>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hgf.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/IM.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/jquery.dotdotdot.min.js"></script>
+		<script type="text/javascript">
+			//------------消息队列相关   订阅者-----------------------
+			var subscriber = parent.HHMQ.createSubscriber('工作计划', 'main,plan-detail', function(flag, msgData) {
+				if(flag == "welcome") {
+					$.showSuccessGritter(JSON.stringify(msgData), {
+						clear: false
+					});
+				}
+				//收到审批处理消息
+				if(msgData.action == "refresh-plan") {
+					console.log("列表页页收通知");
+					getWeekList();
+				}
+			});
+			//页面关闭事件
+			context.onPageClose = function() {
+				subscriber.dispose();
+			};
+			//------------消息队列相关   订阅者end -------------------
+			var tempYear,tempWeek,tempMonth;
+			var weeklyUrl, timeNowFormat = (new Date()).format("yyyy-MM-dd");
+			//1-待提交, 2-待审核, 3-审核通过, 4-审核拒绝, 5-待复审, 6-未审核, 7-已丢弃, 8-未提交
+			var planStatus = {
+				WAIT_SUBMIT: 1,
+				WAIT_APPROVAL: 2,
+				APPROVAL_PASS: 3,
+				APPROVAL_REFUSED: 4,
+				WAIT_REAPPROVAL: 5,
+				UNAPPROVAL: 6,
+				UPDATED: 7,
+				UNSUBMIT: 8
+			};
+			//1-未提交, 2-已提交
+			var planSummerStatus = {
+				UNSUBMIT: 1,
+				SUBMITED: 2
+			};
+			//是否为工作日     0-非工作, 1-工作
+			var isWorkday = {
+				YES: 1,
+				NO: 0
+			};
+			var addOuterPlanIsPosting=false;
+			var selectDomNoData = "", ////没有数据时的工作类型
+				selectDomHasData = "", ////有数据时的工作类型
+				selctedDomHasDataDetail = "", //有数据时设置选中项
+				selectedClientIds = {},
+				selectedHelperIds = [],
+				selectedNotiferIds = [];
+			var dataDate = $.getQueryObject().dates,
+				dataId = $.getQueryObject().planId,
+				tempRefreshSchduleId,tempRefreshSchduleType;
+			var currWeek=0;
+			//获取当天是全年的第几周
+			function getTodayWeekNumInYear(){
+				var nowTimeStamp=(new Date()).getTime();
+				var reduceDay=new Date((new Date()).getFullYear()+"/01/01").getDay();
+				reduceDay=reduceDay==0?1:7-parseInt(reduceDay)
+				var week=((nowTimeStamp-new Date((new Date()).getFullYear()+"/01/01").getTime())-(reduceDay*24*60*60*1000))/(7*24*60*60*1000);
+				return Math.ceil(week);
+			}
+			currWeek=getTodayWeekNumInYear();
+			//获取当前周所在月份
+			function getCurrWeekMonth(){
+				var month;
+				var currDate=new Date().getDate();
+				var currDay= new Date().getDay();
+				if(currDate-currDay>=0) {
+					return new Date().getMonth()+1;
+				}else {
+					return new Date().getMonth();
+				}
+			}
+			$(".week-plan-pack-container").css("height",$(window).height()-$(".work-plan-filter").outerHeight(true)-20+"px");
+			$(".date-picker").datepicker({
+				format: "yyyy-mm",
+				startView: 1,
+				maxViewMode: 1,
+				minViewMode: 1,
+				autoclose: true
+			});
+			$(".date-picker").val((new Date()).Format("yyyy-MM"));
+			$(".date-picker").unbind("change").change(function(){
+				var selectTime=$(this).val();
+				addMonthAllWeekHtml(selectTime.substring(0,4),selectTime.substring(5,7));
+				getWeekList();
+			});
+			$(".date-picker").trigger("change");
+			//填充月分
+			function addMonthAllWeekHtml(year,month){
+				var weeks=getWeeks(year,month);
+				var allWeekDom="";
+				for(var i=0;i<weeks.length;i++) {
+					allWeekDom+="<a index='"+weeks[i]+"' class='"+(weeks[i]==currWeek?"curr-week":"")+"'>第"+weeks[i]+"周</a>";
+				}
+				$(".week-filter").empty().append(allWeekDom);
+				bindConditionFilterEvents();
+			}
+			//绑定筛选事件
+			function bindConditionFilterEvents(){
+				$(".week-filter a").unbind("click").click(function(){
+					$(".week-filter a").removeClass("active");
+					$(this).addClass("active");
+					getWeekList();
+				});
+				$(".week-filter a[index='"+currWeek+"']").addClass("active");
+				if($(".week-filter a.active").length<1) {
+					$(".week-filter a:first-child").addClass("active");
+				}
+				$(".sel-search-type .condition-item").unbind("click").click(function(){
+					$(this).addClass("active").siblings().removeClass("active");
+					getWeekList();
+				});
+				$(".key-word-search").unbind("keydown").keydown(function(e){
+					if(e.keyCode==13){
+						getWeekList();
+					}
+				});
+				//导出按钮
+				$(".btn-export").click(function(){
+					$.downloadFile(BSAPIURL+"/lower_employee/week_schedules"+$.toQueryString(getSelectedCondition(),true)+"&is_export=1");
+				});
+				//跳转计划提交明细
+				$(".open-detail-html").click(function(){
+					var condition=getSelectedCondition();
+					parent.openTab("计划、总结提交明细","views/workplan-summary-submit-details.html"+$.toQueryString(condition,true));
+				});
+			}
+			//获取某年某月的周列表数组
+			function getWeekCountOfMonth(year, month) {
+				var dt = new Date();
+				//设置第一天
+				dt.setFullYear(year, month - 1, 1);
+				//第一天星期
+				var firstDayWeek = dt.getDay();
+				if(firstDayWeek == 0) firstDayWeek = 7;
+				//设置最后一天
+				dt.setFullYear(year, month, 0);
+				//天数
+				var days = dt.getDate();
+				//本月周一与一号相差
+				var currMonthWeek1Ofset = 1;
+				if(firstDayWeek != 1)
+					currMonthWeek1Ofset = 7 - firstDayWeek + 2;
+				//周数
+				var weekCount = Math.ceil((days - currMonthWeek1Ofset + 1) / 7);
+				return weekCount;
+			}
+
+			function getWeeks(year, month) {
+				if(!year||!month) {
+					throw new Error("查询条件错误！");
+					return;
+				}
+				var weekIndex = 0;
+				if(month > 1) {
+					//计算之前周数
+					for(var i = 1; i < month; i++) {
+						weekIndex += getWeekCountOfMonth(year, i);
+					}
+				}
+				//当前周数
+				var weekCount = getWeekCountOfMonth(year, month);
+				var retWeeks = [];
+				for(var i = 1; i <= weekCount; i++) {
+					retWeeks.push(weekIndex + i);
+				}
+				return retWeeks;
+			} 
+			getWeekList();
+			//获取当前选中的年和月并返回YYYY-MM
+			function getSelectedCondition(){
+				var yearNum=$(".work-plan-year-filter").val();
+				var weekNum=$(".week-filter a.active").attr("index");
+				if(!yearNum) {
+					$.showErrorGritter("请选择查询年份！");
+					return false;
+				}
+				if(!weekNum) {
+					$.showErrorGritter("请选择查询周数！");
+					return false;
+				}
+				return {
+					year: yearNum.substring(0,4),
+					month: yearNum.substring(5,7),
+					week_num: weekNum,
+					schedule_status: $(".sel-week-plan .condition-item.active").attr("data-value")||"",
+					report_status: $(".sel-plan-summer .condition-item.active").attr("data-value")||"",
+					key: $(".key-word-search").val()
+				}
+			}
+			//获取某年某月的周计划列表
+			function getWeekList(){
+				var condition=getSelectedCondition();
+				if(!condition) return false;
+				$.ajaxGet(BSAPIURL+"/lower_employee/week_schedules"+$.toQueryString(condition,true),function(resp){
+					if(resp.code!=0) {
+						$.showErrorGritter("获取计划列表失败："+resp.msg);
+						return false;
+					}
+					onWeekListGeted(resp.data);
+				});
+			}
+			//周计划列表获取成功
+			function onWeekListGeted(data){
+				console.log("刷新成功")
+				$(".week-plan-pack-container").empty();
+				if(data.length<1) {
+					$(".week-plan-pack-container").html("该条件下计划为空。")
+				}
+				for(var i in data) {
+					appendOnePlanPack(data[i]);
+				}
+				//大屏一行显示5个，间距18   最小宽度300
+				$(".plan-pack").css("width",($(".week-plan-pack-container").outerWidth(true)-5*18)/5+"px");
+				$(".week-plan-pack-container .plan-pack").unbind("click").click(function(){
+					onPlanPackClick(this);
+				});
+			}
+			//添加一个计划的包
+			function appendOnePlanPack(data){
+				if(!data||!data.work_schedule_id) {
+					throw new Error("计划包参数错误！");
+					return false;
+				}
+				var onePlanPackHtml=
+				//"<div class=\"week-plan-pack-container at\">"
+				"	<div class=\"plan-pack lt\" data-schedule-week-num='"+data.work_schedule_week_number+"' data-has-rule='"+data.has_rule+"' data-schedule-id='"+data.work_schedule_id+"'>"
+						//<!--头部-->
+				+"		<div class=\"pack-head\">"
+				+"			<div class=\"pack-head-real\">"
+				+"				<div class='name-depa' title='"+(data.owner_info.employee_name+"——"+data.owner_info.depa_name)+"'>"
+				+"					<span class='employee-name css-overhidden' data-employee-id='"+data.owner_info.employee_id+"'>"+data.owner_info.employee_name+"</span>"
+				+"					(<span class='employee-depa-name css-overhidden note-font-type' data-depa-id='"+data.owner_info.depa_id+"'>"+data.owner_info.depa_name+"</span>)"
+				+"				</div>"
+//				+(data.work_schedule_is_next_week?"<span class=\"week-remark next-week-remark\">下周</span>"
+//				:data.work_schedule_is_current_week?"<span class=\"week-remark curr-week-remark\">本周</span>"
+//				:"")
+				+"				<span class=\"pack-submit-status rt"+(data.work_schedule_status==planStatus.APPROVAL_PASS?" plan-passed":"")+"\">"+data.work_schedule_status_cn+"</span>"
+				+"			</div>"
+				+"			<span class=\"pack-week-num\">第"+data.work_schedule_week_number+"周</span>"
+				+"			<span class=\"pack-date-during note-font-type\">"+getPlanDateDuring(data.work_schedule_start_date,data.work_schedule_end_date)+"</span>"
+				+"		</div>"
+						//<!--总事项数-->
+				+"		<div class=\"all-item-num at\">"
+				+"			<span class=\"lt\">"
+				+"				<span>总事项数：</span>"
+				+"				<span class=\"note-font-type\">"+(data.work_schedule_status==planStatus.WAIT_SUBMIT?0:data.work_schedule_statistics.items_num)+"</span>"
+				+"			</span>"
+				+"			<span class=\"rt\">"
+				+"				<span>完成：</span>"
+				+"				<span class=\"note-font-type\">"+(data.work_schedule_status==planStatus.WAIT_SUBMIT?0:data.work_schedule_statistics.item_completed_num)+"</span>"
+				+"			</span>"
+				+"		</div>"
+						//<!--事项完成情况-->
+				+"		<div class=\"item-complete-status\">"
+				+"			<div class=\"complete-container\">"
+				+"				<span>计划内完成数：</span>"
+				+"				<span class=\"note-font-type\">"
+				+"					<span class=\"inner-plan-complete-num\">"+(data.work_schedule_status==planStatus.WAIT_SUBMIT?0:data.work_schedule_statistics.in_plan_items_completed_num)+"</span>"
+				+"					/"
+				+"					<span class=\"inner-plan-all-num\">"+(data.work_schedule_status==planStatus.WAIT_SUBMIT?0:data.work_schedule_statistics.in_plan_items_num)+"</span>"
+				+"				</span>"
+				+"			</div>"
+				+"			<div class=\"complete-container\">"
+				+"				<span>计划外完成数：</span>"
+				+"				<span class=\"note-font-type outer-plan-complete-status\">"
+				+"					<span class=\"outer-plan-complete-num\">"+(data.work_schedule_status==planStatus.WAIT_SUBMIT?0:data.work_schedule_statistics.out_plan_items_completed_num)+"</span>"
+				+"					/"
+				+"					<span class=\"outer-plan-all-num\">"+(data.work_schedule_status==planStatus.WAIT_SUBMIT?0:data.work_schedule_statistics.out_plan_items_num)+"</span>"
+				+"				</span>"
+				+"			</div>"
+				+"			<div class=\"complete-container\">"
+				+"				<span>协助完成数：</span>"
+				+"				<span class=\"note-font-type\">"
+				+"					<span class=\"helper-plan-complete-num\">"+(data.work_schedule_status==planStatus.WAIT_SUBMIT?0:data.work_schedule_statistics.by_helper_items_completed_num)+"</span>"
+				+"					/"
+				+"					<span class=\"helper-plan-all-num\">"+(data.work_schedule_status==planStatus.WAIT_SUBMIT?0:data.work_schedule_statistics.by_helper_items_num)+"</span>"
+				+"				</span>"
+				+"			</div>"
+				+"		</div>"
+						//<!--提交时间-->
+				+"		<div class=\"submit-time-container\">"
+				+"			<div class=\"plan-submit-time note-font-type\">"
+				+"				<span>"+(data.work_schedule_submit_time?"计划提交时间":"计划提交截止时间")+"：</span>"
+				+"				<span class=\"plan-submit-time-real\">"
+				+(getFomartDate(data.work_schedule_submit_time||data.work_schedule_should_submit_time)||"")
+				+"				</span>"
+				+"			</div>"
+				+"			<div class=\"summer-submit-time note-font-type\">"
+				+"				<span>"+(data.work_summary_submit_time?"总结提交时间":"总结提交截止时间")+"：</span>"
+				+"				<span class=\"summer-submit-time-real\">"+(getFomartDate(data.work_summary_submit_time||data.work_summary_should_submit_time)||"")+"</span>"
+				+"				<br><span class=\"summer-submit-status "+(data.work_summary_submit_status==planSummerStatus.SUBMITED?"status-submited":"")+"\">("+(data.work_summary_submit_status_cn||"")+")</span>"
+				+"			</div>"
+				+"		</div>"
+						//<!--批注-->
+				+"		<div class=\"leader-note\">"
+				+"			<span class=\"\">批注：</span>"
+				+"			<span class=\"note-font-type leader-note-detail\" title='"+(data.work_schedule_leader_remark||"")+"'>"+(data.work_schedule_leader_remark||"")+"</span>"
+				+"		</div>"
+				+"		<a href=\"javascript:;\" data-name=\""+data.owner_info.employee_name+"的工作计划"+data.work_schedule_start_date.substring(0,4)+
+				"年第"+data.work_schedule_week_number+"周\" data-type=\""+businessGroupCode.plan+"\" data-id=\""+data.work_schedule_id+
+				"\" class=\"group-icon\" onselectstart=\"return false;\" style=\"-moz-user-select:none;\" onclick=\"addGroup(this);\"><img src=\"../resources/images/add-group-icon.png\"></a>"
+				+"	</div>";
+				//+"</div>";
+				$(".week-plan-pack-container").append(onePlanPackHtml);
+				$(".plan-pack[data-schedule-id='"+data.work_schedule_id+"']").data("week-info",data);
+				//超过神略
+				$.zoom({
+					container: $(".plan-pack[data-schedule-id='"+data.work_schedule_id+"'] .leader-note-detail"),
+					height: 120,
+					firstState: 0
+				});
+			}
+			//时间转换
+			function getFomartDate(dateStr){
+				if(!dateStr) return "";
+				return ((new Date(dateStr.replace(/-/g,"/"))).format("yyyy-MM-dd hh:mm"));
+			}
+			//没有计划列表时添加提示
+			function addNoteHtml(type){
+				var noteText=type=="non_rule"?"您没有周计划规则，请先添加周计划规则后再进行使用":"此月没有添加周计划！";
+				var noteHtml="<span class='non-list-note'>"+noteText+"</span>";
+				$(".week-plan-pack-container").append(noteHtml);
+			}
+			//周计划点击事件
+			function onPlanPackClick(obj){
+				/*if($(obj).attr("data-has-rule")!=="true"){
+					$.showErrorGritter("您当前没有周计划规则，不能查看周计划！");
+					return false;
+				}*/
+				var weekInfo=$(obj).data("week-info");
+				console.log(weekInfo)
+				if(weekInfo.work_schedule_status==planStatus.WAIT_SUBMIT) {
+					$.showErrorGritter("该员工计划未提交，不能查看！")
+					return false;
+				}
+				var scheduleWeekNum=$(obj).attr("data-schedule-week-num");
+				var scheduleYear=$(".work-plan-year-filter").val().substring(0,4);
+				var is_next_week=weekInfo.work_schedule_is_next_week;
+				var is_curr_week=weekInfo.work_schedule_is_current_week;
+				var scheduleId=$(obj).attr("data-schedule-id");
+				var employeeId=$(obj).find(".employee-name").attr("data-employee-id");
+				//跳转页面
+				parent.openTab("第"+scheduleWeekNum+"周工作计划"+"（"+$(obj).find(".employee-name").text()+"）","views/ws-one-work-plan-detail.html?schedule_week_num="
+				+scheduleWeekNum+"&schdule_year="+scheduleYear
+				+"&is_next_week="+is_next_week+"&is_curr_week="+is_curr_week
+				+"&schedule_id="+scheduleId+"&employee_id="+employeeId+"&hasRule="+($(obj).attr("data-has-rule")));
+			}
+			//获取周开始时间和结束时间  X月X日-X月X日
+			function getPlanDateDuring(start,end){
+				start=new Date(start.replace(/-/g,"/"));
+				start=start.getMonth()+1+"月"+start.getDate()+"日";
+				end=new Date(end.replace(/-/g,"/"));
+				end=end.getMonth()+1+"月"+end.getDate()+"日";
+				return start+"-"+end;
+			}
+			function addGroup(obj,event){
+				var e=window.event||event;
+				if(e.stopPropagation){
+					e.stopPropagation();
+				}else{
+					window.event.cancelBubble=true;
+				}
+				groupHandle($(obj));
+			}
+		</script>
+	</body>
+
+</html>

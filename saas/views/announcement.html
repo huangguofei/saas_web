@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>公告管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<!--<link rel="stylesheet" href="../resources/css/jquery.mCustomScrollbar.css" />-->
+		<style>
+			.icon-close {
+				color: #d9534f;
+				cursor: pointer;
+			}
+			
+			.icon-close:hover {
+				color: red;
+			}
+			
+			.form-control-dept-select,
+			.form-control-employee-select {
+				min-height: 34px;
+				height: auto;
+			}
+			
+			.label-file-uploaded .item,
+			.list-dept-select-temp .item,
+			.form-control-dept-select .item,
+			.form-control-employee-select .item {
+				display: inline-block;
+				padding: 3px 8px;
+				margin-bottom: 5px;
+				border: 1px solid #eee;
+			}
+			
+			.form-inline.form-group-publicity label {
+				min-width: auto;
+				margin-right: 10px;
+			}
+			
+			.announcement-title,
+			.announcement-title:hover {
+				/*text-decoration: underline;*/
+				/*color: #666;*/
+				font-size: 14px;
+			}
+			
+			.announcement-status-0,
+			.announcement-status-4 {
+				color: #91a1b3!important;
+			}
+			
+			.announcement-status-1 {
+				color: #3dacdd;
+				cursor: pointer;
+			}
+			
+			.announcement-status-2 {}
+			
+			.announcement-status-3 {
+				color: #ca192b;
+				cursor: pointer;
+			}
+			
+			.label-file-uploaded .item {
+				border-bottom: 1px dashed #eee;
+				border-width: 0 0 1px 0;
+				padding: 10px 0;
+				display: inline-block;
+				width: 100%;
+				position: relative;
+			}
+			
+			.label-file-uploaded .item img {
+				position: absolute;
+				top: 17px;
+				right: 10px;
+			}
+			
+			.form-group.form-inline>label {
+				text-align: right;
+				width: 80px;
+				margin-right: 5px;
+			}
+			
+			.form-group-publicity .form-control {
+				padding-left: 0;
+			}
+			
+			.ke-input-text {
+				padding: 5px 5px!important;
+				height: auto!important;
+			}
+			
+			.model-apv-approval-record-common .steps .step.approval-mini {
+				height: 80px;
+			}
+			
+			.model-apv-approval-record-common .steps .step.approval-mini.approval-creator .name-and-time {
+				top: 14px;
+			}
+			
+			.model-apv-approval-record-common .steps .odd-step-container,
+			.model-apv-approval-record-common .steps .even-step-container {
+				width: calc(50% - 20px);
+				padding: 20px 20px 20px 15px;
+			}
+			
+			.model-apv-approval-record-common .steps .step {
+				border: 1px solid #e9e9e9;
+				height: 130px;
+				margin-top: 20px;
+				position: relative;
+			}
+			
+			.model-apv-approval-record-common .steps .step:first-child {
+				margin-top: 0;
+			}
+			
+			.model-apv-approval-record-common .steps .even-step-container .step:first-child {
+				margin-top: 70px;
+			}
+			
+			.model-apv-approval-record-common .steps .head-container {
+				position: relative;
+				width: 70px;
+				height: 50px;
+				margin-right: 5px;
+			}
+			
+			.model-apv-approval-record-common .steps .head-container .head {
+				position: absolute;
+				width: 50px;
+				height: 50px;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				left: 0;
+				top: 0;
+				z-index: 1;
+			}
+			
+			.model-apv-approval-record-common .steps .head-container .head:nth-child(2) {
+				left: 10px;
+				z-index: 2;
+			}
+			
+			.model-apv-approval-record-common .steps .head-container .head:nth-child(3) {
+				left: 20px;
+				z-index: 3;
+			}
+			
+			.model-apv-approval-record-common .steps .step .user {
+				overflow-y: hidden;
+				margin-top: 5px;
+				height: 60px;
+				padding: 10px 14px;
+				position: relative;
+			}
+			
+			.name-and-time {
+				float: none;
+				left: 90px;
+				right: 160px;
+				position: absolute;
+				top: 23px;
+			}
+			
+			.name-and-time span {
+			   max-width: 100%;
+			   display: block;
+			}
+			
+			.approver-and-note-container {
+				background-color: #fafafa;
+			    padding: 10px 14px;
+			    position: absolute;
+			    left: 0;
+			    right: 0;
+			    bottom: 0;
+			    top: 70px;
+			}
+			
+			.approver-and-note-container .note {
+				margin-right: 160px;
+			}
+			
+			.approver-and-note-container .approval-real {
+				position: absolute;
+				right: 14px;
+				top: 14px;
+				width: 155px;
+				text-align: right;
+			}
+			
+			.approver-and-note-container .approval-real .real-approver {
+				max-width: 155px;
+			}
+			
+			.center-line {
+				width: 2px;
+				border: 1px solid #ddd;
+				position: relative;
+			}
+			
+			.center-line img {
+				position: absolute;
+				bottom: 0;
+				left: -1px;
+			}
+			
+			.steps .step .remark {
+				position: absolute;
+				right: -28px;
+				top: 20px;
+				width: 12px;
+				height: 12px;
+				background-color: #fff;
+				border: 3px solid #21b5a9;
+				border-radius: 6px;
+				-webkit-border-radius: 6px;
+				-moz-border-radius: 6px;
+				padding: 0;
+				z-index: 2;
+			}
+			
+			.steps .step .remark.remark-of-red {
+				border: 3px solid #ca192b;
+			}
+			
+			.steps .odd-step-container .remark {
+				right: -28px;
+			}
+			
+			.steps .even-step-container .remark {
+				left: -23px;
+			}
+			
+			.approver-and-note-container .approval-real span {
+				display: block;
+			}
+			
+			.approval-status {
+				margin-top: 10px;
+			}
+			
+			.approval-status .btn-mta {
+				margin-right: 10px;
+				height: 26px;
+				line-height: 13px;
+			}
+			
+			.approval-status .status {
+				font-size: 18px;
+				color: #21b5a9;
+			}
+			
+			.approval-status .status.status-red {
+				color: #CA192B;
+			}
+			
+			.model-apv-approval-record-common .steps .step .text {
+				margin-top: 20px;
+				height: 80px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			
+			.model-apv-approval-record-common .steps .step .text>span {
+				display: block;
+				text-align: center;
+			}
+			
+			.model-apv-approval-record-common .steps .step .text>span.type {
+				font-weight: 700;
+			}
+			
+			.model-apv-approval-record-common .steps .step .text>a {
+				margin-left: 169px;
+				margin-top: -33px;
+			}
+			
+			.model-apv-approval-record-common .steps .step .text>span.note {
+				height: 62px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				text-align: left;
+			}
+			
+			.model-apv-approval-record-common .steps .step .time {
+				text-align: center;
+			}
+			
+			.model-apv-approval-record-common .form-approval {
+				padding-left: 15px;
+				padding-right: 60px;
+			}
+			
+			.model-apv-approval-record-common .form-approval .opinion {
+				margin-bottom: 20px;
+			}
+			
+			.model-apv-approval-record-common .form-approval .opinion .form-control-note {
+				display: block;
+				width: 100%;
+				height: 100px;
+				margin-top: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container">
+			<!--<div class="remark hide">
+				<img src="../resources/images/mannagement-icon.png" alt="" /><span>*公告发布及管理</span>
+			</div>-->
+			<div class="content">
+				<div class="search">
+
+				</div>
+				<div class="role-list">
+					<table id="grid-table" class="grid-module">
+					</table>
+					<div id="grid-pager">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-announcement-info hide">
+			<form class="form-horizontal model-announcement-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">重要等级：</label>
+					<select class="form-control" bind="announcement_level">
+						<option value="" selected="selected">选择重要等级</option>
+						<option value="0">不重要</option>
+						<option value="1">普通</option>
+						<option value="2">重要</option>
+						<option value="3">非常重要</option>
+					</select>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">标题：</label>
+					<input type="text" class="form-control" placeholder="标题" bind="announcement_title" nulltip="标题">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag" style="vertical-align: top;">公示范围：</label>
+					<div class="form-control form-control-noborder" style="height: auto; margin-left: 0; padding: 0;">
+						<div class="form-group form-inline">
+							<span class="form-control form-control-dept-select" style="width: 300px;"></span>
+							<label><a class="btn-a-default btn-dept-select"> 选择部门 </a></label>
+						</div>
+						<div class="form-group form-inline" style="margin-top: 5px;">
+							<span class="form-control form-control-employee-select" style="width: 300px;">
+
+							</span>
+							<label><a class="btn-a-default btn-employee-select"> 选择员工 </a></label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group form-inline form-group-publicity">
+					<label class="input-flag">公示期：</label>
+					<span class="form-control form-control-noborder form-control-height-auto" style="height: auto;">
+						<label><input type="radio" checked="checked" class="form-control-radio" name="rdoPublicityPeriod" value="9999" bind="announcement_time_limit"> 不限</label>
+						<label><input type="radio" class="form-control-radio" name="rdoPublicityPeriod" value="3" bind="announcement_time_limit"> 3天</label>
+						<label><input type="radio" class="form-control-radio" name="rdoPublicityPeriod" value="7" bind="announcement_time_limit"> 一周</label>
+						<label><input type="radio" class="form-control-radio" name="rdoPublicityPeriod" value="14" bind="announcement_time_limit"> 两周</label>
+						<label>
+							<input type="radio" class="form-control-radio form-control-limit-customize" name="rdoPublicityPeriod" data-customize="true"> 自定义 
+							<input type="text" placeholder="公示天数" class="form-control-publicity-days" style="width: 100px; display: none;" data-type="int" maxlength="3" bind="announcement_time_limit"/>
+						</label>
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag" style="vertical-align: top;">正文：</label>
+					<textarea class="form-control form-control-content" style="width: 400px;" bind="announcement_content_html"></textarea>
+				</div>
+				<div class="form-group form-inline">
+					<label style="vertical-align: top;">附件：</label>
+					<div class="form-control form-control-noborder form-control-height-auto  form-control-nopadding">
+						<a class="btn-a-default btn-upload-anx">添加附件</a>
+						<div class="upload">
+							<p class="label-file-uploaded">
+
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="form-group form-inline hide">
+					<label></label>
+					<button type="button" class="btn btn-default btn-announcement-save" data-status="0">保 存</button>
+					<!--<button type="button" class="btn btn-default btn-announcement-save" data-status="1">保存并发布</button>-->
+					<button type="button" class="btn btn-default" data-dismiss="modal">取 消 </button>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-leader-info pnl-dept-select-share hide">
+			<form class="form-horizontal model-leader-info model-dept-select-share">
+				<div class="wrap wrap-source">
+					<label>请以部门为单位选择公示范围：</label>
+					<div class="box">
+						<ul class="list-emp tree tree-dept">
+
+						</ul>
+					</div>
+				</div>
+				<div class="wrap seg">
+					<div class="box">
+						<p>
+							<a href="javascript:;" class="btn-add"><i class="fa fa-arrow-right"></i></a>
+						</p>
+						<br>
+						<p>
+							<a href="javascript:;" class="btn-remove"><i class="fa fa-arrow-left"></i></a>
+						</p>
+					</div>
+				</div>
+				<div class="wrap wrap-new">
+					<label>公示范围：</label>
+					<div class="box">
+						<ul class="list-emp list-dept-select-temp">
+
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-leader-info pnl-employee-select-share hide">
+			<form class="form-horizontal model-leader-info model-employee-select-share">
+				<div class="wrap wrap-source">
+					<label>请以员工为单位选择公示范围：</label>
+					<div class="box">
+						<div class="py">
+							<input type="search" placeholder="可输入“ZS”或“张三”查找" style="width: 100%;" />
+							<p>
+								<a class="active">A</a>
+							</p>
+						</div>
+						<ul class="list-emp">
+							<!--<li><label><input type="checkbox" > <span>A同事</span><span>行政部</span><span>行政专员</span></label></li>-->
+						</ul>
+					</div>
+				</div>
+				<div class="wrap seg">
+					<div class="box">
+						<p>
+							<a href="javascript:;" class="btn-add"><i class="fa fa-arrow-right"></i></a>
+						</p>
+						<br>
+						<p>
+							<a href="javascript:;" class="btn-remove"><i class="fa fa-arrow-left"></i></a>
+						</p>
+					</div>
+				</div>
+				<div class="wrap wrap-new">
+					<label>公示范围：</label>
+					<div class="box">
+						<ul class="list-emp">
+
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openModelInfo('add');" role-auth="saas/companies/0/manage_announcements|post"><i class="fa fa-plus"></i> 添加公告</a>
+			<a class="btn btn-sm btn-danger def-btn-info" onclick="openModelInfo('update');" role-auth="saas/companies/0/manage_announcements/0|put" enable-on="singleselect" enable-tip="多选时不能进行编辑操作。"><i class="fa fa-edit"></i> 编辑</a>
+			<a class="btn btn-sm btn-info def-btn-info" onclick="preview();" role-auth="saas/companies/0/manage_announcements|post" enable-on="singleselect" enable-tip="多选时不能进行编辑操作。"><i class="fa fa-eye" aria-hidden="true"></i> 预览</a>
+			<a class="btn btn-sm btn-danger def-btn-info" onclick="openPublishPop('release');" role-auth="saas/companies/0/manage_announcements/status|put" enable-on="singleselect" enable-tip="多选时不能进行上架操作。"><i class="fa fa-unlock"></i> 发布</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" onclick="openSetStatusPop('shelves');" role-auth="saas/companies/0/manage_announcements/status|put"><i class="fa fa-lock"></i> 取消发布</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" onclick="openSetStatusPop('delete');" role-auth="saas/companies/0/manage_announcements/status|put"><i class="fa fa-trash"></i> 删除</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<!--<script type="text/javascript" src="../resources/js/jquery.mCustomScrollbar.concat.min.js"></script>-->
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+		<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/approval.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			//公告APIS
+			var baseAPIURL = BSAPIURL + "/companies/" + COMPANYID + "/manage_announcements";
+			var ANNOUNCEMENTAPI = {
+				base: baseAPIURL,
+				status: baseAPIURL + "/status",
+				approval: baseAPIURL + "/{id}/approval"
+			};
+			var gridSelector = "#grid-table";
+			var pagerSelector = "#grid-pager";
+			var anmtContentMaxLength = 100000;
+			//editor
+			var KEditor;
+			$(document).ready(function() {
+				//search
+				$.initSearchControls4TagMode({
+					auto: true,
+					url: ANNOUNCEMENTAPI.base,
+					grid: "#grid-table",
+					container: ".search",
+					key_name: "key",
+					key_placeholder: "输入公告标题进行查找",
+					onChange: function(selectTags) {},
+					groups: [{
+						name: "announcement_level_arr",
+						text: "公告等级",
+						items: [{
+							key: "全部",
+							value: ""
+						}, {
+							key: "不重要",
+							value: "0"
+						}, {
+							key: "普通",
+							value: "1"
+						}, {
+							key: "重要",
+							value: "2"
+						}, {
+							key: "非常重要",
+							value: "3"
+						}]
+					}, {
+						name: "announcement_status_arr",
+						text: "公告状态",
+						items: [{
+							key: "全部",
+							value: ""
+						}, {
+							key: "未发布",
+							value: "0"
+						}, {
+							key: "审批中",
+							value: "1"
+						}, {
+							key: "公示中",
+							value: "2"
+						}, {
+							key: "审批未通过",
+							value: "3"
+						}, {
+							key: "已下架",
+							value: "4"
+						}]
+					}]
+				});
+				//token
+				$.token();
+				var gridHeight = $(window).height() - $(".search").height() - 145;
+				//grid
+				var colNames = ['', '', '', '', '标题', '发布范围', '公示期', '状态', '更新时间', '发布时间'];
+				var colModel = [{
+					name: 'id',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.announcement_id;
+					}
+				}, {
+					name: '_data',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return escape(JSON.stringify(rowObject));
+					}
+				}, {
+					name: 'announcement_status',
+					hidden: true
+				}, {
+					name: 'announcement_id',
+					hidden: true
+				}, {
+					name: '__announcement_title',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var clickAction = "openModelInfo('update','" + rowObject.announcement_id + "');";
+							//状态
+							var status = rowObject.announcement_status;
+							/*if() {
+								//审批中、审批未通过
+								clickAction = "parent.openTab('公告详情','views/apv-approval-detail.html?action=my&apvId=" + rowObject.approval_session_id + "');";
+							}*/
+							if(status == 2 || status == 1 || status == 3 || status == 4) {
+								//公示中
+								clickAction = "parent.openTab('公告详情','views/announcement-detail.html?id=" + rowObject.announcement_id + "&status=" + status + "');";
+							}
+							return "<a class='announcement-title " + (status == 3 ? "announcement-status-" + status : "") + "' href='javascript:;' onclick=\"" + clickAction + "\">" + rowObject.announcement_title + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: '__announcement_scopes_cn',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var deptArr = [];
+							var employeeArr = [];
+							if(rowObject.announcement_scopes_cn.length > 0) {
+								for(var i in rowObject.announcement_scopes_cn) {
+									var scopesData = rowObject.announcement_scopes_cn[i];
+									if(scopesData.scope_type == 1) {
+										employeeArr.push(scopesData.scope_name);
+									}
+									if(scopesData.scope_type == 0) {
+										deptArr.push(scopesData.scope_name);
+									}
+								}
+							}
+							return deptArr.join(",") + ";" + employeeArr.join(",");
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'announcement_time_limit_cn'
+				}, {
+					name: 'announcement_status_cn',
+					formatter: function(cellvalue, options, rowObject) {
+						if(rowObject.announcement_status == 1 || rowObject.announcement_status == 3) {
+							return "<span class='announcement-status-" + rowObject.announcement_status + "' onclick=\"openApprovalRecordPop('" + rowObject.approval_session_id + "',true,function(){$(grid).reloadGrid();});\">" + cellvalue + "</span> ";
+						} else {
+							return "<span class='announcement-status-" + rowObject.announcement_status + "'>" + cellvalue + "</span> ";;
+						}
+					}
+				}, {
+					name: 'announcement_update_time_cn'
+				}, {
+					name: 'announcement_publish_time_cn'
+				}];
+				grid = $(gridSelector).initJqGrid({
+					gridSelector: gridSelector,
+					pager: pagerSelector,
+					url: ANNOUNCEMENTAPI.base+"?sidx=announcement_update_time",
+					storeRowDataInCache: true,
+					colNames: colNames,
+					rowNum: 100,
+					storeRowDataInCache: true,
+					sortorder: "desc",
+					colModel: colModel
+					//height: gridHeight
+				});
+				//KindEditor
+				KindEditor.ready(function(K) {
+					KEditor = K;
+				});
+			});
+			//预览
+			function preview() {
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要预览的公告。");
+					return false;
+				}
+				var rowData = $(grid).jqGrid('getRowData', grid.jqGrid('getGridParam', 'selrow'));
+				if(rowData.announcement_status == 2 || rowData.announcement_status == 4) {
+					//公示中
+					$.showErrorGritter("此公告正在公示中或者已下架不能预览！");
+					return false;
+				}
+				parent.openTab('公告详情', 'views/announcement-detail.html?id=' + rowData.announcement_id + '&status=' + rowData.announcement_status + '');
+			}
+			//添加修改公告
+			function openModelInfo(action, id) {
+				if(action == "update" && (!$(grid).isSelectedRowForjqGrid() && !id)) {
+					$.showErrorGritter("请先选择要编辑的公告。");
+					return false;
+				}
+				var rowData = {};
+				if(action == "update") {
+					var rowIndex = $(gridSelector).getJqGridRowIndexByField("id", id) || $(gridSelector).jqGrid('getGridParam', 'selrow');
+					if(!rowIndex) {
+						return false;
+					}
+					rowData = JSON.parse(unescape($(gridSelector).jqGrid('getRowData', rowIndex)._data));
+					if(rowData.announcement_status == 1 || rowData.announcement_status == 2) {
+						//审批中
+						$.showErrorGritter("审批中、公示中的公告不能编辑。");
+						return false;
+					}
+					if(rowData.announcement_status != 0) {
+						//非草稿的公告
+						$.showErrorGritter("非草稿的公告不能编辑。");
+						return false;
+					}
+					if(rowData.announcement_status == 3) {
+						//审批未通过
+						$.showErrorGritter("审批未通过的公告不能进行编辑，你也可以删除此公告。");
+						return false;
+					}
+				}
+
+				var actionText = (action == "add" ? "添加" : "修改");
+				var modalId = $.modal({
+					showButtonIcon: false,
+					showOKButton: false,
+					buttons: [{
+							name: "保 存",
+							class: "btn-primary",
+							onClick: function(modal) {
+								doAnnouncementPost(0);
+							}
+						}
+						/*, {
+												name: "保存并发布",
+												class: "btn-primary",
+												onClick: function(modal) {
+													doAnnouncementPost(1);
+												}
+											}*/
+					]
+				}).show(actionText + "公告", ".pnl-announcement-info",
+					function(modal) {
+
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-announcement-info";
+				var announcementController = new Controller(formContainer);
+				if(action == "update") {
+					//展示数据
+					//公示范围
+					var tempHtmlOfDept = "<span class=\"item\" data-dept-id=\"{ID}\">{N} <img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span> ";
+					var tempHtmlOfEmp = "<span class=\"item\" data-employee-id=\"{ID}\">{N} <img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span> ";
+					var selectDeptDom = $(formContainer + " .form-control-dept-select");
+					var selectEmployeeDom = $(formContainer + " .form-control-employee-select");
+					//selectEmployeeDom.empty();
+					for(var i in rowData.announcement_scopes_cn) {
+						var scopeData = rowData.announcement_scopes_cn[i];
+						if(scopeData.scope_type == 1) {
+							selectEmployeeDom.append(tempHtmlOfEmp.replace("{N}", scopeData.scope_name).replace("{ID}", scopeData.scope_reference_id));
+						} else if(scopeData.scope_type == 0) {
+							selectDeptDom.append(tempHtmlOfDept.replace("{N}", scopeData.scope_name).replace("{ID}", scopeData.scope_reference_id));
+						}
+					}
+					selectEmployeeDom.find(".item").unbind("mouseover").mouseover(function() {
+						transImgSrc($(this).find("img"));
+					}).unbind("mouseout").mouseout(function() {
+						transImgSrc($(this).find("img"));
+					});
+					selectDeptDom.find(".item").unbind("mouseover").mouseover(function() {
+						transImgSrc($(this).find("img"));
+					}).unbind("mouseout").mouseout(function() {
+						transImgSrc($(this).find("img"));
+					});
+					//附件 attachment_arr
+					var tempHtmlOfAnx = "<span class=\"item\" data-path='{P}'>{N} <img src='../resources/images/filter-close.png' onclick=\"$(this).parent().remove();\"/></span> ";
+					for(var i in rowData.attachment_arr) {
+						var anxData = rowData.attachment_arr[i];
+						$(formContainer + " .upload .label-file-uploaded").append(tempHtmlOfAnx.replace("{N}", anxData.file_display_name).replace("{P}", anxData.attachment_reference));
+					}
+				}
+				announcementController.set(rowData);
+				setTimeout(function() {
+					if(action == "update" && $(formContainer + " .form-group-publicity input[name='rdoPublicityPeriod']:checked").length == 0)
+						$(formContainer + " .form-control-limit-customize").attr("checked", "checked").trigger("change");
+				}, 10);
+				//保存
+				var doAnnouncementPost = function(status) {
+					if(!inputValidateForGritter(formContainer)) {
+						return false;
+					}
+					var announcementData = announcementController.getJSON();
+					//附件
+					var annexArr = [];
+					$(formContainer + " .label-file-uploaded span[data-path]").each(function() {
+						annexArr.push($(this).data("path"));
+					});
+					announcementData.attachment_arr = annexArr;
+					//部门、人员
+					var selectEmployeeIds = [];
+					$(formContainer + " .form-control-employee-select span[data-employee-id]").each(function() {
+						selectEmployeeIds.push($(this).data("employee-id"));
+					});
+					var selectDeptIds = [];
+					$(formContainer + " .form-control-dept-select span[data-dept-id]").each(function() {
+						selectDeptIds.push($(this).data("dept-id"));
+					});
+					announcementData.department_arr = selectDeptIds;
+					announcementData.employee_arr = selectEmployeeIds;
+					if(announcementData.department_arr.length == 0 && announcementData.employee_arr.length == 0) {
+						$.showErrorGritter("请选择要公示的部门或员工。");
+						return false;
+					}
+					announcementData.is_publish = status;
+
+					//公示期
+					var selectPublicityDom = $(formContainer + " .form-group-publicity input[name='rdoPublicityPeriod']:checked");
+					if(!$(selectPublicityDom).data("customize")) {
+						announcementData.announcement_time_limit = selectPublicityDom.val();
+					}
+					if(!announcementData.announcement_time_limit || parseInt(announcementData.announcement_time_limit) <= 0) {
+						$.showErrorGritter("公示期有误，请重新选择。");
+						return false;
+					}
+					$(".ke-container a").each(function() {
+						$(this).attr("target", "_blank");
+					});
+					announcementData.announcement_content_html = editor.html();
+					if(!announcementData.announcement_content_html) {
+						$.showErrorGritter("公示内容不能为空，请录入内容。");
+						return false;
+					} else if(announcementData.announcement_content_html.length >= anmtContentMaxLength) {
+						$.showErrorGritter("公告内容过长！");
+						return false;
+					}
+					var curApiUrl = ANNOUNCEMENTAPI.base;
+					if(action == "update")
+						curApiUrl = curApiUrl + "/" + announcementData.announcement_id;
+					$.ajaxByAction(action, curApiUrl, announcementData,
+						function(response) {
+							if(response.code == 0) {
+								//success
+								if(action == "add") {
+									announcementData.announcement_id = response.data.announcement_id;
+								}
+								if(status == 0) {
+									$("#" + modalId).modal('hide');
+									$.showSuccessGritter(actionText + "公告成功。");
+								}
+								$(grid).reloadGrid();
+
+								if(status == 1) {
+									//提交审批
+									openApprovalPostPop(announcementData.announcement_id, { var_value: announcementData.announcement_time_limit }, function() {
+										$("#" + modalId).modal('hide');
+										$.showSuccessGritter("发布公告成功！");
+									});
+								}
+							} else {
+								$.showErrorGritter("保存公告信息失败：" + response.msg);
+							}
+						});
+				};
+				//初始化编辑器
+				var tmpId = $.uuid();
+				$(formContainer + ' .form-control-content').attr("id", tmpId);
+				editor = KEditor.create("#" + tmpId, {
+					minWidth: '400px',
+					resizeType: 1,
+					allowPreviewEmoticons: false,
+					allowImageUpload: false,
+					items: [
+						'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+						'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', '|', 'link'
+					],
+					afterCreate: function(editor) {
+						$(formContainer + " .ke-container").css("width", "400px").css("display", "inline-block");
+					}
+				});
+				//展示正文
+				editor.html(rowData.announcement_content_html);
+				//公示范围 ---
+				var selectDepts;
+				$(formContainer + " .btn-dept-select").click(function() {
+					//选择部门
+					//选择部门
+					var options = {
+						url: SAASAPIS.BS.company.departments.replace("{id}", $.uuid()),
+						leftTitle: "请以部门为单位选择公示范围：",
+						rightTitle: "已选择的范围：",
+						isNeedRightPanel: false, //是否需要右边的模块
+						defaultCheckedIds: getDefualtCheckedIdsArr($(formContainer+" .form-control-dept-select .item"),"data-dept-id"), //默认选中的
+						linkageType: 1, //联动类型   0统计(不联动)   1（下联动） 2 （双联动）
+						//						modalId: modalIdOfDeptId, //打开的modal的id
+						clickCallback: function(data) { //为关闭modal时需要的数据赋值
+							selectDepts = data;
+							var tempHtml = "<span class=\"item\" data-dept-id=\"{ID}\">{N} <img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span> ";
+							var selectDeptDom = $(formContainer + " .form-control-dept-select");
+							//selectEmployeeDom.empty();
+							for(var i in selectDepts) {
+								var deptData = selectDepts[i];
+								if(selectDeptDom.find("span[data-dept-id='" + deptData.dept_id + "']").length > 0) {
+									continue;
+								}
+								selectDeptDom.append(tempHtml.replace("{N}", deptData.dept_name).replace("{ID}", deptData.dept_id));
+							}
+							selectDeptDom.find(".item").unbind("mouseover").mouseover(function() {
+								transImgSrc($(this).find("img"));
+							}).unbind("mouseout").mouseout(function() {
+								transImgSrc($(this).find("img"));
+							});
+							//							modal.modal("hide");
+						}
+					}
+					initDeptTree(options); //主函数
+				});
+				$(formContainer + " .btn-employee-select").click(function() {
+					//选择员工
+					$.showEmployeeSelectPop({
+						title: "选择公示范围",
+						subTitle: "请以员工为单位选择公示范围：",
+						isIncludeSelf: true,
+						isShowMe: true,
+						selectedEmployeeIds: getDefualtCheckedIdsArr($(formContainer+" .form-control-employee-select .item"),"data-employee-id"),
+						okCallback: function(selectEmployees) {
+							var tempHtml = "<span class=\"item\" data-employee-id=\"{ID}\">{N} <img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span> ";
+							var selectEmployeeDom = $(formContainer + " .form-control-employee-select");
+							selectEmployeeDom.data("select", selectEmployees);
+							//selectEmployeeDom.empty();
+							for(var i in selectEmployees) {
+								var empData = selectEmployees[i];
+								if(selectEmployeeDom.find("span[data-employee-id='" + empData.employee_id + "']").length > 0) {
+									continue;
+								}
+								selectEmployeeDom.append(tempHtml.replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+							}
+							selectEmployeeDom.find(".item").unbind("mouseover").mouseover(function() {
+								transImgSrc($(this).find("img"));
+							}).unbind("mouseout").mouseout(function() {
+								transImgSrc($(this).find("img"));
+							});
+						}
+					});
+				});
+				//公示范围 end
+				//公示期
+				$(formContainer + " .form-group-publicity input[name='rdoPublicityPeriod']").change(function() {
+					var publicityDaysDom = $(formContainer + " .form-group-publicity .form-control-publicity-days");
+					publicityDaysDom.hide();
+					var isCustomize = $(this).data("customize");
+					if(isCustomize) {
+						publicityDaysDom.show();
+					}
+				});
+				//附件
+				$(formContainer + " .btn-upload-anx").attr("id", "btnUploadAnx");
+				var upLoadProofImgUrl;
+				$("#btnUploadAnx").initUploader({
+					url: SAASAPIS.BS.upload.document,
+					up_container: formContainer + " .upload",
+					FilesAdded: function(up, files) {
+						return true;
+					},
+					FileUploaded: function(up, file, response) {
+						var resp = JSON.parse(response.response);
+						if(resp.code == 0) {
+							//success
+							$(formContainer + " .upload .label-file-uploaded").append("<span class=\"item\" data-path='{P}' data-file-name=\"{N}\">{N} <img src='../resources/images/filter-close.png' onclick='$(this).parent().parent().remove();'/></span> ".replace(/{N}/g, file.name).replace("{P}", resp.data.id));
+						} else {
+							$.showErrorGritter("上传失败：" + resp.msg);
+						}
+					}
+				});
+			}
+			//发布
+			function openPublishPop() {
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要发布的公告。");
+					return false;
+				}
+				if($(grid).isSelectedMultipleRowForjqGrid()) {
+					$.showErrorGritter("一次只能发布一个公告，请重新选择。");
+					return false;
+				}
+				var rowData = getSelectedDatas(grid)[0];
+				if(rowData.announcement_status == 1) {
+					//共享中
+					$.showErrorGritter("此公告正在审批中，请等待审批结果。");
+					return false;
+				} else if(rowData.announcement_status == 2) {
+					//共享中
+					$.showErrorGritter("此公告已发布，不能再次发布。");
+					return false;
+				} else if(rowData.announcement_status == 3) {
+					//审批不通过
+					$.showErrorGritter("此公告审批未通过，不能上架。");
+					return false;
+				} else if(rowData.announcement_status == 4) {
+					//已下架的公告不能上架
+					$.showErrorGritter("此公告已下架，不能再次上架。");
+					return false;
+				}
+				var id = $(grid).getSelectRowIdsForjqGrid("id");
+				//提交审批
+				openApprovalPostPop(id, { var_value: rowData.announcement_time_limit });
+			}
+			//审批
+			function openApprovalPostPop(id, define_param, callback) {
+				$.showApprovalPostPop({
+					routine: "announcementPublish",
+					define_param: define_param,
+					successCallback: function(apvData, apvModal) {
+						var postApvData = {};
+						if(apvData.needApv) {
+							postApvData = {
+								plan_id: apvData.planId,
+								diy_step_data: apvData.steps
+							}
+						} else {
+
+						}
+						$.ajaxPost(ANNOUNCEMENTAPI.approval.replace("{id}", id), postApvData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(apvData.needApv ? "公告发布审批已提交，请等待审批结果。" : "公告发布成功！");
+									$(grid).reloadGrid();
+									apvModal && apvModal.modal("hide");
+									if(callback) callback();
+								} else {
+									$.showErrorGritter("公告发布失败：" + response.msg);
+								}
+							});
+					}
+
+				});
+			}
+			//修改状态
+			function openSetStatusPop(action) {
+				var actionTxt = "",
+					confirm = "",
+					tmpStatus = "";
+				var rowDatas = getSelectedDatas(grid);
+				if(action == "shelves") {
+					actionTxt = "下架";
+					confirm = "你将下架选择的公告，确认下架吗？";
+					tmpStatus = "4";
+				} else if(action == "release") {
+					actionTxt = "上架";
+					confirm = "发布需要审核，审核通过后其他人才能查看，确认提交审核吗？";
+					tmpStatus = "2";
+				} else if(action == "delete") {
+					for(var i = 0, len = rowDatas.length; i < len; i++) {
+						if(rowDatas[i].announcement_status == 2) {
+							$.showErrorGritter("公告”" + rowDatas[i].announcement_title + "“处于公示中，不能直接删除！");
+							return false;
+						}
+					}
+					actionTxt = "删除";
+					confirm = "你将删除选择的公告，删除后不能恢复，确认删除吗？";
+					tmpStatus = "99";
+				}
+				if(!$(grid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要" + actionTxt + "的公告。");
+					return false;
+				}
+				var doUpdateStatus = function(apvData, apvModal) {
+					apvData = apvData || {};
+					var selRowsIndex = $(grid).jqGrid('getGridParam', 'selarrrow');
+					if(selRowsIndex.length > 0) {
+						var selectRowIds = $(grid).getSelectRowIdsForjqGrid("id");
+
+						$.ajaxPut(ANNOUNCEMENTAPI.status, {
+								announcement_ids: selectRowIds,
+								announcement_status: tmpStatus,
+								plan_id: apvData.planId,
+								diy_step_data: apvData.steps
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									if(apvModal) {
+										//审批
+										apvModal.modal("hide");
+										$.showSuccessGritter("公告发布审批已提交，请等待审批结果。");
+									} else {
+										$.showSuccessGritter(actionTxt + "公告成功。");
+									}
+									//refresh data
+									$(grid).reloadGrid();
+
+								} else {
+									$.showErrorGritter("提交失败：" + response.msg);
+								}
+							});
+					}
+				};
+				$.modal().confirm(confirm, function() {
+					doUpdateStatus();
+				});
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>企业信息管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/city-picker.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.cmp-header:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.cmp-header .cmp-name {
+				float: left;
+			}
+			
+			.cmp-header .cmp-name h4 {
+				height: 10px;
+			}
+			
+			.cmp-header img {
+				float: left;
+			}
+			
+			.fa-icon {
+				color: #666;
+				display: inline-block;
+				margin-right: 5px;
+				font-size: 20px;
+			}
+			
+			.company-info {
+				position: relative;
+			}
+			
+			.panel-info-status {
+				position: absolute;
+				right: 50px;
+				top: -15px;
+				border: none;
+			}
+			
+			.node-name {
+				cursor: pointer;
+			}
+			
+			.area-active {
+				background-color: #ccc;
+			}
+			
+			.cmp-name {
+				max-width: calc(100% - 430px);
+			}
+			
+			.cmp-header h4 {
+				width: 100%;
+				height: 20px!important;
+				display: inline-block;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				vertical-align: middle;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-company">
+			<div class="remark">
+				<i class="fa fa-list-ol fa-2x"></i><span>*企业会员管理，可审核企业信息、重置密码、添加备注以及停用/启用企业等</span>
+			</div>
+			<div class="content">
+				<div class="left-menu">
+					<div class="treeview tree-city">
+						<p>正在加载城市数据...</p>
+						<ul>
+							<li>
+								<label><input type="checkbox"/> 四川省</label>
+								<ul class="sub-item">
+									<li><label><input type="checkbox"/> 成都市</label></li>
+									<li><label><input type="checkbox"/> 绵阳市</label></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="main-wrap">
+					<form class="search" id="formSearch">
+						<div class="form-inline" style="position: relative;">
+							<div>
+								<label>所属行业</label>
+								<select class="form-control form-control-industry" bind="cmp_industry">
+									<option value="">所有行业</option>
+								</select>
+								<label>企业性质</label>
+								<select class="form-control form-control-quality" bind="cmp_quality">
+									<option value="">所有性质</option>
+								</select>
+								<label>认证状态</label>
+								<select class="form-control" bind="cmp_auth_status">
+									<option value="">所有状态</option>
+									<option value="2">未提交</option>
+									<option value="3">待审核</option>
+									<option value="6">待复核</option>
+									<option value="5">通过</option>
+									<option value="4">拒绝</option>
+								</select>
+								<label>版本使用情况</label>
+								<select class="form-control" bind="cmp_edition_status">
+									<option value="">所有情况</option>
+									<option value="1">未使用</option>
+									<option value="2">试用中</option>
+									<option value="0">未购买</option>
+									<option value="3">使用中</option>
+									<option value="4">已到期</option>
+								</select>
+								<label>企业状态</label>
+								<select class="form-control" bind="cmp_status">
+									<option value="">所有状态</option>
+									<option value="1">正常</option>
+									<option value="2">停用</option>
+								</select>
+							</div>
+							<div style="margin-top: 10px;">
+								<label>注册日期</label>
+								<input type="text" class="form-control date-picker" placeholder="选择日期" bind="time_start" data-date-format="yyyy-mm-dd">
+								<span>至</span>
+								<input type="text" class="form-control date-picker" placeholder="选择日期" bind="time_end" data-date-format="yyyy-mm-dd">
+								<input class="form-control" type="text" placeholder="请输入企业名称查询" bind="key" />
+								<button type="button" class="btn btn-default" onclick="reloadGrid();" role-auth="os/users|get">查 询</button>
+								<button type="button" class="btn btn-default" onclick="formSearch.reset();resetSearchForm();">重 置</button>
+							</div>
+						</div>
+					</form>
+					<div class="user-list">
+						<table id="grid-table" class="grid-module">
+						</table>
+						<div id="grid-pager">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel-contacts">
+				<div class="arrow"></div>
+				<ul class="wrap">
+					<li>
+						<label>移动电话：</label> <span class="label-mobile" bind="cmp_contact_mobile"></span>
+						<a href="javascript:;" class="btn btn-default btn-sm">发短信</a>
+					</li>
+					<li>
+						<label>QQ：</label> <span class="label-qq" bind="cmp_contact_qq"></span>
+						<a href="javascript:;" class="btn btn-default btn-sm">聊天</a>
+					</li>
+					<li>
+						<label>邮箱：</label> <span class="label-email" bind="cmp_contact_email"></span>
+						<a href="javascript:;" class="btn btn-default btn-sm">发邮件</a>
+					</li>
+					<li>
+						<label>办公电话：</label> <span class="label-tel" bind="cmp_contact_office_phone"></span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="pnl-company-info hide">
+			<form class="company-info">
+				<div class="header">
+					<div class="cmp-header">
+						<div class="cmp-name">
+							<h4 bind="cmp_name"></h4>
+							<h6 bind="cmp_short_name"></h6>
+						</div>
+						<img class="logo" src="" />
+					</div>
+
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<ul>
+							<li class="form-group form-inline">
+								<label>注册时间</label>
+								<span class="form-control form-control-noborder" bind="cmp_register_time"></span>
+								<label>版本使用情况</label>
+								<span class="form-control form-control-noborder" bind="cmp_edition_status_cn"></span>
+								<label>企业状态</label>
+								<span class="form-control form-control-noborder form-control-cmp_status_cn" bind="cmp_status_cn"></span>
+								<span class="form-control-status-edit hide">
+									<button type="button" class="btn btn-success btn-sm btn-status-enable"><i class="fa fa-unlock"></i> 启用</button>
+									<button type="button" class="btn btn-danger btn-sm btn-status-disenable"><i class="fa fa-lock"></i> 停用</button>
+								</span>
+								<span class="form-control-status-show"><button type="button" class="btn btn-default btn-sm btn-status"><i class="fa fa-edit"></i> 修改</button></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<ul>
+							<li class="form-group-line">
+								<label>企业基本信息</label>
+								<hr>
+							</li>
+							<li class="form-group form-inline">
+								<label>企业名称</label>
+								<span class="form-control form-control-noborder" bind="cmp_name"></span>
+								<label>所在城市</label>
+								<span class="form-control form-control-noborder" bind="cmp_area_cn"></span>
+								<label>详细地址</label>
+								<span class="form-control form-control-noborder" bind="cmp_address"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>所属行业</label>
+								<span class="form-control form-control-noborder" bind="cmp_industry_cn"></span>
+								<label>企业性质</label>
+								<span class="form-control form-control-noborder" bind="cmp_quality_cn"></span>
+								<label>企业帐号</label>
+								<span class="form-control form-control-noborder" bind="cmp_account_mobile"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>企业电话</label>
+								<span class="form-control form-control-noborder" bind="cmp_phone_number"></span>
+								<label>传真</label>
+								<span class="form-control form-control-noborder" bind="cmp_fax"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label></label>
+							</li>
+							<li class="form-group-line">
+								<label>企业证照</label>
+								<hr>
+							</li>
+							<li class="form-group form-inline">
+								<label style="width: 122px;">证件类型</label>
+								<span class="form-control form-control-noborder" bind="code_type"></span>
+							</li>
+							<li class="form-group form-inline">
+								<label bind="code_type_cn"></label>
+								<span class="form-control form-control-noborder" bind="cmp_code"></span>
+								<label>资质凭证</label>
+								<span class="imgs-qa">
+								</span>
+							</li>
+							<li class="form-group-line">
+								<label>企业联系人</label>
+								<hr>
+							</li>
+							<li class="form-group form-inline">
+								<label>联系人</label>
+								<span class="form-control form-control-noborder" bind="cmp_contact_person"></span>
+								<label>职务</label>
+								<span class="form-control form-control-noborder" bind="cmp_contact_title"></span>
+								<label>手机号码</label>
+								<span class="form-control form-control-cmp_contact_mobile form-control-noborder"><span bind="cmp_contact_mobile"></span></span>
+							</li>
+							<li class="form-group form-inline">
+								<label>办公电话</label>
+								<span class="form-control form-control-noborder" bind="cmp_contact_office_phone"></span>
+								<label>QQ</label>
+								<span class="form-control form-control-noborder" bind="cmp_contact_qq"></span>
+								<label>电子邮件</label>
+								<span class="form-control form-control-cmp_contact_email form-control-noborder"><span bind="cmp_contact_email"></span></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-default panel-info-status">
+					<div class="panel-body">
+						<ul>
+							<li class="form-group form-inline">
+								<label>认证状态</label>
+								<span class="form-control form-control-status-needver form-control-noborder"><span class="label label-warning label-cmp_info_status_cn" bind="cmp_info_status_cn"></span></span>
+								<span class="form-control form-control-status-vered form-control-noborder hide"><span class="label label-success label-cmp_info_status_cn" bind="cmp_info_status_cn"></span></span>
+								<span><button type="button" class="btn btn-default btn-sm btn-auth hide"><i class="fa fa-edit"></i> 审核</button></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<ul>
+							<li class="form-group form-group-remark-show form-inline">
+								<label>备注</label>
+								<span class="form-control form-control-noborder form-control-remark" bind="cmp_remark"></span>
+								<span><button type="button" class="btn btn-default btn-sm btn-remark"><i class="fa fa-edit"></i> 添加备注</button></span>
+							</li>
+							<li class="form-group form-group-remark-edit form-inline hide">
+								<label>备注</label>
+								<input type="text" class="form-control form-control-remark" bind="cmp_remark" />
+								<span>
+									<button type="button" class="btn btn-default btn-sm btn-remark-save">保存</button> 
+									<button type="button" class="btn btn-default btn-sm btn-remark-cancel">取消</button>
+								</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<ul class="nav nav-tabs" role="tablist">
+							<li>
+								<a class="pref"></a>
+							</li>
+							<li role="presentation" class="active">
+								<a href="#tabProcess" aria-controls="tabProcess" role="tab" data-toggle="tab">处理信息</a>
+							</li>
+							<li role="presentation">
+								<a href="#tabCompLog" aria-controls="tabCompLog" role="tab" data-toggle="tab">企业信息变更记录</a>
+							</li>
+						</ul>
+						<!-- Tab panes -->
+						<div class="tab-content">
+							<div role="tabpanel" class="tab-pane active" id="tabProcess">
+								<table id="grid-tab-process">
+								</table>
+							</div>
+							<div role="tabpanel" class="tab-pane" id="tabCompLog">
+								<table id="grid-tab-comp-log">
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-company-auth hide">
+			<form class="form-horizontal model-company-auth">
+				<div class="form-group form-inline">
+					<label class="input-flag">企业认证</label>
+					<label><input type="radio" name="auth" checked="checked" class="form-control-radio" value="1"> 通过</label>
+					<label><input type="radio" name="auth" class="form-control-radio" value="2"> 拒绝</label>
+				</div>
+				<div class="form-group form-inline hide">
+					<label class="input-flag">拒绝原因</label>
+					<textarea class="form-control form-control-refuse"></textarea>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-company-disable hide">
+			<form class="form-horizontal model-company-disable">
+				<div class="form-group form-inline">
+					<label>企业停用后，企业所有账户将无法登陆，
+可再次启用后恢复使用，确认停用该企业吗？</label>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">停用原因</label>
+					<textarea class="form-control form-control-disable"></textarea>
+				</div>
+			</form>
+		</div>
+
+		<div id="grid-footer-container" class="hide">
+			<!--<a class="btn btn-sm btn-info" onclick="openModelInfo('add');" role-auth="os/users|post"><i class="fa fa-plus"></i> 添加用户</a>
+			<a class="btn btn-sm btn-danger" onclick="openModelInfo('update');" show-on="singleselect" role-auth="os/users/0|put"><i class="fa fa-edit"></i> 编辑</a>
+			<a class="btn btn-sm btn-danger" onclick="openResetPwdPOP();" show-on="singleselect" role-auth="os/users/0|patch"><i class="fa fa-cog"></i> 重置密码</a>
+			<a class="btn btn-sm btn-danger" show-on="multiselect" onclick="setDisable(1);" role-auth="os/users|patch"><i class="fa fa-unlock"></i> 启用</a>
+			<a class="btn btn-sm btn-danger" show-on="multiselect" onclick="setDisable(2);" role-auth="os/users|patch"><i class="fa fa-lock"></i> 停用</a>
+			<a class="btn btn-sm btn-danger" show-on="multiselect" onclick="deleteModels();" role-auth="os/users|delete"><i class="fa fa-trash"></i> 删除</a>-->
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.data.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			var grid_selector = "#grid-table";
+			var pager_selector = "#grid-pager";
+			var cityTree;
+			var selectCityIds = [];
+			var searchController = new Controller("#formSearch");
+			var needRefreshGrid = false;
+			$(document).ready(function() {
+				$(".left-menu").css("top", ($(".remark").height() + 41) + "px");
+				searchController.set({
+					time_start: "",
+					time_end: "",
+					key: ""
+				});
+				//init tree
+				initTree();
+				//token
+				$.token();
+				//grid
+				//133 = remark 21(padding+border) + search margin-bottom 10 + pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".remark").height() - $(".search").height() - 153;
+				//alert($(".remark").height());
+				var colNames = ['', '名称', '城市', '所属行业', '企业性质', '帐号', '联系人', '认证状态', '版本使用情况', '企业状态', '注册时间'];
+				var colModel = [{
+					name: 'id',
+					index: 'id',
+					hidden: true,
+				}, {
+					name: '__cmp_name',
+					index: '__cmp_name',
+					sortable: true,
+					align: "left",
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"openCompanyInfoPop('" + rowObject.cmp_id + "');\" role-auth=\"os/users/0|put\" role-auth-tip=\"你无权限修改用户信息。\">" + rowObject.cmp_name + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'cmp_area_cn',
+					index: 'cmp_area_cn',
+					sortable: true
+				}, {
+					name: 'cmp_industry_cn',
+					index: 'cmp_industry_cn',
+					sortable: true
+				}, {
+					name: 'cmp_quality_cn',
+					index: 'cmp_quality_cn',
+					sortable: true
+				}, {
+					name: 'cmp_admin_account',
+					index: 'cmp_admin_account',
+					sortable: true
+				}, {
+					name: '__cmp_contact_person',
+					index: '__cmp_contact_person',
+					sortable: true,
+					width: 315,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var contact = {
+								cmp_contact_mobile: rowObject.cmp_contact_mobile,
+								cmp_contact_office_phone: rowObject.cmp_contact_office_phone,
+								cmp_contact_qq: rowObject.cmp_contact_qq,
+								cmp_contact_email: rowObject.cmp_contact_email
+							};
+							return "<a href='javascript:;' class='link-contacts-tip' data-contact=\"" + escape(JSON.stringify(contact)) + "\">" + rowObject.cmp_contact_person + "，" + rowObject.cmp_contact_title + "，" + rowObject.cmp_contact_mobile + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'cmp_auth_status_cn',
+					index: 'cmp_auth_status_cn',
+					sortable: true,
+					/*formatter: function(cellvalue, options, rowObject){
+						if(rowObject.cmp_auth_status==3&&rowObject.is_verify==1){
+							return "待复核";
+						}
+						return cellvalue;
+					}*/
+				}, {
+					name: 'cmp_edition_status_cn',
+					index: 'cmp_edition_status_cn',
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue) {
+								return cellvalue;
+							}
+							if(rowObject.roles.length == 0) {
+								return '';
+							}
+							var roleNames = "";
+							for(var i in rowObject.roles) {
+								roleNames += "," + rowObject.roles[i].role_name;
+							}
+							return roleNames.substr(1);
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'cmp_status_cn',
+					index: 'cmp_status_cn',
+					sortable: true
+				}, {
+					name: 'cmp_register_time',
+					index: 'cmp_register_time',
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return cellvalue;
+							//return $.convertToDate(cellvalue).Format("yyyy-MM-dd");
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				grid = $(grid_selector).initJqGrid({
+					grid_selector: grid_selector,
+					pager: pager_selector,
+					sortname: "cmp_register_time",
+					sortorder: "desc",
+					url: SAASAPIS.OS.companies,
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight,
+					multiselect: false,
+					beforeSelectRow: function(rowid, e) {
+						return rowid != 1;
+					},
+					onCellSelect: function(rowid, iCol, cellcontent, e) {},
+					complete: function() {
+						$(".link-contacts-tip").unbind("click").on({
+							click: function() {
+								var thisobj = $(this);
+								var contact = JSON.parse(unescape($(this).data("contact")));
+								$(".panel-contacts").css({
+									top: (thisobj.offset().top + 16).toString() + "px",
+									left: thisobj.offset().left.toString() + "px",
+									display: "block"
+								});
+								var contactController = new Controller(".panel-contacts");
+								contactController.set(contact);
+								return false;
+							}
+						});
+					}
+				});
+				$('.date-picker').datepicker({
+					autoclose: true,
+					todayHighlight: true
+				});
+				$(document).click(function() {
+					$(".panel-contacts").css({
+						display: "none"
+					});
+					return true;
+				});
+				$(".panel-contacts").click(function() {
+					$(this).css({
+						display: "block"
+					});
+					return false;
+				});
+				$.loadHangyeData(function(data) {
+					for(var i in data) {
+						var item = data[i];
+						$('.form-control-industry').append("<option value='" + item.code_tree_id + "'>" + item.code_name + "</option>");
+					}
+				});
+				$.loadQYXZData(function(data) {
+					for(var i in data) {
+						var item = data[i];
+						$('.form-control-quality').append("<option value='" + item.code_tree_id + "'>" + item.code_name + "</option>");
+					}
+				});
+			});
+			//init tree
+			function initTree() {
+				$.loadCityData(function(dataSource) {
+					var cityData = dataSource.DataSource;
+					if(cityData) {
+						var treeData = [];
+						for(var i in cityData) {
+							var city = cityData[i];
+							if(city.code_tree_parent_id == 100) {
+								treeData.push({
+									id: city.code_tree_id,
+									text: city.code_name,
+									nodes: []
+								});
+							}
+						}
+						for(var i in cityData) {
+							var city = cityData[i];
+							var index = getIndexOfArray(treeData, "id", city.code_tree_parent_id)
+							if(index >= 0) {
+								treeData[index].nodes.push({
+									id: city.code_tree_id,
+									text: city.code_name
+								});
+							}
+						}
+						//init tree
+						$(".treeview").html("");
+						var ulDom = $("<ul></ul>");
+						for(var i in treeData) {
+							var tree = treeData[i];
+							var liDom = $("<li></li>").append("<i class='fa fa-caret-down fa-x fa-icon'></i><span class='node-name' nodeid=\"{id}\"> {text}</span>".replace(/{id}/g, tree.id).replace(/{text}/g, tree.text));
+							if(tree.nodes && tree.nodes.length > 0) {
+								initChildTree(liDom, tree.nodes);
+							}
+							ulDom.append(liDom);
+						}
+						$(".treeview").append(ulDom);
+						$(".treeview i").each(function() {
+							$(this).removeClass("fa-caret-down").addClass("fa-caret-right");
+						});
+						$(".treeview>ul>li li").slideUp();
+						$(".treeview i").click(function() {
+							if($(this).hasClass("fa-caret-down")) {
+								$(this).removeClass("fa-caret-down").addClass("fa-caret-right");
+								$(this).parent().find("li").slideUp();
+							} else {
+								$(this).parent().parent().find("li li").slideUp();
+								$(this).parent().parent().find("li i").removeClass("fa-caret-down").addClass("fa-caret-right");
+								$(this).removeClass("fa-caret-right").addClass("fa-caret-down");
+								$(this).parent().find(">li").slideDown();
+							}
+
+						});
+						$(".treeview .node-name").click(function() {
+							selectCityIds = [];
+							$(".node-name").removeClass("area-active");
+							$(this).addClass("area-active");
+							$(this).parent().find(".node-name").each(function() {
+								selectCityIds.push($(this).attr("nodeid"));
+							});
+							reloadGrid();
+						});
+						//tree checked listen
+						/*$(".treeview input[type='checkbox']").change(function(e) {
+							var mchecked = this.checked;
+							if($(this).parent().find(".fa").length > 0) {
+								if($(this).parent().find("i").hasClass("fa-caret-down")) {
+									//将树收起
+									//$(this).parent().find("i").removeClass("fa-caret-down").addClass("fa-caret-right");
+									//$(this).parent().parent().find("li").slideUp();
+								} else {
+									//打开
+									//$(this).parent().find("i").removeClass("fa-caret-right").addClass("fa-caret-down");
+									//$(this).parent().parent().find(">li").slideDown();
+								}
+							}
+							if($(this).is(":checked")) {
+								//选中   下级全部选中
+								$(this).parent().find("input").each(function(){
+									$(this).prop("checked",true);
+								});
+								//判断上级是否可以选中
+								isAllChecked($(this));
+							} else{
+								//取消选中   上级也取消
+								$(this).removeProp("checked");
+								$(this).parents("li").each(function(){
+									$(this).find("input").removeProp("checked");//.removeAttr("checked");
+								})
+							}
+							function isAllChecked(selector){
+								var thisLevelAllChecked = true;
+								selector.parent().parent().find(">li input").each(function() {
+									if(!$(this).prop("checked")) {
+										thisLevelAllChecked = false;
+										return false;
+									}
+								});
+								if(thisLevelAllChecked){
+									selector.parent().parent().find(">input").prop("checked",true);
+									isAllChecked(selector.parent().parent().find(">input"));
+								}
+							}
+//							$(this).parent().parent().find("input:checkbox").each(function() {
+//								this.checked = mchecked;
+//							});
+							//							var pid = $(this).attr("pid");
+							//							if (pid) {
+							//								$("#ck" + pid).each(function() {
+							//									if (this.checked && $(this).parent().find("input[id!=ck" + pid + "]:checked").length > 0) {
+							//										return false;
+							//									}
+							//									this.checked = mchecked;
+							//									pid = $(this).attr("pid");
+							//									if (pid) {
+							//										$("#ck" + pid).each(function() {
+							//											this.checked = mchecked;
+							//										});
+							//									}
+							//								});
+							//							}
+							//
+
+							selectCityIds = [];
+							$(".treeview input[type='checkbox']:checked").each(function() {
+								selectCityIds.push($(this).attr("nodeid"));
+							});
+							//alert(selectNodeIds);
+							reloadGrid();
+						});*/
+					}
+				});
+			}
+
+			function initChildTree(liNode, nodes) {
+				for(var i in nodes) {
+					var tree = nodes[i];
+					var liDom = $("<li class='sub-item'></li>").append("" + (tree.nodes && tree.nodes.length > 0 ? "<i class='fa fa-caret-down fa-x fa-icon'></i>" : "") + "<span class='node-name' nodeid=\"{id}\"> {text}</span>".replace(/{id}/g, tree.id).replace(/{text}/g, tree.text));
+					if(tree.nodes && tree.nodes.length > 0) {
+						initChildTree(liDom, tree.nodes);
+					}
+					liNode.append(liDom);
+				}
+			}
+			//company info
+			function openCompanyInfoPop(companyId) {
+				//loading
+				$.showLoadingPop("正在加载企业信息，请稍后...");
+				//load companyinfo 
+				$.ajaxGet(SAASAPIS.OS.companies + "/" + companyId, function(response) {
+					if(response.code != 0) {
+						$.showErrorGritter("加载企业信息失败：" + response.msg)
+						//hide
+						$.hideLoadingPop();
+						return false;
+					}
+					//show
+					var infoData = response.data.company_info;
+					infoData.cmp_info_status_cn = infoData.verify_status.info.status_cn;
+					var infoController = new Controller(formContainer);
+					infoData.code_type_cn = infoData.cmp_code_type == 0 ? "注册号" : "统一社会信用代码";
+					infoData.code_type = infoData.cmp_code_type == 0 ? "普通营业执照" : "多证合一营业执照";
+					infoController.set(infoData);
+					var noVerTPL = " <span class='label label-danger'><i class='fa fa-close' style='width:12px;eight:12px;'></i> 未验证</span>";
+					var veredTPL = " <span class='label label-success'><i class='fa fa-check' style='width:12px;eight:12px;'></i> 已验证</span>";
+					var mobileIsVered = infoData.verify_status.mobile.status == 2;
+					var emailIsVered = infoData.verify_status.email.status == 2;
+					$(formContainer + " .form-control-cmp_contact_mobile").after(mobileIsVered ? veredTPL : noVerTPL);
+					$(formContainer + " .form-control-cmp_contact_email").after(emailIsVered ? veredTPL : noVerTPL);
+					//status
+					var infoStatus = infoData.verify_status.info.status;
+					if(infoStatus == 3 || infoStatus == 6) {
+						//待审核
+						$(formContainer + " .btn-auth").removeClass("hide");
+						//如果is_verify=1的时候, 即为待复核.
+						if(response.data.company_info.is_verify == 1) {
+							$(formContainer + " .form-control-status-needver span").removeAttr("bind");
+							$(formContainer + " .form-control-status-needver").html("<span class=\"label label-warning label-cmp_info_status_cn\">待复核</span>");
+						}
+					}
+					if(infoStatus != 5) {
+						showStatusOfNeedVer(formContainer);
+					} else {
+						showStatusOfVerd(formContainer);
+					}
+					//imgs
+					var qaImgs = infoData.cmp_identity_images;
+					if(qaImgs && qaImgs.length > 0) {
+						qaImgs = qaImgs.split(",");
+						for(var i in qaImgs) {
+							var imgPath = qaImgs[i];
+							$(formContainer + " .imgs-qa").append(("<a target='_blank' href='{src}'><img class=\"img-qa\" src=\"{src}\" height=\"100\" style='margin-left:5px;' /></a>").replace(/{src}/g, (imgPath)));
+						}
+					}
+					//logo
+					$(formContainer + " .header .logo").attr("src", infoData.cmp_logo);
+					//审核
+					$(formContainer + " .btn-auth").click(function() {
+						openAuthPop(companyId, formContainer);
+					});
+					//启用/禁用
+					$(formContainer + " .btn-status-enable").click(function() {
+						$.modal().confirm("你将修改企业状态为启用，确认启用吗？", function() {
+							var disData = {
+								cmp_status: 1,
+								remark: ""
+							};
+							$.ajaxPut(SAASAPIS.OS.company.status.replace(/{id}/g, companyId), disData,
+								function(response) {
+									if(response.code == 0) {
+										//success
+										$.showSuccessGritter("启用企业成功。");
+										needRefreshGrid = true;
+										hideStatus4Edit(formContainer);
+										$(formContainer + " .form-control-cmp_status_cn").text("已启用");
+									} else {
+										$.showErrorGritter("启用企业失败：" + response.msg);
+									}
+								});
+						});
+					});
+					$(formContainer + " .btn-status-disenable").click(function() {
+						openDisablePop(companyId, formContainer);
+					});
+					//hide
+					$.hideLoadingPop();
+				});
+				var modalId = $.modal({
+					closeCallback: function() {
+						if(needRefreshGrid) {
+							reloadGrid();
+						}
+					}
+				}).showOfAuto('企业详情', '.pnl-company-info',
+					function(modal) {}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .company-info";
+				//处理信息 grid
+				var colNames = ['操作', '操作内容', '操作备注', '时间', '操作人员'];
+				var colModel = [{
+					name: 'cmp_handler_content',
+					index: 'cmp_handler_content',
+					width: 160,
+					sortable: true
+				}, {
+					name: 'cmp_handler_content',
+					index: 'cmp_handler_content',
+					width: 160,
+					sortable: true
+				}, {
+					name: 'cmp_handler_remark',
+					index: 'cmp_handler_remark',
+					width: 300,
+					sortable: true
+				}, {
+					name: 'cmp_handler_time',
+					index: 'cmp_handler_time',
+					sortable: true,
+					width: 160,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return $.convertToDate(cellvalue).Format("yyyy-MM-dd hh:mm:ss");
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'real_name',
+					index: 'real_name',
+					width: 100,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.os_user.real_name;
+					},
+					hidden: false
+				}];
+				var gridOfProcc = formContainer + " #grid-tab-process";
+				var tmpUUID = $.uuid();
+				$(gridOfProcc).attr("id", tmpUUID);
+				$("#" + tmpUUID).initJqGrid({
+					url: SAASAPIS.OS.company.handler_logs.replace(/{id}/g, companyId),
+					height: 200,
+					autowidth: false,
+					colNames: colNames,
+					colModel: colModel,
+					multiselect: false,
+					sortname: "cmp_handler_time",
+					sortorder: "desc"
+				});
+				//变更记录grid
+				colNames = ['修改项', '操作', '修改前', '修改后', '时间'];
+				colModel = [{
+					name: 'cmp_op_field_cn',
+					index: 'cmp_op_field_cn',
+					width: 170,
+					sortable: true
+				}, {
+					name: '',
+					index: '',
+					sortable: true,
+					width: 50,
+					formatter: function(cellvalue, options, rowObject) {
+						return "修改";
+					}
+				}, {
+					name: 'cmp_op_before',
+					index: 'cmp_op_before',
+					width: 250,
+					sortable: true
+				}, {
+					name: 'cmp_op_after',
+					index: 'cmp_op_after',
+					sortable: true,
+					width: 250
+				}, {
+					name: 'cmp_op_time',
+					index: 'cmp_op_time',
+					sortable: false,
+					width: 160,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return cellvalue;
+							//return $.convertToDate(cellvalue).Format("yyyy-MM-dd hh:mm:ss");
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				var gridOfCompLog = formContainer + " #grid-tab-comp-log";
+				tmpUUID = $.uuid();
+				$(gridOfCompLog).attr("id", tmpUUID);
+				$("#" + tmpUUID).initJqGrid({
+					url: SAASAPIS.OS.company.operate_logs.replace(/{id}/g, companyId),
+					height: 200,
+					autowidth: false,
+					colNames: colNames,
+					colModel: colModel,
+					multiselect: false,
+					sortname: "cmp_op_time",
+					sortorder: "desc"
+				});
+				//remark
+				$(formContainer + " .btn-remark").click(function() {
+					showRemark4Edit(formContainer);
+				});
+				$(formContainer + " .btn-remark-cancel").click(function() {
+					hideRemark4Edit(formContainer);
+				});
+				$(formContainer + " .btn-remark-save").click(function() {
+					var remarkControl = $(formContainer + " .form-group-remark-edit .form-control-remark");
+					var remark = remarkControl.val();
+					if(!remark) {
+						$.showErrorGritter("请先录入企业备注。");
+						remarkControl.focus();
+						return false;
+					}
+					$.ajaxPut(SAASAPIS.OS.company.remark.replace(/{id}/g, companyId), {
+							cmp_remark: remark
+						},
+						function(response) {
+							if(response.code == 0) {
+								$.showSuccessGritter("添加企业备注成功。");
+								needRefreshGrid = true;
+								hideRemark4Edit(formContainer, remark);
+							} else {
+								$.showErrorGritter("添加企业备注失败：" + response.msg);
+							}
+						});
+				});
+				//启用/禁用
+				$(formContainer + " .btn-status").click(function() {
+					showStatus4Edit(formContainer);
+				});
+			}
+			//备注
+			function showRemark4Edit(formContainer) {
+				$(formContainer + " .form-group-remark-show").addClass("hide");
+				$(formContainer + " .form-group-remark-edit").removeClass("hide");
+			}
+
+			function hideRemark4Edit(formContainer, remark) {
+				$(formContainer + " .form-group-remark-show").removeClass("hide");
+				$(formContainer + " .form-group-remark-edit").addClass("hide");
+				if(remark) {
+					$(formContainer + " .form-group-remark-show .form-control-remark").text(remark);
+					$(formContainer + " .form-group-remark-edit .form-control-remark").val(remark);
+				}
+			}
+			//启用/禁用
+			function showStatus4Edit(formContainer) {
+				$(formContainer + " .form-control-status-show").addClass("hide");
+				$(formContainer + " .form-control-status-edit").removeClass("hide");
+			}
+
+			function hideStatus4Edit(formContainer) {
+				$(formContainer + " .form-control-status-show").removeClass("hide");
+				$(formContainer + " .form-control-status-edit").addClass("hide");
+			}
+			//状态
+			function showStatusOfNeedVer(formContainer) {
+				$(formContainer + " .form-control-status-needver").removeClass("hide");
+				$(formContainer + " .form-control-status-verd").addClass("hide");
+			}
+
+			function showStatusOfVerd(formContainer) {
+				$(formContainer + " .form-control-status-needver").addClass("hide");
+				$(formContainer + " .form-control-status-vered").removeClass("hide");
+			}
+			//审核
+			function openAuthPop(companyId, parentFormContainer) {
+				var authStatus;
+				var modalId = $.modal().show("审核", ".pnl-company-auth",
+					function(modal) {
+						authStatus = $(formContainer + " .form-control-radio:checked").val();
+						var authRefuse = $(formContainer + " .form-control-refuse").val();
+						if(authStatus == 2 && !authRefuse) {
+							$.showErrorGritter("审核不通过时必须录入拒绝原因。");
+							$(formContainer + " .form-control-refuse").focus();
+							return false;
+						}
+						var authData = {
+							cmp_auth_status: authStatus == 1 ? "allow" : "denied",
+							remark: authRefuse
+						};
+						$.ajaxPut(SAASAPIS.OS.company.verify.replace(/{id}/g, companyId), authData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("审核企业信息成功。");
+									modal.modal('hide');
+									needRefreshGrid = true;
+									if(authStatus != 1) {
+										showStatusOfNeedVer(parentFormContainer);
+									} else {
+										showStatusOfVerd(parentFormContainer);
+									}
+									$(parentFormContainer + " .btn-auth").addClass("hide");
+									$(parentFormContainer + " .label-cmp_info_status_cn").text(authStatus == 1 ? "通过" : "拒绝");
+								} else {
+									$.showErrorGritter("审核企业信息失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-company-auth";
+				$(formContainer + " input[name='auth']").click(function() {
+					authStatus = $(formContainer + " .form-control-radio:checked").val();
+					if(authStatus == 2) {
+						$(formContainer + " .form-control-refuse").parent().removeClass("hide");
+					} else {
+						$(formContainer + " .form-control-refuse").parent().addClass("hide");
+					}
+				});
+			}
+			//禁用
+			function openDisablePop(companyId, parentFormContainer) {
+				var modalId = $.modal().show("停用企业", ".pnl-company-disable",
+					function(modal) {
+						var disableNote = $(formContainer + " .form-control-disable").val();
+						if(!disableNote) {
+							$.showErrorGritter("停用企业时必须录入停用原因。");
+							return false;
+						}
+						var disData = {
+							cmp_status: 2,
+							remark: disableNote
+						};
+						$.ajaxPut(SAASAPIS.OS.company.status.replace(/{id}/g, companyId), disData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("停用企业成功。");
+									modal.modal('hide');
+									$(parentFormContainer + " .form-control-cmp_status_cn").text("已停用");
+									hideStatus4Edit(parentFormContainer);
+								} else {
+									$.showErrorGritter("停用企业失败：" + response.msg);
+								}
+							});
+					}
+				); //model pop id
+				var formContainer = "#" + modalId + " .model-company-disable";
+			}
+			var resetSearchForm = function() {
+				searchController.set({
+					cmp_industry: "",
+					cmp_quality: "",
+					cmp_auth_status: "",
+					cmp_edition_status: "",
+					cmp_status: "",
+					time_start: "",
+					time_end: "",
+					key: ""
+				});
+			};
+
+			function reloadGrid() {
+				var searchModel = searchController.getJSON();
+				if(searchModel.time_start) {
+					searchModel.time_start = $.convertToDate(searchModel.time_start).getTimestamp();
+				}
+				if(searchModel.time_end) {
+					searchModel.time_end = $.convertToDate(searchModel.time_end).getTimestamp();
+				}
+				searchModel.cmp_area_ids = selectCityIds;
+				var url = SAASAPIS.OS.companies + $.toQueryString(searchModel, true);
+				$("#grid-table").jqGrid('setGridParam', {
+					page: 1,
+					url: url
+				}).trigger("reloadGrid", {});
+				needRefreshGrid = false;
+			}
+		</script>
+	</body>
+
+</html>

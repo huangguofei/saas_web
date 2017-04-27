@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>审批管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			body {
+				overflow: hidden;
+			}
+			
+			.color-danger {
+				color: #ca192b!important;
+			}
+			
+			.page-approval {
+				padding-top: 0;
+				padding-left: 0;
+			}
+			
+			.page-approval .content {
+				padding-top: 0;
+			}
+			
+			.page-approval .content .left-menu {
+				width: 200px;
+				min-height: 260px;
+				max-height: none;
+				border-right: 1px solid #ddd;
+				background-color: #F8F8F8;
+			}
+			
+			.page-approval .content .left-menu .pnl-doc-add {
+				margin-right: 10px;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box::after {
+				content: " ";
+				position: absolute;
+				left: 200px;
+				height: 42px;
+				width: 1px;
+				margin-top: -42px;
+				margin-left: -1px;
+				background: #ddd;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box {
+				border-top: 1px solid #F8F8F8;
+				border-bottom: 1px solid #F8F8F8;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box.active {
+				border-top: 1px solid #ddd;
+				border-bottom: 1px solid #ddd;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box.active::after {
+				background: #fff;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box a {
+				display: block;
+				text-align: left;
+				padding: 10px 20px;
+				color: #666;
+				border-top: 1px solid #F8F8F8;
+				border-bottom: 1px solid #F8F8F8;
+			}
+			
+			.page-approval .content .left-menu .pnl-menu-box a.active {
+				color: #009ed8;
+				background-color: #fff;
+			}
+			
+			.page-approval .content .main-wrap {
+				margin-left: 210px;
+			}
+			
+			.page-approval .content .main-wrap .header {
+				padding: 10px;
+				font-size: 14px;
+			}
+			
+			.page-approval .content .main-wrap .header label {
+				color: #ca192b;
+				font-weight: bold;
+				text-decoration: none;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan ul.nav {
+				height: 34px;
+				border-bottom: 2px solid #66b6ec;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan ul.nav>li a {
+				color: #666;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan ul.nav>li.active a {
+				color: #fff;
+				background-color: #66b5ed;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .nav li[t='button'] {
+				margin-left: 4px;
+				margin-bottom: 0;
+				line-height: 26px;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .nav li[t='button'] button {
+				margin-top: -1px;
+				padding: 3px 10px;
+				color: #fff;
+				background-color: #aaa;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane {
+				padding: 10px;
+				padding-top: 5px;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .btns a {
+				margin-right: 10px;
+				font-size: 12px;
+				color: #999;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps-pane {
+				position: relative;
+				overflow: auto;
+			}
+			
+			.tab-pane .btns {
+				padding-bottom: 20px;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps {
+				padding: 0 10px 10px 41px;
+				/*margin-top: 20px;*/
+				margin-left: 20px;
+				border-left: 2px solid #ddd;
+				overflow: auto;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .tip-null {
+				color: #999;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .direction {
+				margin-bottom: 10px;
+				width: 500px;
+				text-align: center;
+				color: #fff;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .sortable-placeholder,
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step {
+				margin-bottom: 10px;
+				width: 500px;
+				height: auto;
+				min-height: 130px;
+				border: 1px solid #ddd;
+				-moz-box-shadow: 0 1px 5px #eee;
+				-webkit-box-shadow: 0 1px 5px #eee;
+				box-shadow: 0 1px 5px #eee;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step::before {
+				content: attr(index);
+				position: absolute;
+				width: 60px;
+				height: 47px;
+				margin-top: -1px;
+				margin-left: -60px;
+				color: #fff;
+				/*background-color: #66b6ec;*/
+				background-image: url(../resources/images/bg-apv-plan-step.png);
+				text-align: center;
+				line-height: 40px;
+				font-weight: 500;
+				font-size: 20px;
+				font-family: arial;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step.sortable-dragging {
+				background-color: #ddd;
+				border: 1px solid #000;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item {
+				padding: 7px 5px 4px 5px;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item-title {
+				padding: 9px 10px;
+				color: #333;
+				font-weight: bold;
+				border-bottom: 1px solid #ddd;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item-condition {
+				/*border-bottom: 1px solid #e1e1e1;*/
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item-condition-type {
+				margin: 0 10px;
+				padding-top: 10px;
+				border-bottom: 1px dashed #eee;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item-condition-type label {
+				width: 72px!important;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item-condition-type .label-condition-2 {
+				color: #66b6ec;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item-condition-type .label-condition-1 {
+				color: #ca192b;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item-footer {
+				padding: 10px 0 8px;
+				border-top: 1px solid #ddd;
+				background-color: #f7f7f7;
+				text-align: right;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item-footer i.fa {
+				margin-right: 3px;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item-footer .btn-trash {
+				padding-left: 10px;
+				padding-right: 8px;
+				color: #ca192b;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item.item-detail {
+				padding: 0;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item-detail .label-condition-1 {
+				color: #91a1b3!important;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item-detail .label-condition-2 {
+				color: #21b5a9!important;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item-detail .label-condition-3 {
+				color: #ca192b!important;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item .icon-close {
+				float: right;
+				margin-top: 0;
+				margin-right: 0;
+				font-size: 16px;
+				color: rgb(131, 17, 27);
+				cursor: pointer;
+				width: 25px;
+				height: 25px;
+				background-image: url("../resources/images/close-1.png");
+				/*background-color: #fff;*/
+				background-repeat: no-repeat;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item .icon-close:hover {
+				background-image: url("../resources/images/close-1-red.png");
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item .icon-edit {
+				float: right;
+				font-size: 18px;
+				color: #777;
+				cursor: pointer;
+				width: 30px;
+				height: 30px;
+				background-image: url("../resources/images/edit.png");
+				background-repeat: no-repeat;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item .table-step-level {
+				/*width: 378px;*/
+				/*margin: 0 10px;*/
+				width: 100%;
+				margin: 0;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item .table-step-level tr:nth-child(odd) {
+				/*background-color: #eef3f9;*/
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item .table-step-level tr td {
+				padding: 5px;
+				text-align: center;
+				border: 1px solid #fff;
+				border-radius: 5px;
+				color: #666;
+				font-size: 14px;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step .item label {
+				width: 82px;
+				text-align: right;
+				font-weight: 300;
+			}
+			
+			.page-approval .content .main-wrap .wrap-plan .tab-pane .steps .step hr {
+				margin: 0;
+			}
+			
+			.model-step-add {
+				margin: 0 8px;
+			}
+			
+			.model-step-add .list-step-type li {
+				/*position: relative;*/
+				margin: 10px 0 0 0;
+				padding: 10px;
+				/*width: 180px;*/
+				/*height: 180px;*/
+				/*float: left;*/
+				border: 1px solid #ddd;
+				cursor: pointer;
+			}
+			
+			.model-step-add .list-step-type li.active {
+				border: 1px solid #CA192B;
+			}
+			
+			.model-step-add .list-step-type li label {
+				display: block;
+				/*height: 100px;*/
+				/*line-height: 100px;*/
+				/*text-align: center;*/
+				color: #333;
+				font-weight: bold;
+				cursor: pointer;
+			}
+			
+			.model-step-add .list-step-type li p {
+				padding-left: 8px;
+				padding-top: 5px;
+				/*position: absolute;*/
+				/*bottom: 8px;*/
+				/*left: 10px;*/
+				/*right: 10px;*/
+			}
+			
+			.model-step-info .form-control-approver-type label {
+				display: block;
+			}
+			
+			.model-step-level-info .table-step-level,
+			.model-apv-simulation-view .table-step-level {
+				width: 100%;
+				height: auto;
+			}
+			
+			.model-step-level-info .table-step-level th {
+				background-color: #919fac;
+				color: #fff;
+			}
+			
+			.model-step-level-info .table-step-level th:first-child {
+				border-top-left-radius: 5px;
+			}
+			
+			.model-step-level-info .table-step-level th:last-child {
+				border-top-right-radius: 5px;
+			}
+			
+			.model-step-level-info .table-step-level th,
+			.model-step-level-info .table-step-level td {
+				padding: 10px;
+				text-align: center;
+				border: 1px solid #fff;
+			}
+			
+			.model-step-level-info .table-step-level tr:last-child td:first-child {
+				border-bottom-left-radius: 5px;
+			}
+			
+			.model-step-level-info .table-step-level tr:last-child td:last-child {
+				border-bottom-right-radius: 5px;
+			}
+			
+			.model-step-level-info .table-step-level tr:nth-child(odd),
+			.model-apv-simulation-view .table-step-level tr:nth-child(odd) {
+				background-color: #fafafa;
+			}
+			
+			.model-step-level-info .table-step-level tr:nth-child(even),
+			.model-apv-simulation-view .table-step-level tr:nth-child(even) {
+				background-color: #eef3f9;
+			}
+			
+			.model-step-level-info .table-step-level td.td-level,
+			.model-step-level-info .table-step-level td.td-condition-type {
+				width: 130px;
+			}
+			
+			.model-step-level-info .table-step-level td.td-approver-type {
+				width: 230px;
+			}
+			
+			.model-step-level-info .table-step-level td.td-align-left {
+				padding-left: 5px;
+				text-align: left;
+			}
+			
+			.model-step-level-info .table-step-level td.td-align-left label {
+				display: block;
+			}
+			
+			.model-apv-simulation-view .list-step {
+				margin: 10px 0;
+				padding-bottom: 30px;
+				border: 1px solid #eee;
+			}
+			
+			.model-apv-simulation-view .list-step .item-step {
+				margin: 10px auto;
+				margin-top: 10px;
+				margin-bottom: 0;
+				padding: 10px;
+				width: 350px;
+				border: 1px solid #ddd;
+				border-radius: 3px;
+			}
+			
+			.model-apv-simulation-view .list-step .item-step:first-child {
+				margin-top: 25px;
+			}
+			
+			.model-apv-simulation-view .list-step .direction {
+				margin: 10px auto;
+				margin-bottom: 0;
+				text-align: center;
+				color: #ddd;
+			}
+			
+			.model-apv-simulation-view .list-step .item-step label.num {
+				display: block;
+				margin-top: -25px;
+				width: 30px;
+				min-width: 30px;
+				height: 30px;
+				line-height: 30px;
+				text-align: center;
+				border: 1px solid #ddd;
+				border-radius: 30px;
+				background-color: #fff;
+			}
+			
+			.model-apv-simulation-view .list-step .item-step .item {
+				margin-top: 10px;
+			}
+			
+			.model-apv-simulation-view .list-step .item-step .item label {
+				width: 75px;
+				text-align: right;
+			}
+			
+			.model-apv-simulation-view .table-step-level {
+				margin-top: 4px;
+			}
+			
+			.model-apv-simulation-view .table-step-level td {
+				padding: 5px;
+				text-align: center;
+			}
+			
+			.form-control-employee-select {
+				margin-left: 20px;
+				min-height: 34px;
+				height: auto;
+			}
+			
+			.form-control-employee-select .item {
+				display: inline-block;
+				padding: 3px 8px;
+				margin-bottom: 5px;
+				border: 1px solid #eee;
+			}
+			
+			.icon-close {
+				color: #d9534f;
+				cursor: pointer;
+			}
+			
+			.icon-close:hover {
+				color: red;
+			}
+			
+			.lbl-condition-3 {
+				width: 90px;
+			}
+			
+			.margin-bottom-0 {
+				margin-bottom: 0;
+			}
+			
+			.label-condition-name,
+			.label-condition-name-approver {
+				padding-right: 10px;
+				width: 110px;
+			}
+			
+			.form-control-condition-num {
+				width: 150px!important;
+			}
+			
+			.form-control-employee-select-approver {
+				width: 300px!important;
+				min-height: 34px;
+				margin-left: 0;
+			}
+			
+			.item-condition {
+				font-size: 14px;
+				color: #999;
+			}
+			
+			.item-condition span {
+				color: #666;
+				font-size: 14px;
+			}
+			
+			.item-footer .btn-edit {
+				color: #009ed8;
+			}
+			
+			.modal-footer .btn {
+				width: auto!important;
+				padding: 0 10px;
+			}
+			
+			.steps-null {
+				border: 0!important;
+				padding-left: 0!important;
+    			margin-left: 0!important;
+			}
+			
+			.btn-liucheng {
+				border-radius: 2px!important;
+			}
+			
+			.btn-liucheng img {
+				vertical-align: baseline;
+			}
+			
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-approval">
+			<div class="remark">
+				<img src="../resources/images/step-icon.png" alt="" /><span>*审批管理</span>
+			</div>
+			<div class="content">
+				<div class="left-menu">
+					<div class="pnl-menu-box">
+						<label>正在加载审批事项...</label>
+					</div>
+				</div>
+				<div class="main-wrap">
+					<div class="header">
+						<p>设置 <label class="label-apv-title">公告发布</label> 审批流程：</p>
+					</div>
+					<div class="wrap-plan">
+						<ul class="nav nav-tabs" role="tablist">
+							<li t="mark">
+								<a class="pref"></a>
+							</li>
+							<li t="button"><button type="button" class="btn btn-sm btn-liucheng" tabindex=-1 onclick="openPlanInfoPop('add',this,event);"><img src="../resources/images/plus-icon.png" alt="" /> 添加流程</button></li>
+						</ul>
+						<div class="tab-content">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-step-add hide">
+			<form class="form-horizontal model-step-add">
+				<div class="form-group form-inline">
+					请选择审批方式：
+					<ul class="list-step-type">
+						<li data-apv-type="1">
+							<label>发起人所属部门审批</label>
+							<p class="note-font-type">*该步骤由发起人所属部门的领导审批</p>
+						</li>
+						<li data-apv-type="2">
+							<label>发起人上级部门审批</label>
+							<p class="note-font-type">*该步骤由发起人上级部门的领导审批</p>
+						</li>
+						<li data-apv-type="3">
+							<label>指定部门审批</label>
+							<p class="note-font-type">*该步骤由指定部门的负责人或部门员工审批</p>
+						</li>
+						<li data-apv-type="4">
+							<label>指定人审批</label>
+							<p class="note-font-type">*该步骤由指定的领导或员工</p>
+						</li>
+					</ul>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-step-info hide">
+			<form class="form-horizontal model-step-info">
+				<div class="form-group form-inline">
+					<label>审批条件：</label>
+				</div>
+				<div class="form-group form-inline form-group-step-condition">
+					<label><input type="radio" name="rdStepConditionType" class="form-control-radio" value="2" checked="checked"/> 无条件</label>
+					<label><input type="radio" name="rdStepConditionType" class="apv-condition form-control-radio" value="1" /> 条件审批</label>
+					<label class="label-condition hide">
+						<span class="lbl-condition-1">请假天数：</span>
+						<select class="lbl-condition-2">
+							<option value=">=">大于等于</option>
+							<option value=">">大于</option>
+						</select>
+						<input class="lbl-condition-3" type="text" data-type="int" maxlength="3" />
+						<span class="lbl-condition-4">天</span>
+					</label>
+				</div>
+				<div step-type="1,3" class="form-group form-inline margin-bottom-0">
+					<label>审批人范围：</label>
+					<span class="form-control form-control-noborder form-control-height-auto">
+						<a href="javascript:;" class="link-dept"></a>
+					</span>
+				</div>
+				<div step-type="1,3" class="form-group form-inline">
+					<label></label>
+					<span class="form-control form-control-noborder form-control-height-auto form-control-approver-type">
+						
+					</span>
+				</div>
+				<div step-type="4" class="form-group form-inline">
+					<label>请选择审批人：</label>
+				</div>
+				<div step-type="4" class="form-group form-inline">
+					<span class="form-control form-control-height-auto form-control-employee-select">
+					</span>
+					<label><a class="btn-a-default btn-employee-select"> 选择人员 </a></label>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-step-level-info hide">
+			<form class="form-horizontal model-step-level-info">
+				<div class="form-group form-inline">
+					<label>请设置审批人范围：</label>
+				</div>
+				<div class="form-group form-inline">
+					<table class="table-step-level">
+						<tr>
+							<th>公司层级</th>
+							<th>审批方式</th>
+							<th>审批条件</th>
+							<th>审批人范围</th>
+						</tr>
+					</table>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-plan-info hide">
+			<form class="form-horizontal model-plan-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">流程名称：</label>
+					<input type="text" class="form-control process-name" placeholder="输入流程名称" nulltip="流程名称" maxlength="10" bind="plan_name">
+				</div>
+			</form>
+		</div>
+		<div class="pnl-apv-simulation hide">
+			<form class="form-horizontal model-apv-simulation">
+				<div class="form-group form-inline">
+					<label class="input-flag text-align-right label-condition-name-approver">审批发起人：</label>
+					<span class="form-control form-control-height-auto form-control-employee-select-approver form-control-employee-select">
+					</span>
+					<!--<label><a href="javascript:;" class="btn btn-info def-btn-info btn-employee-select"><img src="../resources/images/plus-icon.png" alt="" /> 选择发起人 </a></label>-->
+					<label><a class="btn-a-default btn-employee-select">选择发起人 </a></label>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag text-align-right label-condition-name">请假天数：</label>
+					<input type="text" class="form-control form-control-condition-num" nulltip="请假天数" data-type="int" maxlength="2" bind="condition_num">
+					<span>天</span>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-apv-simulation-view hide">
+			<form class="form-horizontal model-apv-simulation-view">
+				<div class="form-group">
+					流程模拟：
+					<ul class="list-step">
+						<li class="item-step">
+							<label class="num">1</label>
+							<div class="item">
+								<label style="text-align: left;">审批人：</label>
+								<div class="">
+									<table class="table-step-level">
+										<tbody>
+											<tr>
+												<td>三级部门</td>
+												<td>请假天数&gt;=3天</td>
+												<td> 所有负责人</td>
+											</tr>
+											<tr>
+												<td>二级部门</td>
+												<td> 直接审批 </td>
+												<!--<td> 仅主负责人</td>-->
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</li>
+						<li class="direction"><i class="fa fa-arrow-down"></i></li>
+						<li class="item-step">
+							<label class="num">2</label>
+							<div class="item">
+								<label>审批部门：</label>
+								<span>技术部</span>
+							</div>
+							<div class="item">
+								<label>审批人：</label>
+								<span>部门负责人</span>
+							</div>
+						</li>
+						<li class="direction"><i class="fa fa-arrow-down"></i></li>
+						<li class="item-step">
+							<label class="num">3</label>
+							<div class="item">
+								<label>审批部门：</label>
+								<span>行政部</span>
+							</div>
+							<div class="item">
+								<label>审批条件：</label>
+								<span>请假天数>3天</span>
+							</div>
+							<div class="item">
+								<label>审批人：</label>
+								<span>仅员工（发起人除外）</span>
+							</div>
+						</li>
+						<li class="direction"><i class="fa fa-arrow-down"></i></li>
+						<li class="item-step">
+							<label class="num">4</label>
+							<div class="item">
+								<label>审批条件：</label>
+								<span>请假天数>5天</span>
+							</div>
+							<div class="item">
+								<label>审批人：</label>
+								<span>总经理</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</form>
+		</div>
+		<div id="grid-footer-container" class="hide">
+
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			//APIS
+			var baseApiUrl = BSAPIURL + "/approvals";
+			var APPROVALAPIS = {
+				base: baseApiUrl,
+				//审批事项
+				routine: BSAPIURL + "/approval_plans/routines",
+				//方案列表
+				plans: BSAPIURL + "/approval_routines/{id}/plans",
+				//添加流程
+				planAdd: BSAPIURL + "/approval_plans",
+				//添加流程
+				planRename: BSAPIURL + "/approval_plans/{id}/name",
+				//删除流程
+				planDelete: BSAPIURL + "/approval_plans/{id}",
+				//步骤列表
+				steps: BSAPIURL + "/approval_plans/{id}",
+				//创建步骤
+				stepAdd: BSAPIURL + "/approval_plans/steps",
+				//步骤操作
+				step: BSAPIURL + "/approval_plans/steps",
+				//步骤排序
+				stepSort: BSAPIURL + "/approval_plans/step_sort",
+				//审批模拟
+				stepMock: BSAPIURL + "/approval_plans/mock_plan_steps",
+				//部门层级列表
+				deptLevel: BSAPIURL + "/approval_plans/department_level"
+			};
+			//可以设置条件审批的routine_id
+			var canSetConditionRoutineIds = {
+				"CEFEDD93-684F-F93A-D3AD-FBEECF33C4B8": "CEFEDD93-684F-F93A-D3AD-FBEECF33C4B8",
+				"1D6C12B9-2DDA-4906-8995-8A2C96CF5389": "1D6C12B9-2DDA-4906-8995-8A2C96CF5389",
+				"1D6C12B9-2DDA-4906-8995-8A2C96CF5399": "1D6C12B9-2DDA-4906-8995-8A2C96CF5399"
+			}
+			var APVSTEPTYPES = ["发起人所属部门审批", "发起人上级部门审批", "指定部门审批", "指定人审批"];
+			var APPROVERRANGES = [{
+					id: 5,
+					name: "仅员工（发起人除外）"
+				}
+				/*, {
+								id: 4,
+								name: "仅副负责人"
+							}, {
+								id: 3,
+								name: "仅主负责人"
+							}*/
+				, {
+					id: 2,
+					name: "仅负责人"
+				}, {
+					id: 1,
+					name: "所有人（发起人除外）"
+				}
+			];
+			var APPROVAL_SESSION_STATUS = { //整个审批的状态
+				wait_handle: 1, //待处理
+				passed: 2, //审核通过
+				refuse: 3, //审核拒绝
+				canceled: 4 //已撤销
+			};
+			var APPROVAL_STEP_TYPE = { //整个审批的状态
+				ceator_dept_can_approval: 1, //发起人所在部门审批
+				all_prev_dept_can_approval: 2, //各级上级部门审批
+				specify_dept_can_approval: 3, //指定某部门审批
+				specify_person_can_approval: 4 //指定人审批
+			};
+			var flagNumber = 100;
+			var stepsWrapHeeight;
+			//当前事务ID
+			var currRoutineId;
+			//条件名称
+			var currRoutineConditionLabel;
+			$(document).ready(function() {
+				$(".left-menu").css({
+					top: ($(".remark").height() + 41) + "px"
+				});
+				var leftMenuheight = $(".left-menu").height();
+				stepsWrapHeeight = leftMenuheight - $(".main-wrap .header").outerHeight(true) - $(".main-wrap .wrap-plan .nav-tabs").outerHeight(true) - $(".main-wrap .wrap-plan .tab-pane .btns").outerHeight(true) - 40;
+				$(".steps-pane").height(stepsWrapHeeight);
+				//token
+				$.token();
+				//初始数据
+				loadDefaultData();
+				//加载审批事项数据
+				loadRoutinesData();
+			});
+			//加载审批事项列表
+			function loadRoutinesData(okCallback) {
+				$.ajaxGet(APPROVALAPIS.routine, function(response) {
+					if(response.code == 0) {
+						$(".content .left-menu").empty();
+						for(var i in response.data.rows) {
+							var routineData = response.data.rows[i];
+							$(".content .left-menu").append("<div class=\"pnl-menu-box\">" +
+								"	<a href=\"javascript:;\" data-apv-id=\"" + routineData.routine_id + "\" data-condition-label=\"" + routineData.condition_var_label + "\">" + routineData.routine_name + "</a>" +
+								"</div>");
+						}
+						//left group link
+						$(".pnl-menu-box a").click(function() {
+							//切换标签前 保存数据
+							var currPlansData = [];
+							var tabPaneDoms = $(".wrap-plan .tab-content .tab-pane");
+							if(tabPaneDoms.length > 0) {
+								tabPaneDoms.each(function() {
+									currPlansData.push($(this).data("plan"));
+								});
+							}
+							$(".pnl-menu-box a.active").data("plans", currPlansData);
+							//切换
+							$(".pnl-menu-box a").removeClass("active");
+							$(".pnl-menu-box").removeClass("active");
+							$(this).addClass("active");
+							$(this).parent().addClass("active");
+							var routineId = $(this).data("apv-id");
+							var apvName = $(this).text();
+							$(".main-wrap .header .label-apv-title").text(apvName);
+							currRoutineId = routineId;
+							currRoutineConditionLabel = $(this).data("condition-label");
+							loadApvPlans(this, routineId, currRoutineConditionLabel);
+						});
+						//默认加载第一项
+						$(".pnl-menu-box a:first").click();
+					} else {
+						$.showErrorGritter("加载审批事项失败：" + response.msg);
+					}
+				});
+			}
+			//初始化数据
+			var loadDefaultData = function() {
+				for(var i in APPROVERRANGES) {
+					var apvRanData = APPROVERRANGES[i];
+					$(".form-control-approver-type").append("<label><input type=\"radio\" name=\"rdApproverType\" class=\"form-control-radio\" value=\"" + apvRanData.id + "\" /> " + apvRanData.name + "</label>");
+				}
+			};
+			//初始步骤
+			var directionDom = "<div class=\"direction\"><i class=\"fa fa-arrow-down\"></i></div>";
+			var chStepArr = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"];
+			var bindStepsAndEvents = function(flagNumber) {
+				var tabSelector = ".tab-pane.active";
+				if(flagNumber) {
+					tabSelector = "#tab-plan" + flagNumber;
+				}
+				//重新存储步骤数据
+				$(tabSelector + " .steps .direction").remove();
+				var stepCount = $(tabSelector + " .steps .step").length;
+				$(tabSelector + " .steps .step").each(function(i) {
+					$(this).attr("index", chStepArr[i]);
+					$(this).find(".label-step-number").text(chStepArr[i]);
+					if(stepCount - 1 > i)
+						$(this).after(directionDom);
+				});
+				//删除
+				$(tabSelector + " .steps .step .item .btn-trash").unbind("click").click(function() {
+					var currCloseDom = $(this);
+					var stepDom = $(this).parents(".step:first");
+					var stepData = stepDom.data("step");
+					$.modal().confirm("你将删除此审批步骤，确认删除吗？", function() {
+						$.ajaxDelete(APPROVALAPIS.step + "/" + stepData.step_id, {}, function(response) {
+							if(response.code == 0) {
+								$.showSuccessGritter("删除步骤成功。");
+								currCloseDom.parent().parent().remove();
+								//重新设置步骤数据
+								resetStepsDataFromDocument();
+								onStepPanelDraged();
+								bindStepsAndEvents();
+								if($(".tab-pane.active .steps .step").length<1) $(".tab-pane.active .steps").addClass("steps-null");
+							} else {
+								$.showErrorGritter("删除步骤失败：" + response.msg);
+							}
+						});
+					});
+				});
+				//编辑
+				$(tabSelector + " .steps .step .item .btn-edit").unbind("click").click(function() {
+					var stepDom = $(this).parents(".step:first");
+					var stepData = stepDom.data("step");
+					console.log(stepData)
+					var routineId = $(".pnl-menu-box a.active").data("apv-id");
+					if(stepData.apvType == APPROVAL_STEP_TYPE.ceator_dept_can_approval || stepData.apvType == APPROVAL_STEP_TYPE.specify_dept_can_approval || stepData.apvType == APPROVAL_STEP_TYPE.specify_person_can_approval) {
+						//发起人部门、指定部门
+						openStepInfoOfDeptPop(stepDom, routineId, this);
+					} else {
+						openStepInfoOfLevelDeptPop(stepDom, routineId, this);
+					}
+				});
+			};
+			//拖动事件
+			var onStepPanelDraged = function(flagNumber) {
+				var tabSelector = ".tab-pane.active";
+				if(flagNumber) {
+					tabSelector = "#tab-plan" + flagNumber;
+				}
+				if($(tabSelector + ' .steps .step').length > 0) {
+					$(tabSelector + ' .steps .tip-null').hide();
+				} else {
+					$(tabSelector + ' .steps .tip-null').text("无审批步骤");
+					$(tabSelector + ' .steps .tip-null').show();
+					return false;
+				}
+				$(tabSelector + ' .steps').sortable("destroy");
+				$(tabSelector + ' .steps').sortable({
+					items: ".step"
+				}).unbind("sortupdate").bind("sortupdate", function() {
+					//排序完成
+					var stepIds = [];
+					$(".tab-pane.active .steps .step").each(function(i) {
+						stepIds.push($(this).data("step").step_id);
+					});
+					$.ajaxPut(APPROVALAPIS.stepSort, {
+						step_id_arr: stepIds
+					}, function(response) {
+						if(response.code == 0) {
+							//重新设置步骤数据
+							resetStepsDataFromDocument();
+							bindStepsAndEvents();
+						} else {
+							$.showErrorGritter("步骤排序失败：" + response.msg);
+						}
+					});
+
+				});
+			};
+			//添加一个步骤
+			function addStepItemToStepsWrap(stepData, flagNumber) {
+				stepData.apvConditionCN = stepData.apvConditionCN || "无条件";
+				if(stepData.apvType == APPROVAL_STEP_TYPE.specify_person_can_approval)
+					stepData.apvEmployeeCN = stepData.apvEmployeeNames;
+				stepData.apvEmployeeCN = stepData.apvEmployeeCN || "无";
+
+				var stepDom = $("<div class=\"step\" draggable=\"true\">" +
+					"<div class=\"item item-title\">" +
+					"	<label class='hide'>第<span class=\"label-step-number\"></span>步：</label>" +
+					"	<span>" + stepData.apvTypeCN + "</span> <i class=\"icon-close hide\" title='删除该步骤'></i>" +
+					"</div>" +
+					"" +
+					"<div class=\"item item-condition item-condition-type\">" +
+					"	<label>审批条件：</label>" +
+					"	<span class='label-condition label-condition-" + stepData.apvCondition + "'>" + stepData.apvConditionCN + "</span>" +
+					"	<i class='icon-edit hide' title='编辑条件'></i>" +
+					"</div>" +
+					"" +
+					//(stepData.apvDeptName?
+					//("<div class=\"item item-condition\">" +
+					//"	<label>审批部门：</label>" +
+					//"<span class='label-select-dept-name'>"+(stepData.apvDeptName?(""+stepData.apvDeptName+""):"")+"</span>"+
+					//"</div>") :"")+
+					"<div class=\"item item-condition\">" +
+					"	<label class='note-font-type'>审批人：</label>" +
+					"	<span class='label-employee'><span class='label-dept' data-dept-id='" + stepData.apvDept + "'>" + (stepData.apvDeptName ? stepData.apvDeptName + "</span>" : "") + "<span style='"+(stepData.apvDeptName?"color: #999;":"")+"'>" +(stepData.apvDeptName?"（":"")+stepData.apvEmployeeCN +(stepData.apvDeptName?"）":"")+ "</span>" +
+					"</div>" +
+					"</div>");
+				if(stepData.apvType == APPROVAL_STEP_TYPE.all_prev_dept_can_approval) {
+					//层级审批
+					stepDom.find("hr").remove();
+					stepDom.find(".item:eq(1)").remove();
+					stepDom.find(".item:eq(1)").remove();
+					stepDom.append("<div class=\"item item-condition\">" +
+					//	"	<label>审批人：</label>" +
+						"	<i class='icon-edit hide' title='编辑条件'></i>" +
+						"</div>");
+					var levelItemDom = $("<div class=\"item item-detail\"><table class='table-step-level'></table></div>");
+					if(stepData.deptLevelDatas && stepData.deptLevelDatas.length > 0) {
+						for(var i in stepData.deptLevelDatas) {
+							var levelData = stepData.deptLevelDatas[i];
+							levelItemDom.find(".table-step-level").append("<tr><td>" + levelData.deptLevelName +
+								"</td><td class='label-condition-" + levelData.conditionType + "'>" + levelData.conditionTypeCN + "</td><td>" + levelData.approverTypeCN + "</td></tr>");
+						}
+					}
+					stepDom.append(levelItemDom);
+				}
+				stepDom.append("<div class=\"item item-footer\">" +
+					"	<a href=\"javascript:;\" class='btn-edit'><i class=\"fa fa-edit\"></i>编辑</a>" +
+					"	<a href=\"javascript:;\" class='btn-trash'><i class=\"fa fa-trash\"></i>删除</a>" +
+					"</div>");
+				stepDom.data("step", stepData);
+				var tabSelector = ".tab-pane.active";
+				if(flagNumber) {
+					tabSelector = "#tab-plan" + flagNumber;
+				}
+				$(tabSelector + " .steps").append(stepDom);
+				onStepPanelDraged(flagNumber);
+				bindStepsAndEvents(flagNumber);
+			};
+			//初始化方案数据
+			function loadApvPlans(obj, routineId, routineConditionLabel) {
+				//清空
+				$(".wrap-plan .nav li[t='customize']").remove();
+				$(".wrap-plan .tab-content").empty();
+				setTimeout(function() {
+					if($(obj).data("loaded")) {
+						//已加载过
+						var plans = $(obj).data("plans");
+						for(var i in plans) {
+							addTabPage(plans[i], true, routineConditionLabel);
+						}
+					} else {
+						//首次加载
+						$.ajaxGet(APPROVALAPIS.plans.replace("{id}", routineId), function(response) {
+							if(response.code == 0) {
+								var plans = response.data.rows;
+								if(plans) {
+									for(var i in plans) {
+										addTabPage(plans[i], true, routineConditionLabel);
+									}
+								}
+							} else {
+								$.showErrorGritter("加载流程失败：" + response.msg);
+							}
+						});
+					}
+					$(obj).data("loaded", true);
+				}, 300);
+			};
+			//添加步骤到步骤列表（数据）
+			function addStepDatToStepList(stepData) {
+				var planData = $(".tab-pane.active").data("plan");
+				planData.steps = planData.steps || [];
+				planData.steps.push(stepData);
+			};
+			//重新保存步骤数据
+			function resetStepsDataFromDocument() {
+				var planData = $(".tab-pane.active").data("plan");
+				planData.steps = [];
+
+				$(".tab-pane.active .steps .step").each(function(i) {
+					planData.steps.push($(this).data("step"));
+				});
+			};
+			//添加步骤
+			function openAddStepPop(obj) {
+				var planData = $(obj).parents(".tab-pane:first").data("plan");
+				var modalId = $.modal({
+					width: 430
+				}).showOfLarge("添加审批步骤", ".pnl-step-add",
+					function(modal) {
+						var apvType = $(formContainer + " .list-step-type li.active").data("apv-type");
+						if(!apvType) {
+							$.showErrorGritter("请先选择审批方式。");
+							return false;
+						}
+						$.ajaxPost(APPROVALAPIS.stepAdd, {
+							plan_id: planData.plan_id,
+							step_type: apvType
+						}, function(response) {
+							if(response.code == 0) {
+								var stepData = {
+									step_id: response.data.step_id,
+									apvType: apvType,
+									apvTypeCN: APVSTEPTYPES[apvType - 1]
+								};
+								addStepDatToStepList(stepData);
+								addStepItemToStepsWrap(stepData);
+								//滚动到最后
+								$(".tab-pane.active .steps").scrollTop($(".tab-pane.active .steps").height());
+								$(".tab-pane.active .steps").removeClass("steps-null");
+								$("#"+modalId).modal("hide");
+							} else {
+								$.showErrorGritter("添加步骤失败：" + response.msg);
+							}
+						});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-step-add";
+				$(formContainer + " .list-step-type li").click(function() {
+					$(formContainer + " .list-step-type li").removeClass("active");
+					$(this).addClass("active");
+				});
+			};
+			//审批模拟
+			function openApvSimulationPop(obj) {
+				if($('.tab-pane.active .steps .step').length == 0) {
+					$.showErrorGritter("此流程还未添加审批步骤，请先完善此流程。");
+					return false;
+				}
+				var modalId = $.modal({
+					okButtonText: "开始模拟"
+				}).show("审批模拟", ".pnl-apv-simulation",
+					function(modal) {
+						var selEmployeeId = $(formContainer + " .form-control-employee-select span[data-employee-id]:first").data("employee-id");
+						if(!selEmployeeId) {
+							$.showErrorGritter("请先选择模拟的审批发起人。");
+							return false;
+						}
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var conditionNum = $(formContainer + " .form-control-condition-num").val();
+						if(conditionNum <= 0) {
+							$.showErrorGritter("天数不能小于0");
+							return false;
+						}
+						//方案数据
+						var planData = $(obj).parents(".tab-pane:first").data("plan");
+						openApvSimulationViewPop(modalId, {
+							plan_id: planData.plan_id,
+							employee_id: selEmployeeId,
+							routine_value: conditionNum
+						});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-apv-simulation";
+				if(currRoutineConditionLabel) {
+					$(formContainer + " .label-condition-name").text(currRoutineConditionLabel + "：");
+				} else {
+					$(formContainer + " .label-condition-name").parent().remove();
+				}
+				$(formContainer + " .form-control-condition-num").attr("nulltip", currRoutineConditionLabel);
+				//选择审批发起人
+				var selectEmployeeDom = $(formContainer + " .form-control-employee-select");
+				var tempHtml4EmployeeSelect = "<span class=\"item\" data-employee-id=\"{ID}\">{N} <img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span> ";
+				$(formContainer + " .btn-employee-select").click(function() {
+					$.showEmployeeSelectPop({
+						title: "选择审批人",
+						subTitle: "选择审批发起人：",
+						onlySingle: true,
+						isIncludeSelf: true,
+						isShowMe: true,
+						okCallback: function(employeesData) {
+							selectEmployeeDom.empty();
+							for(var i in employeesData) {
+								var empData = employeesData[i];
+								if(selectEmployeeDom.find("span[data-employee-id='" + empData.employee_id + "']").length > 0) {
+									continue;
+								}
+								selectEmployeeDom.append(tempHtml4EmployeeSelect.replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+							}
+							selectEmployeeDom.find(".item").unbind("mouseover").mouseover(function() {
+								transImgSrc($(this).find("img"));
+							}).unbind("mouseout").mouseout(function() {
+								transImgSrc($(this).find("img"));
+							});
+						}
+					});
+				});
+			};
+			//展示模拟流程
+			function openApvSimulationViewPop(parentModalId, simulationData) {
+				$(formContainer + " .list-step").empty();
+				var modalId = $.modal({
+					okButtonText: "换一位，再试试"
+				}).show("审批模拟", ".pnl-apv-simulation-view",
+					function(modal) {
+						modal.modal("hide");
+					},
+					function(modal) {
+						$("#" + parentModalId).modal("hide");
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-apv-simulation-view";
+				$.ajaxGet(APPROVALAPIS.stepMock + $.toQueryString(simulationData, true), function(response) {
+					if(response.code == 0) {
+						var stepsData = response.data.rows;
+						if(stepsData) {
+							var stepsDom = $(formContainer + " .list-step");
+							stepsDom.empty();
+							for(var i in stepsData) {
+								var stepData = stepsData[i];
+								//step_type=4 指定人审批
+								if(i > 0) {
+									stepsDom.append("<li class=\"direction\"><i class=\"fa fa-arrow-down\"></i></li>");
+								}
+								var apvEmployeeNames = "",
+									deptName = "";
+								for(var j in stepData.approver_data) {
+									var approverData = stepData.approver_data[j];
+									if(apvEmployeeNames) {
+										apvEmployeeNames += ",";
+									}
+									apvEmployeeNames += approverData.employee_name;
+									deptName = approverData.depa_name;
+								}
+								stepsDom.append("<li class=\"item-step\">" +
+									"	<label class=\"num\">" + stepData.step_num + "</label>" +
+									"	<div class=\"item " + (deptName.length == 0 ? "hide" : "") + "\">" +
+									"		<label class='hide'>审批部门：</label>" +
+									"		<span class='hide'>" + deptName + "</span>" +
+									"	</div>" +
+									"	<div class=\"item\">" +
+									"		<label>审批人：</label>" +
+									"		<span>" + apvEmployeeNames + "</span>" +
+									"	</div>" +
+									"</li>");
+							}
+						}
+					} else {
+						$.showErrorGritter("模拟审批流程失败：" + response.msg);
+					}
+				});
+			};
+			//编辑步骤
+			function openStepInfoOfDeptPop(stepDom, routineId, obj) {
+				var sourceStepData = stepDom.data("step");
+				var stepData = $.cloneObject(sourceStepData);
+				if($(obj).parent().next().find(".label-employee .label-dept").text()) {
+					stepData.apvDeptName = $(obj).parent().next().find(".label-employee .label-dept").text();
+					stepData.apvDept = $(obj).parent().next().find(".label-employee .label-dept").attr("data-dept-id");
+				}
+				console.log(sourceStepData)
+				var modalId = $.modal({
+					shownCallback: function() {
+
+					}
+				}).show("设置审批条件", ".pnl-step-info",
+					function(modal) {
+						//条件
+						var selectConditionType = $(formContainer + " .form-group-step-condition input[name='rdStepConditionType']:checked").val();
+						stepData.apvCondition = selectConditionType;
+						if(stepData.apvCondition == 1) {
+							//天数
+							var cond1 = $(formContainer + " .form-group-step-condition .label-condition .lbl-condition-1").text();
+							//大于
+							var cond2 = $(formContainer + " .form-group-step-condition .label-condition .lbl-condition-2").val();
+							//3
+							var cond3 = $(formContainer + " .form-group-step-condition .label-condition .lbl-condition-3").val();
+							cond3=parseInt(cond3);
+							//天
+							var cond4 = $(formContainer + " .form-group-step-condition .label-condition .lbl-condition-4").text();
+							if(!cond3) {
+								$.showErrorGritter("条件不完整，请完善条件。");
+								return false;
+							}
+							if(cond3 <= 0) {
+								$.showErrorGritter("天数不能为0");
+								return false;
+							}
+							stepData.apvConditionCN = cond1 + cond2 + cond3 + cond4;
+							stepData.apvCondition1 = cond1;
+							stepData.apvCondition2 = cond2;
+							stepData.apvCondition3 = cond3;
+							stepData.apvCondition4 = cond4;
+							//显示到步骤界面
+							//stepDom.find(".label-condition").text(stepData.apvConditionCN);
+						} else {
+							stepData.apvConditionCN = "无条件";
+						}
+						if(stepData.apvType == APPROVAL_STEP_TYPE.ceator_dept_can_approval || stepData.apvType == APPROVAL_STEP_TYPE.specify_dept_can_approval) {
+							//审批部门
+							if(stepData.apvType == APPROVAL_STEP_TYPE.specify_dept_can_approval && !stepData.apvDept) {
+								$.showErrorGritter("请选择审批部门。");
+								return false;
+							}
+							//审批人
+							var selectApproverType = $(formContainer + " .form-control-approver-type input[name='rdApproverType']:checked").val();
+							if(!selectApproverType) {
+								$.showErrorGritter("请选择审批人范围。");
+								return false;
+							}
+							stepData.apvEmployee = selectApproverType;
+							stepData.apvEmployeeCN = $(formContainer + " .form-control-approver-type input[name='rdApproverType']:checked").parent().text();
+							//显示到步骤界面
+							//stepDom.find(".label-employee").text(stepData.apvEmployeeCN);
+							//if (stepData.apvType == 3)
+							//	stepDom.find(".label-select-dept-name").text(" (" + stepData.apvDeptName + ")");
+						} else if(stepData.apvType == APPROVAL_STEP_TYPE.specify_person_can_approval) {
+							//指定审批人
+							var selectEmployees = [];
+							var selectEmployeeIds = [];
+							var selectEmployeeNames = "";
+							$(formContainer + " .form-control-employee-select span[data-employee-id]").each(function() {
+								selectEmployees.push({
+									employee_id: $(this).data("employee-id"),
+									employee_name: $(this).text()
+								});
+								selectEmployeeIds.push($(this).data("employee-id"));
+								if(selectEmployeeNames) {
+									selectEmployeeNames += ",";
+								}
+								selectEmployeeNames += $(this).text();
+							});
+							if(selectEmployees.length == 0) {
+								$.showErrorGritter("请选择审批人。");
+								return false;
+							}
+							stepData.apvEmployees = selectEmployees;
+							stepData.apvEmployeeIds = selectEmployeeIds;
+							stepData.apvEmployeeNames = selectEmployeeNames;
+							//显示到步骤界面
+							//stepDom.find(".label-employee").text(selectEmployeeNames);
+						}
+
+						//提交数据格式转换
+						$.ajaxPut(APPROVALAPIS.step + "/" + stepData.step_id, {
+							step_condition_logic: stepData.apvCondition2,
+							step_condition_value: stepData.apvCondition3,
+							step_is_using_condition: stepData.apvCondition,
+							step_specified_department_employee_type: stepData.apvEmployee,
+							step_specified_department_id: stepData.apvDept,
+							step_specified_employees_list: stepData.apvEmployeeIds || []
+						}, function(response) {
+							if(response.code == 0) {
+								//填充到原始数据
+								sourceStepData.apvCondition = stepData.apvCondition;
+								sourceStepData.apvConditionCN = stepData.apvConditionCN;
+								sourceStepData.apvCondition1 = stepData.apvCondition1;
+								sourceStepData.apvCondition2 = stepData.apvCondition2;
+								sourceStepData.apvCondition3 = stepData.apvCondition3;
+								sourceStepData.apvCondition4 = stepData.apvCondition4;
+								sourceStepData.apvEmployee = stepData.apvEmployee;
+								sourceStepData.apvEmployeeCN = stepData.apvEmployeeCN;
+								sourceStepData.apvEmployees = stepData.apvEmployees;
+								sourceStepData.apvEmployeeIds = stepData.apvEmployeeIds;
+								sourceStepData.apvEmployeeNames = stepData.apvEmployeeNames;
+								sourceStepData.apvType = stepData.apvType;
+								console.log(stepData)
+								//更新步骤数据到页面
+								//if (stepData.apvCondition == 1) {
+								stepDom.find(".label-condition").removeClass("label-condition-1").removeClass("label-condition-2");
+								stepDom.find(".label-condition").addClass("label-condition-" + stepData.apvCondition);
+								stepDom.find(".label-condition").text(stepData.apvConditionCN);
+								//}
+								if(stepData.apvType == APPROVAL_STEP_TYPE.ceator_dept_can_approval || stepData.apvType == APPROVAL_STEP_TYPE.specify_dept_can_approval) {
+									stepDom.find(".label-employee").html(($(formContainer + " .link-dept").text() ? "<span class='label-dept' data-dept-id='" + stepData.apvDept + "'>" + $(formContainer + " .link-dept").text() + "</span>," : "") +
+										stepData.apvEmployeeCN);
+										stepDom.data("step").apvDept=stepData.apvDept;
+										stepDom.data("step").apvDeptName=$(formContainer + " .link-dept").text();
+									if(stepData.apvType == APPROVAL_STEP_TYPE.specify_dept_can_approval)
+										stepDom.find(".label-select-dept-name").text(" (" + stepData.apvDeptName + ")");
+								}
+								if(stepData.apvType == APPROVAL_STEP_TYPE.specify_person_can_approval) {
+									stepDom.find(".label-employee").text(selectEmployeeNames);
+								}
+								modal.modal("hide");
+							} else {
+								$.showErrorGritter("编辑步骤条件失败：" + response.msg);
+							}
+						});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-step-info";
+				$(formContainer + " .label-condition .lbl-condition-1").text(currRoutineConditionLabel);
+				//选择条件
+				if(!canSetConditionRoutineIds[routineId]) {
+					$(formContainer + " .form-group-step-condition .lbl-condition-1").parent().prev().css("background-color", "#999");
+					$(formContainer + " .form-group-step-condition .lbl-condition-1").parent().prev().find("input").attr("disabled", "disabled");
+				}
+				$(formContainer + " .form-group-step-condition input[name='rdStepConditionType']").change(function() {
+					if($(this).parent().next().find(">span.lbl-condition-1").text() == "null") {
+						$.showErrorGritter("不能设置条件审批！");
+						$(this).removeAttr("checked")
+						$(this).parent().prev().find("input[name='rdStepConditionType']").prop("checked", "checked")
+						return false;
+					}
+					$(formContainer + " .form-group-step-condition .label-condition").addClass("hide");
+					var selectVal = $(formContainer + " .form-group-step-condition input[name='rdStepConditionType']:checked").val();
+					if(selectVal == 1) {
+						$(formContainer + " .form-group-step-condition .label-condition").removeClass("hide");
+					}
+				});
+				//步骤类型
+				$(formContainer + " div[step-type]").addClass("hide");
+				$(formContainer + " div[step-type*='" + stepData.apvType + "']").removeClass("hide");
+				//选择部门
+				var linkDeptSelectDom = $(formContainer + " .link-dept");
+				linkDeptSelectDom.text(stepData.apvDeptName);
+				if(stepData.apvType == APPROVAL_STEP_TYPE.specify_dept_can_approval) {
+					linkDeptSelectDom.text(stepData.apvDeptName || "选择审批部门");
+					linkDeptSelectDom.click(function() {
+						$.showDeptSelectPop({
+							subTitle: "选择审批部门：",
+							selectedDeptIds: [stepData.apvDept],
+							okCallback: function(deptData) {
+								stepData.apvDept = deptData.dept_id;
+								stepData.apvDeptName = deptData.dept_name;
+								linkDeptSelectDom.text(deptData.dept_name);
+							}
+						});
+					});
+				}
+				//选择人员
+				var selectEmployeeDom = $(formContainer + " .form-control-employee-select");
+				var saveData=[];
+				//console.log(stepData.apvEmployeeIds.length)
+				if(stepData.apvEmployeeIds) {
+					stepData.apvEmployeeIds.forEach(function(val,index,arry){
+						saveData.push({"employee_id":val});
+					});
+				}
+				console.log(saveData)
+				selectEmployeeDom.data("select",saveData);
+				var tempHtml4EmployeeSelect = "<span class=\"item\" data-employee-id=\"{ID}\">{N} <img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span> ";
+				$(formContainer + " .btn-employee-select").click(function() {
+					$.showEmployeeSelectPop({
+						title: "选择审批人",
+						subTitle: "选择审批人员：",
+						isIncludeSelf: true,
+						isShowMe: true,
+						selectedEmployeeIds: selectEmployeeDom.data("select"),
+						okCallback: function(employeesData) {
+							selectEmployeeDom.data("select", employeesData);
+							//selectEmployeeDom.empty();
+							for(var i in employeesData) {
+								var empData = employeesData[i];
+								if(selectEmployeeDom.find("span[data-employee-id='" + empData.employee_id + "']").length > 0) {
+									continue;
+								}
+								selectEmployeeDom.append(tempHtml4EmployeeSelect.replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+							}
+							selectEmployeeDom.find(".item").unbind("mouseover").mouseover(function() {
+								transImgSrc($(this).find("img"));
+							}).unbind("mouseout").mouseout(function() {
+								transImgSrc($(this).find("img"));
+							});
+						}
+					});
+				});
+
+				//赋值
+				$(formContainer + " .form-group-step-condition input[name='rdStepConditionType'][value='" + stepData.apvCondition + "']").attr("checked", "checked").trigger("change");
+				$(formContainer + " .form-group-step-condition .label-condition .lbl-condition-2").val(stepData.apvCondition2);
+				$(formContainer + " .form-group-step-condition .label-condition .lbl-condition-3").val(stepData.apvCondition3);
+				$(formContainer + " .form-control-approver-type input[name='rdApproverType'][value='" + stepData.apvEmployee + "']").attr("checked", "checked");
+				//已选审批人
+				if(stepData.apvEmployees && stepData.apvEmployees.length > 0) {
+					for(var i in stepData.apvEmployees) {
+						var empData = stepData.apvEmployees[i];
+						selectEmployeeDom.append(tempHtml4EmployeeSelect.replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+					}
+				}
+			};
+			//编辑步骤 上级审批
+			function openStepInfoOfLevelDeptPop(stepDom, routineId) {
+				var stepData = stepDom.data("step");
+				var modalId = $.modal({
+					shownCallback: function() {}
+				}).showOfLarge("设置部门层级审批流程", ".pnl-step-level-info",
+					function(modal) {
+						var inputValidateFlag = true;
+						var deptLevelDatas = [];
+						$(formContainer + " .table-step-level tr").each(function(k) {
+							//标题行 th
+							if(k == 0) {
+								return;
+							}
+							//审批方式
+							var selectConditionType = $(this).find("input[name*='rdApvConditionType']:checked").val();
+							var selectConditionTypeCN = $(this).find("input[name*='rdApvConditionType']:checked").parent().text();
+							if(!selectConditionType) {
+								inputValidateFlag = false;
+								$.showErrorGritter("请选择审批方式。");
+								return false;
+							}
+							var cond1, cond2, cond3, cond4;
+							if(selectConditionType == 3) {
+								//审批条件
+								//天数
+								cond1 = $(this).find(".label-condition .lbl-condition-1").text();
+								//大于
+								cond2 = $(this).find(".label-condition .lbl-condition-2").val();
+								//3
+								cond3 = $(this).find(".label-condition .lbl-condition-3").val();
+								cond3=parseInt(cond3);
+								//天
+								cond4 = $(this).find(".label-condition .lbl-condition-4").text();
+								if(!cond3) {
+									inputValidateFlag = false;
+									$.showErrorGritter("条件不完整，请完善条件。");
+									$(this).find(".label-condition .lbl-condition-3").focus();
+									return false;
+								} else {
+									if(cond3 <= 0) {
+										inputValidateFlag = false;
+										$.showErrorGritter("天数不能为0");
+										$(this).find(".label-condition .lbl-condition-3").focus();
+										return false;
+									}
+								}
+
+								selectConditionTypeCN = cond1 + cond2 + cond3 + cond4;
+							}
+							//审批人范围
+							var selectApproverType = $(this).find("input[name*='rdApproverType']:checked").val();
+							var selectApproverTypeCN = $(this).find("input[name*='rdApproverType']:checked").parent().text();
+							if(!selectApproverType) {
+								inputValidateFlag = false;
+								$.showErrorGritter("请选择审批人范围。");
+								return false;
+							}
+							var levelDom = $(this).find(".label-level");
+							deptLevelDatas.push({
+								deptLevelId: levelDom.data("level-id"),
+								deptLevelName: levelDom.text(),
+								conditionType: selectConditionType,
+								conditionTypeCN: selectConditionTypeCN,
+								condition1: cond1,
+								condition2: cond2,
+								condition3: cond3,
+								condition4: cond4,
+								approverType: selectApproverType,
+								approverTypeCN: selectApproverTypeCN,
+								department_level: levelDom.data("level-id"),
+								depa_approval_type: selectConditionType,
+								depa_condition_logic: cond2,
+								depa_condition_value: cond3,
+								depa_approval_range: selectApproverType
+							});
+						});
+						if(!inputValidateFlag) {
+							return false;
+						}
+
+						//提交数据格式转换
+						$.ajaxPut(APPROVALAPIS.step + "/" + stepData.step_id, {
+							step_sub_step_arr: deptLevelDatas
+						}, function(response) {
+							if(response.code == 0) {
+								stepData.deptLevelDatas = deptLevelDatas;
+								//更新页面数据
+								stepDom.find(".table-step-level").empty();
+								if(deptLevelDatas.length > 0) {
+									for(var i in deptLevelDatas) {
+										var levelData = deptLevelDatas[i];
+										stepDom.find(".table-step-level").append("<tr><td>" + levelData.deptLevelName +
+											"</td><td class='label-condition-" + levelData.conditionType + "'>" + levelData.conditionTypeCN + "</td><td>" + levelData.approverTypeCN + "</td></tr>");
+									}
+								}
+
+								modal.modal("hide");
+							} else {
+								$.showErrorGritter("编辑步骤条件失败：" + response.msg);
+							}
+						});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-step-level-info";
+				//初始部门层级数据
+				$.loadDeptLevelsData(function(deptLevelsData) {
+					for(var i in deptLevelsData) {
+						var levelData = deptLevelsData[i];
+						var trTplHtml = "<tr data-level-id=\"{id}\">" +
+							"	<td class=\"td-level\">" +
+							"		<label class=\"label-level\" data-level-id=\"{id}\">{name}</label>" +
+							"	</td>" +
+							"	<td class=\"td-condition-type td-align-left\">" +
+							"		<label><input type=\"radio\" class=\"form-control-radio\" name=\"rdApvConditionType{id}\" checked=\"checked\" value=\"2\"> 直接审批 </label>" +
+							"		<label><input type=\"radio\" class=\"form-control-radio conditional-apv\" name=\"rdApvConditionType{id}\" value=\"3\"> 条件审批 </label>" +
+							"		<label><input type=\"radio\" class=\"form-control-radio\" name=\"rdApvConditionType{id}\" value=\"1\"> 不审批 </label>" +
+							"	</td>" +
+							"	<td class=\"td-condition\">" +
+							"		<label class=\"label-condition hide\">" +
+							"			<span class=\"lbl-condition-1\">" + currRoutineConditionLabel + "</span>" +
+							"			<select class=\"lbl-condition-2\">" +
+							"				<option value=\">=\">大于等于</option>" +
+							"				<option value=\">\">大于</option>" +
+							"			</select>" +
+							"			<input class=\"lbl-condition-3\" type=\"text\" data-type=\"int\" style=\"width: 40px;\" maxlength=\"2\" oval=\"\">" +
+							"			<span class=\"lbl-condition-4\">天</span>" +
+							"		</label>" +
+							"		<label class=\"label-condition-null\">" +
+							"			无" +
+							"		</label>" +
+							"	</td>" +
+							"	<td class=\"td-approver-type td-align-left\">" +
+							"		<label><input type=\"radio\" name=\"rdApproverType{id}\" class=\"form-control-radio\" value=\"3\"> 负责人</label>" +
+							"		<label><input type=\"radio\" name=\"rdApproverType{id}\" class=\"form-control-radio\" value=\"5\" checked=\"checked\"> 仅员工（发起人除外）</label>" +
+							//"		<label><input type=\"radio\" name=\"rdApproverType{id}\" class=\"form-control-radio\" value=\"4\"> 仅副负责人</label>" +
+							//"		<label><input type=\"radio\" name=\"rdApproverType{id}\" class=\"form-control-radio\" value=\"2\"> 所有负责人</label>" +
+							"		<label><input type=\"radio\" name=\"rdApproverType{id}\" class=\"form-control-radio\" value=\"1\"> 所有人（发起人除外）</label>" +
+							"	</td>" +
+							"</tr>";
+						$(formContainer + " .table-step-level").append(trTplHtml.replace(/{id}/g, levelData.code_tree).replace(/{name}/g, levelData.code_name));
+
+						//审批方式选择
+						$(formContainer + " .table-step-level input[name*='rdApvConditionType']").change(function() {
+							var selectType = $(this).val();
+							$(this).parents("tr:first").find(".label-condition-null").addClass("hide");
+							$(this).parents("tr:first").find(".label-condition").addClass("hide");
+							//条件审批
+							if(selectType == 3) {
+								$(this).parents("tr:first").find(".label-condition").removeClass("hide");
+							} else {
+								$(this).parents("tr:first").find(".label-condition-null").removeClass("hide");
+							}
+						});
+						//控制条件选择是否禁用
+						if(!canSetConditionRoutineIds[routineId]) {
+							$(formContainer + " .td-condition-type input.conditional-apv").parent().css("background-color", "#999");
+							$(formContainer + " .td-condition-type input.conditional-apv").attr("disabled", "disabled");
+						}
+						//已选择条件
+						setTimeout(function() {
+							if(stepData.deptLevelDatas && stepData.deptLevelDatas.length > 0) {
+								for(var i in stepData.deptLevelDatas) {
+									var levelData = stepData.deptLevelDatas[i];
+									var currLevelTrDom = $(formContainer + " .table-step-level tr[data-level-id='" + levelData.deptLevelId + "']");
+									currLevelTrDom.find(".lbl-condition-2").val(levelData.condition2);
+									currLevelTrDom.find(".lbl-condition-3").val(levelData.condition3);
+									currLevelTrDom.find("input[name*='rdApvConditionType'][value='" + levelData.conditionType + "']").attr("checked", "checked").trigger("change");
+									currLevelTrDom.find("input[name*='rdApproverType'][value='" + levelData.approverType + "']").attr("checked", "checked");
+								}
+							}
+						}, 0);
+					}
+				});
+			};
+			//添加、修改流程
+			function openPlanInfoPop(action, obj, e) {
+				e.target.blur();
+				e.preventDefault();
+				var isAdd = action == "add";
+				var actionText = (action == "add" ? "添加" : "重命名");
+				var modalId = $.modal().showOfMini(actionText + "流程", ".pnl-plan-info",
+					function(modal) {
+						saveBtn();
+					}
+				);
+				$("#" + modalId + " .process-name").keypress(function(event) {
+					if(event.keyCode == 13) {
+						saveBtn();
+						return false;
+					}
+				});
+				var formContainer = "#" + modalId + " .model-plan-info";
+				var planController = new Controller(formContainer);
+				function saveBtn() {
+					if(!inputValidateForGritter(formContainer)) {
+						return false;
+					}
+					var planData = planController.getJSON();
+					planData.routine_id = currRoutineId;
+					planData.plan_name=$(formContainer+" .process-name").val();
+					$.ajaxByAction(action, (isAdd ? APPROVALAPIS.planAdd : APPROVALAPIS.planRename.replace("{id}", planData.plan_id)), planData, function(response) {
+						if(response.code == 0) {
+							$.showSuccessGritter(actionText + "流程成功。");
+							if(isAdd) {
+								planData.plan_id = response.data.plan_id;
+								//添加一页
+								addTabPage(planData);
+							} else if(action == "update") {
+								$(".wrap-plan .nav-tabs li.active a").text(planData.plan_name);
+								$(".wrap-plan .tab-content .tab-pane.active").data("plan", planData);
+							}
+							$("#" + modalId).modal("hide");
+						} else {
+							$.showErrorGritter("添加流程失败：" + response.msg);
+						}
+					});
+				}
+				//model pop id
+				if(action == "update") {
+					var planData = $(obj).parents(".tab-pane:first").data("plan");
+					planController.set(planData);
+				}
+			};
+			//删除流程
+			function openRemovePlanPop(obj) {
+				$.modal().confirm("你将删除此流程，确认删除吗？", function() {
+					var planData = $(obj).parents(".tab-pane:first").data("plan");
+					$.ajaxDelete(APPROVALAPIS.planDelete.replace("{id}", planData.plan_id), {}, function(response) {
+						if(response.code == 0) {
+							$.showSuccessGritter("删除流程成功。");
+							removeCurrTabPage();
+						} else {
+							$.showErrorGritter("删除流程失败：" + response.msg);
+						}
+					});
+				});
+			};
+			//添加标签页
+			function addTabPage(planData, loadSteps, routineConditionLabel) {
+				flagNumber++;
+				routineConditionLabel = routineConditionLabel || currRoutineConditionLabel;
+				//tab nav
+				var tmpNavHtml = "<li t=\"customize\" role=\"presentation\" class=\"\" i=\"{N}\">" +
+					"<a href=\"#tab-plan{N}\" aria-controls=\"tab-plan{N}\" role=\"tab\" data-toggle=\"tab\" aria-expanded=\"false\">{NAME}</a></li>";
+				$(".wrap-plan .nav-tabs li[t='button']").before(tmpNavHtml.replace(/{N}/g, flagNumber).replace(/{NAME}/g, planData.plan_name));
+				//tab content
+				var tabPaneDom = $("<div role=\"tabpanel\" class=\"tab-pane\" id=\"tab-plan" + flagNumber + "\"></div>");
+				planData.tabIndex = flagNumber;
+				tabPaneDom.data("plan", planData);
+				tabPaneDom.append("<div class=\"btns\">" +
+					"	<a href=\"javascript:;\" onclick=\"openAddStepPop(this);\">添加步骤</a>" +
+					"	<a href=\"javascript:;\" onclick=\"openPlanInfoPop('update',this,event);\">重命名</a>" +
+					"	<a href=\"javascript:;\" onclick=\"openApvSimulationPop(this);\">审批模拟</a>" +
+					"	<a href=\"javascript:;\" onclick=\"openRemovePlanPop(this);\" class='color-danger'>删除流程</a>" +
+					"</div>");
+				tabPaneDom.append("<div class=\"steps-pane\" style='height:" + stepsWrapHeeight + "px;'><div class=\"steps steps-null\"><div class=\"tip-null\" draggable=\"false\">无审批步骤</div></div></div>");
+				$(".wrap-plan .tab-content").append(tabPaneDom);
+				$(".wrap-plan .nav-tabs li a[href='#tab-plan" + flagNumber + "']").tab('show');
+				tabPaneDom.find(".steps").addClass("steps-null");
+				var currPlanFlagNumber = flagNumber;
+				if(loadSteps) {
+					//加载步骤数据
+					if(!planData.steps) {
+						planData.steps = [];
+						$("#tab-plan" + currPlanFlagNumber + " .steps .tip-null").text("正在加载审批步骤...");
+						$("#tab-plan" + currPlanFlagNumber + " .steps").addClass("steps-null");
+						$.ajaxGet(APPROVALAPIS.steps.replace("{id}", planData.plan_id), function(response) {
+							if(response.code == 0) {
+								var steps = response.data.rows;
+								if(steps && steps.length > 0) {
+									$("#tab-plan" + currPlanFlagNumber + " .steps").removeClass("steps-null");
+									for(var i in steps) {
+										var stepData = steps[i];
+										//审批条件
+										stepData.apvCondition = stepData.step_is_using_condition;
+										if(stepData.apvCondition == 1)
+											stepData.apvConditionCN = routineConditionLabel + " " + stepData.step_condition_logic + " " + stepData.step_condition_value;
+										stepData.apvCondition2 = stepData.step_condition_logic;
+										stepData.apvCondition3 = stepData.step_condition_value;
+										//审批方式
+										stepData.apvType = stepData.step_type;
+										stepData.apvTypeCN = stepData.step_type_cn;
+										//审批人范围
+										stepData.apvEmployee = stepData.step_specified_department_employee_type;
+										stepData.apvEmployeeCN = stepData.step_specified_department_employee_type_cn;
+										//指定部门
+										stepData.apvDept = stepData.step_specified_department_id;
+										stepData.apvDeptName = stepData.step_specified_department_id_cn;
+										//指定人审批
+										stepData.apvEmployeeIds = [];
+										stepData.apvEmployeeNames = "";
+										stepData.apvEmployees = stepData.step_specified_employees_list;
+										if(stepData.step_specified_employees_list && stepData.step_specified_employees_list.length > 0) {
+											for(var j in stepData.step_specified_employees_list) {
+												var empData = stepData.step_specified_employees_list[j];
+												stepData.apvEmployeeIds.push(empData.employee_id);
+												if(stepData.apvEmployeeNames) {
+													stepData.apvEmployeeNames += ",";
+												}
+												stepData.apvEmployeeNames += empData.employee_name;
+											}
+										}
+										//部门层次审批
+										stepData.deptLevelDatas = [];
+										if(stepData.step_sub_step_arr && stepData.step_sub_step_arr.length > 0) {
+											for(var j in stepData.step_sub_step_arr) {
+												var subStepData = stepData.step_sub_step_arr[j];
+												stepData.deptLevelDatas.push({
+													deptLevelId: subStepData.department_level,
+													deptLevelName: subStepData.department_level_cn,
+													conditionType: subStepData.depa_approval_type,
+													conditionTypeCN: (subStepData.depa_approval_type == 3 ? (routineConditionLabel + " " + subStepData.step_condition_logic + " " + subStepData.step_condition_value) : subStepData.depa_approval_type_cn),
+													condition2: subStepData.step_condition_logic,
+													condition3: subStepData.step_condition_value,
+													approverType: subStepData.depa_approval_range,
+													approverTypeCN: subStepData.depa_approval_range_cn
+												});
+											}
+										}
+										addStepItemToStepsWrap(stepData, currPlanFlagNumber);
+										planData.steps.push(stepData);
+									}
+								}
+							} else {
+								$.showErrorGritter("加载流程步骤失败：" + response.msg);
+							}
+							$("#tab-plan" + currPlanFlagNumber + " .steps .tip-null").text("无审批步骤");
+						});
+					} else {
+						for(var i in planData.steps) {
+							addStepItemToStepsWrap(planData.steps[i], currPlanFlagNumber);
+						}
+					}
+				}
+			};
+			//删除当前标签页
+			function removeCurrTabPage() {
+				$(".wrap-plan .nav-tabs li.active").remove();
+				$(".wrap-plan .tab-content .tab-pane.active").remove();
+				$(".wrap-plan .nav-tabs li[t='customize']:first a").tab('show');
+			};
+		</script>
+	</body>
+
+</html>

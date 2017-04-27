@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>轨迹系统</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.form-group.form-inline {
+				float: left;
+				/*margin-right: 100px;*/
+				width: 20%;
+				min-width: 300px;
+			}
+			
+			.form-group.form-inline input {
+				border-radius: 0;
+				height: 26px;
+			}
+			
+			.form-inline label:before {
+				margin: 0;
+			}
+			
+			.form-group.form-inline .form-control-half {
+				width: 65%;
+			}
+			
+			.form-group.form-inline.form-date {
+				width: 20%;
+			}
+			
+			.content-header .form-group-level .form-inline label {
+				min-width: 0;
+				font-size: 12px;
+				color: #666;
+			}
+			
+			.content-header .form-group-level .form-inline input {
+				font-size: 12px;
+				color: #666;
+			}
+			
+			.form-group-level {
+				position: relative;
+			}
+			
+			.form-btns {
+				/*position: absolute;*/
+				/*right: 1%;*/
+				display: inline-block;
+				width: 200px!important;
+			}
+			
+			.form-group-level:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.btn-head {
+				font-size: 12px;
+				padding: 5px 10px;
+				display: inline-block;
+				width: 50px;
+				height: 25px;
+				line-height: 13px;
+				border-radius: 1px;
+				margin-right: 10px;
+			}
+			
+			.form-group-level .form-btns .btn-head:hover {
+				background-color: #bbb!important;
+				border: 1px solid #bbb;
+			}
+			
+			.btn-default,
+			.btn-default:hover,
+			.btn-default:active,
+			.btn-default:visited,
+			.btn-default:focus {
+				background-color: #aaa!important;
+				color: #fff!important;
+				border: 1px solid #aaa;
+				box-shadow: none;
+				text-shadow: none;
+				background-image: none;
+				outline: none;
+			}
+			
+			.btn-footer {
+				font-size: 16px;
+				padding: 5px 20px;
+			}
+			
+			.date-picker {
+				width: 110px!important;
+			}
+			
+			.underline {
+				/*text-decoration: underline;*/
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container">
+			<div class="content">
+				<div class="content-header">
+					<div class="form-group-level">
+						<div class="form-group form-inline">
+							<label class="">用户:</label>
+							<input autocomplete="off" class="form-control-half form-control" type="text" bind="employee_key" placeholder="请输入操作人、账号进行查询" />
+						</div>
+						<!--<div class="form-group form-inline">
+							<label class="">操作 IP</label>
+							<input autocomplete="off" class="form-control-half form-control" type="text" bind="employee_ip" placeholder="请输入IP地址进行查询" />
+						</div>-->
+					<!--</div>
+					<div class="form-group-level">-->
+						<!--<div class="form-group form-inline">
+							<label class="">操作模块</label>
+							<select class="form-control-half" name="operator-model" id="moduel" bind="change_module">
+								
+							</select>
+						</div>-->
+						<div class="form-group form-inline">
+							<label class="">操作内容:</label>
+							<input autocomplete="off" class="form-control-half form-control" type="text" bind="change_field" placeholder="请输入操作内容" />
+						</div>
+						<div class="form-group form-inline">
+							<label class="">操作对象:</label>
+							<input autocomplete="off" class="form-control-half form-control" type="text" bind="change_obj" placeholder="请输入操作对象" />
+						</div>
+						<div class="form-group form-inline form-date">
+							<label class="">日期:</label>
+							<input autocomplete="off" type="text" class="date-picker form-control" bind="change_time_begin" placeholder="年-月-日" />
+							至
+							<input autocomplete="off" type="text" class="date-picker form-control" bind="change_time_end" placeholder="年-月-日" />
+						</div>
+						<div class="form-group form-inline form-btns">
+							<a href="javascript:;" class="btn btn-default btn-sm btn-head btn-search">查询</a>
+							<a href="javascript:;" class="btn btn-default btn-sm btn-head btn-clear">重置</a>
+						</div>
+					</div>
+				</div>
+				<div class="content-main">
+					<div class="grid">
+						<table id="grid-table"></table>
+						<table id="grid-pager"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="grid-footer" class="hide">
+			<a href="javascript:;" class="btn btn-info btn-sm def-btn-info btn-footer" role-auth="saas/locus/restore|post" onclick="onRecoveryBtnClick(this)"><img src="../resources/images/recovery-icon.png" alt="" />恢复</a>
+		</div>
+		<!--恢复的弹窗-->
+		<div class="recovery hide">
+			<div class="recovery-alert">
+				
+			</div>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			var getChangeModuleUrl=BSAPIURL+"/locus/modules",
+			searchChangeUrl=BSAPIURL+"/locus",
+			recoveryChangeUrl=BSAPIURL+"/locus/restore";
+			//grid
+			var gridSelector="#grid-table",pager="#grid-pager";
+			var grid="";
+			var searchConditions;
+			$(document).ready(function(){
+				//日期选择
+				$(".date-picker").datepicker({
+					format: 'yyyy-mm-dd',
+					autoclose: true,
+				});
+				//查询按钮事件绑定
+				$(".btn-search").click(function(){
+					onBtnSearchClick(this);
+				});
+				//重置按钮
+				$(".btn-clear").click(function(){
+					$("input[bind]").val("");
+				});
+				//加载表格
+				loadTab();
+			});
+			//查询按钮点击事件 处理函数
+			function onBtnSearchClick(obj){
+				var controller=new Controller(".content-header");
+				searchConditions=controller.getJSON();
+				console.log(searchConditions)
+				reloadGrid(searchConditions);
+			}
+			var gridHeight = $(window).height() - $(".content-header").outerHeight(true) - 165;
+			//加载表格函数
+			function loadTab(){
+				var colNames=["","姓名","账号","IP地址","操作日期","操作模块","操作对象","操作内容","操作前","操作后"];
+				var colModel=[
+					{
+						name: "id",
+						hidden: true,
+						formatter: function(cellvalue, options, rowObject){
+							return rowObject.change_detail_id;
+						}
+					},{
+						name: "employee_name",
+						index: "employee_name",
+						width: 70,
+						formatter: function(cellvalue, options, rowObject) {
+							return "<span class='underline'>"+cellvalue+"</span>";
+						}
+					},{
+						name: "employee_account",
+						width: 100,
+						index: "employee_account"
+					},{
+						name: "employee_ip",
+						width: 100,
+						index: "employee_ip"
+					},{
+						name: "change_time",
+						width: 130,
+						index: "change_time"
+					},{
+						name: "change_module_cn",
+						width: 130,
+						index: "change_module_cn"
+					},{
+						name: "change_obj",
+						index: "change_obj"
+					},{
+						name: "change_field_cn",
+						index: "change_field_cn",
+						formatter: function(cellvalue, options, rowObject){
+							if(rowObject.can_restore) return "<img style='width:20px;' src='../resources/images/recovery.png'>"+cellvalue;
+							return cellvalue;
+						}
+					},{
+						name: "change_before_cn",
+						index: "change_before_cn"
+					},{
+						name: "change_after_cn",
+						index: "change_after_cn"
+					}
+				];
+				var grid=$(gridSelector).initJqGrid({
+					pager: pager,
+					url: searchChangeUrl,
+					colNames: colNames,
+					colModel: colModel,
+					storeRowDataInCache: true,
+					width: $(".grid").outerWidth(true)-20,
+					height: gridHeight,
+					autowidth: false,
+					footerBtnContainer: "#grid-footer"
+				});
+			}
+			//重载表格
+			function reloadGrid(searchConditions){
+				$(gridSelector).jqGrid('setGridParam', {
+					page: 1,
+					datatype: "json",
+					url: searchChangeUrl+$.toQueryString(searchConditions,true)
+				}).trigger("reloadGrid", {});
+			}
+			//
+			//恢复按钮点击事件
+			$(".btn-footer").click(function(){
+				onRecoveryBtnClick(this);
+			});
+			function onRecoveryBtnClick(obj){
+				var rowDatas=getSelectedDatas(gridSelector);
+				var selectedIds = [];
+				for(var i in rowDatas){
+					if(!rowDatas[i].can_restore) {
+						$.showErrorGritter("添加项无法进行恢复操作！");
+						return false;
+					}
+					selectedIds.push(rowDatas[i].change_detail_id);
+				}
+				console.log(selectedIds)
+				if(!selectedIds||(selectedIds&&selectedIds.length<1)){
+					$.showErrorGritter("请先选择需要恢复的数据！");
+					return false;
+				}
+				var modalId=$.modal().showOfLarge("系统提示",".recovery",function(modal){
+						$.ajaxPost(recoveryChangeUrl,{
+							change_detail_ids: selectedIds.join(",")
+						},function(resp){
+							if(resp.code!=0){
+								$.showErrorGritter("恢复失败："+resp.msg);
+								return false;
+							}else{
+								$.showSuccessGritter("恢复成功！");
+								$("#"+modalId).modal("hide");
+								reloadGrid();
+							}
+						});
+				});
+				$("#"+modalId+" .recovery-alert").html("你将对选择的"+selectedIds.length+"条操作记录进行恢复操作，请再次确认！");
+			}
+		</script>
+	</body>
+
+</html>

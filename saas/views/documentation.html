@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>文档管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			body {
+				overflow: hidden;
+			}
+			
+			.page-documentation .content {
+				padding-top: 0;
+			}
+			
+			.page-documentation .content .left-menu {
+				margin: 0;
+				padding: 0;
+				margin-top: -4px;
+				margin-left: -10px;
+				width: 200px;
+				min-height: 260px;
+				border-right: 1px solid #e3e3e3;
+				bottom: 0;
+				max-height: none;
+				background-color: #f8f8f8;
+			}
+			
+			.page-documentation .content .main-wrap {
+				float: right;
+				margin-left: -1px;
+				padding-top: 12px;
+			}
+			
+			.page-documentation .content .left-menu .pnl-doc-add {
+				position: absolute;
+				bottom: 0;
+				width: 200px;
+				padding: 10px;
+			}
+			
+			.page-documentation .content .left-menu .pnl-doc-add a.btn {
+				color: #fff;
+			}
+			
+			.page-documentation .content .left-menu .pnl-menu-box a {
+				display: block;
+				text-align: left;
+				padding: 12px 20px;
+				background-color: #fff;
+				border-bottom: 1px solid #eeeeee;
+				border-left: 2px solid #fff;
+			}
+			
+			.page-documentation .content .left-menu .pnl-menu-box-doc-my {}
+			
+			.page-documentation .content .left-menu .pnl-menu-box a:hover,
+			.page-documentation .content .left-menu .pnl-menu-box a.active {
+				color: #ca192b;
+				background-color: #fff;
+				border-left: 2px solid #ca192b;
+				text-decoration: none;
+			}
+			
+			.page-documentation .content .left-menu .pnl-menu-box-share .tree-dept-menu {
+				overflow-x: auto;
+			}
+			
+			.page-documentation .content .left-menu .pnl-menu-box-share a.active:hover+.tree-dept-menu,
+			.page-documentation .content .left-menu .pnl-menu-box-share .tree-dept-menu:hover {
+				display: block;
+			}
+			
+			.page-documentation .content .main-wrap .form-control-search {}
+			
+			.icon-close {
+				color: #d9534f;
+				cursor: pointer;
+			}
+			
+			.icon-close:hover {
+				color: red;
+			}
+			
+			.form-control-dept-select,
+			.form-control-employee-select {
+				min-height: 34px;
+				height: auto;
+			}
+			
+			.list-dept-select-temp .item,
+			.form-control-dept-select .item,
+			.form-control-employee-select .item {
+				display: inline-block;
+				padding: 3px 8px;
+				margin-bottom: 5px;
+				border: 1px solid #eee;
+			}
+			
+			.list-employee .item-employee {
+				margin: 0 0 5px 5px;
+				width: 50px;
+				height: auto;
+				max-height: 60px;
+				display: inline-block;
+				overflow: hidden;
+				text-align: center;
+				border: 1px solid transparent;
+			}
+			
+			.list-employee .item-employee.active {
+				border-color: #666;
+			}
+			
+			.list-employee .item-employee.active:before {
+				position: absolute;
+				margin-top: 10px;
+				display: inline-block;
+				width: 40px;
+				text-align: center;
+				font: normal normal normal 14px/1 FontAwesome;
+				font-size: inherit;
+				text-rendering: auto;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+				box-sizing: border-box;
+				content: "\f058";
+				color: #666;
+				font-size: 20px;
+			}
+			
+			.list-employee .item-employee .head {
+				width: 40px;
+				height: 40px;
+			}
+			
+			.pnl-bottom-btns {
+				text-align: center;
+			}
+			
+			.css-overhidden {
+				width: 50px;
+			}
+			.list-plan .css-overhidden {
+				width: 150px;
+			}
+			.tree>li ul>li:last-child:before {
+				background-color: #f8f8f8!important;
+				border-left-color: #f8f8f8!important;
+			}
+			
+			.btn-upload-word {
+				font-size: 12px;
+				color: #009ED8;
+				cursor: pointer;
+			}
+			
+			.label-file-uploaded span {
+				padding: 10px 0;
+				position: relative;
+				border-bottom: 1px dashed #eee;
+				display: inline-block;
+				width: 100%;
+			}
+			
+			.label-file-uploaded img {
+				position: absolute;
+				top: 17px;
+				right: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-documentation">
+			<div class="content">
+
+				<div class="main-wrap">
+					<div class="tab-doc tab-doc-my">
+						<div class="search">
+
+						</div>
+						<div class="role-list">
+							<table id="grid-table-doc-my" class="grid-module">
+							</table>
+							<div id="grid-pager-doc-my">
+							</div>
+						</div>
+					</div>
+					<div class="tab-doc tab-doc-collect hide">
+						<div class="search">
+
+						</div>
+						<div class="role-list">
+							<table id="grid-table-doc-collect" class="grid-module">
+							</table>
+							<div id="grid-pager-doc-collect">
+							</div>
+						</div>
+					</div>
+					<div class="tab-doc tab-doc-share hide">
+						<div class="search">
+
+						</div>
+						<div class="role-list">
+							<table id="grid-table-doc-share" class="grid-module">
+							</table>
+							<div id="grid-pager-doc-share">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="left-menu">
+					<div class="pnl-menu-box pnl-menu-box-doc-my">
+						<a href="javascript:;" class="active" index="0">我的文档</a>
+					</div>
+					<div class="pnl-menu-box">
+						<a href="javascript:;" index="1">我的收藏</a>
+					</div>
+					<div class="pnl-menu-box pnl-menu-box-share">
+						<a href="javascript:;" index="2">共享的文档</a>
+					</div>
+					<div class="file-depa-tree">
+						<ul class="tree tree-dept-menu">
+						</ul>
+					</div>
+					<div class="pnl-doc-add">
+						<a class="btn btn-default btn-block btn-doc-add def-btn-info" onclick="openDocInfoPop('add');" role-auth="saas/files|post">
+							<i class="fa fa-cloud-upload"> 上传文档</i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-doc-info hide">
+			<form class="form-horizontal model-doc-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">文档类型：</label>
+					<select class="form-control form-control-doc-type" bind="file_type" nulltip="文档类型">
+						<option value="">选择文档类型</option>
+					</select>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">文档标题：</label>
+					<input type="text" class="form-control form-control-file-name" placeholder="文档标题" bind="file_title" nulltip="文档标题">
+				</div>
+				<div class="form-group form-group-upload-word form-inline">
+					<label class="input-flag" style="vertical-align: top;">选择文档：</label>
+					<div class="form-control form-control-noborder form-control-nopadding form-control-height-auto">
+						<a class="btn-upload-word btn-upload-default">
+							上传文档
+						</a>
+						<div class="upload">
+							<p class="label-file-uploaded">
+
+							</p>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-share hide">
+			<form class="form-horizontal model-share">
+				<div class="form-group form-inline">
+					<label>请选择共享的范围：</label>
+				</div>
+				<div class="form-group form-inline" style="padding-left: 20px;">
+					<span class="form-control form-control-dept-select"></span>
+					<label><a class="btn-a-default btn-dept-select"> 选择部门 </a></label>
+				</div>
+				<div class="form-group form-inline" style="padding-left: 20px;">
+					<div class="form-control form-control-employee-select">
+					</div>
+					<label><a class="btn-a-default btn-employee-select"> 选择员工 </a></label>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-leader-info pnl-dept-select-share hide">
+			<form class="form-horizontal model-leader-info model-dept-select-share">
+				<div class="wrap wrap-source">
+					<label>请以部门为单位选择公示范围：</label>
+					<div class="box">
+						<ul class="list-emp tree tree-dept">
+
+						</ul>
+					</div>
+				</div>
+				<div class="wrap seg">
+					<div class="box">
+						<p>
+							<a href="javascript:;" class="btn-add"><i class="fa fa-arrow-right"></i></a>
+						</p>
+						<br>
+						<p>
+							<a href="javascript:;" class="btn-remove"><i class="fa fa-arrow-left"></i></a>
+						</p>
+					</div>
+				</div>
+				<div class="wrap wrap-new">
+					<label>公示范围：</label>
+					<div class="box">
+						<ul class="list-emp list-dept-select-temp">
+
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-leader-info pnl-employee-select-share hide">
+			<form class="form-horizontal model-leader-info model-employee-select-share">
+				<div class="wrap wrap-source">
+					<label>请以部门为单位选择公示范围：</label>
+					<div class="box">
+						<div class="py">
+							<input type="search" placeholder="可输入“ZS”或“张三”查找" style="width: 100%;" />
+							<p>
+								<a class="active">A</a>
+							</p>
+						</div>
+						<ul class="list-emp">
+							<!--<li><label><input type="checkbox" > <span>A同事</span><span>行政部</span><span>行政专员</span></label></li>-->
+						</ul>
+					</div>
+				</div>
+				<div class="wrap seg">
+					<div class="box">
+						<p>
+							<a href="javascript:;" class="btn-add"><i class="fa fa-arrow-right"></i></a>
+						</p>
+						<br>
+						<p>
+							<a href="javascript:;" class="btn-remove"><i class="fa fa-arrow-left"></i></a>
+						</p>
+					</div>
+				</div>
+				<div class="wrap wrap-new">
+					<label>公示范围：</label>
+					<div class="box">
+						<ul class="list-emp">
+
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-doc-readdetail hide">
+			<form class="form-horizontal model-doc-readdetail">
+				<div class="form-group form-inline">
+					<label>未读 <span class="label-employee-unread">0</span> 人</label>
+				</div>
+				<ul class="list-employee list-employee-unread">
+
+				</ul>
+				<hr>
+				<div class="form-group form-inline">
+					<label>已读 <span class="label-employee-readed">0</span> 人</label>
+				</div>
+				<ul class="list-employee list-employee-readed">
+
+				</ul>
+				<hr>
+				<div class="pnl-bottom-btns">
+					<span class="label-remind-read">
+						<label style="font-weight: normal;"><input type="checkbox" class="form-control-radio form-control-unread-select" /> 未读同事</label>
+						<button type="button" class="btn btn-default btn-remind-read">提醒阅读</button>
+					</span>
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-doc-download-detail hide">
+			<form class="form-horizontal model-doc-download-detail">
+				<div class="form-group form-inline">
+					<label>已下载 <span class="label-count-download">0</span>/<span class="label-count-all-download">0</span> 人</label>
+				</div>
+				<ul class="list-employee list-employee-readed list-employee-download">
+					<li style="padding-left: 15px;">
+						无下载人员记录
+					</li>
+				</ul>
+				<hr>
+				<div class="pnl-bottom-btns">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div>
+			</form>
+		</div>
+
+		<div id="grid-footer-container-doc-my" class="hide">
+			<a class="btn btn-sm btn-danger def-btn-info" onclick="openDocInfoPop('update');" role-auth="saas/files/0|put" enable-on="singleselect"><i class="fa fa-edit"></i> 编辑</a>
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openDocDtail()" role-auth="saas/files/0|get" enable-on="singleselect" enable-tip="多选时不能进行此操作"><i class="fa fa-eye"></i> 预览</a>
+			<a class="btn btn-sm btn-danger def-btn-info" onclick="openDownloadDocPop(true);" role-auth="saas/files/loading/0|get"><i class="fa fa-download"></i> 下载</a>
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openSharePop();" role-auth="saas/files/sharing|put" enable-on="singleselect"><i class="fa fa-share-alt"></i> 共享</a>
+			<a class="btn btn-sm btn-info def-btn-danger" onclick="openCancelSharePop();" role-auth="saas/files/sharing|delete"><i class="fa fa-lock"></i> 取消共享</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" onclick="openDeleteDocPop();" role-auth="saas/files|delete"><i class="fa fa-trash"></i> 删除</a>
+		</div>
+		<div id="grid-footer-container-doc-share" class="hide">
+			<a class="btn btn-sm btn-danger def-btn-danger" onclick="openDownloadDocPop(false);" role-auth="saas/files/loading/0|get"><i class="fa fa-download"></i> 下载</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/approval.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			//APIS
+			var DOCUMENTATIONAPIS = {
+				base: BSAPIURL + "/files",
+				//共享的文档
+				share: BSAPIURL + "/files",
+				//我的文档
+				my: BSAPIURL + "/files/me",
+				//我的文档
+				collect: BSAPIURL + "/favorite/files",
+				//代码类型
+				type: BSAPIURL + "/file_types",
+				//共享
+				sharing: BSAPIURL + "/files/sharing",
+				//下载
+				download: BSAPIURL + "/files/loading/",
+				//提交下载审批
+				approval: BSAPIURL + "/files/download/approval/{id}",
+				//部门文档
+				department: BSAPIURL + "/file/share/depas",
+				//阅读情况
+				readInfo: BSAPIURL + "/files/{id}/read_status",
+				//下载情况
+				downloadInfo: BSAPIURL + "/files/{id}/download_status"
+			};
+			//我的文档 
+			var gridOfMyDoc;
+			var gridSelectorOfMyDoc = "#grid-table-doc-my";
+			var pagerSelectorOfMyDoc = "#grid-pager-doc-my";
+			var isFirstLoadGridOfMyDoc = true;
+			//我的收藏
+			var gridOfCollectDoc;
+			var gridSelectorOfCollectDoc = "#grid-table-doc-collect";
+			var pagerSelectorOfCollectDoc = "#grid-pager-doc-collect";
+			var isFirstLoadGridOfCollectDoc = true;
+			//共享文档
+			var gridOfShareDoc;
+			var gridSelectorOfShareDoc = "#grid-table-doc-share";
+			var pagerSelectorOfShareDoc = "#grid-pager-doc-share";
+			var isFirstLoadGridOfShareDoc = true;
+			var modulesJSON = [];
+			var documentTypeJSON4Search;
+			//加载我的文档
+			function initMyDocTab() {
+				if(!isFirstLoadGridOfMyDoc) {
+					$(gridOfMyDoc).reloadGrid();
+					return false;
+				}
+				//加载文档类型
+				$.ajaxGet(DOCUMENTATIONAPIS.type, function(response) {
+					if(response.code == 0) {
+						documentTypeJSON4Search = [];
+						documentTypeJSON4Search.push({
+							key: "全部",
+							value: 0
+						});
+						for(var i in response.data) {
+							var typeData = response.data[i];
+							documentTypeJSON4Search.push({
+								key: typeData.type_cn,
+								value: typeData.type
+							});
+							//user roles
+							$(".form-control-doc-type").append("<option value='" + typeData.type + "'>" + typeData.type_cn + "</option>");
+						}
+						//search
+						$.initSearchControls4TagMode({
+							auto: true,
+							url: DOCUMENTATIONAPIS.my,
+							grid: gridSelectorOfMyDoc,
+							container: ".tab-doc-my .search",
+							keyName: "title",
+							keyPlaceholder: "输入文档标题查找",
+							onChange: function(selectTags) {},
+							groups: [{
+								name: "type",
+								text: "文档类型",
+								items: documentTypeJSON4Search
+							}, {
+								name: "status",
+								text: "文档状态",
+								items: [{
+									key: "全部",
+									value: "0"
+								}, {
+									key: "未共享",
+									value: "1"
+								}, {
+									key: "审批中",
+									value: "2"
+								}, {
+									key: "共享中",
+									value: "3"
+								}, {
+									key: "审批未通过",
+									value: "4"
+								}]
+							}]
+						});
+					} else {
+						$.showErrorGritter("加载文档类型失败：" + response.msg);
+					}
+				});
+				//grid
+				//122 = pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".remark").outerHeight(true) - $(".tab-doc-my .search").outerHeight(true) - 125;
+				//alert($(".remark").height());
+				var colNames = ['', '', '', '', '', '', '文档名称', '状态', '共享范围', '大小', '更新时间'];
+				var colModel = [{
+					name: 'id',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.file_id;
+					}
+				}, {
+					name: 'file_download_status',
+					hidden: true
+				}, {
+					name: 'file_status',
+					hidden: true
+				}, {
+					name: '__file_info',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return escape(JSON.stringify(rowObject.file_info));
+					}
+				}, {
+					name: 'file_type',
+					hidden: true
+				}, {
+					name: 'file_title',
+					hidden: true
+				}, {
+					name: '__name',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var clickAction = "";
+							//状态
+							var status = rowObject.file_status;
+							if(status == 1 || status == 4 || status == 5) {
+								//审批未通过、未共享
+								clickAction = "openDocInfoPop('update','" + rowObject.file_id + "');";
+							}
+							if(status == 2 || status == 3) {
+								//审批中、共享中
+								clickAction = "parent.openTab('文档详情','views/documentation-detail.html?id=" + rowObject.file_id + "&status=" + status + "');";
+							}
+							return "<a href='javascript:;' onclick=\"" + clickAction + "\">" + rowObject.file_title + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'file_status_cn',
+					formatter: function(cellvalue, options, rowObject) {
+						if(rowObject.file_status == 2 || rowObject.file_status == 4) {
+							return "<a href='javascript:;' onclick=\"openApprovalRecordPop('" + rowObject.approval_session_id + "',true,function(){$(gridOfMyDoc).reloadGrid();});\">" + cellvalue + "</a>";
+						} else {
+							return cellvalue;
+						}
+					}
+				}, {
+					name: 'file_scope_cn',
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.file_scope_cn.join(",");
+					}
+				}, {
+					name: 'role_status_cn',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return $.converBytesToCN(rowObject.file_info.size);
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'file_upload_time',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return cellvalue; //$.convertToDate(cellvalue).Format("yyyy-MM-dd");
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				gridOfMyDoc = $(gridSelectorOfMyDoc).initJqGrid({
+					pager: pagerSelectorOfMyDoc,
+					storeRowDataInCache: true,
+					footerBtnContainer: "#grid-footer-container-doc-my",
+					url: DOCUMENTATIONAPIS.my,
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight
+				});
+				isFirstLoadGridOfMyDoc = false;
+			}
+			//加载我的收藏
+			function initCollectDocTab() {
+				if(!isFirstLoadGridOfCollectDoc) {
+					$(gridOfCollectDoc).reloadGrid();
+					return false;
+				}
+				//search
+				$.initSearchControls4TagMode({
+					auto: true,
+					url: DOCUMENTATIONAPIS.collect,
+					grid: gridSelectorOfCollectDoc,
+					container: ".tab-doc-collect .search",
+					keyName: "title",
+					keyPlaceholder: "输入文档标题查找",
+					onChange: function(selectTags) {},
+					groups: [{
+						name: "type",
+						text: "文档类型",
+						items: documentTypeJSON4Search
+					}]
+				});
+				//grid
+				//122 = pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".remark").outerHeight(true) - $(".tab-doc-collect .search").outerHeight(true) - 125;
+				//alert($(".remark").height());
+				var colNames = ['', '', '文档名称', '共享范围', '大小', '共享时间', '操作'];
+				var colModel = [{
+					name: 'id',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.file_id;
+					}
+				}, {
+					name: 'file_download_status',
+					hidden: true
+				}, {
+					name: '__name',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"parent.openTab('文档详情','views/documentation-detail.html?id=" + rowObject.file_id + "&status=" + rowObject.file_status + "');\">" + rowObject.file_title + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'file_scope_cn',
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.file_scope_cn.join(",");
+					}
+				}, {
+					name: 'file_size',
+					formatter: function(cellvalue, options, rowObject) {
+						return $.converBytesToCN(rowObject.file_info.size);
+					}
+				}, {
+					name: 'file_share_time',
+					sortable: true
+				}, {
+					name: '',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"openReadDetailPop('" + rowObject.file_id + "','" + rowObject.is_own + "');\" role-auth=\"saas/files/0/read_status|get\" role-auth-tip=\"你无权限查看阅读情况。\">已读" + rowObject.read_status.has_reader.length + "人 未读 " + rowObject.read_status.non_reader.length + "人</a>" +
+								" | <a href='javascript:;' onclick=\"openDownloadDetailPop('" + rowObject.file_id + "');\" role-auth=\"saas/files/0/download_status|get\" role-auth-tip=\"你无权限查看下载情况。\">已下载 " + rowObject.download_status.has_download.length + "/" + rowObject.download_status.non_download.length + " 人</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				gridOfCollectDoc = $(gridSelectorOfCollectDoc).initJqGrid({
+					pager: pagerSelectorOfCollectDoc,
+					url: DOCUMENTATIONAPIS.collect,
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight
+				});
+				isFirstLoadGridOfCollectDoc = false;
+			}
+			//加载共享的文档
+			function initShareDocTab() {
+
+				var selectDeptIdForShare;
+				var selectTagsForShare = {};
+				//加载部门文档树
+				//获取左侧部门树数据
+				loadDashedDeptTree({
+					container: ".tree-dept-menu",
+					url: DOCUMENTATIONAPIS.department,
+					showIcon: true,
+					onlyShowDept: true,
+					childDepaKey: "depas",
+					depaIdKey: "depa_id",
+					showEmps: true,
+					parentDepaIdKey: "depa_parent_id",
+					removeHeightForTree: $(".pnl-menu-box-doc-my").outerHeight(true) * 3 + $(".pnl-doc-add").outerHeight(true),
+					loadComplete: function() {
+						$(".tree-dept-menu label").click(function() {
+							selectDeptIdForShare = $(this).attr("code");
+							selectTagsForShare.from_depart = selectDeptIdForShare;
+							//重新加载表格数据
+							$(gridOfShareDoc).jqGrid('setGridParam', {
+								page: 1,
+								url: DOCUMENTATIONAPIS.share + $.toQueryString(selectTagsForShare, true)
+							}).trigger("reloadGrid", {});
+						});
+					}
+				});
+				if(!isFirstLoadGridOfShareDoc) {
+					$(gridOfShareDoc).reloadGrid();
+					return false;
+				}
+				//				$.ajaxGet(DOCUMENTATIONAPIS.department, function(response) {
+				//					if(response.code == 0) {
+				//						var deptList = response.data;
+				//						for(var i in deptList) {
+				//							var deptData = deptList[i];
+				//							deptData.depa_tree_code = deptData.depa_id;
+				//							deptData.parent_depa_tree_code = deptData.depa_parent_id;
+				//						}
+				//						var treeDom = $(".tree-dept-menu");
+				//						appendDeptTreeNode(deptList, 0, treeDom);
+				//						//click event
+				//						$(".tree-dept-menu li label").click(function(e) {
+				//
+				//							$(".tree-dept-menu li label").removeClass("active");
+				//							$(this).addClass("active");
+				//							var selectDeptData = $(this).parents("li:first").data("dept");
+				//							if(selectDeptData) {
+				//								selectDeptIdForShare = selectDeptData.depa_tree_code;
+				//								selectTagsForShare.from_depart = selectDeptIdForShare;
+				//								//重新加载表格数据
+				//								$(gridOfShareDoc).jqGrid('setGridParam', {
+				//									page: 1,
+				//									url: DOCUMENTATIONAPIS.share + $.toQueryString(selectTagsForShare, true)
+				//								}).trigger("reloadGrid", {});
+				//							}
+				//						});
+				//					} else {
+				//						$.showErrorGritter("加载文档类型失败：" + response.msg);
+				//					}
+				//				});
+				var appendDeptTreeNode = function(deptList, parentId, treeDom) {
+					for(var i in deptList) {
+						var deptData = deptList[i];
+						if(deptData.parent_depa_tree_code == parentId) {
+							var childDepts = queryChildDepts(deptList, deptData.depa_tree_code);
+							var hasChildDept = childDepts.length > 0;
+							var liDom = $("<li></li>");
+							liDom.data("dept", deptData);
+							if(hasChildDept)
+								liDom.append("<p class=\"fa fa-chevron-down\"><label code='" + deptData.depa_tree_code + "'>" + deptData.depa_name + " (" + deptData.share_file_count + ")</label></p>");
+							else
+								liDom.append("<label code='" + deptData.depa_tree_code + "'>" + deptData.depa_name + " (" + deptData.share_file_count + ")</label>");
+							if(childDepts.length > 0) {
+								appendChildDeptTreeNode(deptList, childDepts, deptData.depa_tree_code, liDom);
+							}
+							$(treeDom).append(liDom);
+						}
+					}
+				};
+				var queryChildDepts = function(deptList, parentId) {
+					var resDeptList = [];
+					for(var i in deptList) {
+						var deptData = deptList[i];
+						if(deptData.parent_depa_tree_code == parentId && deptData.share_file_count > 0) {
+							resDeptList.push(deptData);
+						}
+					}
+					return resDeptList;
+				};
+				var appendChildDeptTreeNode = function(deptList, childDepts, parentId, treeDom) {
+					var ulDom = $("<ul class='items'></ul>");
+					for(var i in childDepts) {
+						var deptData = childDepts[i];
+						if(deptData) {
+							var mchildDepts = queryChildDepts(deptList, deptData.depa_tree_code);
+							var hasChildDept = mchildDepts.length > 0;
+							var isZhiWu = deptData.depa_type == 1;
+							var liDom = $("<li dept-type='" + deptData.depa_type + "'></li>");
+							liDom.data("dept", deptData);
+							if(hasChildDept)
+								liDom.append("<p class=\"fa fa-chevron-down\"><label code='" + deptData.depa_tree_code + "'>" + deptData.depa_name + " (" + deptData.share_file_count + ")</label></p>");
+							else
+								liDom.append("<label code='" + deptData.depa_tree_code + "'>" + deptData.depa_name + " (" + deptData.share_file_count + ")</label>");
+							if(hasChildDept) {
+								appendChildDeptTreeNode(deptList, mchildDepts, deptData.depa_tree_code, liDom);
+							}
+							$(ulDom).append(liDom);
+						}
+					}
+					var deptPostLiCount = ulDom.find("li[dept-type='1']").length;
+					if(deptPostLiCount == 1) {
+						ulDom.find("li[dept-type=1] .btn-dept-move").remove();
+					} else {
+						ulDom.find("li[dept-type=1]:first .btn-dept-move-up").hide();
+						ulDom.find("li[dept-type=1]:last .btn-dept-move-down").hide();
+					}
+					$(treeDom).append(ulDom);
+				};
+				//search
+				$.initSearchControls4TagMode({
+					auto: true,
+					url: DOCUMENTATIONAPIS.share,
+					grid: gridSelectorOfShareDoc,
+					container: ".tab-doc-share .search",
+					keyName: "title",
+					keyPlaceholder: "输入文档标题查找",
+					beforeReloadGrid: function(selectTags) {
+						if(selectDeptIdForShare)
+							selectTags.from_depart = selectDeptIdForShare;
+					},
+					onChange: function(selectTags) {
+						selectTagsForShare = selectTags;
+					},
+					groups: [{
+						name: "type",
+						text: "文档类型",
+						items: documentTypeJSON4Search
+					}]
+				});
+				//grid
+				//122 = pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".remark").outerHeight(true) - $(".tab-doc-share .search").outerHeight(true) - 125 - 20;
+				//alert($(".remark").height());
+				var colNames = ['', '', '文档名称', '共享范围', '大小', '共享时间', '操作'];
+				var colModel = [{
+					name: 'id',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.file_id;
+					}
+				}, {
+					name: 'file_download_status',
+					hidden: true
+				}, {
+					name: '__name',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							//
+							return "<a href='javascript:;' onclick=\"parent.openTab('文档详情','views/documentation-detail.html?id=" + rowObject.file_id + "&status=" + rowObject.file_status + "');\">" + rowObject.file_title + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'file_title',
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.file_scope_cn.join(",");
+					}
+				}, {
+					name: 'file_size',
+					formatter: function(cellvalue, options, rowObject) {
+						return $.converBytesToCN(rowObject.file_info.size);
+					}
+				}, {
+					name: 'file_share_time',
+					sortable: true
+				}, {
+					name: '',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"openReadDetailPop('" + rowObject.file_id + "','" + rowObject.is_own + "');\" role-auth=\"saas/files/0/read_status|get\" role-auth-tip=\"你无权限查看阅读情况。\">已读" + rowObject.read_status.has_reader.length + "人 未读 " + rowObject.read_status.non_reader.length + "人</a>" +
+								" | <a href='javascript:;' onclick=\"openDownloadDetailPop('" + rowObject.file_id + "');\" role-auth=\"saas/files/0/download_status|get\" role-auth-tip=\"你无权限查看下载情况。\">已下载 " + rowObject.download_status.has_download.length + "/" + (rowObject.download_status.non_download.length + rowObject.download_status.has_download.length) + " 人</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				gridOfShareDoc = $(gridSelectorOfShareDoc).initJqGrid({
+					pager: pagerSelectorOfShareDoc,
+					footerBtnContainer: "#grid-footer-container-doc-share",
+					url: DOCUMENTATIONAPIS.share,
+					colNames: colNames,
+					colModel: colModel,
+					storeRowDataInCache: true,
+					height: gridHeight
+				});
+				isFirstLoadGridOfShareDoc = false;
+			}
+			$(document).ready(function() {
+				//------------消息队列相关-----------------------
+
+				var subscriber = parent.HHMQ.createSubscriber('文档中心', 'documentation,welcome', function(flag, msgData) {
+					if(flag == "welcome") {
+						$.showSuccessGritter(JSON.stringify(msgData), {
+							clear: false
+						});
+					}
+					$(".active").click();
+					$(gridOfShareDoc).reloadGrid();
+					$(gridOfMyDoc).reloadGrid();
+					$(gridOfCollectDoc).reloadGrid();
+				});
+				//页面关闭事件
+				context.onPageClose = function() {
+					subscriber.dispose();
+				};
+				//------------消息队列相关 end -------------------
+				$(".main-wrap").width($(document).width() - $(".left-menu").outerWidth(true) - 25);
+				//token
+				$.token();
+				//left group link
+				$(".pnl-menu-box a").click(function() {
+					$(".pnl-menu-box a").removeClass("active");
+					$(this).addClass("active");
+					var index = $(this).attr("index");
+					$(".tab-doc").addClass("hide");
+					$(".tab-doc").eq(index).removeClass("hide");
+					if(index == 0) {
+						initMyDocTab();
+						$(".tree-dept-menu").hide();
+					} else if(index == 1) {
+						initCollectDocTab();
+						$(".tree-dept-menu").hide();
+					} else if(index == 2) {
+						initShareDocTab();
+						$(".tree-dept-menu").show();
+					}
+				});
+				//my doc
+				initMyDocTab();
+			});
+			//添加、修改
+			function openDocInfoPop(action, id) {
+				if(action == "update" && (!$(gridOfMyDoc).isSelectedRowForjqGrid() && !id)) {
+					$.showErrorGritter("请先选择要编辑的文档。");
+					return false;
+				}
+				if(action == "update" && $(gridOfMyDoc).isSelectedMultipleRowForjqGrid() && !id) {
+					$.showErrorGritter("一次只能编辑一个文档，请重新选择。");
+					return false;
+				}
+				var rowData = {};
+				if(action == "update") {
+					var rowIndex = $(gridOfMyDoc).getJqGridRowIndexByField("id", id) || $(gridOfMyDoc).jqGrid('getGridParam', 'selrow');
+					if(!rowIndex) {
+						return false;
+					}
+					rowData = $(gridOfMyDoc).jqGrid('getRowData', rowIndex);
+					if(rowData.file_status == 3 || rowData.file_status == 2) {
+						//共享中、审批中
+						$.showErrorGritter("共享中的文档不能编辑。");
+						return false;
+					}
+					setTimeout(function() {
+						//已上传文件
+						var fileData = JSON.parse(unescape(rowData.__file_info));
+						$(formContainer + " .form-group-upload-word .upload .label-file-uploaded").html("<span data-file-id='{P}'>{N} <img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span>".replace("{N}", fileData.name).replace("{P}", fileData.id));
+					}, 200);
+				}
+
+				var actionText = (action == "add" ? "上传" : "编辑");
+				var modalId = $.modal().show(actionText + "文档", ".pnl-doc-info",
+					function(modal) {
+						//to save
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						$("#" + modalId + " .form-control-file-name").trigger("change");
+						var docData = docController.getJSON();
+						var uploadFilePath = $(".form-group-upload-word .upload .label-file-uploaded span[data-file-id]").data("file-id");
+						if(!uploadFilePath) {
+							$.showErrorGritter("请先上传文档后再保存。");
+							return false;
+						}
+						docData.file_dfs_reference = uploadFilePath;
+
+						$.ajaxByAction(action, DOCUMENTATIONAPIS.base + (action == "update" ? ("/" + docData.id) : ""), docData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "文档成功。");
+									modal.modal('hide');
+									$(gridOfMyDoc).reloadGrid();
+								} else {
+									$.showErrorGritter("保存文档信息失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-doc-info";
+				var docController = new Controller(formContainer);
+				docController.set(rowData);
+				var tmpUid = $.uuid();
+				$(formContainer + " .btn-upload-word").attr("id", tmpUid);
+				$("#" + tmpUid).initUploader({
+					url: SAASAPIS.BS.upload.document,
+					upContainer: formContainer + " .form-group-upload-word .upload",
+					FileUploaded: function(up, file, response) {
+						var resp = JSON.parse(response.response);
+						if(resp.code == 0) {
+							//success
+							$(formContainer + " .form-group-upload-word .upload .label-file-uploaded").html("<span data-file-id='{P}'>{N} <img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span>".replace("{N}", file.name).replace("{P}", resp.data.id));
+							$(formContainer + " .form-control-file-name").val() || $(formContainer + " .form-control-file-name").val(resp.data.name.replace("." + resp.data.ext, ""));
+						} else {
+							$.showErrorGritter("上传文档出错：" + resp.msg);
+						}
+					}
+				});
+			}
+			//共享
+			function openSharePop() {
+				if(!$(gridOfMyDoc).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要共享的文档。");
+					return false;
+				}
+				if($(gridOfMyDoc).isSelectedMultipleRowForjqGrid()) {
+					$.showErrorGritter("一次只能共享一个文档，请重新选择。");
+					return false;
+				}
+				var rowData = $(gridOfMyDoc).jqGrid('getRowData', gridOfMyDoc.jqGrid('getGridParam', 'selrow'));
+				if(rowData.file_status == 2) {
+					//审批中
+					$.showErrorGritter("此文档已正在审批，不能共享。");
+					return false;
+				}
+				if(rowData.file_status == 3) {
+					//共享中
+					$.showErrorGritter("此文档已共享，不能再次共享。");
+					return false;
+				}
+
+				var modalId = $.modal().show("共享文档", ".pnl-share",
+					function(modal) {
+						//to save
+						var selectEmployeeIds = [];
+						$(formContainer + " .form-control-employee-select span[data-employee-id]").each(function() {
+							selectEmployeeIds.push($(this).data("employee-id"));
+						});
+						var selectDeptIds = [];
+						$(formContainer + " .form-control-dept-select span[data-dept-id]").each(function() {
+							selectDeptIds.push($(this).data("dept-id"));
+						});
+						if(selectDeptIds.length == 0 && selectEmployeeIds.length == 0) {
+							$.showErrorGritter("请选择共享的部门或员工。");
+							return false;
+						}
+
+						$.showApprovalPostPop({
+							routine: "documentShare",
+							successCallback: function(apvData, apvModal) {
+								var putData = {
+									depart: selectDeptIds,
+									employee: selectEmployeeIds,
+									file_ids: $(gridOfMyDoc).getSelectRowIdsForjqGrid("id"),
+
+								}
+								if(apvData.needApv) {
+									putData.plan_id = apvData.planId,
+										putData.diy_step_data = apvData.steps
+								}
+								$.ajaxPut(DOCUMENTATIONAPIS.sharing, putData,
+									function(response) {
+										if(response.code == 0) {
+											//success
+											$.showSuccessGritter(apvData.needApv ? "共享审批已提交，请等待审批结果。" : "共享成功！");
+											modal.modal('hide');
+											$(gridOfMyDoc).reloadGrid();
+											if(!apvData.needApv)
+												initShareDocTab();
+											apvModal && apvModal.modal("hide");
+											//apvModal.modal("hide");
+										} else {
+											$.showErrorGritter("共享文档失败：" + response.msg);
+										}
+									});
+							}
+						});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-share";
+				var docController = new Controller(formContainer);
+				var selectDepts;
+				$(formContainer + " .btn-dept-select").click(function() {
+					var options = {
+						url: SAASAPIS.BS.company.departments.replace("{id}", $.uuid()),
+						leftTitle: "选择适用部门：",
+						isNeedRightPanel: false, //是否需要右边的模块
+						defaultCheckedIds: getDefualtCheckedIdsArr($(formContainer+" .form-control-dept-select .item"),"data-dept-id"), //默认选中的
+						linkageType: 1, //联动类型   0统计
+						//modalId: modalIdOfDeptId, //打开的modal的id
+						clickCallback: function(data, modalId) { //为关闭modal时需要的数据赋值
+							selectDepts = data;
+							console.log(data);
+							var tempHtml = "<span class=\"item\" data-dept-id=\"{ID}\">{N} <img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span> ";
+							var selectDeptDom = $(formContainer + " .form-control-dept-select");
+							//selectEmployeeDom.empty();
+							for(var i in selectDepts) {
+								var deptData = selectDepts[i];
+								if(selectDeptDom.find("span[data-dept-id='" + deptData.dept_id + "']").length > 0) {
+									continue;
+								}
+								selectDeptDom.append(tempHtml.replace("{N}", deptData.dept_name).replace("{ID}", deptData.dept_id));
+							}
+							selectDeptDom.find(".item").unbind("mouseover").mouseover(function() {
+								transImgSrc($(this).find("img"));
+							}).unbind("mouseout").mouseout(function() {
+								transImgSrc($(this).find("img"));
+							});
+							$("#" + modalId).modal("hide");
+						}
+					}
+					initDeptTree(options); //主函数
+				});
+				//选择员工
+				$(formContainer + " .btn-employee-select").click(function() {
+					$.showEmployeeSelectPop({
+						title: "选择共享范围",
+						subTitle: "请以员工为单位选择共享范围：",
+						isShowMe: true,
+						isIncludeSelf: true,
+						selectedEmployeeIds:getDefualtCheckedIdsArr($(formContainer + " .form-control-employee-select .item"),"data-employee-id"),
+						okCallback: function(selectEmployees) {
+							var tempHtml = "<span class=\"item\" data-employee-id=\"{ID}\">{N} <img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span> ";
+							var selectEmployeeDom = $(formContainer + " .form-control-employee-select");
+							//selectEmployeeDom.empty();
+							selectEmployeeDom.data("select", selectEmployees);
+							for(var i in selectEmployees) {
+								var empData = selectEmployees[i];
+								if(selectEmployeeDom.find("span[data-employee-id='" + empData.employee_id + "']").length > 0) {
+									continue;
+								}
+								selectEmployeeDom.append(tempHtml.replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+							}
+							selectEmployeeDom.find(".item").unbind("mouseover").mouseover(function() {
+								transImgSrc($(this).find("img"));
+							}).unbind("mouseout").mouseout(function() {
+								transImgSrc($(this).find("img"));
+							});
+						}
+					});
+				});
+			}
+			//取消共享
+			function openCancelSharePop() {
+				if(!$(gridOfMyDoc).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要取消共享的文档。");
+					return false;
+				}
+				var selectStatus = $(gridOfMyDoc).getSelectRowIdsForjqGrid("file_status");
+				var selectNames = $(gridOfMyDoc).getSelectRowIdsForjqGrid("id");
+				if(selectStatus.indexOf("1") >= 0 || selectStatus.indexOf("2") >= 0 || selectStatus.indexOf("4") >= 0) {
+					$.showErrorGritter("只有共享中的文档才能取消共享，请重新选择。");
+					return false;
+				}
+
+				$.modal().confirm("你将取消共享选择的文档，确认取消共享吗？", function() {
+					var selectRowIds = $(gridOfMyDoc).getSelectRowIdsForjqGrid("id");
+					$.ajaxDelete(DOCUMENTATIONAPIS.sharing, {
+							file_ids: selectRowIds
+						},
+						function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter("取消共享成功。");
+								$(gridOfMyDoc).reloadGrid();
+								initShareDocTab();
+							} else {
+								$.showErrorGritter("取消共享失败：" + response.msg);
+							}
+						});
+				});
+			}
+			//删除
+			function openDeleteDocPop() {
+				if(!$(gridOfMyDoc).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要删除的文档。");
+					return false;
+				}
+				var selectStatus = $(gridOfMyDoc).getSelectRowIdsForjqGrid("file_status");
+				var selectNames = $(gridOfMyDoc).getSelectRowIdsForjqGrid("id");
+				if(selectStatus.indexOf("2") >= 0) {
+					$.showErrorGritter("选择的文档包含审批中的文档，<br>审批中的文档不能删除，请重新选择。");
+					return false;
+				}
+
+				if(selectStatus.indexOf("3") >= 0) {
+					$.showErrorGritter("选择的文档包含共享中的文档，<br>共享中的文档不能删除，请重新选择。");
+					return false;
+				}
+
+				$.modal().confirm("你将删除选择的文档，删除后不能恢复，确认删除吗？", function() {
+					var selRowsIndex = $(gridOfMyDoc).jqGrid('getGridParam', 'selarrrow');
+					if(selRowsIndex.length > 0) {
+						var selectRowIds = $(gridOfMyDoc).getSelectRowIdsForjqGrid("id");
+						$.ajaxDelete(DOCUMENTATIONAPIS.base, {
+								file_ids: selectRowIds
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("删除文档成功。");
+									//refresh data
+									var len = selRowsIndex.length;
+									for(var i = 0; i < len; i++) {
+										$(gridOfMyDoc).jqGrid("delRowData", $(gridOfMyDoc).jqGrid('getGridParam', 'selrow'));
+									}
+								} else if(response.code > 0 && response.data.used_roles) {
+									var cannotDelModels = response.data.used_roles;
+									var canotDelNames = [];
+									for(var i in cannotDelModels) {
+										canotDelNames.push(cannotDelModels[i].role_name);
+									}
+									//$.showErrorGritter("角色 [" + canotDelNames.join(',') + "] 已有账户使用，删除失败，本次删除操作取消。");
+								} else {
+									$.showErrorGritter("删除文档失败：" + response.msg);
+								}
+							});
+					}
+				});
+			}
+			//下载
+			function openDownloadDocPop(isMyDocTab) {
+				var tmpGridObj = isMyDocTab ? gridOfMyDoc : gridOfShareDoc;
+				if(!$(tmpGridObj).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要下载的文档。");
+					return false;
+				}
+				if($(tmpGridObj).isSelectedMultipleRowForjqGrid()) {
+					$.showErrorGritter("一次只能下载一个文档，请重新选择。");
+					return false;
+				}
+				//var rowData = $(tmpGridObj).jqGrid('getRowData', $(tmpGridObj).jqGrid('getGridParam', 'selrow'));
+				var rowData = $(tmpGridObj).getRowData4JqGrid();
+				console.log(rowData)
+				var downloadUrl = DOCUMENTATIONAPIS.download + rowData.file_id;
+				var getDowninfo = function() {
+					$.ajaxGet(downloadUrl, function(response) {
+						if(response.code == 0) {
+							//success
+							var status = response.data.download_status;
+							if(status == 0) {
+								$.modal().confirm("下载文档需要审核，审核通过后才能下载，确认提交下载申请吗？", function() {
+									$.showApprovalPostPop({
+										routine: "documentDownload",
+										successCallback: function(apvData, apvModal) {
+											$.ajaxPost(DOCUMENTATIONAPIS.approval.replace("{id}", rowData.file_id), {
+													plan_id: apvData.planId,
+													diy_step_data: apvData.steps
+												},
+												function(response) {
+													if(response.code == 0) {
+														//success
+														$.showSuccessGritter("下载申请已提交，请等待审批结果。");
+														//apvModal.modal("hide");
+														apvModal && apvModal.modal("hide");
+													} else {
+														$.showErrorGritter("下载文档失败：" + response.msg);
+													}
+												});
+										}
+									});
+								});
+								return false;
+							} else if(status == 1) {
+								$.showErrorGritter("该文档你已提交下载申请，请等待审批结果。");
+								//打开审批记录
+								//....
+								return false;
+							} else if(status == 2) {
+								$.downloadFile(downloadUrl);
+							}
+						} else {
+							$.showErrorGritter("下载文档失败：" + response.msg);
+						}
+					});
+				};
+				if(rowData.file_download_status == 2 || !rowData.download_need_approval) {
+					$.downloadFile(downloadUrl);
+				} else {
+					getDowninfo();
+				}
+			}
+			//阅读详情
+			function openReadDetailPop(documentId, isOwn) {
+				var modalId = $.modal({
+					showFooter: false
+				}).show("阅读状态", ".pnl-doc-readdetail");
+				//model pop id
+				var formContainer = "#" + modalId + " .model-doc-readdetail";
+				//加载阅读详情
+				var employeeItemHtml = "<li class=\"item-employee\" data-employee-id=\"{ID}\">" +
+					"<img class=\"head\" src=\"{H}\">" +
+					"<p title=\"{N}\" class=\"name css-overhidden\">{N}</p>" +
+					"</li>";
+				$.ajaxGet(DOCUMENTATIONAPIS.readInfo.replace("{id}", documentId), function(response) {
+					if(response.code == 0) {
+						//success
+						//未读
+						$(formContainer + " .label-employee-unread").text(response.data.non_reader.length);
+						for(var i in response.data.non_reader) {
+							var empData = response.data.non_reader[i];
+							empData.employee_avatar = empData.employee_avatar;
+							$(formContainer + " .list-employee-unread").append(employeeItemHtml.replace("{H}", empData.employee_avatar).replace("{N}", empData.employee_name).replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+						}
+						//已读
+						$(formContainer + " .label-employee-readed").text(response.data.has_reader.length);
+						for(var i in response.data.has_reader) {
+							var empData = response.data.has_reader[i];
+							empData.employee_avatar = empData.employee_avatar;
+							$(formContainer + " .list-employee-readed").append(employeeItemHtml.replace("{H}", empData.employee_avatar).replace("{N}", empData.employee_name).replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+						}
+						if(isOwn == "false") {
+							$(formContainer + " .label-remind-read").remove();
+							return false;
+						}
+						//选择事件
+						$(formContainer + " .list-employee-unread .item-employee").click(function() {
+							$(this).toggleClass("active");
+						});
+					} else {
+						$.showErrorGritter("加载公告阅读详情失败：" + response.msg);
+					}
+				});
+				if(isOwn == "false") {
+					$(formContainer + " .label-remind-read").remove();
+					return false;
+				}
+				//提醒
+				$(formContainer + " .btn-remind-read").click(function() {
+					var selectUnreadEmployees = [];
+					$(formContainer + " .list-employee-unread .item-employee.active").each(function() {
+						selectUnreadEmployees.push($(this).data("employee-id"));
+					});
+					if(selectUnreadEmployees.length == 0) {
+						$.showErrorGritter("请先选择要提醒阅读的人员。");
+						return false;
+					}
+					var infoData = {};
+					infoData.business_type = 30;
+					infoData.data_id = documentId;
+					infoData.employee_id = selectUnreadEmployees.join(',');
+					infoData.message = {};
+					infoData.message.msg_content = "文档提醒阅读";
+					infoData.message.msg_type = 5;
+					infoData.business_type_cn="M一下：文档";
+					sendMtaMessage(infoData,modalId);
+				});
+				$(formContainer + " .form-control-unread-select").change(function() {
+					var tmpChecked = $(this).is(":checked");
+					var employeeDoms = $(formContainer + " .list-employee-unread .item-employee");
+					if(tmpChecked) {
+						employeeDoms.addClass("active");
+					} else {
+						employeeDoms.removeClass("active");
+					}
+				});
+			}
+			//预览
+			function openDocDtail() {
+				var rowData = getSelectedDatas(gridOfMyDoc);
+				if(rowData.length < 1) {
+					$.showErrorGritter("请先选择需要预览的文档！");
+					return false;
+				}
+				if(rowData[0].file_status == 3) {
+					$.showErrorGritter("当前文档状态不能预览，您可以点击文档标题查看详情！");
+					return false;
+				}
+				parent.openTab('文档详情', "views/documentation-detail.html?id=" + rowData[0].file_id + "&status=" + rowData[0].file_status);
+
+			}
+			//下载详情
+			function openDownloadDetailPop(documentId) {
+				var modalId = $.modal({
+					showFooter: false
+				}).show("下载情况", ".pnl-doc-download-detail");
+				//model pop id
+				var formContainer = "#" + modalId + " .model-doc-download-detail";
+				//加载下载详情
+				var employeeItemHtml = "<li class=\"item-employee\" data-employee-id=\"{ID}\">" +
+					"<img class=\"head\" src=\"{H}\">" +
+					"<p title=\"{N}\" class=\"name css-overhidden\">{N}</p>" +
+					"</li>";
+				$.ajaxGet(DOCUMENTATIONAPIS.downloadInfo.replace("{id}", documentId), function(response) {
+					if(response.code == 0) {
+						//success
+						$(formContainer + " .label-count-all-download").text(response.data.non_download.length + response.data.has_download.length);
+						$(formContainer + " .label-count-download").text(response.data.has_download.length);
+
+						if(response.data.has_download.length > 0) {
+							$(formContainer + " .list-employee-download").empty();
+
+							for(var i in response.data.has_download) {
+								var empData = response.data.has_download[i];
+								empData.employee_avatar = empData.employee_avatar;
+								$(formContainer + " .list-employee-download").append(employeeItemHtml.replace("{H}", empData.employee_avatar).replace("{N}", empData.employee_name).replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+							}
+						}
+					} else {
+						$.showErrorGritter("加载公告下载详情失败：" + response.msg);
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

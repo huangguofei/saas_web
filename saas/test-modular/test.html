@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>页面模块化</title>
+		<link rel="stylesheet" href="//www.saas.com/resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="//www.saas.com/resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="//www.saas.com/resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="//www.saas.com/resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="//www.saas.com/resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="//www.saas.com/resources/css/main-page.css" />
+		<style>
+			.ifr-main {}
+			
+			.ifr-main .ifr-menu {
+				float: left;
+				width: 10%;
+				background-color: #eee;
+			}
+			
+			.ifr-main .ifr-menu li {
+				padding: 10px;
+			}
+			
+			.ifr-main .ifr-content {
+				float: right;
+				width: 90%;
+				background-color: #ddd;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="ifr-main">
+			<div class="ifr-menu">
+				<ul>
+					<li>
+						<a href="javascript:;" class="link-m1">模块1</a>
+					</li>
+					<li>
+						<a href="javascript:;" class="link-m2">模块2</a>
+					</li>
+				</ul>
+			</div>
+			<div class="ifr-content">
+				我是内容区域
+			</div>
+		</div>
+		<script src="//cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script>
+			$(document).ready(function() {
+				$(".link-m1").click(function() {
+					loadPage(".ifr-content", "control1.html");
+				});
+				$(".link-m2").click(function() {
+					loadPage(".ifr-content", "http://www.saas.com/views/user.html");
+				});
+			});
+
+			function loadPage(container, url) {
+				$(container).load(url, function() {
+
+				});
+			}
+		</script>
+	</body>
+
+</html>

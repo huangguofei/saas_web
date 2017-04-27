@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>工作计划、总结提交情况</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			
+			.table-bordered thead tr td {
+				border-bottom-width: 1px;
+			}
+			
+			.grid-module,
+			.table-container {
+				table-layout: fixed;
+				margin-bottom: 0;
+				text-align: left;
+			}
+			
+			.grid-module thead tr:first-child {
+				background: #66b5ed;
+				color: #fff;
+				height: 50px;
+				font-size: 18px;
+				text-align: center;
+			}
+			
+			.grid-module thead tr:last-child {
+				background: #f8f8f8;
+				color: #666;
+				height: 40px;
+				font-weight: bold;
+			}
+			
+			.table-container {
+				width: 100%;
+				border-top: 0;
+				border-left: 0;
+				border-right: 0;
+				overflow: auto;
+			}
+			
+			.table-container tr td:first-child {
+				border-left: 0;
+			}
+			
+			.table-container tr td:last-child {
+				border-right: 0;
+			}
+			
+			.table-container tr:first-child td {
+				border-top: 0;
+			}
+			
+			.table-container tr:last-child {
+				border-bottom: 1px solid #ddd;
+			}
+			
+			.table-box {
+				overflow: auto;
+				border-bottom: 1px solid #ddd;
+			}
+			
+			.bottom-btn {
+				padding-right: 50px;
+				padding-top: 15px;
+				height: 65px;
+				background: #fafafa;
+				border: 1px solid #DDDDDD;
+			}
+			
+			.tab-sp {
+				color: #999999;
+				font-size: 12px;
+			}
+			
+			.tab-mark {
+				font-size: 12px;
+				color: red;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container workplan-summary-details">
+			<div class="content">
+				<table class="table text-align-center table-bordered grid-module" style="border-bottom: 0;">
+					<!--<caption>标题</caption>-->
+					<thead>
+						<tr>
+							<td colspan="6">计划提交情况</td>
+							<td colspan="6">总结提交情况</td>
+						</tr>
+						<tr>
+							<td colspan="3">提交超时</td>
+							<td colspan="3">按时提交</td>
+							<td colspan="2">未提交</td>
+							<td colspan="2">未按时提交</td>
+							<td colspan="2">按时提交</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td colspan="12" style="padding: 0; border-bottom: 0;">
+								<div class="table-box">
+									<table class="table table-hover table-bordered table-container">
+
+									</table>
+								</div>
+
+							</td>
+						</tr>
+					</tbody>
+
+				</table>
+				<div class="bottom-btn"><button class="btn btn-sm btn-danger pull-right" onclick="loadTableData(1)"><i class="fa fa-download" aria-hidden="true"></i> 导出</bottom></div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript" src="../resources/js/main.min.js"></script>
+	<script type="text/javascript">
+		var loadUrl = BSAPIURL + "/lower_employee/week_schedules/statistics";
+		$(function() {
+			loadTableData();
+		});
+		$(".table-box").css("height", ($(window).height() - 180) + "px");
+
+		function loadTableData(isExport) {
+			var url = loadUrl + "?" + loadUrlData();
+			if(isExport == 1) {
+				$.downloadFile(url + "&is_export=" + isExport);
+				return true;
+			}
+			$.showLoadingPop("正在加载数据。。。");
+			$.ajaxGet(url, function(resp) {
+				if(resp.code == 0) {
+					showTable(resp.data);
+				} else {
+					$.showErrorGritter("获取提交情况失败：" + resp.msg);
+				}
+			});
+		}
+
+		function showTable(data) {
+			var noPlanLength = data.schedule.submit_on_time.length; //计划未提交
+			var planLength = data.schedule.submit_late.length; //计划提交
+			var noSumLength = data.report.no_submit.length; //总结未提交
+			var noTimeSumLength = data.report.submit_late.length; //总结超时
+			var sumLength = data.report.submit_on_time.length; //总结提交
+
+			var lengths = [noPlanLength, planLength, noSumLength, noTimeSumLength, sumLength];
+			console.log(lengths)
+			var max = lengths.max(); //最长
+			console.log(max)
+			var str = "<tr><td colspan=3>{NOPLANNAME}</td><td colspan=3>{PLANNAME}</td><td colspan=2>{NOSUMNAME}</td><td colspan=2>{NOTIMESUMNAME}</td><td colspan=2>{SUMNAME}</td></tr>"
+			if(data) {
+				for(var i = 0; i < max; i++) {
+					var noPlanStr = loadString(data.schedule.submit_late[i]);
+					var PlanStr = loadString(data.schedule.submit_on_time[i]);
+					var noSumStr = loadString(data.report.no_submit[i]);
+					var noTimeSumStr = loadString(data.report.submit_late[i],true);
+					var SumStr = loadString(data.report.submit_on_time[i]);
+					$(".table-container").append(str.replace("{NOPLANNAME}", noPlanStr).replace("{PLANNAME}", PlanStr)
+						.replace("{NOSUMNAME}", noSumStr).replace("{NOTIMESUMNAME}", noTimeSumStr).replace("{SUMNAME}", SumStr));
+				}
+			}
+			$.hideLoadingPop();
+		}
+
+		function loadString(data,isShowTime) {
+			if(data) {
+				var submitTimeStr = (isShowTime&&data.submit_time) ? "<br><span class=\"tab-mark\">" + data.submit_time + "</span>" : "";
+				return data.employee.employee_name + "<span class=\"tab-sp\">（" + data.employee.depa_name + "）</span>" + "  " + submitTimeStr;
+			} else {
+				return "";
+			}
+		}
+
+		function loadUrlData() {
+			var urlData = $.getQueryObject();
+			delete urlData.schedule_status;
+			delete urlData.report_status;
+			return $.toQueryString(urlData);
+		}
+		Array.prototype.max = function() {
+			return Math.max.apply({}, this);
+		}
+	</script>
+
+</html>

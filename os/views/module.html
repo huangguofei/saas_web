@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>运营模块管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+	</head>
+
+	<body>
+		<div class="page-container">
+			<div class="remark">
+				<i class="fa fa-list-ol fa-2x"></i><span>*运营端系统模块管理，可以添加、编辑、删除模块，停/启用模块以及调整模块顺序</span>
+			</div>
+			<div class="content">
+				<div class="left-menu">
+					<div class="treeview">
+						<p>正在加载数据...</p>
+					</div>
+				</div>
+				<div class="main-wrap">
+					<table id="grid-table" class="grid-module">
+					</table>
+					<div id="grid-pager">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-info hide">
+			<form class="form-horizontal model-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">模块名称</label>
+					<input type="text" class="form-control" placeholder="模块名称" bind="name" nulltip="模块名称">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">上级模块</label>
+					<input type="text" class="form-control" bind="pname" disabled="disabled">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag1">图标</label>
+					<span class="form-control module-icon">
+						<a href="javascript:;" icon-value="fa-clock-o"><i class="fa fa-clock-o fa-2x"></i></a>
+						<a href="javascript:;" icon-value="fa-bell-o"><i class="fa fa-bell-o fa-2x"></i></a>
+						<a href="javascript:;" icon-value="fa-calendar"><i class="fa fa-calendar fa-2x"></i></a>
+						<a href="javascript:;" icon-value="fa-cart-plus"><i class="fa fa-cart-plus fa-2x"></i></a>
+						<a href="javascript:;" icon-value="fa-cloud"><i class="fa fa-cloud fa-2x"></i></a>
+						<a href="javascript:;" icon-value="fa-desktop"><i class="fa fa-desktop fa-2x"></i></a>
+						<a href="javascript:;" icon-value="fa-envelope-o"><i class="fa fa-envelope-o fa-2x"></i></a>
+						<a href="javascript:;" icon-value="fa-film"><i class="fa fa-film fa-2x"></i></a>
+						<a href="javascript:;" icon-value="fa-heartbeat"><i class="fa fa-heartbeat fa-2x"></i></a>
+						<a href="javascript:;" icon-value="fa-line-chart"><i class="fa fa-line-chart fa-2x"></i></a>
+						<!--<a href="javascript:;" id="linkUploadIcon">上传图标</a>-->
+						<input type="text" class="input-icon" placeholder="自定义：输入图标地址" style=" padding: 3px; margin-top: 5px; width: 100%;" bind="icon" />
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">URL地址</label>
+					<input type="text" class="form-control" placeholder="链接地址" bind="url" nulltip="URL地址" value="#">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag1">功能描述</label>
+					<textarea class="form-control" placeholder="功能描述" bind="remark"></textarea>
+				</div>
+				<hr>
+				<div class="form-group form-inline">
+					<label class="input-flag1">API地址1</label>
+					<span class="form-control method method0">
+						<input type="text" placeholder="API地址" bind="api0">
+					<a href="javascript:;" v="get">GET</a>
+					<a href="javascript:;" v="post">POST</a>
+					<a href="javascript:;" v="put">PUT</a>
+					<a href="javascript:;" v="patch">PATCH</a>
+					<a href="javascript:;" v="delete">DELETE</a>
+					<input type="text" class="input-method hide" bind="methods0" />
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag1">API地址2</label>
+					<span class="form-control method method1">
+						<input type="text" placeholder="API地址" bind="api1">
+					<a href="javascript:;" v="get">GET</a>
+					<a href="javascript:;" v="post">POST</a>
+					<a href="javascript:;" v="put">PUT</a>
+					<a href="javascript:;" v="patch">PATCH</a>
+					<a href="javascript:;" v="delete">DELETE</a>
+					<input type="text" class="input-method hide" bind="methods1" />
+					</span>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-sort hide">
+			<form class="form-horizontal model-sort">
+				<div class="dd">
+					<ol class="dd-list nestable-ol">
+
+					</ol>
+				</div>
+			</form>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info" onclick="openModelInfo('add');" role-auth="os/modules|post"><i class="fa fa-plus"></i> 添加模块</a>
+			<a class="btn btn-sm btn-info" onclick="openSortInfo();" role-auth="os/modules/sort|patch"><i class="fa fa-sort-amount-asc"></i> 调整顺序</a>
+			<a class="btn btn-sm btn-danger" onclick="openModelInfo('update');" show-on="singleselect" role-auth="os/modules/0|put"><i class="fa fa-edit"></i> 编辑</a>
+			<!--<a class="btn btn-sm btn-danger" onclick="sortModule(-1);" show-on="singleselect" role-auth="os/modules/0|patch"><i class="fa fa-arrow-up"></i> 上移</a>
+			<a class="btn btn-sm btn-danger" onclick="sortModule(1);" show-on="singleselect" role-auth="os/modules/0|patch"><i class="fa fa-arrow-down"></i> 下移</a>-->
+			<a class="btn btn-sm btn-danger" show-on="multiselect" onclick="setDisable(1);" role-auth="os/modules|patch"><i class="fa fa-unlock"></i> 启用</a>
+			<a class="btn btn-sm btn-danger" show-on="multiselect" onclick="setDisable(2);" role-auth="os/modules|patch"><i class="fa fa-lock"></i> 停用</a>
+			<a class="btn btn-sm btn-danger" show-on="multiselect" onclick="deleteModels();" role-auth="os/modules|delete"><i class="fa fa-trash"></i> 删除</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.nestable.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			var grid_selector = "#grid-table";
+			var pager_selector = "#grid-pager";
+			var moduleTree;
+			var modulesJSON = [];
+			var selectedNodeId = "0",
+				selectedNodeName = "运营系统";
+			$(document).ready(function() {
+				//token
+				$.token();
+				//init module data
+				$.ajaxGet(OSAPIURL + "/modules?isall=true&sidx=sort&sort=desc", function(response) {
+					if(response.code == 0) {
+						modulesJSON = response.data.rows;
+						//srot
+						sortModuleJSON();
+						//init tree
+						initTree(0);
+						//first
+						initModuleGrid(0);
+					}
+				});
+				$(".left-menu").css("top", ($(".remark").height() + 41) + "px");
+				//grid
+				//133 = remark 21(padding+border) + pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".remark").height() - 143;
+				//alert($(".remark").height());
+				var colNames = ['', '', '', '名称', '图标', '地址', '功能描述', '状态', '', '', ''];
+				var colModel = [{
+					name: 'id',
+					index: 'id',
+					hidden: true
+				}, {
+					name: 'pid',
+					index: 'pid',
+					hidden: true
+				}, {
+					name: 'name',
+					index: 'name',
+					hidden: true
+				}, {
+					name: '__name',
+					index: '__name',
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"openModelInfo('update'," + rowObject.id + ");\" role-auth=\"os/modules/0|put\" role-auth-tip=\"你无权限修改模块信息。\">" + rowObject.name + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: '__icon',
+					index: '__icon',
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<span class='fa " + rowObject.icon + " fa-2x'></span>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'url',
+					index: 'url',
+					sortable: true
+				}, {
+					name: 'remark',
+					index: 'remark',
+					sortable: true
+				}, {
+					name: 'status_name',
+					index: 'status_name',
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return rowObject.status == 2 ? "<span class='fa fa-lock'><span> 停用" : "启用";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'sort',
+					index: 'sort',
+					hidden: true
+				}, {
+					name: 'icon',
+					index: 'icon',
+					hidden: true
+				}, {
+					name: '__uris',
+					index: '__uris',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var uris = [];
+							for(var i in rowObject.uris) {
+								uris.push(rowObject.uris[i].api + "|" + rowObject.uris[i].methods);
+							}
+							return uris;
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				grid = $(grid_selector).initJqGrid({
+					showPager: false,
+					datatype: "local",
+					grid_selector: grid_selector,
+					pager: pager_selector,
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight
+				});
+				//grid = $(grid_selector).initJqGrid4Local(grid_selector, pager_selector, colNames, colModel, gridHeight);
+			});
+			//add and update
+			function openModelInfo(action, id) {
+				var actionText = (action == "add" ? "添加" : "修改");
+				var modalId = $.modal().show(actionText + "模块", ".pnl-info",
+					function(modal) {
+						//to save
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var moduleData = moduleController.getJSON();
+						//						if (!moduleData.icon) {
+						//							$.showErrorGritter("模块图标未录入，请录入。");
+						//							return false;
+						//						}
+						moduleData.uris = [];
+						var api0 = $(formContainer).find(".method0 input[bind='api0']").val();
+						var methods0 = $(formContainer).find(".method0 input[bind='methods0']").val();
+						if(api0) {
+							moduleData.uris.push({
+								api: api0,
+								methods: methods0
+							});
+						}
+						var api1 = $(formContainer).find(".method1 input[bind='api1']").val();
+						var methods1 = $(formContainer).find(".method1 input[bind='methods1']").val();
+						if(api1) {
+							moduleData.uris.push({
+								api: api1,
+								methods: methods1
+							});
+						}
+						//alert(JSON.stringify(moduleData.uris));
+						//return false;
+						$.ajaxByAction(action, OSAPIURL + "/modules" + (action == "update" ? ("/" + moduleData.id) : ""), moduleData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "模块成功。");
+									modal.modal('hide');
+									if(action == "add") {
+										moduleData.id = response.data;
+										modulesJSON.push(moduleData);
+										//init tree
+										initTree(moduleData.pid);
+									}
+									moduleData.__icon = moduleData.icon;
+									moduleData.__name = moduleData.name;
+									$(grid).jqGrid(action == "add" ? "addRowData" : "setRowData", moduleData.id, moduleData);
+								} else {
+									$.showErrorGritter("保存模块信息失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-info";
+				//$(formContainer).find(".module-icon").html("").append("<a href=\"javascript:;\" id=\"linkUploadIcon\" class=\"btn btn-info btn-sm\">上传图标</a>");
+				var rowData = {
+					pid: selectedNodeId,
+					pname: selectedNodeName,
+					icon: '',
+					api: '',
+					methods: ''
+				};
+				//icon click
+				$(formContainer).find(".module-icon a").click(function() {
+					$(formContainer).find(".module-icon a").removeClass("active");
+					$(this).addClass("active");
+					rowData.icon = $(this).attr("icon-value");
+					$(formContainer).find(".module-icon .input-icon").val(rowData.icon);
+					$(formContainer).find(".module-icon .input-icon").trigger("change");
+				});
+				//api click
+				$(formContainer).find(".method a").click(function() {
+					$(this).parent().find("a").removeClass("active");
+					$(this).addClass("active");
+					rowData.methods = $(this).text();
+					$(this).parent().find(".input-method").val(rowData.methods);
+					$(this).parent().find(".input-method").trigger("change");
+				});
+				var moduleController = new Controller(formContainer);
+				if(action == "update") {
+					var rowIndex = id || $(grid_selector).jqGrid('getGridParam', 'selrow');
+					if(!rowIndex) {
+						return false;
+					}
+					rowData = $(grid_selector).jqGrid('getRowData', rowIndex);
+					rowData.pname = selectedNodeName;
+					//bind api
+					var uris = rowData.__uris.split(',');
+					for(var i in uris) {
+						var apim = uris[i].split('|');
+						$(formContainer).find(".method" + i + " input[bind='api" + i + "']").val(apim[0]);
+						$(formContainer).find(".method" + i + " input[bind='methods" + i + "']").val(apim[1]);
+						$(formContainer).find(".method" + i + " a[v='" + apim[1] + "']").addClass("active");
+					}
+				}
+				moduleController.set(rowData);
+				//init upload
+				//initUpload();
+			}
+
+			function get_sort_tree(dom, pid, mAr) {
+				var chs = $(dom).find(">.dd-list>li.dd-item");
+				if(chs.length > 0) {
+					chs.each(function() {
+						var nodeId = $(this).attr("data-id");
+						mAr.push({
+							id: nodeId,
+							pid: pid
+						});
+						get_sort_tree($(this), nodeId, mAr);
+					});
+				}
+			}
+			//sort
+			function openSortInfo() {
+				if(treeData.length == 0) {
+					return false;
+				}
+				var modalId = $.modal().show("模块排序s", ".pnl-sort",
+					function(modal) {
+						var sortedArr = [];
+						var idsArr = [];
+						var mAr = [];
+						var index = 0;
+						$(formContainer + " .dd>.dd-list>li.dd-item").each(function() {
+							var nodeId = $(this).attr("data-id");
+							sortedArr.push({
+								id: nodeId,
+								sort: index * -1
+							});
+							idsArr.push(nodeId);
+
+							var node = {
+								id: nodeId,
+								pid: 0
+							};
+							get_sort_tree($(this), nodeId, mAr);
+							mAr.push(node);
+							index++;
+						});
+
+						$.ajaxPatch(OSAPIURL + "/modules/sort", {
+								ids: mAr
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									window.location = window.location;
+									return;
+									//$.showSuccessGritter("模块排序完成。");
+									for(var i in sortedArr) {
+										var itemIndex = getIndexOfArray(modulesJSON, "id", sortedArr[i].id);
+										if(itemIndex >= 0) {
+											modulesJSON[itemIndex].sort = sortedArr[i].sort;
+										}
+									}
+									//srot source
+									sortModuleJSON();
+									//init tree
+									initTree(selectedNodeId);
+									//init grid
+									initModuleGrid(selectedNodeId);
+									//alert(JSON.stringify(sortedArr));
+									modal.modal('hide');
+								} else {
+									$.showErrorGritter("修改顺序失败：" + response.msg);
+								}
+							});
+					});
+				var formContainer = "#" + modalId + " .model-sort";
+				$(formContainer + " .nestable-ol").html("");
+				var nodes = treeData[0].nodes;
+				for(var i in nodes) {
+					var nodeData = nodes[i];
+					var liDom = $("<li class=\"dd-item\" data-id=\"" + nodeData.href + "\"><div class=\"dd-handle\">" + nodeData.text + "</div></li>");
+					if(nodeData.nodes && nodeData.nodes.length > 0) {
+						var subOLDom = $("<ol class=\"dd-list\"></ol>");
+						for(var j in nodeData.nodes) {
+							var subNodeData = nodeData.nodes[j];
+							subOLDom.append("<li class=\"dd-item\" data-id=\"" + subNodeData.href + "\"><div class=\"dd-handle\">" + subNodeData.text + "</div></li>");
+						}
+						liDom.append(subOLDom);
+					}
+					$(formContainer + " .nestable-ol").append(liDom);
+				}
+				$(formContainer + ' .dd').nestable();
+			}
+			//delete module
+			function deleteModels() {
+				$.modal().confirm("你将删除选择的模块，删除后不能恢复，确认删除吗？", function() {
+					var selRowsIndex = $(grid).jqGrid('getGridParam', 'selarrrow');
+					if(selRowsIndex.length > 0) {
+						$.ajaxDelete(OSAPIURL + "/modules", {
+								ids: selRowsIndex
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("删除模块成功。");
+									//refresh data
+									var len = selRowsIndex.length;
+									for(var i = 0; i < len; i++) {
+										var rowIndex = $(grid).jqGrid('getGridParam', 'selrow');
+										//remove
+										removeArrayByField(modulesJSON, "id", rowIndex);
+										//init tree
+										initTree(selectedNodeId);
+										//remove tr
+										$(grid).jqGrid("delRowData", rowIndex);
+									}
+								} else if(response.code > 0 && response.data.not_allow) {
+									var cannotDelModels = response.data.not_allow;
+									var canotDelNames = [];
+									for(var i in cannotDelModels) {
+										canotDelNames.push(cannotDelModels[i].module_name);
+									}
+									$.showErrorGritter("模块 [" + canotDelNames.join(',') + "] 删除失败，该模块已关联角色，本次删除操作取消。");
+								} else {
+									$.showErrorGritter("删除模块失败：" + response.msg);
+								}
+							});
+						//					var rowIndex = $(grid).jqGrid('getGridParam', 'selrow');
+						//					if (rowIndex) {
+						//						$.ajaxDelete(OSAPIURL + "/modules/" + rowIndex.toString(), null,
+						//							function(response) {
+						//								if (response.code == 0) {
+						//									//success
+						//									$.showSuccessGritter("删除模块成功。");
+						//									//remove
+						//									removeArrayByField(modulesJSON, "id", rowIndex);
+						//									//init tree
+						//									initTree(selectedNodeId);
+						//									//refresh data
+						//									$(grid).jqGrid("delRowData", $(grid).jqGrid('getGridParam', 'selrow'));
+						//								} else {
+						//									$.showErrorGritter("提交删除失败：" + response.msg);
+						//								}
+						//							});
+					}
+				});
+			}
+
+			function setDisable(state) {
+				var doSetDisable = function() {
+					var selRowsIndex = $(grid).jqGrid('getGridParam', 'selarrrow');
+					if(selRowsIndex.length > 0) {
+						$.ajaxPatch(OSAPIURL + "/modules", {
+								ids: selRowsIndex,
+								status: state
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(status + " 模块成功。");
+									//refresh data
+									var len = selRowsIndex.length;
+									for(var i = 0; i < len; i++) {
+										var rowIndex = $(grid).jqGrid('getGridParam', 'selrow');
+										$(grid).jqGrid("setRowData", rowIndex, {
+											status_name: status,
+											status: state
+										});
+										$(grid).jqGrid("setSelection", rowIndex);
+									}
+								} else {
+									$.showErrorGritter("修改状态失败：" + response.msg);
+								}
+							});
+					}
+				};
+
+				var status = state == 2 ? "停用" : "启用";
+
+				if(state == 1) {
+					doSetDisable();
+				} else {
+					$.modal().confirm("停用后该该模块将不会在用户的菜单栏中显示，重新启用后可显示出来，是否确认停用？", function() {
+						doSetDisable();
+					});
+				}
+			}
+
+			function sortModule(mark) {
+				//mark -1、1
+				var selRowIndex = $(grid).jqGrid('getGridParam', 'selrow');
+				if(selRowIndex) {
+					var index = getIndexOfArray(modulesJSON, "id", selRowIndex);
+					if(index >= 0) {
+						var sortNum = parseInt(modulesJSON[index].sort) + parseInt(mark);
+						$.ajaxPatch(OSAPIURL + "/modules/" + selRowIndex.toString(), {
+								id: selRowIndex,
+								sort: sortNum
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									//$.showSuccessGritter(status + " 模块成功。");
+									//refresh data
+									modulesJSON[index].sort = sortNum;
+									//srot source
+									sortModuleJSON();
+									initModuleGrid(selectedNodeId);
+								} else {
+									$.showErrorGritter("修改顺序失败：" + response.msg);
+								}
+							});
+					}
+				}
+			}
+			var treeData = [];
+
+			function initTree(selectId) {
+				treeData = [];
+				var node = {
+					text: "运营系统",
+					href: 0,
+					state: {
+						selected: selectId == 0,
+						expanded: true
+					}
+				};
+				initChildModules(node, 0, selectId);
+				if(node.nodes)
+					node.tags = [node.nodes.length];
+				treeData.push(node);
+				//init tree
+				if(moduleTree) {
+					$(".treeview").treeview('remove');
+				}
+				moduleTree = $(".treeview").treeview({
+					color: "#428bca ",
+					expandIcon: "fa fa-plus ",
+					collapseIcon: "fa fa-minus ",
+					nodeIcon: " ",
+					showTags: true,
+					data: treeData,
+					onNodeSelected: function(event, data) {
+						selectedNodeId = data.href;
+						selectedNodeName = data.text;
+						initModuleGrid(selectedNodeId);
+					},
+					onNodeUnselected: function(event, data) {
+						//$('.treeview').treeview('selectNode', [data.nodeId, {
+						//	silent: true
+						//}]);
+					}
+				});
+			}
+
+			function initChildModules(node, pid, selectId) {
+				var childNodes = [];
+				for(var i in modulesJSON) {
+					var module = modulesJSON[i];
+					if(module.pid == pid) {
+						var selected = selectId == module.id;
+						var chnode = {
+							text: module.name,
+							href: module.id,
+							state: {
+								selected: selected,
+								expanded: selected
+							}
+						};
+						if(selected)
+							node.state.expanded = true;
+						initChildModules(chnode, module.id, selectId);
+						if(chnode.nodes)
+							chnode.tags = [chnode.nodes.length];
+						childNodes.push(chnode);
+					}
+				}
+				if(childNodes.length > 0)
+					node.nodes = childNodes;
+			}
+
+			function initModuleGrid(pid) {
+				$(grid).jqGrid('clearGridData');
+				var count = 0;
+				//var childModuls = [];
+				for(var i in modulesJSON) {
+					var module = modulesJSON[i];
+					if(module.pid == pid) {
+						$(grid).jqGrid('addRowData', module.id, module);
+						//childModuls.push(module);
+						count++;
+					}
+				}
+				//$(grid)[0].addJSONData(childModuls);
+				$(".s-count").text("，" + count.toString() + " 条");
+			}
+
+			function sortModuleJSON() {
+//				modulesJSON.sort(function(a, b) {
+//					return a.sort < b.sort;
+//				});
+			}
+
+			function initUpload() {
+				var uploader = new plupload.Uploader({
+					runtimes: 'html5,flash,silverlight,html4',
+					browse_button: 'linkUploadIcon', // you can pass an id...
+					//container: document.getElementById('container'), // ... or DOM Element itself
+					url: 'upload.php',
+					multi_selection: false,
+					flash_swf_url: '../resources/upload/Moxie.swf',
+					silverlight_xap_url: '../resources/upload/Moxie.xap',
+					filters: {
+						max_file_size: '1mb',
+						mime_types: [{
+							title: "Image files",
+							extensions: "jpg,gif,png"
+						}]
+					},
+					init: {
+						PostInit: function() {
+							//							document.getElementById('filelist').innerHTML = '';
+							//							document.getElementById('uploadfiles').onclick = function() {
+							//								uploader.start();
+							//								return false;
+							//							};
+						},
+						FilesAdded: function(up, files) {
+							uploader.start();
+							//plupload.each(files, function(file) {
+							//	document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+							//});
+						},
+						UploadProgress: function(up, file) {
+							//document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+						},
+						Error: function(up, err) {
+							//document.getElementById('console').appendChild(document.createTextNode("\nError #" + err.code + ": " + err.message));
+						}
+					}
+				});
+				uploader.init();
+			}
+		</script>
+	</body>
+
+</html>

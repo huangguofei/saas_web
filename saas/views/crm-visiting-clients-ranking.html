@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>拜访客户排名</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			
+			.page-container {
+				padding: 0;
+				margin: 0;
+			}
+			
+			.page-container .content {
+				padding: 0;
+				padding-left: 10px;
+			}
+			
+			ul {
+				zoom: 1;
+			}
+			
+			ul:after {
+				clear: both;
+				content: '.';
+				display: block;
+				width: 0;
+				height: 0;
+				visibility: hidden;
+			}
+			
+			li {
+				cursor: pointer;
+			}
+			
+			.content-menu {
+				height: 45px;
+				border-bottom: 1px solid #C9C9C9;
+				background-color: #f8f8f8;
+				/*padding-top: 10px;*/
+			}
+			
+			.content-menu-list {
+				padding-left: 10px;
+				height: 45px;
+			}
+			
+			.content-menu-list li {
+				height: 44px;
+				line-height: 44px;
+				padding: 0 10px;
+				text-align: center;
+				float: left;
+				/*margin-left: 10px;*/
+				margin-right: 20px;
+				font-size: 14px;
+				color: #666;
+			}
+			
+			.content-menu-list li.menuselectstyle {
+				color: #009ed8;
+				border-bottom: 2px solid #009ed8;
+			}
+			
+			.content-main>div {
+				margin-left: 10px;
+			}
+			
+			.content-main-signindate {
+				height: 40px;
+				line-height: 40px;
+				padding-left: 10px;
+				margin: 14px 0 12px 0;
+			}
+			
+			.content-main-signindate input[type=date] {
+				width: 300px;
+				height: 30px;
+			}
+			
+			.content-main-rankingmenu {
+				margin-top: 14px;
+				height: 36px;
+				border: 1px solid #e3e3e3;
+				border-bottom: none;
+				background-color: #f8f8f8;
+				border-bottom: 2px solid #85beeb;
+			}
+			
+			.rankingmenu-list {
+				/*padding-left: 30px;*/
+				height: 36px;
+				line-height: 34px;
+			}
+			
+			.rankingmenu-list li {
+				float: left;
+				padding: 0 10px;
+				margin-right: 20px;
+				min-width: 75px;
+			}
+			
+			li.selectedstyle {
+				color: #fff;
+				background-color: #85beeb;
+				/*border-bottom: 2px solid #009ed8;*/
+			}
+			
+			.content-main-myranking {
+				height: 62px;
+				/*margin-bottom: 10px;*/
+				border: 1px solid #e3e3e3;
+				/*margin-left: 10px;*/
+				/*margin-top: 14px;*/
+			}
+			
+			.content-main-myranking ul {
+				height: 62px;
+				width: 100%;
+			}
+			
+			.content-main-myranking ul li>span {
+				font-size: 14px;
+				color: #666;
+			}
+			
+			.content-main-myranking ul li>span span {
+				color: #999;
+			}
+			
+			.content-main-myranking ul li {
+				float: left;
+				cursor: auto;
+				width: 24%;
+				height: 62px;
+				line-height: 62px;
+				text-align: center;
+			}
+			
+			.liimg img {
+				width: 40px;
+				height: 40px;
+				border-radius: 20px;
+				margin-right: 10px;
+			}
+			
+			.content-main-myranking ul li img {
+				/*margin-right: 10px;*/
+			}
+			
+			.content-main-myranking ul li.limyinfo {
+				line-height: 62px;
+			}
+			
+			.signinonemonth .content-main-myranking ul li.limyinfo {
+				line-height: 62px;
+			}
+			
+			.ui-jqgrid .ui-jqgrid-hdiv {
+				border-top: none!important;
+			}
+			
+			.ui-jqgrid-hdiv .ui-jqgrid-htable {
+				border-top: none!important;
+			}
+			
+			.content-main-rankingmap {
+				display: none;
+				width: 100%;
+			}
+			
+			th {
+				text-align: center
+			}
+			
+			.signinonemonth,
+			.signinonemonth-time {
+				display: none;
+			}
+			
+			.date-picker {
+				display: inline;
+			}
+			
+			.adc-in-date {
+				border: 1px solid #e3e3e3;
+				display: inline-block;
+				width: 205px;
+				height: 36px;
+				line-height: 36px;
+				margin-left: -10px;
+				padding-left: 10px;
+			}
+			
+			.adc-in-date>span {
+				color: #666;
+				font-size: 14px;
+			}
+			
+			.adc-in-date input {
+				border: none;
+				width: 130px;
+				color: #999;
+			}
+			
+			.adc-in-date img {
+				margin-left: -20px;
+				margin-bottom: 4px;
+			}
+			
+			.divided-line:after {
+				margin-top: 16px;
+			}
+			
+			.emp-avatar {
+				width: 40px;
+				height: 40px;
+				margin-right: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container signin-ranking">
+			<div class="content">
+				<!--<div class="remark hide">
+					<img src="../resources/images/sign-in-icon.png" alt="" /><span>*我的签到排名及同事签到位置查看</span>
+				</div>-->
+			</div>
+			<div class="content-menu">
+				<ul class="content-menu-list">
+					<li data-num="1" data-load="true" class="day-frequency menuselectstyle">日均拜访客户家次排名</li>
+					<li data-num="2" data-load="false" class="mouth-frequency">月拜访客户家次排名</li>
+					<li data-num="3" data-load="false" class="mouth-duration">月拜访客户时长排名</li>
+				</ul>
+			</div>
+			<!--日均拜访客户家次排名-->
+			<div class="content-main signinoneday">
+				<div class="content-main-signindate">
+					<div class="adc-in-date">
+						<span>日期:</span>
+						<input type="text" class="date-picker" placeholder="年 /月" onchange="reloadData('1');" style="width: 120px;">
+						<img src="../resources/images/ri-li-icon.png" alt="" />
+					</div>
+				</div>
+				<div class="content-main-myranking">
+					<ul>
+						<li class="liimg limyinfo divided-line">
+							<img class="myAvatar" src="" alt="无法显示">
+							<span class="name">我</span>
+						</li>
+						<li class="limyinfo divided-line">
+							<img src="../resources/images/adc-rank-icon.png" alt="" />
+							<span>排名：<span class="ranking">-</span></span>
+						</li>
+						<li class="myranking-signindate divided-line">
+							<img src="../resources/images/adc-in-time.png" alt="" /> 日均拜访家次：
+							<span class="frequency">-</span>
+						</li>
+						<li class="hide">
+							<img src="../resources/images/adc-in.png" alt="" /> 签到地点：
+							<span class="signin-place">-</span>
+						</li>
+					</ul>
+				</div>
+				<div class="content-main-rankingmenu at">
+					<ul class="rankingmenu-list lt">
+						<li data-ranking="asc" data-limit="10">前十名</li>
+						<li data-ranking="desc" data-limit="10">后十名</li>
+						<li class="selectedstyle" data-ranking="asc" data-limit="">所有排名</li>
+					</ul>
+				</div>
+				<div class="content-main-ranking-list">
+					<table id="rankingday-table">
+					</table>
+					<div id="gridday-pager">
+					</div>
+				</div>
+			</div>
+			<!--月拜访客户家次排名-->
+			<div class="content-main signinonemonth">
+				<div class="content-main-signindate">
+					<label>月份：<input type="text" placeholder="年 /月" class="signindate date-picker" onchange="reloadData('2');"></label>
+				</div>
+				<div class="content-main-myranking">
+					<ul>
+						<li class="liimg limyinfo divided-line">
+							<img class="myAvatar" src="" alt="无法显示">
+							<span class="name">我</span>
+						</li>
+						<li class="limyinfo divided-line">
+							<img src="../resources/images/adc-rank-icon.png" alt="" />
+							<span>排名：<span class="ranking">-</span></span>
+						</li>
+						<li class="myranking-signindate divided-line">
+							<img src="../resources/images/adc-in-time.png" alt="" /> 月拜访家次：
+							<span class="frequency">-</span>
+						</li>
+						<li class="hide">
+							<img src="../resources/images/adc-in.png" alt="" /> 签到地点：
+							<span class="signin-place">-</span>
+						</li>
+					</ul>
+				</div>
+				<div class="content-main-rankingmenu at">
+					<ul class="rankingmenu-list lt">
+						<li data-ranking="asc" data-limit="10">前十名</li>
+						<li data-ranking="desc" data-limit="10">后十名</li>
+						<li class="selectedstyle" data-ranking="asc" data-limit="">所有排名</li>
+					</ul>
+				</div>
+				<div class="content-main-ranking-list">
+					<table id="rankingmonth-table">
+					</table>
+					<div id="gridmonth-pager">
+					</div>
+				</div>
+			</div>
+			<!--月拜访客户时长排名-->
+			<div class="content-main signinonemonth-time">
+				<div class="content-main-signindate">
+					<label>月份：<input type="text" placeholder="年 /月" class="signindate date-picker" onchange="reloadData('3');"></label>
+				</div>
+				<div class="content-main-myranking">
+					<ul>
+						<li class="liimg limyinfo divided-line">
+							<img class="myAvatar" src="" alt="无法显示">
+							<span class="name">我</span>
+						</li>
+						<li class="limyinfo divided-line">
+							<img src="../resources/images/adc-rank-icon.png" alt="" />
+							<span>排名：<span class="ranking">-</span></span>
+						</li>
+						<li class="myranking-signindate divided-line">
+							<img src="../resources/images/adc-in-time.png" alt="" /> 拜访时长：
+							<span class="frequency">-</span>
+						</li>
+						<li class="hide">
+							<img src="../resources/images/adc-in.png" alt="" /> 签到地点：
+							<span class="signin-place">-</span>
+						</li>
+					</ul>
+				</div>
+				<div class="content-main-rankingmenu at">
+					<ul class="rankingmenu-list lt">
+						<li data-ranking="asc" data-limit="10">前十名</li>
+						<li data-ranking="desc" data-limit="10">后十名</li>
+						<li class="selectedstyle" data-ranking="asc" data-limit="">所有排名</li>
+					</ul>
+				</div>
+				<div class="content-main-ranking-list">
+					<table id="rankingmonth-time-table">
+					</table>
+					<div id="gridmonth-time-pager">
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript" src="../resources/js/main.min.js"></script>
+	<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG"></script>-->
+	<script type="text/javascript">
+		var visitUrl = BSAPIURL + "/report/visit/rank";
+		var dayFrequencyGrid, mouthFrequencyGrid, mouthDurationGrid;
+		var dayFrequencyTab = "#rankingday-table",
+			mouthFrequencyTab = "#rankingmonth-table",
+			mouthDurationTab = "#rankingmonth-time-table";
+		var dayFrequencyPageDom = "#gridday-pager",
+			mouthFrequencyPageDom = "#gridmonth-pager",
+			mouthDurationPageDom = "#gridmonth-time-pager";
+		var gridHeight = $(window).height() - $(".content-menu").outerHeight(true) - $(".content-main-signindate").outerHeight(true) -
+			$(".content-main-myranking").outerHeight(true) - $(".content-main-rankingmenu").outerHeight(true) - 110;
+		var gridNum = 52000;
+		var colNames = ['排名', '姓名'];
+		var colModel = [{
+			name: 'rank'
+		}, {
+			name: '_empInfo',
+			formatter: function(cellvalue, options, rowObject) {
+				return "<img class=\"emp-avatar\" src=\"" + rowObject.employee_avatar + "\" >" + rowObject.employee_name;
+			}
+		}, {
+			name: 'rank_value'
+		}];
+		$(function() {
+			$(".content-menu-list li").click(function() {
+				$(this).addClass("menuselectstyle").siblings().removeClass("menuselectstyle");
+				if($(this).hasClass("day-frequency")) {
+					$(".signinoneday").show().siblings(".content-main").hide();
+					showVisitDayFrequency($(this).data("num"), $(this).data("load"));
+				} else if($(this).hasClass("mouth-frequency")) {
+					$(".signinonemonth").show().siblings(".content-main").hide();
+					showVisitMouthFrequency($(this).data("num"), $(this).data("load"));
+				} else {
+					$(".signinonemonth-time").show().siblings(".content-main").hide();
+					showVisitMouthDuration($(this).data("num"), $(this).data("load"));
+				}
+			});
+			$(".rankingmenu-list li").click(function() {
+				$(this).addClass("selectedstyle").siblings().removeClass("selectedstyle");
+				reloadData();
+			});
+			$(".date-picker").datepicker({
+				startView: 1,
+				maxViewMode: 1,
+				minViewMode: 1,
+				autoclose: true,
+				clearBtn: true,
+				todayHighlight: true,
+				format: "yyyy-mm"
+			});
+			//默认显示上月
+			$(".date-picker").val(prevMouth());
+			showVisitDayFrequency("1", false);
+		});
+
+		function prevMouth() {
+			var d = new Date();
+			var y = d.getFullYear();
+			var m = d.getMonth();
+			if(m == 0) {
+				m = 12;
+				y = y - 1;
+			}
+			if(m < 10)
+				m = "0" + m;
+			return y + "-" + m;
+		}
+
+		function showVisitDayFrequency(type, load) { //显示日均家次
+			if(load) {
+				reloadData(type);
+				return false;
+			}
+			var data = collectData(type);
+			$(".content-menu-list .day-frequency").data("load", true);
+			dayFrequencyGrid = $(dayFrequencyTab).initJqGrid({
+				grid_selector: dayFrequencyTab,
+				pager: dayFrequencyPageDom,
+				url: visitUrl + $.toQueryString(data, true),
+				colNames: colNames.concat(["日均拜访家次"]),
+				colModel: colModel,
+				height: gridHeight,
+				multiselect: false,
+				rowNum: gridNum,
+				sortorder: data.sort,
+				afterLoadComplete: function(response) {
+					var myInfoData = response.data.self;
+					//绑定我的数据
+					if(myInfoData) {
+						showSelfInfo(myInfoData, ".signinoneday .content-main-myranking");
+					}
+				}
+			});
+		}
+
+		function showVisitMouthFrequency(type, load) { //显示月均家次
+			if(load) {
+				reloadData(type);
+				return false;
+			}
+			var data = collectData(type);
+			$(".content-menu-list .mouth-frequency").data("load", true);
+			mouthFrequencyGrid = $(mouthFrequencyTab).initJqGrid({
+				grid_selector: mouthFrequencyTab,
+				pager: mouthFrequencyPageDom,
+				url: visitUrl + $.toQueryString(data, true),
+				colNames: colNames.concat(["月拜访家次"]),
+				colModel: colModel,
+				height: gridHeight,
+				multiselect: false,
+				rowNum: gridNum,
+				sortorder: data.sort,
+				afterLoadComplete: function(response) {
+					var myInfoData = response.data.self;
+					//绑定我的数据
+					if(myInfoData) {
+						showSelfInfo(myInfoData, ".signinonemonth .content-main-myranking");
+					}
+				}
+			});
+		}
+
+		function showVisitMouthDuration(type, load) { //显示月均时长
+			if(load) {
+				reloadData(type);
+			}
+
+			var data = collectData(type);
+			$(".content-menu-list .mouth-duration").data("load", true);
+			mouthDurationGrid = $(mouthDurationTab).initJqGrid({
+				grid_selector: mouthDurationTab,
+				pager: mouthDurationPageDom,
+				url: visitUrl + $.toQueryString(data, true),
+				colNames: colNames.concat(["拜访时长"]),
+				colModel: colModel,
+				height: gridHeight,
+				multiselect: false,
+				rowNum: gridNum,
+				sortorder: data.sort,
+				afterLoadComplete: function(response) {
+					var myInfoData = response.data.self;
+					//绑定我的数据
+					if(myInfoData) {
+						showSelfInfo(myInfoData, ".signinonemonth-time .content-main-myranking");
+					}
+				}
+			});
+		}
+
+		function showSelfInfo(data, container) { //绑定时间
+			$(container + " .myAvatar").attr('src', data.employee_avatar);
+			$(container + " .ranking").text(data.rank);
+			$(container + " .frequency").text(data.rank_value);
+		}
+
+		function collectData(type) { //收集数据
+			var data = {};
+			if(type == 1) {
+				data.limit = $(".signinoneday .rankingmenu-list .selectedstyle").data("limit");
+				data.month = $(".signinoneday input").val();
+				data.sort = $(".signinoneday .rankingmenu-list .selectedstyle").data("ranking");
+			} else if(type == 2) {
+				data.limit = $(".signinonemonth .rankingmenu-list .selectedstyle").data("limit");
+				data.month = $(".signinonemonth input").val();
+				data.sort = $(".signinonemonth .rankingmenu-list .selectedstyle").data("ranking");
+			} else {
+				data.limit = $(".signinonemonth-time .rankingmenu-list .selectedstyle").data("limit");
+				data.month = $(".signinonemonth-time input").val();
+				data.sort = $(".signinonemonth-time .rankingmenu-list .selectedstyle").data("ranking");
+			}
+			data.rank_type = type;
+			console.log(data)
+			return data;
+		}
+
+		function reloadData(type) {
+			if(!type) {
+				type = $(".content-menu-list .menuselectstyle").data("num");
+			}
+			var data = collectData(type);
+			var grid = (type == "1" ? dayFrequencyGrid : (type == "2" ? mouthFrequencyGrid : mouthDurationGrid));
+			$(grid).jqGrid('setGridParam', {
+				page: 1,
+				sortorder: data.sort,
+				url: visitUrl + $.toQueryString(data, true),
+				rowNum: gridNum
+			}).trigger("reloadGrid", {});
+		}
+	</script>
+
+</html>

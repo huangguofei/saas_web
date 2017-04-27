@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+    <head lang="zh-CN">
+        <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+        <meta charset="utf-8"/>
+        <title>客户档案管理操作</title>
+        <meta name="viewport" contnet="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="../resources/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css"/>
+        <link rel="stylesheet" href="../resources/css/jquery.gritter.css"/>
+        <link rel="stylesheet" href="../resources/css/ui.jqgrid.css"/>
+        <link rel="stylesheet" href="../resources/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="../resources/css/datepicker.css"/>
+        <link rel="stylesheet" href="../resources/css/main-page.css"/>
+        <style>
+            .crm-client-file-management .content-hide,
+            .crm-client-file-management .record-public-sea-hide {
+                display: none;
+            }
+
+            .crm-client-file-management .content-active,
+            .crm-client-file-management .record-public-sea-active {
+                display: block;
+            }
+
+            .crm-client-file-management .panel-record {
+                border: 1px solid #ccc;
+                padding: 5px 10px 0 10px;
+                margin: 0;
+                border-bottom: none;
+                color: #666;
+                text-decoration: none;
+            }
+
+            .crm-client-file-management .panel-record:hover,
+            .crm-client-file-management .panel-record.active{
+                color: #666;
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+            .crm-client-file-management .content .nav {
+                margin-left: 5px;
+            }
+
+            .crm-client-file-management .record-public-sea-nav-tabs {
+                color: #666;
+                display: inline-block;
+                margin-left: 5px;
+            }
+
+            .crm-client-file-management .record-public-sea-nav-tabs:hover,
+            .crm-client-file-management .record-public-sea-nav-tabs.active {
+                color: #666;
+                font-weight: bold;
+                text-decoration: underline;
+            }
+
+            .crm-client-file-management .record-text span {
+                color: #999;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-container crm-client-file-management">
+            <div class="remark">
+                <i class="fa fa-list-ol fa-2x"></i><span>*员工对客户的操作记录及管理</span>
+            </div>
+            <div class="content">
+                <!--导航  共享记录/移交记录/公海操作记录-->
+                <div class="nav nav-tabs">
+                    <a href="javascript:;" role-auth1="saas/crm/records/share|get" class="panel-record panel-record-shared active" index="shared">共享记录</a>
+                    <a href="javascript:;" role-auth1="saas/crm/records/transfers_to_employee|get" class="panel-record panel-record-hand-over" index="hand-over">移交记录</a>
+                    <a href="javascript:;" role-auth1="saas/crm/records/transfers_to_sea|get" class="panel-record panel-record-public-sea" index="public-sea">公海操作记录</a>
+                </div>
+                <!--客户共享记录查询及管理-->
+                <div class="content-record record-shared content-active">
+                    <div class="record-text">
+                        <span>*客户共享记录查询及管理</span>
+                    </div>
+                    <div class="search">
+
+                    </div>
+                    <table id="grid-table-record-shared"></table>
+                    <div id="grid-pager-record-shared"></div>
+                </div>
+                <!--客户移交记录查询-->
+                <div class="content-record record-hand-over content-hide">
+                    <div class="record-text">
+                        <span>*客户移交记录查询</span>
+                    </div>
+                    <div class="search">
+
+                    </div>
+                    <table id="grid-table-record-hand-over"></table>
+                    <div id="grid-pager-record-hand-over"></div>
+                </div>
+                <!--公海操作记录查询-->
+                <div class="content-record record-public-sea content-hide">
+                    <div class="record-text">
+                        <span>*公海操作记录查询</span>
+                    </div>
+                    <!--公海操作记录查询导航   移入记录/抢取记录-->
+                    <div class="record-public-sea-nav">
+                        <a href="javascript:;" class="record-public-sea-nav-tabs record-immigration active" index="immigration">移入记录</a>
+                        <a href="javascript:;" class="record-public-sea-nav-tabs record-snatch" index="snatch">抢取记录</a>
+                    </div>
+                    <!--移入记录-->
+                    <div class="record-public-sea-content record-public-sea-immigration record-public-sea-active">
+                        <div class="search">
+
+                        </div>
+                        <table id="grid-table-record-public-sea-immigration"></table>
+                        <div id="grid-pager-record-public-sea-immigration"></div>
+                    </div>
+                    <!--抢取记录-->
+                    <div class="record-public-sea-content record-public-sea-snatch record-public-sea-hide">
+                        <div class="search">
+
+                        </div>
+                        <table id="grid-table-record-public-sea-snatch"></table>
+                        <div id="grid-pager-record-public-sea-snatch"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+        <script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+        <script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+        <script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+        <script type="text/javascript" src="../resources/js/sortable.js"></script>
+        <script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+        <script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+        <script type="text/javascript" src="../resources/js/main.min.js"></script>
+        <script type="text/javascript">
+            var gridSelectorOfRecordShared = "#grid-table-record-shared";
+            var pagerSelectOfRecordShared = "#grid-pager-record-shared";
+            var gridSelectorOfRecordHandOver = "#grid-table-record-hand-over";
+            var pagerSelectOfRecordHandOver = "#grid-pager-record-hand-over";
+            var gridSelectorOfRecordPublicSeaImmigration = "#grid-table-record-public-sea-immigration";
+            var pagerSelectOfRecordPublicSeaImmigration = "#grid-pager-record-public-sea-immigration";
+            var gridSelectorOfRecordPublicSeaSnatch = "#grid-table-record-public-sea-snatch";
+            var pagerSelectOfRecordPublicSeaSnatch = "#grid-pager-record-public-sea-snatch";
+            $(document).ready(function(){
+                ////点击  共享记录  移交记录   公海  切换内容
+                $(".panel-record").click(function(){
+                    $(".panel-record").removeClass("active");
+                    $(this).addClass("active");
+                    var index = $(this).attr("index");
+                    $(".content-record").removeClass("content-active").addClass("content-hide");
+                    $(".record-"+index).addClass("content-active");
+                    switch (index){
+                        case "shared": initGridOfRecordShared();break;
+                        case "hand-over": initGridOfRecordHandOver();break;
+                        case "public-sea": initGridOfRecordPublicSea();break;
+                        default :initGridOfRecordShared();
+                    }
+                });
+                ///////token
+                $.token();
+                ////初始加载的表格
+                initGridOfRecordShared();
+            });
+            var isFirstInitGridOfRecordShared =false,isFirstInitGridOfRecordHandOver=false,
+                isFirstInitGridOfRecordPublicSeaImmigration=false,isFirstInitGridOfRecordPublicSeaSnatch=false;
+            ////共享记录
+            function initGridOfRecordShared(){
+                if(isFirstInitGridOfRecordShared){
+                    $(gridOfRecordShared).jqGrid('setGridParam', {
+                        page: 1,
+                        url: url
+                    }).trigger("reloadGrid", {});
+                    return true;
+                }
+                ////共享记录  search
+                $.initSearchControls4TagMode({
+                    auto: true,
+                    url: "",
+                    grid: gridSelectorOfRecordShared,
+                    container: ".record-shared .search",
+                    key_name: "key",
+                    key_placeholder: "请输入客户单位名称、共享人进行查询",
+                    onChange: function(selectTags){},
+                    groups: [
+                        {
+                            type: "date",
+                            text: "共享日期",
+                            items: [
+                                {
+                                    name: "shared_start_time",
+                                    placeholder: "年/月/日",
+                                    type: "date"
+                                },{
+                                    type:  "text",
+                                    value: "至"
+                                },{
+                                    name: "shared_end_time",
+                                    placeholder: "年/月/日",
+                                    type: "date"
+                                }
+                            ]
+                        },{
+                            name: "shared_content",
+                            text: "共享内容",
+                            items: [
+                                {
+                                    key: "客户单位",
+                                    value: ""
+                                },{
+                                    key: "科室/部门",
+                                    value: "1"
+                                },{
+                                    key: "联系人",
+                                    value: "2"
+                                }
+                            ]
+                        }
+                    ]
+                });
+                /////共享记录的表格
+                var colNames = ['客户单位','共享人','共享日期','共享内容','具体内容','共享的权限','共享原因','共享对象','当前状态','操作'];
+                var colModel = [
+                    {},{},{},{},{},{},{},{},{},{}
+                ];
+                gridOfRecordShared = $(gridSelectorOfRecordShared).initJqGrid({
+                    pager: pagerSelectOfRecordShared,
+                    url: "",
+                    colNames: colNames,
+                    colModel: colModel
+                });
+                isFirstInitGridOfRecordShared = true;
+            }
+            ////移交记录
+            function initGridOfRecordHandOver(){
+                if(isFirstInitGridOfRecordHandOver){
+                    $(gridOfRecordHandOver).jqGrid('setGridParam', {
+                        page: 1,
+                        url: url
+                    }).trigger("reloadGrid", {});
+                    return true;
+                }
+                ////移交记录  search
+                $.initSearchControls4TagMode({
+                    auto: true,
+                    url: "",
+                    grid: gridSelectorOfRecordHandOver,
+                    container: ".record-hand-over .search",
+                    key_name: "key",
+                    key_placeholder: "请输入客户单位名称、移交人进行查询",
+                    onChange: function(selectTags){},
+                    groups: [
+                        {
+                            type: "date",
+                            text: "移交日期",
+                            items: [
+                                {
+                                    name: "hand_over_start_time",
+                                    placeholder: "年/月/日",
+                                    type: "date"
+                                },{
+                                    type:  "text",
+                                    value: "至"
+                                },{
+                                    name: "hand_over_end_time",
+                                    placeholder: "年/月/日",
+                                    type: "date"
+                                }
+                            ]
+                        },{
+                            name: "hand_over_content",
+                            text: "移交内容",
+                            items: [
+                                {
+                                    key: "客户单位",
+                                    value: ""
+                                },{
+                                    key: "科室/部门",
+                                    value: "1"
+                                },{
+                                    key: "联系人",
+                                    value: "2"
+                                }
+                            ]
+                        }
+                    ]
+                });
+                /////移交记录的表格
+                var colNames = ['客户单位','移交人','移交日期','移交内容','具体内容','共享的权限','移交原因','接收对象'];
+                var colModel = [
+                    {},{},{},{},{},{},{},{}
+                ];
+                gridOfRecordHandOver = $(gridSelectorOfRecordHandOver).initJqGrid({
+                    pager: pagerSelectOfRecordHandOver,
+                    url: "",
+                    colNames: colNames,
+                    colModel: colModel
+                });
+                isFirstInitGridOfRecordHandOver = true;
+            }
+            ////公海操作记录
+            function initGridOfRecordPublicSea(){
+                ////移入记录或抢取记录按钮
+                $(".record-public-sea-nav-tabs").click(function(){
+                    $(".record-public-sea-nav-tabs").removeClass("active");
+                    $(this).addClass("active");
+                    var index = $(this).attr("index");
+                    $(".record-public-sea-content").removeClass("record-public-sea-active").addClass("record-public-sea-hide");
+                    $(".record-public-sea-"+index).removeClass("record-public-sea-hide").addClass("record-public-sea-active");
+                    switch (index){
+                        case "immigration" : initGridOfRecordPublicSeaImmigration();break;
+                        case "snatch" : initGridOfRecordPublicSeaSnatch();break;
+                        default : initGridOfRecordPublicSeaImmigration();
+                    }
+                });
+                ////移入记录
+                function initGridOfRecordPublicSeaImmigration(){
+                    if(isFirstInitGridOfRecordPublicSeaImmigration){
+                        $(gridOfRecordPublicSeaImmigration).jqGrid('setGridParam', {
+                            page: 1,
+                            url: url
+                        }).trigger("reloadGrid", {});
+                        return true;
+                    }
+                    ////公海操作记录  search
+                    $.initSearchControls4TagMode({
+                        auto: true,
+                        url: "",
+                        grid: gridSelectorOfRecordPublicSeaImmigration,
+                        container: ".record-public-sea .record-public-sea-immigration .search",
+                        key_name: "key",
+                        key_placeholder: "请输入客户单位名称、移入人进行查询",
+                        onChange: function(selectTags){},
+                        groups: [
+                            {
+                                type: "date",
+                                text: "移交日期",
+                                items: [
+                                    {
+                                        name: "public_sea_start_time",
+                                        placeholder: "年/月/日",
+                                        type: "date"
+                                    },{
+                                        type:  "text",
+                                        value: "至"
+                                    },{
+                                        name: "public_sea_end_time",
+                                        placeholder: "年/月/日",
+                                        type: "date"
+                                    }
+                                ]
+                            },{
+                                name: "public_sea_content",
+                                text: "移交内容",
+                                items: [
+                                    {
+                                        key: "客户单位",
+                                        value: ""
+                                    },{
+                                        key: "科室/部门",
+                                        value: "1"
+                                    },{
+                                        key: "联系人",
+                                        value: "2"
+                                    }
+                                ]
+                            }
+                        ]
+                    });
+                    /////公海操作记录的表格
+                    var colNames = ['客户单位','移入人','移交日期','移入内容','具体内容','共享的权限','移入原因'];
+                    var colModel = [
+                        {},{},{},{},{},{},{}
+                    ];
+                    gridOfRecordPublicSeaImmigration = $(gridSelectorOfRecordPublicSeaImmigration).initJqGrid({
+                        pager: pagerSelectOfRecordPublicSeaImmigration,
+                        url: "",
+                        colNames: colNames,
+                        colModel: colModel
+                    });
+                    isFirstInitGridOfRecordPublicSeaImmigration = true;
+                }
+                ////抢取记录
+                function initGridOfRecordPublicSeaSnatch(){
+                    if(isFirstInitGridOfRecordPublicSeaSnatch){
+                        $(gridOfRecordPublicSeaSnatch).jqGrid('setGridParam', {
+                            page: 1,
+                            url: url
+                        }).trigger("reloadGrid", {});
+                        return true;
+                    }
+                    ////公海操作记录  search
+                    $.initSearchControls4TagMode({
+                        auto: true,
+                        url: "",
+                        grid: gridSelectorOfRecordPublicSeaSnatch,
+                        container: ".record-public-sea .record-public-sea-snatch .search",
+                        key_name: "key",
+                        key_placeholder: "请输入客户单位名称、移入人进行查询",
+                        onChange: function(selectTags){},
+                        groups: [
+                            {
+                                type: "date",
+                                text: "移交日期",
+                                items: [
+                                    {
+                                        name: "public_sea_start_time",
+                                        placeholder: "年/月/日",
+                                        type: "date"
+                                    },{
+                                        type:  "text",
+                                        value: "至"
+                                    },{
+                                        name: "public_sea_end_time",
+                                        placeholder: "年/月/日",
+                                        type: "date"
+                                    }
+                                ]
+                            },{
+                                name: "public_sea_content",
+                                text: "移交内容",
+                                items: [
+                                    {
+                                        key: "客户单位",
+                                        value: ""
+                                    },{
+                                        key: "科室/部门",
+                                        value: "1"
+                                    },{
+                                        key: "联系人",
+                                        value: "2"
+                                    }
+                                ]
+                            }
+                        ]
+                    });
+                    /////公海操作记录的表格
+                    var colNames = ['客户单位','抢取人','抢取日期','抢取内容','具体内容','抢取结果'];
+                    var colModel = [
+                        {},{},{},{},{},{}
+                    ];
+                    gridOfRecordPublicSeaSnatch = $(gridSelectorOfRecordPublicSeaSnatch).initJqGrid({
+                        pager: pagerSelectOfRecordPublicSeaSnatch,
+                        url: "",
+                        colNames: colNames,
+                        colModel: colModel
+                    });
+                    isFirstInitGridOfRecordPublicSeaSnatch= true;
+                }
+                ////默认加载
+                initGridOfRecordPublicSeaImmigration();
+            }
+        </script>
+    </body>
+</html>

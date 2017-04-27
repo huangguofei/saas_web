@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>系统代码管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.code-name {
+				display: inline-block;
+				width: 100%;
+				line-height: 50px;
+				border: 1px solid #ccc;
+				padding-left: 20px;
+				color: #428BCA;
+			}
+			
+			.fa-icon {
+				background-color: #fff;
+				color: #428BCA;
+				width: 15px;
+				height: 15px;
+			}
+			
+			.selected,
+			.hover {
+				background-color: #428BCA;
+				/*border-radius: 5px;*/
+				color: #fff;
+			}
+			
+			.selected .fa-icon,
+			.hover .fa-icon {
+				background-color: #428BCA;
+				color: #fff;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container">
+			<div class="remark">
+				<i class="fa fa-list-ol fa-2x"></i><span>*运营端系统模块管理，可以添加、编辑、删除模块，停/启用模块以及调整模块顺序</span>
+			</div>
+			<div class="content">
+				<div class="left-menu left-menu-basicdata">
+					<div class="treeview">
+						<p>正在加载代码类...</p>
+					</div>
+				</div>
+				<div class="left-menu-bottom-btn-basicdata">
+					<a class="btn btn-sm btn-info" onclick="openModelInfo4CodeClass('add');" role-auth="os/codes/class|post"><i class="fa fa-plus"></i> 添加代码类型</a>
+					<a class="btn btn-sm btn-info" onclick="openModelInfo4CodeClass('update');" role-auth="os/codes/class/0|put"><i class="fa fa-edit"></i> 修改代码类型</a>
+					<a class="btn btn-sm btn-danger" onclick="deleteModel4CodeClass();" role-auth="os/codes/class|delete"><i class="fa fa-trash"></i> 删除代码类型</a>
+				</div>
+				<div class="main-wrap main-wrap-basicdata">
+					<table id="grid-table" class="grid-module">
+					</table>
+					<div id="grid-pager">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-info hide">
+			<form class="form-horizontal model-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">代码类</label>
+					<input type="text" class="form-control" bind="pname" disabled="disabled">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">名称</label>
+					<input type="text" class="form-control" placeholder="代码名称" bind="code_name" nulltip="名称">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag-no">编号</label>
+					<input type="text" class="form-control" placeholder="代码编号" bind="code_number">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag-no">其他名称</label>
+					<input type="text" class="form-control" placeholder="其他名称" bind="code_orther_name">
+				</div>
+			</form>
+		</div>
+		<div class="pnl-codeclass-info hide">
+			<form class="form-horizontal model-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">代码类名称</label>
+					<input type="text" class="form-control" placeholder="代码类型名称" bind="class_name" nulltip="代码类型名称">
+				</div>
+			</form>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info" onclick="openModelInfo('add');" role-auth="os/codes|post"><i class="fa fa-plus-square-o"></i> 添加代码</a>
+			<a class="btn btn-sm btn-danger" onclick="openModelInfo('update');" show-on="singleselect" role-auth="os/codes/0|put"><i class="fa fa-edit"></i> 编辑</a>
+			<a class="btn btn-sm btn-danger" show-on="multiselect" onclick="deleteModels();" role-auth="os/codes|delete"><i class="fa fa-trash"></i> 删除</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.nestable.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			var grid_selector = "#grid-table";
+			var pager_selector = "#grid-pager";
+			var moduleTree;
+			//代码类别缓存
+			var codeClassJSON = [];
+			//代码列表缓存
+			var codeJSON = [];
+			var treeData = [];
+			var topNodeName = "系统代码",
+				selectedNodeId = "0",
+				selectedNodeId1 = 0,
+				selectedNodeName = topNodeName;
+			$(document).ready(function() {
+				$(".left-menu").css({
+					top: ($(".remark").height() + 41) + "px",
+					bottom: "50px"
+				});
+				//token
+				$.token();
+				initLeftTree(0,true);
+				//init cadeclass data
+				/*$.ajaxGet(SAASAPIS.OS.code.class, function(response) {
+					if(response.code == 0) {
+						codeClassJSON = response.data.class_lists;
+						//init tree
+						initTree(0);
+					}
+				});*/
+				$(".module-tree").css("top", ($(".remark").height() + 41) + "px");
+				//grid
+				//133 = remark 21(padding+border) + pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+
+				//grid = $(grid_selector).initJqGrid4Local(grid_selector, pager_selector, colNames, colModel, gridHeight);
+			});
+			var isFirstInitCodesGrid=true;
+			initCodesGrid("0");
+			function initCodesGrid(classId) {
+				url=OSAPIURL+"/codes?class_id="+classId;
+				if(!isFirstInitCodesGrid) {
+					$(grid_selector).jqGrid('setGridParam', {
+						url: url,
+						datatype: "json",
+					}).trigger("reloadGrid", {});
+					return true;
+				}
+				var gridHeight = $(window).height() - $(".remark").height() - 143;
+				//alert($(".remark").height());
+				var colNames = ['', '', '', '编号', '名称', '拼音', '其他名称'];
+				var colModel = [{
+					name: 'code_id',
+					index: 'code_id',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.code_tree_id;
+					}
+				}, {
+					name: 'parent_id',
+					index: 'parent_id',
+					hidden: true
+				}, {
+					name: 'code_name',
+					index: 'code_name',
+					hidden: true
+				}, {
+					name: 'code_number',
+					index: 'code_number',
+					sortable: false
+				}, {
+					name: '__code_name',
+					index: '__code_name',
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"openModelInfo('update','" + rowObject.code_tree_id + "');\" role-auth=\"os/codes/0|put\" role-auth-tip=\"你无权限修改代码信息。\">" + rowObject.code_name + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'code_short_name',
+					index: 'code_short_name',
+					sortable: false
+				}, {
+					name: 'code_other_name',
+					index: 'code_other_name',
+					sortable: false
+				}];
+				grid = $(grid_selector).initJqGrid({
+					showPager: false,
+					datatype: "local",
+					grid_selector: grid_selector,
+					pager: pager_selector,
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight
+				});
+				isFirstInitCodesGrid=false;
+			}
+			//add and update
+			function openModelInfo(action, id) {
+				var actionText = (action == "add" ? "添加" : "修改");
+				var codeData = {};
+				codeData.code_parent_tree_id=$(".code-name.selected").parent().data("tree-code");
+				codeData.code_name=$(".code-name.selected").text();
+				var modalId = $.modal().show(actionText + "代码", ".pnl-info",
+					function(modal) {
+						//to save
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var postData={};
+						postData.code_parent_id=codeData.code_parent_tree_id;
+						postData.parent_id=codeData.code_parent_tree_id;
+						postData.pname=codeData.code_name;
+						postData.code_name=$("#"+modalId+" .model-info>div:eq(1) input").val();
+						postData.code_number=$("#"+modalId+" .model-info>div:eq(2) input").val();
+						postData.code_other_name=$("#"+modalId+" .model-info>div:eq(3) input").val();
+						//console.log(postData)
+						//codeData.
+						//return false;
+						if(!postData.code_name) {
+							$.showErrorGritter("代码名称不能为空！");
+							return false;
+						}
+						$.ajaxByAction(action, SAASAPIS.OS.codes + (action == "update" ? ("/" + rowData.code_id) : ""), postData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "代码成功。");
+									//清除浏览器缓存   防止其他地方加载不出新增或者修改后的代码
+									localStorage["_CITY"]=null;
+									modal.modal('hide');
+									if(action == "add") {
+										codeData.code_id = response.data.cpde_info.code_tree_id;
+										codeData.code_tree_id = response.data.cpde_info.code_tree_id;
+										codeData.code_parent_tree_id = response.data.cpde_info.code_parent_tree_id;
+										codeJSON.push(codeData);
+										//init tree
+										//var index = getIndexOfArray(codeClassJSON, "class_id", selectedNodeId);
+										//codeData.items = [];
+										//codeClassJSON[index].items.push(codeData);
+										//initTree(selectedNodeId);
+										//										$(".treeview li[data-nodeid='" + selectedNodeId1 + "']").attr("loaded", 0);
+										//										loadCode({
+										//											nodeId: selectedNodeId1,
+										//											parentId: 1
+										//										});
+									}
+									codeData.__code_name = codeData.code_name;
+									//alert(codeData.code_id);
+									//$(grid).jqGrid(action == "add" ? "addRowData" : "setRowData", codeData.code_id, codeData);
+									initLeftTree(postData.parent_id);
+								} else {
+									$.showErrorGritter("保存代码信息失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-info";
+				//console.log(codeData)
+				$("#"+modalId+" .model-info>div:first-child input").val(codeData.code_name);
+				//var codeController = new Controller(formContainer);
+				if(action == "update") {
+					var rowIndex = id || $(grid_selector).jqGrid('getGridParam', 'selrow');
+					if(!rowIndex) {
+						return false;
+					}
+					var rowData = $(grid_selector).jqGrid('getRowData', rowIndex);
+					rowData.parent_id= codeData.code_parent_tree_id,
+					rowData.code_parent_id= codeData.code_parent_tree_id,
+					rowData.pname= codeData.code_name
+					//console.log(rowData);
+					$("#"+modalId+" .model-info>div:eq(1) input").val(rowData.code_name);
+					$("#"+modalId+" .model-info>div:eq(2) input").val(rowData.code_number);
+					$("#"+modalId+" .model-info>div:eq(3) input").val(rowData.code_other_name);
+				}
+				//codeController.set(rowData);
+			}
+			//codeclass add and update
+			function openModelInfo4CodeClass(action, id) {
+				var actionText = (action == "add" ? "添加" : "修改");
+				var modalId = $.modal().show(actionText + "代码类型", ".pnl-codeclass-info",
+					function(modal) {
+						//to save
+						var modelData = {};
+						modelData.pid = $(".code-name.selected").parent().parent().data("parent-tree-code");
+						modelData.class_name = $("#" + modalId + " input").val();
+						modelData.class_id = $(".code-name.selected").parent().data("tree-code");
+						if(!modelData.class_name) {
+							$.showErrorGritter("代码类名称不能为空！");
+							return false;
+						}
+						//alert(JSON.stringify(modelData));
+						$.ajaxByAction(action, SAASAPIS.OS.code.class + (action == "update" ? ("/" + modelData.class_id) : ""), modelData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "代码类型成功。");
+									modal.modal('hide');
+									if(action == "add") {
+										modelData.class_id = response.data.id;
+										codeClassJSON.push(modelData);
+									} else {
+										var index = getIndexOfArray(codeClassJSON, "class_id", selectedNodeId);
+										//codeClassJSON[index].class_name = modelData.class_name;
+									}
+									//init tree
+									if(!modelData.pid) modelData.pid = 0;
+									initLeftTree(modelData.pid);
+								} else {
+									$.showErrorGritter("保存代码类型失败：" + response.msg);
+								}
+							});
+					}
+				);
+				if(action == "update") $("#" + modalId + " input").val($(".code-name.selected").text());
+				//				//model pop id
+				//				var formContainer = "#" + modalId + " .model-info";
+				//				var rowData = {
+				//					pid: 0
+				//				};
+				//				var moduleController = new Controller(formContainer);
+				//				if(action == "update") {
+				//					if(selectedNodeId == 0) {
+				//						return false;
+				//					}
+				//					rowData.pid = selectedNodeId;
+				//					rowData.class_id = selectedNodeId;
+				//					rowData.class_name = selectedNodeName;
+				//				}
+				//				moduleController.set(rowData);
+			}
+			//delete code
+			function deleteModels() {
+				$.modal().confirm("你将删除选择的代码，删除后不能恢复，确认删除吗？", function() {
+					var selRowsIndex = $(grid).jqGrid('getGridParam', 'selarrrow'); //$.getSelectRowIdsForjqGrid(grid, "code_id"); //
+					if(selRowsIndex.length > 0) {
+						$.ajaxDelete(SAASAPIS.OS.codes, {
+								ids: selRowsIndex
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("删除代码成功。");
+									//清除浏览器缓存   防止其他地方仍然有删除后的代码
+									localStorage["_CITY"]=null;
+									//refresh data
+									var len = selRowsIndex.length;
+									for(var i = 0; i < len; i++) {
+										var rowIndex = $(grid).jqGrid('getGridParam', 'selrow');
+										//remove code
+										$(grid).jqGrid("delRowData", rowIndex);
+										//tree
+										//var index = getIndexOfArray(codeClassJSON, "class_id", selectedNodeId);
+										//removeArrayByField(codeClassJSON[index].items, "code_id", rowIndex);
+										//initTree(selectedNodeId);
+										$(".treeview li[data-id='" + rowIndex + "']").remove();
+									}
+									initLeftTree($(".code-name.selected").parent().data("tree-code"));
+								} else if(response.code > 0 && response.data && response.data.not_allow) {
+									var cannotDelModels = response.data.not_allow;
+									var canotDelNames = [];
+									for(var i in cannotDelModels) {
+										canotDelNames.push(cannotDelModels[i].module_name);
+									}
+									$.showErrorGritter("代码 [" + canotDelNames.join(',') + "] 删除失败，本次删除操作取消。");
+									initLeftTree($(".code-name.selected").parent().data("tree-code"));
+								} else {
+									$.showErrorGritter("删除代码失败：" + response.msg);
+								}
+							});
+					}
+				});
+			}
+			//delete codeclass
+			function deleteModel4CodeClass() {
+				$.modal().confirm("你将删除选择的代码类型，删除后不能恢复，确认删除吗？", function() {
+					selectedNodeId = $(".code-name.selected").parent().data("tree-code");
+					$.ajaxDelete(SAASAPIS.OS.code.class, {
+							ids: [selectedNodeId]
+						},
+						function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter("删除代码类型成功。");
+								//remove
+								removeArrayByField(codeClassJSON, "class_id", selectedNodeId);
+								//init tree
+								selectedNodeId = 0;
+								initLeftTree(selectedNodeId);
+							} else if(response.code > 0 && response.data.not_allow) {
+								var cannotDelModels = response.data.not_allow;
+								var canotDelNames = [];
+								for(var i in cannotDelModels) {
+									canotDelNames.push(cannotDelModels[i].class_name);
+								}
+								$.showErrorGritter("代码类型 [" + canotDelNames.join(',') + "] 删除失败，本次删除操作取消。");
+							} else {
+								$.showErrorGritter("删除代码类型失败：" + response.msg);
+							}
+						});
+				});
+			}
+
+			function initLeftTree(treeId,isNeedOpenTab) {
+				if(treeId == 0) {
+					$.ajaxGet(SAASAPIS.OS.code.class, function(resp) {
+						if(resp.code == 0) {
+							//codeClassJSON = response.data.class_lists;
+							//init tree
+							//initTree(0);
+							//console.log(resp);
+
+							$(".treeview").html(
+								"<ul class='code-class-top'>" +
+								"<li data-tree-code='" + treeId + "'><span class='code-name selected'><i class='fa fa-minus fa-icon'></i>系统代码</span><li>" +
+								"</ul>"
+							);
+							addChildCode(treeId, resp.data.class_lists);
+						} else {
+							$.showErrorGritter("加载代码类失败：" + resp.msg);
+						}
+					});
+				} else {
+					//console.log(treeId)
+					$.ajaxGet(OSAPIURL + "/codes?class_id=" + treeId, function(resp) {
+						if(resp.code == 0) {
+							//codeClassJSON = response.data.class_lists;
+							//init tree
+							//initTree(0);
+							//console.log(resp);
+							addChildCode(treeId, resp.data.class_lists);
+						} else {
+							$.showErrorGritter("加载代码类失败：" + resp.msg);
+						}
+					});
+				}
+
+				function addChildCode(treeId, data) {
+					var parentPddingLeft = parseInt(getComputedStyle($("li[data-tree-code='" + treeId + "']>span")[0]).paddingLeft);
+					var classCodeLiDom = "";
+					if(treeId == 0) {
+						$.each(data, function(i, item) {
+							classCodeLiDom +=
+								"<li data-tree-code='" + item.class_id + "'>" +
+								"<span style='padding-left:" + (parentPddingLeft + 20) + "px;' class='code-name'>" + (item.has_child ? "<i class='fa fa-plus fa-icon'></i>" : "") + item.class_name + "</span>" +
+								"</li>";
+						});
+						if($("ul[data-parent-tree-code='" + treeId + "']").length < 1) $("li[data-tree-code='" + treeId + "']").append("<ul data-parent-tree-code='" + treeId + "'>" + classCodeLiDom + "<ul>");
+					} else {
+						$.each(data, function(i, item) {
+							if(item.code_tree_parent_id==treeId){
+								classCodeLiDom +=
+								"<li data-tree-code='" + item.code_tree_id + "'>" +
+								"<span style='padding-left:" + (parentPddingLeft + 20) + "px;' class='code-name'>" + (item.has_child ? "<i class='fa fa-plus fa-icon'></i>" : "") + item.code_name + "</span>" +
+								"</li>";
+							}
+						});
+						if($("ul[data-parent-tree-code='" + treeId + "']").length < 1){
+							$("li[data-tree-code='" + treeId + "']").append("<ul data-parent-tree-code='" + treeId + "'>" + classCodeLiDom + "<ul>");
+						}else{
+							$("li[data-tree-code='" + treeId + "']>ul").remove();
+							$("li[data-tree-code='" + treeId + "']").append("<ul data-parent-tree-code='" + treeId + "'>" + classCodeLiDom + "<ul>");
+						}
+					}
+					$(grid).jqGrid('clearGridData');
+					for(var i in data) {
+						var code = data[i];
+						if(data[i].code_tree_parent_id!=treeId) continue;
+						$(grid).jqGrid('addRowData', code.code_tree_id, code);
+					}
+					//initCodesGrid(treeId);
+					$(".code-class-top .fa-icon").unbind("click");
+					$(".code-class-top .fa-icon").click(function(e) {
+						e.stopPropagation();
+						$(".code-name").removeClass("selected");
+						$(this).parent().addClass("selected");
+						if($(this).hasClass("fa-minus")) {
+							//打开操作
+							$(this).removeClass("fa-minus").addClass("fa-plus");
+							$(this).parent().parent().find("ul i").removeClass("fa-minus").addClass("fa-plus");
+							$(this).parent().parent().find(">ul").css("display", "none")
+						} else {
+							$(this).removeClass("fa-plus").addClass("fa-minus");
+							initLeftTree($(this).parent().parent().data("tree-code"),true);
+							$(this).parent().parent().find("ul").css("display", "block");
+						}
+					});
+					$(".code-class-top .code-name").unbind("click");
+					$(".code-class-top .code-name").click(function() {
+						$(".code-name").removeClass("selected");
+						$(this).addClass("selected");
+						if($(this).find("i").hasClass("fa-minus")) {
+							//打开操作
+							//$(this).find("i").removeClass("fa-minus").addClass("fa-plus");
+						} else {
+							$(this).find("i").removeClass("fa-plus").addClass("fa-minus");
+						}
+						initLeftTree($(this).parent().data("tree-code"),true);
+					});
+					if(!isNeedOpenTab){//
+						$("li[data-tree-code='" + treeId + "']>.fa-icon").click();
+						$("li[data-tree-code='" + treeId + "']>.code-name").click();
+					}
+					bindTransBackgroundEvent($(".code-name"), "hover");
+				}
+			} /**/
+			/*function initTree(selectId) {
+				treeData = [];
+				var node = {
+					text: topNodeName,
+					href: 0,
+					state: {
+						selected: selectId == 0,
+						expanded: true
+					}
+				};
+				initCodeClasses(node, selectId);
+				treeData.push(node);
+				//init tree
+				if(moduleTree) {
+					$(".treeview").treeview('remove');
+				}
+				moduleTree = $(".treeview").treeview({
+					color: "#428bca ",
+					expandIcon: "fa fa-plus ",
+					collapseIcon: "fa fa-minus ",
+					nodeIcon: " ",
+					showTags: false,
+					data: treeData,
+					onNodeSelected: function(event, data) {
+						selectedNodeId = data.href;
+						selectedNodeName = data.text;
+						selectedNodeId1 = data.nodeId;
+						//expandTreeNode(data.nodeId);
+						if(selectedNodeId != 0) {
+							loadCode(data);
+						}
+					},
+					onNodeUnselected: function(event, data) {
+						//$('.treeview').treeview('selectNode', [data.nodeId, {
+						//	silent: true
+						//}]);
+					}
+				});
+			}*/
+			//load grid table
+//			var node = {
+//				text: "系统代码",
+//				href: 0,
+//				state: {
+//					selected: true,
+//					expanded: true
+//				}
+//			};
+//			loadCode(node)
+
+			function loadCode(node) {
+				//	var isLoaded = $(".treeview li[data-nodeid='" + node.nodeId + "']").attr("loaded") == "1";
+				//				var isCodeClass = node.parentId == 0;
+				//				if(isLoaded || node.parentId > 0) {
+				//					//init grid
+				//					initCodeGrid(isCodeClass);
+				//					return false;
+				//				}
+				//init cadeclass data
+				selectedNodeId = $(".code-name.selected").parent().data("tree-code");
+				$.ajaxGet(SAASAPIS.OS.codes + "?class_id=" + selectedNodeId, function(response) {
+					if(response.code == 0) {
+						$(".treeview li[data-nodeid='" + node.nodeId + "']").attr("loaded", "1");
+						var codes = response.data.class_lists;
+						var newCodeJSON = [];
+						//convertDataToTreeDataJSON(selectedNodeId, newCodeJSON, codes);
+						//var index = getIndexOfArray(codeClassJSON, "class_id", selectedNodeId);
+						//if(index >= 0)
+						//codeClassJSON[index]["items"] = newCodeJSON;
+						//codeJSON = codeJSON.concat(codes);
+						//init tree
+						initTree(selectedNodeId);
+						//init grid
+						//initCodeGrid(selectedNodeId == 0 ? false : true);
+					}
+				});
+			}
+
+			function initCodeGrid(isCodeClass) {
+				//$(grid).jqGrid('clearGridData');
+				var count = 0;
+				var codes = [];
+				if(isCodeClass) {
+					var index = getIndexOfArray(codeClassJSON, "class_id", selectedNodeId);
+					codes = codeClassJSON[index]["items"];
+				} else {
+					var index = getIndexOfArray(codeJSON, "code_tree_id", selectedNodeId);
+					//codes = codeJSON[index]["items"];
+				}
+				for(var i in codes) {
+					var code = codes[i];
+					$(grid).jqGrid('addRowData', code.code_tree_id, code);
+					count++;
+				}
+			}
+
+			function convertDataToTreeDataJSON(pid, codeList, codeData) {
+				for(var i in codeData) {
+					var code = codeData[i];
+					if(code.code_tree_parent_id == pid) {
+						//child
+						convertDataToTreeDataJSON4Child(code, codeData);
+						codeList.push(code);
+					}
+				}
+			}
+
+			function convertDataToTreeDataJSON4Child(node, codeData) {
+				var childs = [];
+				for(var i in codeData) {
+					var code = codeData[i];
+					if(code.code_tree_parent_id == node.code_tree_id) {
+						//while
+						convertDataToTreeDataJSON4Child(code, codeData);
+						childs.push(code);
+					}
+				}
+				node.items = childs;
+			}
+
+			function expandTreeNode(nodeId) {
+				$('.treeview').treeview('expandNode', [nodeId, {
+					levels: 1,
+					silent: true
+				}]);
+			}
+
+			function initCodeClasses(node, selectId) {
+				var childNodes = [];
+				for(var i in codeClassJSON) {
+					var codeClass = codeClassJSON[i];
+					var selected = selectId == codeClass.class_id;
+					var chnode = {
+						text: codeClass.class_name,
+						href: codeClass.class_id,
+						state: {
+							selected: selected,
+							expanded: selected
+						}
+					};
+					if(selected)
+						node.state.expanded = true;
+					//child
+					initCodes(chnode, codeClass.items, codeClass.class_id, selectId);
+					childNodes.push(chnode);
+				}
+				if(childNodes.length > 0)
+					node.nodes = childNodes;
+			}
+
+			function initCodes(node, items, pid, selectId) {
+				if(items && items.length > 0) {
+					var childNodes = [];
+					for(var j in items) {
+						var code = items[j];
+						if(code.code_tree_parent_id == pid) {
+							var selected = selectId == code.code_tree_id;
+							var chnode = {
+								text: code.code_name,
+								href: code.code_tree_id,
+								state: {
+									selected: selected,
+									expanded: selected
+								}
+							};
+							if(selected)
+								node.state.expanded = true;
+							//child
+							initCodes(chnode, code.items, code.code_tree_id, selectId);
+							childNodes.push(chnode);
+						}
+					}
+					if(childNodes.length > 0)
+						node.nodes = childNodes;
+				}
+			}
+		</script>
+	</body>
+
+</html>

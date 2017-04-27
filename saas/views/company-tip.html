@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>企业认证提示</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.color-yellow {
+				color: #e38d13;
+			}
+			
+			.font2x {
+				font-size: 16px;
+			}
+			
+			.cmp-data-container>div {
+				width: 90%;
+				margin-top: 50px;
+				border: 1px solid #F3F3F3;
+			}
+			
+			.cmp-data-container .detail-title {
+				border-bottom: 1px solid #F3F3F3;
+				padding: 5px 10px;
+				font-weight: bold;
+			}
+			
+			.cmp-emp-detail,
+			.cmp-account-data {
+				padding: 20px 50px;
+			}
+			
+			.cmp-emp-detail:after,
+			.cmp-account-data:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.cmp-emp-detail>div,
+			.cmp-account-data>div {
+				float: left;
+				margin-right: 10%;
+			}
+			
+			.cmp-emp-detail>div>div,
+			.cmp-account-data>div>div {
+				float: left;
+				margin-left: 30px;
+				margin-top: 10px;
+			}
+			
+			.cmp-emp-detail>div>div p,
+			.cmp-account-data>div>div p {
+				text-align: center;
+				color: #AEAEAE;
+				font-size: 16px;
+			}
+			
+			.cmp-emp-detail>div>div p[bind],
+			.cmp-account-data>div>div p[bind] {
+				font-weight: bold;
+				font-size: 18px;
+			}
+			
+			.cmp-data-container img {
+				float: left;
+				vertical-align: middle;
+			}
+			
+			.alert-container {
+				width: 90%;
+				margin-top: 50px;
+				border: 1px solid #F3F3F3;
+			}
+			
+			.alert-title {
+				border-bottom: 1px solid #F3F3F3;
+				padding: 5px 10px;
+				font-weight: bold;
+			}
+			
+			.alert-detail {
+				padding: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container">
+			<div class="content">
+				<div class="alert-container form-group-toperfect hide">
+					<div class="alert-title">
+						<img src="../resources/images/alert-icon.png" alt="" />
+						<span>提示</span>
+					</div>
+					<div class="alert-detail">
+						<span>请完善企业信息、进行企业认证，认证通过后将可免费试用、购买版本</span>
+						<a href="javascript:;" onclick="parent.openTab('完善企业信息','views/company-info.html')" class="btn btn-default">去完善</a>
+					</div>
+				</div>
+				<div class="alert-container form-group-toauth hide">
+					<div class="alert-title">
+						<img src="../resources/images/alert-icon.png" alt="" />
+						<span>提示</span>
+					</div>
+					<div class="alert-detail">
+						<span>您已完善企业信息，请进行企业认证，认证通过后将可免费试用、购买版本</span>
+						<a href="javascript:;" onclick="parent.openTab('企业认证','views/company-auth.html')" class="btn btn-default">去认证</a>
+					</div>
+				</div>
+				<div class="alert-container form-group-hasAuthed hide">
+					<div class="alert-title">
+						<img src="../resources/images/auth-status-icon.png" alt="" />
+						<span>企业认证</span>
+					</div>
+					<div class="alert-detail alert-detail-5 hide">
+						<h4>企业已通过认证 <img src="../resources/images/authed-icon.png" alt="" /></h4>
+					</div>
+					<div class="alert-detail alert-detail-4 hide">
+						<h4>
+							企业未通过认证
+							<img src="../resources/images/unauthed-icon.png" alt="" />
+							<a href="javascript:;" onclick="parent.openTab('企业信息管理','views/company-info.html')" class="btn btn-default">去修改</a>
+						</h4>
+					</div>
+					<div class="alert-detail alert-detail-6 hide">
+						<h4>企业信息待复审 <img src="../resources/images/authing-icon.png" alt="" /></h4>
+					</div>
+					<div class="alert-detail alert-detail-3 hide">
+						<h4>企业信息待审核 <img src="../resources/images/authing-icon.png" alt="" /></h4>
+					</div>
+				</div>
+				<div class="alert-container form-group-authing hide">
+					<label><i class="fa fa-info-circle color-yellow font2x"></i> 你的认证还在审核中，请耐心等待... </label>
+				</div>
+			</div>
+			<div class="cmp-data-container">
+				<div class="cmp-emp-data">
+					<p class="detail-title">员工数据</p>
+					<div class="cmp-emp-detail">
+						<div class="cmp-depa-account">
+							<img src="../resources/images/depa_icon.png" alt="" />
+							<div>
+								<p>部门数</p>
+								<p class="cmp-depa-account-real" bind="departments"></p>
+							</div>
+						</div>
+						<div>
+							<img src="../resources/images/emp_icon.png" alt="" />
+							<div>
+								<p>员工数</p>
+								<p class="cmp-emp-account-real" bind="employees"></p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="cmp-account-data-container">
+					<p class="detail-title">账号使用情况</p>
+					<div class="cmp-account-data">
+						<div>
+							<img src="../resources/images/account_icon.png" alt="" />
+							<div>
+								<p>购买账户数</p>
+								<p class="cmp-emp-account-real" bind="account"></p>
+							</div>
+						</div>
+						<div>
+							<img src="../resources/images/used_icon.png" alt="" />
+							<div>
+								<p>已使用账户数</p>
+								<p class="cmp-emp-account-real" bind="account_used"></p>
+							</div>
+						</div>
+						<div>
+							<img src="../resources/images/unused_icon.png" alt="" />
+							<div>
+								<p>未使用账户数</p>
+								<p class="cmp-emp-account-real" bind="account_remaining"></p>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				//------------消息通知相关-----------------------
+				var subscriber = parent.HHMQ.createSubscriber('企业认证', 'company-auth', function(flag, msgData) {
+					//收到认证相关消息
+					if(msgData.action == "perfected") {
+						//完善资料
+						showAuthPostMode();
+					} else if(msgData.action == "posed") {
+						//提交认证
+						showAuthingMode();
+					}
+				});
+				//页面关闭事件
+				context.onPageClose = function() {
+					subscriber.dispose();
+				};
+				//------------消息通知相关 end -------------------
+				//token
+				$.token();
+				//加载企业状态
+				//load companyinfo 
+				$.ajaxGet(SAASAPIS.BS.companies, function(response) {
+					if(response.code == 0) {
+						//success
+						var compData = response.data;
+						var infoStatus = compData.verify_status.info.status;
+						if(infoStatus !=1&&infoStatus!=2) {
+							//已完成
+							//取消消息提醒
+							$(".form-group-hasAuthed").removeClass("hide");
+							$(".form-group-hasAuthed .alert-detail-"+infoStatus).removeClass("hide");
+							if(!compData.has_buy_edition) compData.account_statistics.departments="";
+							var dataInfoController=new Controller(".cmp-data-container");
+							dataInfoController.set(compData.account_statistics);
+							subscriber.dispose();
+						} else if(infoStatus == 1) {
+							//待完善
+							showPerfectMode();
+						} else if(infoStatus == 2) {
+							//待提交
+							showAuthPostMode();
+						}
+					} else {
+						$.showErrorGritter("加载企业信息失败：" + response.msg);
+					}
+				});
+			});
+
+			function showAuthedMode() {
+				$(".form-group-toperfect").addClass("hide");
+				$(".form-group-toauth").addClass("hide");
+				$(".form-group-authing").addClass("hide");
+				//$(".form-group-hasAuthed").removeClass("hide");
+			}
+
+			function showPerfectMode() {
+				showAuthedMode();
+
+				$(".form-group-toperfect").removeClass("hide");
+			}
+
+			function showAuthingMode() {
+				showAuthedMode();
+
+				$(".form-group-authing").removeClass("hide");
+			}
+
+			function showAuthPostMode() {
+				showAuthedMode();
+
+				$(".form-group-toauth").removeClass("hide");
+			}
+		</script>
+	</body>
+
+</html>

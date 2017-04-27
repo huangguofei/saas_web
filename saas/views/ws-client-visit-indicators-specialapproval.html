@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>客户拜访指标特批</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+			.search-txt input {
+				width: 350px;
+				height: 28px;
+			}
+			
+			.search-txt a {
+				display: inline-block;
+				width: 45px;
+				border: 1px solid #ccc;
+				text-align: center;
+				height: 28px;
+				line-height: 28px;
+				vertical-align: bottom;
+			}
+			
+			.search-select {
+				margin: 10px 0;
+				border-bottom: 1px solid #ccc;
+			}
+			
+			.search-select label {
+				margin-left: 10px;
+			}
+			
+			.specialapproval-list {
+				width: 100%;
+				zoom: 1;
+				overflow: auto;
+			}
+			
+			.specialapproval-list:after {
+				content: ".";
+				display: block;
+				height: 0;
+				clear: both;
+				visibility: hidden;
+			}
+			
+			.specialapproval-list-box {
+				float: left;
+				width: 48%;
+				min-width: 700px;
+				border: 1px solid #ccc;
+				border-radius: 3px;
+				-webkit-border-radius: 3px;
+				-moz-border-radius: 3px;
+				margin: 0 15px 15px 0;
+			}
+			
+			.specialapproval-list-box:nth-child(2n+1) {
+				margin-left: 0;
+			}
+			
+			.box-top {
+				border-bottom: 1px solid #ccc;
+				height: 40px;
+				line-height: 40px;
+			}
+			
+			.box-menu {
+				width: 80%;
+				padding-left: 14px;
+			}
+			
+			.box-state {
+				width: 20%;
+				text-align: center;
+			}
+			
+			.box-center {
+				width: 100%;
+				height: 150px;
+				padding: 10px;
+				padding-left: 40px;
+				overflow: auto;
+			}
+			
+			.box-tab {
+				width: 100%;
+			}
+			
+			.box-tab th {
+				font-weight: inherit;
+				text-align: center;
+			}
+			/*.box-tab td {
+				font-weight: bold;
+			}*/
+			
+			.box-tab tr {
+				height: 30px;
+				text-align: center;
+			}
+			
+			.fa-file-pdf-o {
+				color: #F28D7E;
+				margin-right: 10px;
+			}
+			
+			.box-tab-info {
+				color: #999999;
+				text-align: left;
+			}
+			
+			.box-bottom {
+				border-top: 1px solid #ccc;
+				height: 80px;
+			}
+			
+			.box-disposerecord {
+				width: 80%;
+				padding: 10px 0 0px 14px;
+				line-height: 25px;
+			}
+			
+			.box-dispose {
+				width: 20%;
+			}
+			
+			.dispose {
+				display: inline-block;
+				width: 50px;
+				height: 50px;
+				line-height: 50px;
+				text-align: center;
+				border-radius: 25px;
+				-webkit-border-radius: 25px;
+				-moz-border-radius: 25px;
+			}
+			
+			.agree-dispose {
+				color: #008000;
+				border: 1px solid #008000;
+			}
+			
+			.refuse-dispose {
+				color: #FF0000;
+				border: 1px solid #FF0000;
+			}
+			
+			.cancel-specialapproval {
+				line-height: 30px;
+			}
+			
+			.refuse-reason {
+				resize: none;
+				height: 50px;
+				width: 100%;
+				margin-top: 10px;
+			}
+			
+			.modal-dialog {
+				margin-top: 20%!important;
+			}
+			
+			.applyfor-reason {
+				font-size: 14px;
+				word-wrap: break-word;
+				word-break: break-all;
+				display: -webkit-box;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				-webkit-line-clamp: 5;
+				-webkit-box-orient: vertical;
+				/*text-align: left;*/
+			}
+			
+			.box-name {
+				max-width: 200px;
+			}
+			/*新样式*/
+			
+			.color-gray {
+				color: #999;
+				word-break: break-all;
+				word-wrap: break-word;
+				font-size: 12px;
+			}
+			
+			.color-black {
+				color: #000;
+			}
+			
+			.font-blod {
+				font-weight: bold;
+			}
+			
+			.font-size-15 {
+				font-size: 15px;
+			}
+			
+			.badge-danger {
+				position: inherit;
+			}
+			
+			.page-visit-quota-change-apv {}
+			
+			.page-visit-quota-change-apv .specialapproval-list-box {
+				border: 1px solid #e3e3e3;
+				border-top: 2px solid #66b5ed;
+				border-radius: 0;
+				-moz-box-shadow: 0 1px 5px #eee;
+				-webkit-box-shadow: 0 1px 5px #eee;
+				box-shadow: 0 1px 5px #eee;
+			}
+			
+			.page-visit-quota-change-apv .specialapproval-list-box .box-top {
+				height: 42px;
+				background-color: #f3f3f3;
+				border-bottom: 0;
+			}
+			
+			.page-visit-quota-change-apv .specialapproval-list-box .box-top {
+				height: 42px;
+				background-color: #f3f3f3;
+				border-bottom: 0;
+			}
+			
+			.page-visit-quota-change-apv .specialapproval-list-box .box-top .box-name .css-overhidden {
+				min-width: 30px;
+				vertical-align: top;
+				font-size: 14px;
+			}
+			
+			.page-visit-quota-change-apv .specialapproval-list-box .box-top .box-name .label-time {
+				padding-left: 15px;
+				font-size: 12px;
+			}
+			
+			.page-visit-quota-change-apv .specialapproval-list-box .box-top .box-state {
+				text-align: right;
+				padding-right: 14px;
+				font-size: 14px;
+				color: #21b5a9;
+			}
+			
+			.page-visit-quota-change-apv .specialapproval-list-box .box-top .box-state.text-danger {
+				color: #ca192b;
+			}
+			
+			.page-visit-quota-change-apv .specialapproval-list-box .box-reason {
+				padding: 10px 14px;
+				background-color: #f3f3f3;
+				font-size: 12px;
+				color: #666;
+				height: 60px;
+			}
+			
+			.page-visit-quota-change-apv .specialapproval-list-box .box-bottom {
+				border-top: 1px solid #e3e3e3;
+				overflow: auto;
+			}
+			
+			.page-visit-quota-change-apv .specialapproval-list-box .box-bottom .pull-right {
+				padding: 0 10px;
+				padding-top: 35px;
+				text-align: right;
+			}
+			
+			.page-visit-quota-change-apv .specialapproval-list-box .box-bottom .pull-left .disposerecord-list-result {
+				font-size: 16px;
+				margin-right: 10px;
+				color: #21b5a9;
+				display: inline-block;
+				width: 52px;
+				text-align: left;
+			}
+			
+			.page-visit-quota-change-apv .specialapproval-list-box .box-bottom .pull-left .disposerecord-list-result.text-danger {
+				color: #ca192b;
+			}
+			
+			.page-visit-quota-change-apv .specialapproval-list-box .box-bottom .pull-left .disposerecord-list-time {
+				font-size: 13px;
+				padding-left: 10px;
+				padding-right: 15px;
+			}
+			
+			.disposerecord-list-time,
+			.disposerecord-list-deparment,
+			.disposerecord-list-name {
+				font-size: 12px;
+			}
+			
+			.box-tab-name {
+				font-size: 14px;
+				color: #333;
+			}
+			
+			.box-tab .text-danger {
+				color: #ca192b;
+			}
+			
+			.box-tab-info-company {
+				font-size: 12px;
+				color: #999;
+				max-width: 250px;
+			}
+			
+			.cancel-special {
+				margin-left: -17px;
+    			margin-right: 3px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container client-visit-indicators-specialapproval page-visit-quota-change-apv">
+			<div class="content">
+				<div class="remark">
+					<img src="../resources/images/zhibiao-icon.png" alt="" /><span>*客户拜访指标特批</span>
+				</div>
+				<div class="client-visit-indicators-specialapproval-main">
+					<div class="search">
+
+					</div>
+					<div class="search-txt hide">
+						<input type="text" placeholder="请输入员工姓名、部门、客户名称进行查找" />
+						<a href="javascript:search();"><i class="fa fa-search" aria-hidden="true"></i></a>
+					</div>
+					<div class="search-select hide">
+						处理状态：
+						<label onclick="search()"><input type="checkbox" value="1">待处理</label>
+						<label onclick="search()"><input type="checkbox" value="2">已同意</label>
+						<label onclick="search()"><input type="checkbox" value="3">已拒绝</label>
+						<label onclick="search()"><input type="checkbox" value="4">已取消特批</label>
+					</div>
+					<div class="specialapproval-list">
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--拒绝申请弹窗-->
+		<div class="refuse-applyfor hide">
+			<p style="font-size: 20px;text-align: center;">确认拒绝该申请？</p>
+			<p><span class="important">*</span>拒绝原因：</p>
+			<textarea class="refuse-reason" maxlength="50"></textarea>
+		</div>
+	</body>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript" src="../resources/js/main.min.js"></script>
+	<script type="text/javascript" src="../resources/js/customize/jquery.dotdotdot.min.js"></script>
+	<script type="text/javascript">
+		var applyforListUrl = BSAPIURL + "/crm/visit_quotas/special";
+		var applyforRefuseUrl = BSAPIURL + "/crm/visit_quota_apply/special/refuse";
+		var applyforAgreeUrl = BSAPIURL + "/crm/visit_quota_apply/special/pass";
+		var applyforCancelUrl = BSAPIURL + "/crm/visit_quota_apply/special/cancel";
+		var page = 1,
+			status = "",
+			key = "",
+			tempSelectTags = {};
+		$(function() {
+			//搜索
+			$.initSearchControls4TagMode({
+				auto: false,
+				container: ".search",
+				keyName: "key",
+				keyPlaceholder: "请输入员工姓名、部门、客户名称进行查找",
+				onChange: function(selectTags) {
+					tempSelectTags = selectTags;
+					loadApplyforList(selectTags, true);
+				},
+				groups: [{
+					name: "change_status",
+					text: "处理状态",
+					items: [{
+						key: "待处理",
+						value: "1"
+					}, {
+						key: "已同意",
+						value: "2"
+					}, {
+						key: "已拒绝",
+						value: "3"
+					}, {
+						key: "已取消特批",
+						value: "4"
+					}]
+				}]
+			});
+
+			//加载申请列表
+			$(".specialapproval-list").height($(window).height() - $(".search").outerHeight(true) - 30);
+			loadApplyforList("", "");
+			$(".specialapproval-list").unbind("scroll").scroll(function() {
+				var nScrollHight = $(this)[0].scrollHeight;
+				var nScrollTop = $(this)[0].scrollTop;
+				var nDivHight = $(this).height();
+				if(nScrollTop + nDivHight >= nScrollHight) {
+					page++;
+					loadApplyforList(tempSelectTags);
+				}
+			});
+		});
+
+		function changeHeight() {
+
+		}
+		//加载申请列表
+		function loadApplyforList(conditionData,notResetPage) {
+			$.showLoadingPop("正在加载...");
+			//清空
+			if(!status) {
+				status = "";
+			}
+			if(!key) {
+				key = "";
+			}
+			if(!conditionData) conditionData = tempSelectTags;
+			if(!notResetPage) conditionData.page=page;
+			else {
+				conditionData.page = 1;
+				page=0;
+			}
+			//$.ajaxGet(applyforListUrl + "?change_status=" + status + "&search_key=" + key + "&page=" + page, function(response) {
+			$.ajaxGet(applyforListUrl + $.toQueryString(conditionData, true), function(response) {
+				var applyforListInfoDatas = response.data.rows;
+				if(conditionData.page == 1)
+					$(".specialapproval-list").empty();
+				if(applyforListInfoDatas.length == 0) return false;
+				for(var i in applyforListInfoDatas) {
+					var applyforListInfoData = applyforListInfoDatas[i];
+					var status_cn = applyforListInfoData.change_status==1? "申请中":applyforListInfoData.change_status==2?
+					"同&nbsp;&nbsp;&nbsp;意":applyforListInfoData.change_status== 3? "已拒绝":applyforListInfoData.change_status== 4?"已取消":"";
+					var str = "<div class=\"specialapproval-list-box\" id='" + applyforListInfoData.change_id + "'>";
+					str += "<div class=\"box-top\">";
+					str += "<p class=\"box-menu pull-left color-gray\">";
+					//str += "<span class=\"badge badge-danger\">拜访</span> ";
+					str += "<span class=\"box-name\" title='" + applyforListInfoData.employee_name +
+						"'><b class='color-black font-blod font-size-15 css-overhidden'> " + applyforListInfoData.employee_name +
+						"</b> (" + applyforListInfoData.depa_name + ")" +
+						"<span class='label-time'>" + applyforListInfoData.change_date + "</span></span>";
+					str += "</p>";
+					var statusClass = "text-info";
+					if(applyforListInfoData.change_status == 2) {
+						statusClass = "text-success";
+					}
+					if(applyforListInfoData.change_status >= 3) {
+						statusClass = "text-danger";
+					}
+					str += "<p class=\"box-state pull-right " + statusClass + "\">" + applyforListInfoData.change_status_cn + "</p>";
+					str += "<div class=\"clearfix\"></div>";
+					str += "</div>";
+					str += "<div class=\"box-center\">";
+					str += "<table class=\"box-tab\">";
+					str += "<tr class='color-gray'>";
+					str += "<th width=\"40%\" style='text-align:left;'>申请对象</th>";
+					str += "<th width=\"20%\">重要等级</th>";
+					str += "<th width=\"20%\">原指标(次/月)</th>";
+					str += "<th width=\"20%\">申请指标(次/月)</th>";
+					str += "</tr>";
+					for(var j in applyforListInfoData.detail_arr) {
+						str += "<tr style='font-size:14px;'>";
+						str += "<td style='text-align:left;'>";
+						if(applyforListInfoData.detail_arr[j].object_changing_status == 3) {
+							str += "<img aria-hidden=\"true\" class='cancel-special' src='../resources/images/cancel-special-icon.png' title='" + applyforListInfoData.employee_name + " 取消特批于 " + applyforListInfoData.detail_arr[j].cancel_date + "'/>";
+						}
+						if(applyforListInfoData.detail_arr[j].change_object_type == 1) {
+							str += "<span class=\"box-tab-name\">" + applyforListInfoData.detail_arr[j].client_full_name + "</span>";
+						} else if(applyforListInfoData.detail_arr[j].change_object_type == 2) {
+							str += "<span class=\"box-tab-name\">" + applyforListInfoData.detail_arr[j].depa_name + "</span>";
+							//str += "<p class=\"box-tab-info\">";
+							str += "<span class=\"box-tab-info-company css-overhidden\" title='"+applyforListInfoData.detail_arr[j].client_full_name+"'>（" + applyforListInfoData.detail_arr[j].client_full_name + "）</span>";
+							//str += "</p>";
+						} else {
+							str += "<span class=\"box-tab-name\">" + applyforListInfoData.detail_arr[j].contact_name + "</span>";
+							//str += "<p class=\"box-tab-info\">";
+							str += "<span class=\"box-tab-info-company css-overhidden\" title='"+(applyforListInfoData.detail_arr[j].client_full_name+applyforListInfoData.detail_arr[j].depa_name)+"'>（" + applyforListInfoData.detail_arr[j].client_full_name + "，";
+							str += "<span class=\"box-tab-info-deparment\">" + applyforListInfoData.detail_arr[j].depa_name + "</span>）</span>";
+							//str += "</p>";
+						}
+
+						str += "</td>";
+						str += "<td>" + applyforListInfoData.detail_arr[j].important_level_cn + "</td>";
+						str += "<td>" + applyforListInfoData.detail_arr[j].visit_quota_old_value + "</td>";
+						str += "<td class='text-danger'>" + applyforListInfoData.detail_arr[j].visit_quota_new_value + "</td>";
+						str += "</tr>";
+					}
+					var isRefuse = applyforListInfoData.change_status == 3;
+					str += "</table>";
+					str += "</div>";
+					str += "<div class=\"box-reason\">申请原因：<span class='color-gray'>" + applyforListInfoData.change_reason + "</span></div>";
+					str += "<div class=\"box-bottom\">";
+					str += "<div class=\"box-disposerecord pull-left\" " + (isRefuse ? "style=\"width:98%\"" : "") + ">";
+					
+					
+					str += "<p class=\"disposerecord-list\">";
+					if(applyforListInfoData.change_approver) {
+						str += "<span class=\"disposerecord-list-result text-" + (applyforListInfoData.change_status ==4?"success":isRefuse ? "danger" : "success") + " font-blod\">" + (applyforListInfoData.change_status ==4?"同&nbsp;&nbsp;&nbsp;意":status_cn) + "</span>";
+						str += "<span class=\"disposerecord-list-name color-gray\">" + applyforListInfoData.change_approver_name + "</span>";
+						str += "<span class=\"disposerecord-list-deparment color-gray\">," + applyforListInfoData.change_approver_depa_name + "</span>";
+						str += "<span class=\"disposerecord-list-time color-gray\">" + applyforListInfoData.change_approval_date + "</span>";
+						if(isRefuse) {
+							//拒绝
+							str += "<br><span class=\"disposerecord-list-reason css-overhidden color-gray\" title='"+applyforListInfoData.change_approval_reason+"'><span style='color:#333;'>原因：</span>" + applyforListInfoData.change_approval_reason + "</span>";
+						}
+					}
+					str += "</p>";
+					
+					
+					
+					if(applyforListInfoData.change_status ==4){
+						str += "<p class=\"disposerecord-list\">";
+						if(applyforListInfoData.change_cancel_employee_id) {
+							//str += (applyforListInfoData.can_handle ? "<span class=\"disposerecord-list-result text-danger font-blod\">取消特批</span>" : "");
+							str += "<span class=\"disposerecord-list-result text-" + (applyforListInfoData.change_status ==4 ? "danger" : "success") + " font-blod\">已取消</span>";
+							str += "<span class=\"disposerecord-list-name color-gray\">" + applyforListInfoData.change_cancel_employee_name + "</span>";
+							str += "<span class=\"disposerecord-list-deparment color-gray\">," + applyforListInfoData.change_cancel_depa_name + "</span>";
+							str += "<span class=\"disposerecord-list-time color-gray\">" + applyforListInfoData.change_cancel_date + "</span>";
+						}
+						str += "</p>";
+					}
+					
+					str += "</div>";
+					if(applyforListInfoData.change_status != 3) {
+						str += "<div class=\"box-dispose pull-right\">";
+						if(applyforListInfoData.can_handle) {
+							if(applyforListInfoData.change_status == 1) {
+								str += "<a href=\"javascript:;\" class=\"btn btn-sm btn-info def-btn-info\" onclick=\"agreeApplyfor(this)\"><img src='../resources/images/icon-apv-agree.png'>同意</a> ";
+								str += "<a href=\"javascript:;\" class=\"btn btn-sm btn-danger def-btn-danger\" onclick=\"refuseApplyfor(this)\"><img src='../resources/images/icon-apv-refuse.png'>拒绝</a>";
+							} else if(applyforListInfoData.change_status == 2) {
+								str += "<a href=\"javascript:;\" class=\"btn btn-sm btn-danger def-btn-danger\" onclick=\"cancelApplyfor(this)\"><img src='../resources/images/icon-apv-cancel.png'>取消特批</a>";
+							} else {}
+						}
+						str += "</div>";
+					}
+					str += "<div class=\"clearfix\"></div>";
+					str += "</div>";
+					str += "</div>";
+					$(".specialapproval-list").append(str);
+					if($("#" + applyforListInfoData.change_id + " .applyfor-reason").height() > 30) {
+						$("#" + applyforListInfoData.change_id + " .applyfor-reason").css("text-align", "left");
+					}
+					//多行省略号兼容
+					//$clamp($("#" + applyforListInfoData.change_id + " .applyfor-reason")[0], { clamp: 5 });
+				}
+				//$(".specialapproval-list>div:nth-child(2n+1)").css("margin-left", "0");
+				$(".disposerecord-list-reason").css({
+					"max-width": $(".disposerecord-list").outerWidth(true)-20+"px"
+				});
+				$.zoom({
+					container: $(".box-reason span"),
+					height: 30,
+					firstState: 0
+				});
+			});
+			$.hideLoadingPop();
+		}
+		//同意
+		function agreeApplyfor(obj) {
+			var applyforId = $(obj).parents(".specialapproval-list-box").attr("id");
+			var modalId = $.modal().confirm("确认同意该申请？", function() {
+				$.ajaxPut(applyforAgreeUrl, {
+					"change_id": applyforId
+				}, function(response) {
+					if(response.code == 0) {
+						//success									
+						$.showSuccessGritter("已同意该申请");
+						//刷新列表
+						page = 1;
+						loadApplyforList();
+						$("#" + modalId).modal("hide");
+					} else {
+						$.showErrorGritter("同意失败" + response.msg);
+					}
+				});
+			});
+			$("#" + modalId + " .modal-dialog").css("margin-top", "20%");
+		}
+		//拒绝
+		function refuseApplyfor(obj) {
+			var modalId = $.modal().show("提示", ".refuse-applyfor", function() {
+				var applyforId = $(obj).parents(".specialapproval-list-box").attr("id");
+				$.ajaxPut(applyforRefuseUrl, {
+					"change_approval_reason": $("#" + modalId + " .refuse-reason").val(),
+					"change_id": applyforId
+				}, function(response) {
+					if(response.code == 0) {
+						//success									
+						$.showSuccessGritter("已拒绝该申请");
+						//刷新列表
+						page = 1;
+						loadApplyforList();
+						$("#" + modalId).modal("hide");
+					} else {
+						$.showErrorGritter("拒绝失败" + response.msg);
+					}
+				});
+			});
+		}
+		//取消特批
+		function cancelApplyfor(obj) {
+			var modalId = $.modal().confirm("确认取消特批？", function() {
+				var applyforId = $(obj).parents(".specialapproval-list-box").attr("id");
+				$.ajaxPut(applyforCancelUrl, {
+					"change_id": applyforId
+				}, function(response) {
+					if(response.code == 0) {
+						//success									
+						$.showSuccessGritter("已取消特批");
+						//刷新列表
+						page = 1;
+						loadApplyforList();
+						$("#" + modalId).modal("hide");
+					} else {
+						$.showErrorGritter("取消特批失败" + response.msg);
+					}
+				});
+			});
+		}
+		//搜索
+		function search() {
+			var searchText = $(".search-txt>input").val();
+			var searchStatus = [];
+			$(".search-select input:checked").each(function() {
+				searchStatus.push($(this).val());
+			});
+			page = 1;
+			status = searchStatus;
+			key = searchText;
+			loadApplyforList();
+		}
+	</script>
+
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>打印页面</title>
+		<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/resources/js/jquery.print.js"></script>
+	</head>
+
+	<body>
+		<button type="button" class="btn-print">打印</button>
+		<div class="pnl">
+			<h5>这是打印内容</h5>
+			<ol>
+				<li>列表1</li>
+				<li>列表1</li>
+				<li>列表1</li>
+				<li>列表1</li>
+				<li>列表1</li>
+				<li>列表1</li>
+				<li>列表1</li>
+				<li>列表1</li>
+			</ol>
+		</div>
+		<script>
+			$(document).ready(function() {
+				$(".btn-print").click(function() {
+					$(".pnl").print();
+				});
+			});
+		</script>
+	</body>
+
+</html>

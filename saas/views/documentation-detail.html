@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>文档详情</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			body {
+				-moz-user-select: none;
+				/*火狐*/
+				-webkit-user-select: none;
+				/*webkit浏览器*/
+				-ms-user-select: none;
+				/*IE10*/
+				-khtml-user-select: none;
+				/*早期浏览器*/
+				user-select: none;
+			}
+			
+			.page-announcement {
+				/*width: 1200px;*/
+				/*margin: 0 auto;*/
+			}
+			
+			.page-announcement .item-announcement {
+				margin: 10px 10px 0 0;
+				height: auto;
+			}
+			
+			.page-announcement .item-announcement .header h4 {
+				margin: 20px 0 30px 0;
+				padding: 0;
+				font-size: 20px;
+				color: #333;
+				font-weight: bold;
+				/*text-align: center;*/
+			}
+			
+			.page-announcement .item-announcement .header hr {
+				margin: 10px 0;
+			}
+			
+			.page-announcement .item-announcement .header .label-collect a.active {
+				color: orange;
+			}
+			
+			.page-announcement .item-announcement .header .info .row-left,
+			.page-announcement .item-announcement .header .info .row-center,
+			.page-announcement .item-announcement .header .info .row-right {
+				display: inline-block;
+				/*width: 30%;*/
+			}
+			
+			.page-announcement .item-announcement .header .info .row-center {
+				/*width: 39%;*/
+				margin: 0 40px;
+				display: inline-block;
+				text-align: center;
+			}
+			
+			.label-publish-name {
+				margin-right: 40px;
+			}
+			
+			.label-collect {
+				margin-left: 40px;
+			}
+			
+			.page-announcement .item-announcement .footer {
+				padding: 10px 0;
+			}
+			
+			.page-announcement .item-announcement .footer .annex .bar-annex {
+				margin-bottom: 30px;
+				padding: 10px 0;
+				border: 1px dashed #eee;
+				border-width: 1px 0 1px 0;
+				border-bottom: 1px solid #eee;
+			}
+			
+			.page-announcement .item-announcement .footer .annex .bar-annex .label-download-detail {
+				/*float: right;*/
+			}
+			
+			.page-announcement .item-announcement .footer .annex .list-annex li {
+				margin-bottom: 10px;
+			}
+			
+			.page-announcement .item-announcement .footer .annex .list-annex li:after {
+				clear: both;
+			}
+			
+			.page-announcement .item-announcement .footer .annex .list-annex li>.link-read-online,
+			.page-announcement .item-announcement .footer .annex .list-annex li>.link-download {
+				float: right;
+				margin-left: 10px;
+			}
+			
+			.pnl-bottom-btns {
+				text-align: center;
+			}
+			
+			.css-overhidden {
+				width: 50px;
+			}
+			
+			.modal-body {
+				padding: 0 15px;
+			}
+			
+			.css-overhidden {
+				width: 50px;
+			}
+			
+			.label-collect,
+			.label-read {
+				color: #009ED8;
+				font-size: 12px;
+			}
+			
+			.summary {
+				font-size: 14px;
+				color: #666;
+			}
+			
+			.bar-annex>span:first-child,
+			.list-annex .title {
+				display: inline-block;
+				color: #999;
+				font-size: 14px;
+				width: 300px;
+			}
+			
+			.link-download-detail,
+			.link-download-detail:hover,
+			.label-read-detail,
+			.label-read-detail:hover {
+				color: #009ED8;
+				font-size: 12px;
+				cursor: pointer;
+			}
+			
+			.label-collect a {
+				color: #999;
+				cursor: pointer;
+			}
+			
+			.list-employee .item-employee {
+				margin: 0 17px 5px 17px;
+				width: 50px;
+				height: 70px;
+				display: inline-block;
+				overflow: hidden;
+				text-align: center;
+				border: 1px solid transparent;
+				position: relative;
+				color: #999;
+			}
+			
+			.list-employee a {
+				color: #999;
+			}
+			
+			.list-employee .item-employee img {
+				width: 48px;
+				margin: 0;
+			}
+			
+			.list-employee .item-employee.active img {
+				border-color: #009ed8;
+			}
+			
+			.list-employee .item-employee.active:before {
+				position: absolute;
+				top: 0;
+				right: 0;
+				display: inline-block;
+				width: 10px;
+				height: 9px;
+				box-sizing: border-box;
+				content: "";
+				background-image: url(../resources/images/read-status-icon.png);
+			}
+			
+			.list-employee .item-employee .head {
+				width: 48px;
+				height: 48px;
+				border: 1px solid #e3e3e3;
+			}
+			
+			.form-group-has-read {
+				margin: 10px 0 20px 0;
+				border-bottom: 1px solid #eee;
+			}
+			
+			.btn-read {
+				margin-right: 14px;
+			}
+			
+			.header {
+				margin-top: 30px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-announcement">
+			<div class="content">
+				<div class="item-announcement">
+					<div class="header">
+						<h4 bind="file_title"></h4>
+						<div class="info">
+							<span class="row-left note-font-type">
+								<span class="label-level">
+									<span bind="file_type_cn"></span>
+								</span>
+							</span>
+							<span class="row-center note-font-type">
+								<span class="label-publish-dept" bind="file_owner_depa_cn"></span>
+								<span class="label-publish-name" bind="file_owner_cn"></span>
+								<span>发布于</span>
+								<span class="label-time" bind="file_share_time"></span>
+							</span>
+							<span class="row-right note-font-type">
+								<span class="label-read zindex-can-click">
+									<a class="label-read-detail status-control">已读 <span class="count-read" bind="count_read"></span> 人，未读 <span class="count-not-read" bind="count_not_read"></span> 人</a>
+								</span>
+								<span class="label-collect zindex-can-click">
+									<a href="javascript:;" class="status-control" title="收藏">
+										<i class="fa fa-star-o"></i> 
+										(<span class="label-count-favorite" bind="file_favorite_count">0</span>)
+									</a>
+								</span>
+								<span class="label-collect1 zindex-can-click hide">
+									<i class="fa fa-star-o"></i> (<span class="label-count-favorite" bind="file_favorite_count">0</span>)
+								</span>
+							</span>
+						</div>
+						<hr />
+					</div>
+					<div class="summary" bind="announcement_content_html">
+					</div>
+					<div class="footer">
+						<div class="annex">
+							<div class="bar-annex">
+								<span class="label-download-detail zindex-can-click">
+									<a href="javascript:;" class="link-download-detail status-control zindex-can-click">已下载 <span bind="count_download"></span>/<span bind="count_all_download"></span> 人</a>
+								</span>
+								<p class="clear"></p>
+							</div>
+							<div class="text-align-center">
+								<a href="javascript:;" class="btn btn-danger def-btn-danger btn-read btn-read1 status-control zindex-can-click">确认已阅读</a>
+								<a class="btn btn-danger def-btn-danger btn-download status-control zindex-can-click">下载</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-doc-readdetail hide">
+			<form class="form-horizontal model-doc-readdetail">
+				<div class="form-group form-inline">
+					<label class="zindex-can-click">未读 <span class="label-employee-unread">0</span> 人</label>
+				</div>
+				<ul class="list-employee list-employee-unread">
+
+				</ul>
+				<div class="form-group form-group-has-read form-inline">
+					<label class="zindex-can-click">已读 <span class="label-employee-readed">0</span> 人</label>
+				</div>
+				<ul class="list-employee list-employee-readed">
+
+				</ul>
+				<hr>
+				<div class="pnl-bottom-btns">
+					<label style="font-weight: normal;"><input type="checkbox" class="form-control-radio form-control-unread-select zindex-can-click" /> 未读同事</label>
+					<button type="button" class="btn btn-info def-btn-info btn-sm btn-remind-read zindex-can-click">提醒阅读</button>
+					<button type="button" class="btn btn-primary def-btn-primary btn-sm zindex-can-click" data-dismiss="modal">关闭</button>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-doc-download-detail hide">
+			<form class="form-horizontal model-doc-download-detail">
+				<div class="form-group form-inline">
+					<label class="zindex-can-click">已下载 <span bind="count_download">0</span>/<span bind="count_all_download">0</span> 人</label>
+				</div>
+				<ul class="list-employee list-employee-readed list-employee-download">
+					<li style="padding-left: 15px;">
+						无下载人员记录
+					</li>
+				</ul>
+				<hr>
+				<div class="pnl-bottom-btns">
+					<button type="button" class="btn btn-primary def-btn-primary btn-sm" data-dismiss="modal">关闭</button>
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			//------------消息队列相关-----------------------
+			var publisher = parent.HHMQ.createPublisher('文档详情', 'documentation');
+			//页面关闭事件
+			context.onPageClose = function() {
+				publisher.dispose();
+			};
+			//------------消息队列相关 end -------------------
+			//公告APIS
+			var baseAPIURL = BSAPIURL + "/files";
+			var DOCUMENTAPI = {
+				base: baseAPIURL,
+				//收藏
+				favorite: BSAPIURL + "/favorite/files",
+				//确认阅读
+				read: baseAPIURL + "/readers",
+				//阅读情况
+				reader: baseAPIURL + "/{id}/read_status",
+				//下载情况
+				downloadinfo: baseAPIURL + "/{id}/download_status",
+				download: baseAPIURL + "/loading/{id}",
+				//提醒阅读
+				notify: baseAPIURL + "/{id}/reader/notify",
+				//提交下载审批
+				approval: baseAPIURL + "/download/approval/{id}",
+				//获取状态
+				loadStates: baseAPIURL + "/loading/{id}/status"
+			};
+			var isCollecting = false;
+			var documentId = $.getQueryObject().id;
+			var documentStatus = $.getQueryObject().status;
+			var isMyDoc = false;
+			var meIsInArea = false;
+			var needApv = false;
+			$(document).ready(function() {
+				if(!documentId) {
+					$.showLoadingPop("页面参数有误，请返回重新打开。");
+					return false;
+				}
+				$.showLoadingPop("正在加载文档信息，请稍后...");
+				//token
+				$.token();
+				//加载数据
+				loadDocumentDetail();
+			});
+			//展示文档数据
+			function loadDocumentDetail() {
+				$.ajaxGet(DOCUMENTAPI.base + "/" + documentId, function(response) {
+					if(response.code == 0) {
+						//success
+						var announcementData = response.data;
+						var annController = new Controller();
+						documentStatus = announcementData.file_status;
+						needApv = announcementData.download_need_approval;
+						//是否自己的文档
+						if(announcementData.is_current_employee) {
+							isMyDoc = true;
+							meIsInArea = announcementData.self_in_scope;
+							$(".btn-read1").attr("disabled", "disabled");
+							if(!meIsInArea) {
+								$(".label-collect").hide();
+								$(".label-collect1").removeClass("hide");
+							}
+						}
+						if($.getQueryObject().im != undefined && announcementData.file_status == 1) {
+							$.hideLoadingPop();
+							//$.showErrorGritter("公告已下架！");
+							$("body").append("<div class=\"inform hide\"><p style=\"line-height:100px;font-size:20px;text-align:center;\">文档已取消共享！</p></div")
+							var modalId = $.modal().show("系统提示", ".inform", function() {
+								parent.closeCurrActiveTab();
+							}, function() {
+								parent.closeCurrActiveTab();
+							});
+							$("#" + modalId + " .close").unbind('click').click(function() {
+								parent.closeCurrActiveTab();
+							});
+							return false;
+						}
+						//已读
+						announcementData.count_read = announcementData.read_status.has_reader.length;
+						//未读
+						announcementData.count_not_read = announcementData.read_status.non_reader.length;
+						announcementData.count_download = announcementData.download_status.has_download.length;
+						announcementData.count_all_download = announcementData.download_status.non_download.length + announcementData.count_download;
+						annController.set(announcementData);
+						if(announcementData.file_is_favorite) {
+							$(".label-collect a").addClass("active");
+						}
+						if(announcementData.file_is_read) {
+							$(".btn-read1").text("已阅读").removeClass("btn-read").attr("disabled", "disabled");
+						}
+						$(".btn-download").data("status", announcementData.file_download_status);
+						console.log(response)
+						$(".link-download-detail").attr("data-is-download", response.data.file_is_download);
+						if(response.data.is_own && response.data.self_in_scope) {
+							$(".item-announcement .footer .btn-read").text("已阅读");
+							$(".item-announcement .footer .btn-read").prop("disabled", "disabled");
+						} else if(response.data.is_own && !response.data.self_in_scope) {
+							$(".item-announcement .footer .btn-read").remove();
+						}
+						//事件
+						initBtnEvents();
+						var waterPrintTimeOut = setTimeout(function() {
+							waterPrint();
+							clearTimeout(waterPrintTimeOut);
+							waterPrintTimeOut = null;
+						}, 50);
+
+						if(documentStatus == 1 || documentStatus == 2 || documentStatus == 4) {
+							//$(".row-center").remove();
+							$(".row-right").remove();
+							$(".footer,.row-center").remove();
+						}
+						//读取文档内容
+						onlineRead(announcementData.file_info.name, announcementData.file_info.path, $(".summary"));
+						//console.log(document.getElementsByName("online-read")[0].contentWindow)
+//						document.getElementsByName("online-read")[0].contentWindow.document.getElementsByTagName("body")[0].style.fontSize="14px";
+//						document.getElementsByName("online-read")[0].contentWindow.document.getElementsByTagName("body")[0].style.color="#666";
+//						document.getElementsByName("online-read")[0].contentWindow.document.getElementsByTagName("body")[0].style.display="none";
+//						console.log(document.getElementsByName("online-read")[0].contentWindow.document.getElementsByTagName("body")[0].style.fontSize)
+					} else {
+						$.showErrorGritter("加载公告详情失败：" + response.msg);
+					}
+
+					$.hideLoadingPop();
+				});
+			}
+			//页面按钮事件绑定
+			function initBtnEvents() {
+				if(documentStatus != 3) {
+					$(".status-control").attr("disabled", "disabled");
+					$(".status-control").css("background-color", "#EBEBEB");
+					$(".status-control").css("cursor", "not-allowed");
+					$(".status-control").click(function(e) {
+						var text = "文档审批中...";
+						$.showErrorGritter(text);
+					});
+					return false;
+				}
+				//收藏
+				if(!isMyDoc || isMyDoc && meIsInArea) {
+
+					$(".item-announcement .header .label-collect a").click(function() {
+						if(isCollecting) {
+							$.showSuccessGritter("操作频繁！");
+							return;
+						};
+						isCollecting = true;
+						var linkObj = $(this);
+						var favoriteAPIURL = DOCUMENTAPI.favorite;
+						var isCollect = !$(this).hasClass("active");
+						$(this).toggleClass("active");
+						if(isCollect) {
+							$.ajaxPost(favoriteAPIURL, {
+								file_ids: [documentId]
+							}, function(response) {
+								if(response.code == 0) {
+									//success
+									//消息推送
+									$.showSuccessGritter("添加收藏成功。");
+									setFavoriteCount(linkObj, 1);
+									publisher.publisheMsg({
+										action: "collect",
+										msg: "收藏",
+										documentId: documentId
+									});
+								} else {
+									$.showErrorGritter("收藏失败：" + response.msg);
+								}
+								isCollecting = false;
+							});
+						} else {
+							$.ajaxDelete(favoriteAPIURL, {
+								file_ids: [documentId]
+							}, function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("取消收藏成功。");
+									setFavoriteCount(linkObj, -1);
+									//消息推送
+									publisher.publisheMsg({
+										action: "collect",
+										msg: "取消收藏",
+										documentId: documentId
+									});
+								} else {
+									$.showErrorGritter("取消收藏失败：" + response.msg);
+								}
+								isCollecting = false;
+							});
+						}
+					});
+				}
+				var setFavoriteCount = function(obj, flag) {
+					var prevNum = parseInt($(obj).find(".label-count-favorite").text());
+					var setNum = flag > 0 ? prevNum + flag : (prevNum + flag < 0 ? 0 : prevNum + flag);
+					$(obj).find(".label-count-favorite").text(setNum);
+				};
+				//阅读详情
+				$(".item-announcement .label-read-detail").click(function() {
+					openReadDetailPop();
+				});
+				//下载详情
+				$(".item-announcement .link-download-detail").click(function() {
+					openDownloadDetailPop();
+				});
+				//确认阅读
+				if(!isMyDoc) {
+					$(".item-announcement .footer .btn-read").click(function() {
+						openConfirmReadPop(this);
+					});
+				}
+				//下载
+				$(".item-announcement .footer .btn-download").click(function() {
+					openDownloadPop(this);
+				});
+			}
+			//阅读详情
+			function openReadDetailPop() {
+				var modalId = $.modal({
+					showFooter: false
+				}).show("阅读状态", ".pnl-doc-readdetail");
+				//model pop id
+				var formContainer = "#" + modalId + " .model-doc-readdetail";
+				//加载阅读详情
+				var employeeItemHtml = "<li class=\"item-employee\" data-employee-id=\"{ID}\">" +
+					"<img class=\"head\" src=\"{H}\">" +
+					"<p title=\"{N}\" class=\"name css-overhidden\">{N}</p>" +
+					"</li>";
+				$.ajaxGet(DOCUMENTAPI.reader.replace("{id}", documentId), function(response) {
+					if(response.code == 0) {
+						//success
+						//未读
+						$(formContainer + " .label-employee-unread").text(response.data.non_reader.length);
+						for(var i in response.data.non_reader) {
+							var empData = response.data.non_reader[i];
+							$(formContainer + " .list-employee-unread").append(employeeItemHtml.replace("{H}", empData.employee_avatar).replace("{N}", empData.employee_name).replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+						}
+						//已读
+						$(formContainer + " .label-employee-readed").text(response.data.has_reader.length);
+						for(var i in response.data.has_reader) {
+							var empData = response.data.has_reader[i];
+							$(formContainer + " .list-employee-readed").append(employeeItemHtml.replace("{H}", empData.employee_avatar).replace("{N}", empData.employee_name).replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+						}
+						//选择事件
+						$(formContainer + " .list-employee-unread .item-employee").click(function() {
+							if(!isMyDoc)
+								return false;
+							$(this).toggleClass("active");
+						});
+					} else {
+						$.showErrorGritter("加载阅读详情失败：" + response.msg);
+					}
+				});
+				if(!isMyDoc) {
+					$(formContainer + " .btn-remind-read").remove();
+					$(formContainer + " .form-control-unread-select").parent().remove();
+					return false;
+				}
+				//提醒
+				$(formContainer + " .btn-remind-read").click(function() {
+					var selectUnreadEmployees = [];
+					$(formContainer + " .list-employee-unread .item-employee.active").each(function() {
+						selectUnreadEmployees.push($(this).data("employee-id"));
+					});
+					if(selectUnreadEmployees.length == 0) {
+						$.showErrorGritter("请先选择要提醒阅读的人员。");
+						return false;
+					}
+					var infoData = {};
+					infoData.business_type = 30;
+					infoData.data_id = documentId;
+					infoData.employee_id = selectUnreadEmployees.join(',');
+					infoData.message = {};
+					infoData.message.msg_content = "文档提醒阅读";
+					infoData.message.msg_type = MtaCode.documenttion;
+					infoData.business_type_cn="M一下：文档";
+					sendMtaMessage(infoData,modalId);
+				});
+				$(formContainer + " .form-control-unread-select").change(function() {
+					var tmpChecked = $(this).is(":checked");
+					var employeeDoms = $(formContainer + " .list-employee-unread .item-employee");
+					if(tmpChecked) {
+						employeeDoms.addClass("active");
+					} else {
+						employeeDoms.removeClass("active");
+					}
+				});
+			}
+			//下载详情
+			function openDownloadDetailPop() {
+				var modalId = $.modal({
+					showFooter: false
+				}).show("下载情况", ".pnl-doc-download-detail");
+				//model pop id
+				var formContainer = "#" + modalId + " .model-doc-download-detail";
+				//加载下载详情
+				var employeeItemHtml = "<li class=\"item-employee\" data-employee-id=\"{ID}\">" +
+					"<img class=\"head\" src=\"{H}\">" +
+					"<p title=\"{N}\" class=\"name css-overhidden\">{N}</p>" +
+					"</li>";
+				$.ajaxGet(DOCUMENTAPI.downloadinfo.replace("{id}", documentId), function(response) {
+					if(response.code == 0) {
+						//success
+						if(response.data.has_download.length > 0) {
+							$(formContainer + " .list-employee-download").empty();
+							for(var i in response.data.has_download) {
+								var empData = response.data.has_download[i];
+								$(formContainer + " .list-employee-download").append(employeeItemHtml.replace("{H}", empData.employee_avatar).replace("{N}", empData.employee_name).replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+							}
+						}
+					} else {
+						$.showErrorGritter("加载下载详情失败：" + response.msg);
+					}
+				});
+			}
+			//确认阅读
+			function openConfirmReadPop(obj) {
+				$.modal().confirm("确认已阅读本条文档吗？", function() {
+					$.ajaxPut(DOCUMENTAPI.read, {
+							file_id: documentId
+						},
+						function(response) {
+							if(response.code == 0) {
+								//success
+								//消息推送
+								publisher.publisheMsg({
+									action: "read",
+									msg: "确认阅读",
+									documentId: documentId
+								});
+								$(obj).text("已阅读").attr("disabled", "disabled").unbind("click");
+								$(".count-read").html(parseInt($(".count-read").html()) + 1);
+								$(".count-not-read").html(parseInt($(".count-not-read").html()) == 0 ? 0 : parseInt($(".count-not-read").html()) - 1);
+							} else {
+								$.showErrorGritter("确认阅读失败：" + response.msg);
+							}
+						});
+				});
+			}
+			//加载文档动态
+			function loadDocumentationStates(id, callback) {
+				$.ajaxGet(DOCUMENTAPI.loadStates.replace("{id}", id), function(response) {
+					if(response.code == 0) {
+						$(".btn-download").data("status", response.data.download_status);
+						callback(response.data.download_status);
+					} else {
+						$.showErrorGritter("下载文档失败：" + response.msg);
+					}
+				});
+			}
+			//下载
+			function openDownloadPop(obj) {
+				loadDocumentationStates(documentId, function(st) {
+					var getDowninfo = function() {
+						$.ajaxGet(DOCUMENTAPI.download.replace("{id}", documentId),
+							function(response) {
+								if(response.code == 0) {
+									//success
+									var status = response.data.download_status;
+									if(status == 0) {
+										$.modal().confirm("下载文档需要审核，审核通过后才能下载，确认提交下载申请吗？", function() {
+											$.showApprovalPostPop({
+												routine: "documentDownload",
+												successCallback: function(apvData, apvModal) {
+													$.ajaxPost(DOCUMENTAPI.approval.replace("{id}", documentId), {
+															plan_id: apvData.planId,
+															diy_step_data: apvData.steps
+														},
+														function(response) {
+															if(response.code == 0) {
+																//success
+																$.showSuccessGritter("下载申请已提交，请等待审批结果。");
+																$(obj).data("status", 1);
+																apvModal && apvModal.modal("hide");
+																//apvModal.modal("hide");
+															} else {
+																$.showErrorGritter("下载文档失败：" + response.msg);
+															}
+														});
+												}
+											});
+										});
+										return false;
+									} else if(status == 1) {
+										$.showErrorGritter("该文档你已提交下载申请，请等待审批结果。");
+										return false;
+									} else if(status == 2) {
+										if((!isMyDoc || (isMyDoc && meIsInArea)) && $(".link-download-detail").prop("data-is-download") == "false") {
+											//消息推送
+											publisher.publisheMsg({
+												action: "download",
+												msg: "下载",
+												documentId: documentId
+											});
+											$(".link-download-detail").prop("data-is-download", true);
+											$(".link-download-detail span:first-child").html(parseInt($(".link-download-detail span:first-child").html()) + 1);
+										}
+										$.downloadFile(DOCUMENTAPI.download.replace("{id}", documentId));
+									}
+								} else {
+									$.showErrorGritter("下载文档失败：" + response.msg);
+								}
+							});
+					};
+					if(st == 2 || !needApv) {
+						if((!isMyDoc || (isMyDoc && meIsInArea)) && $(".link-download-detail").attr("data-is-download") == "false") {
+							//消息推送
+							publisher.publisheMsg({
+								action: "download",
+								msg: "下载",
+								documentId: documentId
+							});
+							$(".link-download-detail").attr("data-is-download", true);
+							$(".link-download-detail span:first-child").html(parseInt($(".link-download-detail span:first-child").html()) + 1);
+						}
+						$.downloadFile(DOCUMENTAPI.download.replace("{id}", documentId));
+					} else
+						getDowninfo();
+				});
+			}
+		</script>
+	</body>
+
+</html>

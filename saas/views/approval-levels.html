@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>审批层级</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			
+			.page-approval {}
+			
+			.page-approval .container .remark {
+				border: 0;
+			}
+			
+			.approvallevels-particular>p {
+				height: 40px;
+				line-height: 40px;
+			}
+			
+			.approvallevels-particular>p span {
+				border-left: 3px solid #ca192b;
+				padding-left: 6px;
+				font-size: 14px;
+				color: #666;
+				line-height: 20px;
+			}
+			
+			.approvallevels-particular-content {
+				/*margin-left: 10px;*/
+				/*padding-left: 10px;*/
+				border: 1px solid #E4E4E4;
+				background: #fff;
+				border-left: 0;
+				border-right: 0;
+				padding: 10px 0 15px 20px;
+				/*border-radius: 5px;*/
+				/*-moz-border-radius: 5px;*/
+				/*-webkit-border-radius: 5px;*/
+			}
+			
+			.particular-content-ul-1 li img {
+				margin-right: 5px;
+			}
+			
+			.particular-content-ul-1 li .btns-container img {
+				vertical-align: baseline;
+			}
+			
+			.particular-content-ul-1 li {
+				line-height: 25px;
+				margin-left: 20px;
+			}
+			
+			.particular-content-ul-1 i {
+				margin-right: 5px;
+			}
+			/*.particular-content-ul-1>li>ul>li {
+				text-indent: 2rem;
+			}
+			
+			.particular-content-ul-1>li>ul>li>ul>li {
+				text-indent: 4rem;
+			}
+			
+			.particular-content-ul-1>li>ul>li>ul>li>ul>li {
+				text-indent: 6rem;
+			}
+			
+			.particular-content-ul-1>li>ul>li>ul>li>ul>li>ul>li {
+				text-indent: 8rem;
+			}*/
+			
+			.content-ul {
+				cursor: pointer;
+			}
+			
+			.content-ul>li {}
+			
+			.particular-content-ul-1 {
+				cursor: pointer;
+			}
+			
+			.content-ul-select {
+				width: 105px;
+				/*margin-left: 5px;*/
+			}
+			
+			.content-ul-settings {
+				/*margin-left: 10px;*/
+			}
+			
+			.btns-container {
+				display: inline-block;
+			}
+			
+			.btns-container img {
+				display: inline-block;
+				text-indent: 0;
+				margin-right: 10px;
+			}
+			
+			.content-ul-1-menu {
+				width: 90%;
+				height: 30px;
+			}
+			
+			.levels-seted {
+				color: #009ed8;
+				display: inline-block;
+				width: 150px;
+			}
+			/*.content-ul-1-menu .line,
+			.content-ul-1-menu .content-ul-span {
+				display: inline-block;
+			}
+			
+			.content-ul-span {
+				width: 80%;
+			}
+			
+			.content-ul-span .content-ul-name {
+				float: left;
+			}
+			
+			.content-ul-span .line {
+				width: 40%;
+			}
+			
+			.content-ul-span .content-ul-settings {
+				float: right;
+			}
+			
+			.content-ul-1-menu i {
+			}*/
+			
+			.content-ul-span {
+				display: inline-block;
+				width: 800px;
+				position: relative;
+			}
+			/*.content-ul-span .content-ul-select*/
+			
+			.content-ul-span .content-ul-settings {
+				position: absolute;
+				right: 0;
+				top: -16px;
+				z-index: 2;
+				background-color: #fff;
+				padding-left: 6px;
+				width: 300px;
+			}
+			
+			.content-ul-span .line {
+				/*display: inline-block;*/
+				/*width: 98%;*/
+				position: absolute;
+				top: -4px;
+				left: 5px;
+				right: 5px;
+				border: 1px dashed #eee;
+				border-width: 1px 0 0 0;
+				height: 1px;
+				z-index: 1;
+				margin: 0 1%;
+			}
+			
+			.content-ul-span .content-ul-name {
+				position: absolute;
+				left: 0;
+				top: -16px;
+				z-index: 2;
+				background-color: #fff;
+				padding-right: 5px;
+				font-size: 14px;
+				color: #666;
+				max-width: 300px;
+				/*width: 300px;*/
+			}
+			
+			.level-note {
+				font-size: 14px;
+				color: #999;
+			}
+			
+			.btn-a-default {
+				display: inline-block;
+				margin-right: 20px;
+				text-decoration: none;
+			}
+			
+			.cancel-set.btn-a-default {
+				color: #CA192B;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-approval">
+			<div class="content">
+				<div class="remark">
+					<img src="../resources/images/approval-level-icon.png" alt="" /><span>*企业审批层级设置及修改</span>
+				</div>
+			</div>
+			<div class="approvallevels-particular">
+				<p><span>企业审批层级</span></p>
+				<div class="approvallevels-particular-content">
+					<ul class="particular-content-ul-1 content-ul">
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+		<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			var strSelect = '<select class="content-ul-select " onblur="" onchange="">';
+			var applevelsHierarchy;
+			var approval_depa_level_type = {
+				DEPA: 0,
+				ZHI_WU: 1
+			}
+			//获取部门层级
+			$(function() {
+				$.ajaxGet(BSAPIURL + "/companies/" + COMPANYID + "/class/102104", function(response) {
+					if(response.code != 0) {
+						$.showErrorGritter("获取代码失败：" + response.msg, {
+							time: 3000
+						});
+					} else {
+						applevelsHierarchy = response.data.code_list;
+						strSelect += "<option value='0'>未设置层级</option>";
+						for(var i in applevelsHierarchy) {
+							strSelect += '<option value=' + applevelsHierarchy[i].code_tree + '>' + applevelsHierarchy[i].code_name + '</option>';
+						}
+						strSelect += '</select>';
+						LoadApprovallevelsData();
+					}
+				});
+//				$.loadDeptLevelsData(function(Hierarchy) {
+//					applevelsHierarchy = Hierarchy;
+//					strSelect += "<option value='0'>未设置层级</option>";
+//					for(var i in applevelsHierarchy) {
+//						strSelect += '<option value=' + applevelsHierarchy[i].code_tree + '>' + applevelsHierarchy[i].code_name + '</option>';
+//					}
+//					strSelect += '</select>';
+//					LoadApprovallevelsData();
+//				});
+			});
+			//获取部门树数据
+			function LoadApprovallevelsData() {
+				var LoadApprovallevelsDataUrl = BSAPIURL + "/companies/" + COMPANYID + "/departments";
+				$.ajaxGet(LoadApprovallevelsDataUrl, function(response) {
+					if(response.code == 0) {
+						var approvallevelsDepartments = response.data.rows;
+						var ancestorId;
+						//打印一级部门
+						for(var i in approvallevelsDepartments) {
+							if(approvallevelsDepartments[i].depa_parent_id == "") {
+								departmentLevel = approvallevelsDepartments[i].depa_level;
+								ancestorId = approvallevelsDepartments[i].depa_id;
+								var approvallevelsDepartmentsStr = '<li id=' + approvallevelsDepartments[i].depa_id + '>';
+								approvallevelsDepartmentsStr += '<div class="content-ul-1-menu">';
+								approvallevelsDepartmentsStr += '<img data-trans-src="../resources/images/plus-o-icon.png" src="../resources/images/minus-o-icon.png" class="" data-collapse="false" onclick="onSlideUpOrDownBtnClick(this)"/>';
+								approvallevelsDepartmentsStr += '<span class="content-ul-span at" leveltype="' + departmentLevel + '" levelTypeCn="' + (getLevelNameById(departmentLevel) ? getLevelNameById(departmentLevel) : "(未设置层级)") + '">';
+								approvallevelsDepartmentsStr += '<span class="content-ul-name css-overhidden" title="'+approvallevelsDepartments[i].depa_name+'">' + approvallevelsDepartments[i].depa_name + '</span>';
+								if(approvallevelsDepartments[i].depa_name.indexOf("未分配部门") < 0) {
+									approvallevelsDepartmentsStr += "<i class='line'></i>";
+									if(departmentLevel == "") {
+										approvallevelsDepartmentsStr += '<span class="content-ul-settings"><span class="level-note">审批层级 ： </span><span class="levels-seted">(未设置层级)</span><img onclick="openSelect(this)" src="../resources/images/btn-edit-img.png"></span>';
+									} else {
+										approvallevelsDepartmentsStr += '<span class="content-ul-settings"><span class="level-note">审批层级 ： </span><span class="levels-seted">' + (getLevelNameById(departmentLevel) ? getLevelNameById(departmentLevel) : "(未设置层级)") + '</span><img onclick="openSelect(this)" src="../resources/images/btn-edit-img.png"></span>';
+									}
+									approvallevelsDepartmentsStr += '</span>';
+									approvallevelsDepartmentsStr += "<div class='btns-container hide'>";
+									approvallevelsDepartmentsStr += "<span class='save-set btn-a-default'><img class='' src='../resources/images/btn-save-img.png'>保存</span><span class='cancel-set btn-a-default'><img src='../resources/images/btn-cancel-img.png' class=''>取消</span>";
+									approvallevelsDepartmentsStr += "</div>";
+								}
+								approvallevelsDepartmentsStr += '</div>';
+								//approvallevelsDepartmentsStr += '<ul class="content-ul"></ul>';
+								approvallevelsDepartmentsStr += '</li>';
+								$(".particular-content-ul-1").append(approvallevelsDepartmentsStr);
+							}
+						}
+						var treeInfo = getDataArrAsTree(approvallevelsDepartments, ancestorId);
+						for(var i in treeInfo) {
+							appendTreeHtml(treeInfo[i], ".particular-content-ul-1>li");
+						}
+						//删除最低级分支前+-号
+						$(".particular-content-ul-1 li").each(function(index) {
+							var offsetWidth = 0,
+								liOffsetWidth = 8;
+							if($(this).find("li").length == 0) {
+								$(this).find(">div>img").before("<i style='display: inline-block;width: 11px;height: 11px;margin-right: 5px;'></i>");
+								$(this).find(">div>img").remove();
+								offsetWidth = $(this).find(">div>i").outerWidth(true);
+							} else {
+								offsetWidth = $(this).find(">div>img").outerWidth(true);
+							}
+							var x = $(this).parent().css("margin-left");
+							//$(this).css("margin-left", "20px");//(parseInt(x)||0) + liOffsetWidth + "px");
+							$(this).find(".content-ul-span").css("width", parseInt($(this).find(".content-ul-span").css("width")) - ((parseInt(x) || 0)) - $(this).parent().find(">div>img").outerWidth(true) + (offsetWidth || 33) + "px");
+						});
+					} else {
+						$.showErrorGritter("加载失败");
+					}
+				});
+			}
+			//生成树状数组
+			function getDataArrAsTree(data, pid) {
+				var result = [],
+					temp;
+				for(var i = 0; i < data.length; i++) {
+					if(data[i].depa_parent_id == pid) {
+						var obj = data[i];
+						temp = getDataArrAsTree(data, data[i].depa_id);
+						if(temp.length > 0) {
+							obj.children = temp;
+						}
+						result.push(obj);
+					}
+				}
+				return result;
+			}
+			//打印树
+			function appendTreeHtml(data, place) {
+				if(data.depa_type != approval_depa_level_type.ZHI_WU) {
+					var departmentLevel = data.depa_level;
+					var departmentsStr = '<li id=' + data.depa_id + '>';
+					departmentsStr += '<div class="content-ul-1-menu">';
+					departmentsStr += '<img data-trans-src="../resources/images/plus-o-icon.png" src="../resources/images/minus-o-icon.png" class="" data-collapse="false" onclick="onSlideUpOrDownBtnClick(this)"/>';
+					departmentsStr += '<span class="content-ul-span at" leveltype="' + departmentLevel + '" levelTypeCn="' + (getLevelNameById(departmentLevel) ? getLevelNameById(departmentLevel) : "(未设置层级)") + '">';
+					departmentsStr += '<span class="content-ul-name css-overhidden" title="'+data.depa_name+'">' + data.depa_name + '</span>';
+					if(data.depa_name.indexOf("未分配部门") < 0) {
+						departmentsStr += "<i class='line'></i>";
+						if(departmentLevel == "") {
+							departmentsStr += '<span class="content-ul-settings"><span class="level-note">审批层级 ： </span><span class="levels-seted">(未设置层级)</span><img onclick="openSelect(this)" src="../resources/images/btn-edit-img.png"></span>';
+						} else {
+							departmentsStr += '<span class="content-ul-settings"><span class="level-note">审批层级 ： </span><span class="levels-seted">' + (getLevelNameById(departmentLevel) ? getLevelNameById(departmentLevel) : "(未设置层级)") + '</span><img onclick="openSelect(this)" src="../resources/images/btn-edit-img.png"></span>';
+						}
+						departmentsStr += '</span>';
+						departmentsStr += "<div class='btns-container hide'>";
+						departmentsStr += "<span class='save-set btn-a-default'><img class='' src='../resources/images/btn-save-img.png'>保存</span><span class='cancel-set btn-a-default'><img src='../resources/images/btn-cancel-img.png' class=''>取消</span>";
+						departmentsStr += "</div>";
+					}
+					departmentsStr += '</div>';
+					//departmentsStr += '<ul class="content-ul"></ul>';
+					departmentsStr += '</li>';
+					$(place).append(departmentsStr);
+				}
+				if(data.children && data.children.length != 0) {
+					var chilrenPlace = "#" + data.depa_id;
+					for(var j in data.children) {
+						appendTreeHtml(data.children[j], chilrenPlace);
+					}
+				}
+
+			}
+			//点击弹出下拉框
+			function openSelect(obj) {
+				if($(obj).parent().parent().find(">span").text().indexOf("未分配部门") >= 0) return;
+				var leveltype = $(obj).attr("leveltype");
+				if($(obj).parent().parent().children().is(".content-ul-settings")) {
+					$(obj).parent().parent().find(".content-ul-settings .levels-seted").replaceWith(strSelect);
+					$(obj).parent().parent().find(".content-ul-select").focus();
+					if(leveltype == "") {
+						$(obj).parent().parent().find(".content-ul-select option[value='0']").prop("selected", "selected");
+					} else {
+						console.log($(obj).parent().parent().find(".content-ul-select option[value='" + leveltype + "']").length)
+						$(obj).parent().parent().find(".content-ul-select option[value='" + leveltype + "']").prop("selected", "selected");
+					}
+				}
+				$(obj).addClass("hide");
+				$(obj).parent().parent().parent().find(".btns-container").removeClass('hide');
+				$(obj).parent().parent().parent().find(".btns-container .save-set").unbind("click").click(function() {
+					saveUpdatedData($(this).parent().prev().find("select"));
+					closeSelect($(this).parent().prev().find("select"), true);
+					$(this).parent().addClass('hide');
+				});
+				$(obj).parent().parent().parent().find(".btns-container .cancel-set").unbind("click").click(function() {
+					closeSelect($(this).parent().prev().find("select"), false);
+					$(this).parent().addClass('hide');
+				});
+				if($(obj).parent().parent().attr("leveltype")) return true;
+			}
+			//下拉框改变传值
+			function saveUpdatedData(obj) {
+				//关闭下拉
+				var txt = $(obj).children('option:selected').text();
+				var levelsNum = $(obj).children('option:selected').val();
+				var strSpan = '<span class="content-ul-settings"><span class="level-note">审批层级 ： </span><span class="levels-seted">' + txt + '</span><img onclick="openSelect(this)" src="../resources/images/btn-edit-img.png"></span>';
+				$(obj).parent().find(".btns-container").addClass('hide');
+				$(obj).parent().prop("leveltype", levelsNum);
+				var departmentCode = $(obj).parents("li").prop("id");
+				var amendLevelsData = {
+					"depa_id": departmentCode,
+					"department_level": levelsNum
+				};
+				var amendLevelsUrl = BSAPIURL + "/approval_levels";
+				$.ajaxPut(amendLevelsUrl, amendLevelsData, function(response) {
+					if(response.code == 0) {
+						$.showSuccessGritter("修改成功！");
+					} else {
+						$.showErrorGritter("修改失败：" + response.msg);
+					}
+				});
+
+			}
+			//下拉框失去焦点关闭
+			function closeSelect(obj, isSave) {
+				var txt = $(obj).children('option:selected').text();
+				var prevTxt = $(obj).parent().parent().attr("levelTypeCn");
+				console.log($(obj).parent().parent().attr("levelTypeCn"));
+				var levelsNum = $(obj).children('option:selected').val();
+				if(isSave) {
+					var strSpan = '<span class="content-ul-settings"><span class="level-note">审批层级 ： </span><span class="levels-seted">' + txt + '</span><img onclick="openSelect(this)" src="../resources/images/btn-edit-img.png"></span>';
+					$(obj).parent().parent().attr("leveltype", levelsNum);
+					$(obj).parent().parent().attr("name", levelsNum);
+					$(obj).parent().parent().attr("levelTypeCn", txt);
+				} else {
+					var strSpan = '<span class="content-ul-settings"><span class="level-note">审批层级 ： </span><span class="levels-seted">' + prevTxt + '</span><img onclick="openSelect(this)" src="../resources/images/btn-edit-img.png"></span>';
+				}
+				var departmentCode = $(obj).parent().parent().parent().prop("id");
+				$(obj).parent().replaceWith(strSpan);
+			}
+			//下拉上收
+			function onSlideUpOrDownBtnClick(obj) {
+				if($(obj).attr("data-collapse") == "true") {
+					$(obj).attr("data-collapse", "false");
+					$(obj).parent().parent().find(">li").slideDown();
+					//$(obj).replaceWith('<img data-trans-src="../resources/images/minus-o-icon.png" src="../resources/images/plus-o-icon.png" class="" data-collapse="false" onclick="onSlideUpOrDownBtnClick(this)"/>');
+				} else {
+					$(obj).attr("data-collapse", "true");
+					$(obj).parent().parent().find(">li").slideUp();
+					//$(obj).replaceWith('<img data-trans-src="../resources/images/minus-o-icon.png" src="../resources/images/plus-o-icon.png" class="" data-collapse="false" onclick="onSlideUpOrDownBtnClick(this)"/>');
+				}
+				transImgSrc(obj);
+			}
+			//返回对应id的层次名
+			function getLevelNameById(id) {
+				for(var i in applevelsHierarchy) {
+					if(applevelsHierarchy[i].code_tree == id) {
+						return applevelsHierarchy[i].code_name;
+						break;
+					}
+				}
+			}
+		</script>
+
+	</body>
+
+</html>

@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>个人中心</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/city-picker.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+		<style>
+			.page-container,
+			.page-container .content {
+				padding: 0;
+			}
+			
+			.stop-account {
+				min-height: 200px;
+				font-size: 20px;
+				padding-top: 50px;
+			}
+			
+			.stop-account p {
+				width: 100%;
+				margin: 10px auto;
+				text-align: center;
+			}
+			
+			.nav-tabs {
+				background-color: #f3f3f3;
+				height: 45px;
+				line-height: 45px;
+				padding-left: 10px;
+			}
+			
+			.nav-tabs>li>a {
+				height: 45px;
+				line-height: 45px;
+				font-size: 14px;
+				color: #666;
+				padding: 0 10px;
+				background-color: #f3f3f3!important;
+			}
+			
+			.nav-tabs>li.active>a {
+				height: 47px;
+				border-bottom: 2px solid #009ed8!important;
+			}
+			
+			.tab-pane {
+				padding-left: 10px;
+			}
+			
+			.form-user-info>div>label,
+			.border-left {
+				border-left: 3px solid #ca192b;
+				padding-left: 5px;
+			}
+			
+			.form-padding-left {
+				padding-left: 28px;
+			}
+			
+			.model-changemobile .form-inline label,
+			.model-resetpwd .form-inline label {
+				width: 80px;
+				text-align: right;
+			}
+			
+			.tab-content {
+				overflow: auto;
+			}
+			
+			.page-company .form-group-last {
+				margin: 0;
+			}
+			
+			.page-company .form-group-btn {
+				position: relative;
+				bottom: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-company page-user-center">
+			<div class="content">
+				<div class="tabbable tabs-left">
+					<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active">
+							<a href="#tab-info" aria-controls="table" onclick="if(!$(this).parent().hasClass('active')){initFormToShowMode()}" role="tab" data-toggle="tab">个人信息</a>
+						</li>
+						<li role="presentation">
+							<a href="#tab-security" aria-controls="profile" role="tab" data-toggle="tab">安全中心</a>
+						</li>
+					</ul>
+					<!-- Tab panes -->
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane active" id="tab-info">
+							<div class="form-horizontal form-user-info">
+								<div style="margin: 10px 0;">
+									<label>当前状态：<span bind="employee_status_cn">试用期</span></label>
+								</div>
+								<div class="form-group-line">
+									<label>基本信息</label>
+									<p class="right-btn hide">
+										<a class="btn btn-danger def-btn-danger btn-edit" group="contact"><img src="../resources/images/btn-edit-img.png" alt="" /> 修改</a>
+									</p>
+									<hr>
+								</div>
+								<div group="info">
+									<div class="form-group form-inline">
+										<label>头像：</label>
+										<img class="img-head" src="../resources/images/default.jpg" width="80" height="80" style="margin-left: 12px;" />
+										<a class="btn-a-default hide" id="btnUploadHead" style="margin-left: 50px;"> 上传新头像</a>
+									</div>
+									<div class="form-group form-inline">
+										<label>工号：</label>
+										<span class="form-control form-control-noborder" bind="employee_code"></span>
+									</div>
+									<div class="form-group form-inline">
+										<label>姓名：</label>
+										<span class="form-control form-control-noborder" bind="employee_name"></span>
+									</div>
+									<div class="form-group form-inline">
+										<label>性别：</label>
+										<span class="form-control form-control-noborder" bind="employee_sex"></span>
+									</div>
+									<div class="form-group form-inline">
+										<label>出生日期：</label>
+										<span class="form-control form-control-noborder" bind="employee_birth_date"></span>
+									</div>
+									<div class="form-group-line">
+										<label class="border-left">工作信息</label>
+										<hr>
+									</div>
+									<div class="form-group form-inline">
+										<label>部门：</label>
+										<span class="form-control form-control-noborder" bind="employee_department_cn"></span>
+									</div>
+									<div class="form-group form-inline">
+										<label>职务：</label>
+										<span class="form-control form-control-noborder" bind="employee_post"></span>
+									</div>
+								</div>
+								<div class="form-group-line">
+									<label>联系方式</label>
+									<p class="right-btn">
+										<a class="btn btn-danger def-btn-danger btn-edit hide" group="link">修改</a>
+									</p>
+									<hr>
+								</div>
+								<div group="contact" class="form-group-last">
+									<div class="form-group form-inline">
+										<label>办公电话：</label>
+										<input type="text" class="form-control hide" placeholder="办公电话" bind="employee_office_phone" maxlength="12" disabled="disabled">
+										<span class="form-control form-control-noborder" bind="employee_office_phone"></span>
+									</div>
+									<div class="form-group form-inline">
+										<label>手机号码：</label>
+										<input type="text" class="form-control hide" placeholder="手机号码" bind="employee_primary_mobile" maxlength="11" disabled="disabled">
+										<span class="form-control form-control-noborder" bind="employee_primary_mobile"></span>
+									</div>
+									<div class="form-group form-inline">
+										<label>备用手机：</label>
+										<input type="text" class="form-control hide" placeholder="备用手机" bind="employee_secondary_mobile" maxlength="11" disabled="disabled">
+										<span class="form-control form-control-noborder" bind="employee_secondary_mobile"></span>
+									</div>
+									<div class="form-group form-inline">
+										<label>电子邮箱：</label>
+										<input type="text" class="form-control form-control-noborder hide" bind="employee_email" disabled="disabled">
+										<span class="form-control form-control-noborder" bind="employee_email"></span>
+									</div>
+									<div class="form-group form-inline">
+										<label>QQ：</label>
+										<input type="text" class="form-control hide" placeholder="QQ" bind="employee_qq" maxlength="12" disabled="disabled">
+										<span class="form-control form-control-noborder" bind="employee_qq"></span>
+									</div>
+									<div class="form-group form-inline">
+										<label>微信：</label>
+										<input type="text" class="form-control hide" placeholder="微信" bind="employee_wechat" maxlength="20" disabled="disabled">
+										<span class="form-control form-control-noborder" bind="employee_wechat"></span>
+									</div>
+									<div class="form-group form-inline">
+										<label>家庭地址：</label>
+										<input type="text" class="form-control hide" placeholder="家庭地址" bind="employee_home_address" nulltip="家庭地址">
+										<span class="form-control form-control-noborder" bind="employee_home_address"></span>
+									</div>
+									<div class="form-group form-inline">
+										<label>现住址：</label>
+										<input type="text" class="form-control hide" placeholder="现住址" bind="employee_now_address" nulltip="现住址">
+										<span class="form-control form-control-noborder" bind="employee_now_address"></span>
+									</div>
+									<div class="form-group form-inline">
+										<label>现住址定位：</label>
+										<input type="text" class="form-control form-control-noborder form-control-location-show hide" disabled="disabled">
+										<a class="btn-a-default btn-location hide" onclick="openSetLocationPop();"> 地图定位</a>
+										<span class="form-control form-control-location-show form-control-noborder" onclick="openSetLocationPop(true);">-</span>
+									</div>
+									<div class="form-group form-inline form-group-edit">
+										<!--<label>&nbsp;</label>-->
+										<hr />
+										<div class="form-padding-left">
+											<a class="btn btn-danger def-btn-danger btn-edit" group="contact">
+												<img src="../resources/images/btn-edit.png" /> 修改个人信息
+											</a>
+										</div>
+									</div>
+								</div>
+								<div class="form-group form-group-btn form-inline hide">
+									<!--<label>&nbsp;</label>-->
+									<hr />
+									<div class="form-inline form-padding-left">
+										<a class="btn btn-info def-btn-info btn-post">
+											<img src="../resources/images/btn-save.png" alt="" />保 存
+										</a>
+										<a class="btn btn-danger def-btn-danger btn-cancel" onclick="initFormToShowMode(true);">
+											<img src="../resources/images/btn-cancel.png" alt="" />取 消
+										</a>
+									</div>
+								</div>
+								<div class="form-group form-group-btn-update form-inline hide">
+									<label>&nbsp;</label>
+									<a class="btn btn-danger def-btn-danger btn-update">更改认证</a>
+								</div>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="tab-security">
+							<div class="form-group-line">
+								<label>帐号安全</label>
+								<hr>
+							</div>
+							<div class="form-group form-inline">
+								<label>手机号码：</label>
+								<span class="form-control form-control-noborder form-control-oldmobile" style="width: 200px;">13000000000</span>
+								<span class="form-control form-control-noborder"><a href="javascript:;" onclick="openChangeMobilePop();">修改手机号</a></span>
+							</div>
+							<div class="form-group form-inline">
+								<label>帐号密码：</label>
+								<span class="form-control form-control-noborder" style="width: 200px;">********</span>
+								<span class="form-control form-control-noborder"><a href="javascript:;" onclick="openResetPwdPop();">修改密码</a></span>
+							</div>
+							<div class="form-group form-inline">
+								<label>帐号状态：</label>
+								<span class="form-control form-control-noborder form-control-account-status" style="width: 200px;">正常</span>
+								<span class="form-control form-control-noborder form-control-stop-account"><a href="javascript:;" onclick="openStopAccountPop();">停用账号</a></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-changemobile hide">
+			<form class="form-horizontal model-changemobile company-auth-info">
+				<div class="form-group form-inline form-group-oldmobile">
+					<label class="form-label-type">原手机号：</label>
+					<span class="form-control" bind="number"></span>
+				</div>
+				<div class="form-group form-inline form-group-newmobile hide">
+					<label class="form-label-type">新手机号：</label>
+					<input type="text" class="form-control form-control-newmobile" placeholder="输入要更换的新手机" bind="newnumber" maxlength="11">
+				</div>
+				<div class="form-group form-inline">
+					<label>图像验证：</label>
+					<input type="text" class="form-control form-control-imgcode" placeholder="输入右侧验证码" bind="imgcode" maxlength="6"><img class="img-code" src="../resources/images/code.jpg" title="点击更换验证码" onclick="initVerifyCode();" />
+				</div>
+				<div class="form-group form-inline">
+					<label class="form-label-type-code">验证码：</label>
+					<input type="text" class="form-control form-control-code" bind="code" nulltip="验证码" style="width: 170px; margin-right: 4px;" maxlength="6">
+					<a href="javascript:;" class="btn btn-success btn-sendcode" enb="1">发送验证码</a>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-resetpwd hide">
+			<form class="form-horizontal model-resetpwd">
+				<div class="form-group form-inline">
+					<label class="input-flag">原密码：</label>
+					<input id="txtOldPwd" type="password" class="form-control" placeholder="原密码" nulltip="原密码" maxlength="20">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">新密码：</label>
+					<input id="txtPwd" type="password" class="form-control" placeholder="新密码" nulltip="新密码" maxlength="20" valitype="password" valirange="6-20" valitip="密码长度为 6-20 位。">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">确认密码：</label>
+					<input id="txtPwd1" type="password" class="form-control" placeholder="确认密码" nulltip="确认密码" maxlength="20">
+				</div>
+			</form>
+		</div>
+		<div class="pnl-location hide">
+			<form class="form-horizontal model-location">
+				<div class="form-group form-inline">
+					<label>位置：</label>
+					<span class="form-control form-control-noborder form-control-location"></span>
+				</div>
+				<div class="form-group form-inline" id="pnlMap" style="width: 560px; height: 320px;">
+
+				</div>
+			</form>
+		</div>
+		<div class="stop-account-container hide">
+			<div class="stop-account">
+				<p>帐号停用后您将无法登录</p>
+				<p>确认停用当前帐号？</p>
+			</div>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.data.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=534a6946f3345a0d3cc18a544ccaa8cb"></script>
+		<script type="text/javascript">
+			var CODETYPE = "changemobile";
+			var formSelector = ".page-user-center";
+			var userController = new Controller(formSelector);
+			//手机号
+			var myMobile;
+			//住址定位
+			var myLocationPoint = {
+				employee_location_lat: null,
+				employee_location_lon: null
+			};
+			//上传的Head
+			var imgPathOfHead = "";
+			//			window.onload = function() {
+			//				var script = document.createElement("script");
+			//				script.src = "http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG&callback=doApi";
+			//				$("body").append(script);
+			//			};
+			$(document).ready(function() {
+				//loading
+				$.showLoadingPop("正在加载个人信息，请稍后...");
+				//token
+				$.token();
+				//加载个人信息
+				loadUserInfo();
+				$(".tab-content").height($(window).outerHeight() - $(".nav-tabs").outerHeight());
+				//提交
+				$(".btn-post").click(function() {
+					var userData = userController.getJSON();
+					if(!inputValidateForGritter(formSelector)) {
+						return false;
+					}
+					userData.employee_avatar = imgPathOfHead;
+					userData.employee_location_lon = myLocationPoint.employee_location_lon;
+					userData.employee_location_lat = myLocationPoint.employee_location_lat;
+					$.ajaxPut(SAASAPIS.BS.employee.contact, userData, function(response) {
+						if(response.code == 0) {
+							//success
+							userController.set(userData);
+							//$(".form-control-location-show").html("<img class='location-icon' src='../resources/images/position-red.png'>"+$(".form-control-location-show").html());
+							$.showSuccessGritter("个人信息保存成功。");
+
+							initFormToShowMode();
+							loadUserInfo();
+							return false;
+						} else {
+							$.showErrorGritter("个人信息保存失败：" + response.msg);
+						}
+					});
+				});
+				$(".btn-edit[group]").click(function() {
+					var group = $(this).attr("group");
+					initFormToEditMode(group);
+				});
+				//upload
+				initUpload();
+			});
+
+			function initUpload() {
+				$("#btnUploadHead").initUploader({
+					url: SAASAPIS.BS.upload.image,
+					up_container: ".form-group-logo-edit .upload",
+					FilesAdded: function(up, files) {
+						if(files.length == 0) {
+							return;
+						}
+						for(var i in files) {
+							var mFile = files[i];
+							//$(".form-group-logo-edit .imgs").html("<img class=\"img-qa\" src=\"{src}\" width='130'/>".replace(/{src}/g, mFile.name));
+						}
+						return true;
+					},
+					FileUploaded: function(up, file, response) {
+						var resp = JSON.parse(response.response);
+						if(resp.code == 0) {
+							imgPathOfHead = resp.data.path;
+							$(".img-head").attr("src", imgPathOfHead);
+							parent.myAvatar = imgPathOfHead;
+						} else {
+							$.showErrorGritter("上传头像失败：" + resp.msg);
+						}
+					}
+				});
+			}
+			//个人信息可编辑状态
+			function initFormToEditMode(group) {
+				var groupSelector = "div[group='" + group + "']";
+				$(groupSelector + " input.form-control," + groupSelector + " select.form-control").removeClass("hide");
+				$(groupSelector + " span.form-control").addClass("hide");
+				$(".form-group-btn").removeClass("hide");
+				$(".form-group-edit").toggleClass("hide");
+				$(".btn-location").toggleClass("hide");
+				$("#btnUploadHead").toggleClass("hide");
+			}
+			//个人信息展示状态
+			function initFormToShowMode(isCancel) {
+				var groupSelector = ".form-user-info";
+				$(groupSelector + " input.form-control," + groupSelector + " select.form-control").addClass("hide");
+				$(groupSelector + " span.form-control").removeClass("hide");
+				$(".city-picker-span").addClass("hide");
+				$(".form-group-logo-show").removeClass("hide");
+				$(".form-group-logo-edit").addClass("hide");
+				//img
+				$(".form-group-qa-show").removeClass("hide");
+				$(".form-group-qa-edit").addClass("hide");
+				$(".form-group-btn").addClass("hide");
+				$(".form-group-edit").toggleClass("hide");
+				$(".btn-location").toggleClass("hide");
+				$("#btnUploadHead").toggleClass("hide");
+				if(isCancel) {
+					loadUserInfo();
+					$(".img-head").attr("src", $(".img-head").data("prevSrc"));
+				}
+			}
+			var loadCompletedCount = 0;
+			//加载个人信息
+			function loadUserInfo() {
+				$.ajaxGet(SAASAPIS.BS.employee.profile, function(response) {
+					loadCompletedCount++;
+					if(response.code != 0) {
+						$.showErrorGritter("加载个人信息失败：" + response.msg)
+						//hide
+						hideLoadingPop();
+						return false;
+					}
+					//myMobile = response.data.employee_primary_mobile;
+					//point
+					myLocationPoint.employee_location_lat = response.data.employee_location_lat;
+					myLocationPoint.employee_location_lon = response.data.employee_location_lon;
+					var point = new BMap.Point(myLocationPoint.employee_location_lon, myLocationPoint.employee_location_lat);
+					getAddressByPoint(point, (".form-control-location-show"), true);
+					//show
+					userController.set(response.data);
+					//avatar
+					imgPathOfHead = response.data.employee_avatar;
+					//更新头像
+					$('.btn-user img', parent.document).attr("src", imgPathOfHead);
+					$(".form-control-location-show").html("<img class='location-icon' src='../resources/images/position-red.png'><span></span>");
+					$(".img-head").attr("src", imgPathOfHead);
+					$(".img-head").data("prevSrc", imgPathOfHead);
+					//hide
+					hideLoadingPop();
+				});
+				$.ajaxGet(SAASAPIS.BS.account.security_info, function(response) {
+					loadCompletedCount++;
+					if(response.code != 0) {
+						$.showErrorGritter("加载个人信息失败：" + response.msg)
+						//hide
+						hideLoadingPop();
+						return false;
+					}
+					myMobile = response.data.mobile;
+					$(".form-control-oldmobile").text(myMobile);
+					//					$(".form-control-account-status").text(response.data.account_status);
+					//					if(response.data.account_status==1){
+					//						$(".form-control-stop-account a").click(function(){
+					//							openStopAccountPop();
+					//						});
+					//					}else {
+					//						$(".form-control-stop-account a").attr("disabled","disabled").css("cursor","not-allowed");
+					//					}
+					//hide
+					hideLoadingPop();
+				});
+			}
+			var hideLoadingPop = function() {
+				if(loadCompletedCount == 2)
+					$.hideLoadingPop();
+			};
+			//修改手机
+			function openChangeMobilePop() {
+				var authNumber = myMobile;
+				//first
+				var verNewMobile = false;
+				var oldMobile = authNumber;
+				var modalId = $.modal().showOfMini("修改手机号", ".pnl-changemobile",
+					function(modal) {
+						var authData = authController.getJSON();
+						//to save
+						if(verNewMobile) {
+							if(!mobileValidate(authData.newnumber)) {
+								$.showSuccessGritter("新手机号码格式有误，请重新录入。", {
+									clear: true
+								});
+								$(formContainer + " .form-control-newmobile").focus();
+								return false;
+							}
+							authNumber = authData.newnumber;
+						}
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var postData = {
+							mobile: authNumber,
+							sms_code: authData.code,
+							sms_code_type: CODETYPE
+						};
+						if(verNewMobile) {
+							$.ajaxPut(SAASAPIS.BS.account.mobile.step3, postData,
+								function(response) {
+									if(response.code == 0) {
+										myMobile = authNumber;
+										$(".form-control-oldmobile").text(myMobile);
+										//success
+										$.showSuccessGritter("修改手机号码成功，跳转到登录页面...", {
+											time: 3000,
+											position: "login-center"
+										});
+										parent.location = "../login.html";
+										modal.modal('hide');
+										resetSendCodeBtn();
+									} else {
+										$.showErrorGritter("验证新手机失败：" + response.msg);
+									}
+								});
+						} else {
+							//第一步 验证原手机
+							$.ajaxPut(SAASAPIS.BS.account.mobile.step1, postData,
+								function(response) {
+									if(response.code == 0) {
+										$.clearGritter();
+										$.showSuccessGritter("原手机验证成功，请验证新手机。", {
+											clear: true
+										});
+										verNewMobile = true;
+										resetSendCodeBtn();
+										$(formContainer + " .form-group-newmobile," + formContainer + " .form-group-oldmobile").toggleClass("hide");
+										initVerifyCode();
+										$(formContainer + " .form-control-code").val("");
+										$(formContainer + " .form-control-newmobile").focus();
+										//新手机号码验证
+										$(formContainer + " .form-control-newmobile").keyup(function() {
+											var newMobile = $(this).val();
+											if(mobileValidate(newMobile)) {
+												$.ajaxPut(SAASAPIS.BS.account.mobile.step2, {
+													new_mobile: newMobile
+												}, function(response2) {
+													if(response2.code == 0) {
+														//ok
+													} else {
+														$.showErrorGritter("验证新手机失败：" + response2.msg);
+													}
+												});
+											}
+										});
+									} else {
+										$.showErrorGritter("验证失败：" + response.msg);
+									}
+								});
+						}
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-changemobile";
+				var rowData = {
+					number: authNumber
+				};
+				var authController = new Controller(formContainer);
+				authController.set(rowData);
+				//code
+				var codeTimer = null;
+				var resetSendCodeBtn = function() {
+					var linkSendCode = $(formContainer + " .btn-sendcode");
+					linkSendCode.removeAttr("disabled");
+					linkSendCode.addClass("act").attr("enb", "1").text("发送验证码");
+					clearInterval(codeTimer);
+				}
+				$(formContainer + " .btn-sendcode").click(function() {
+					if(verNewMobile) {
+						authNumber = authController.getJSON().newnumber;
+						if(!mobileValidate(authNumber)) {
+							$.showSuccessGritter("新手机号码格式有误，请重新录入。", {
+								clear: true
+							});
+							$(formContainer + " .form-control-newmobile").focus();
+							return false;
+						}
+					}
+					var captcha_code = $(formContainer + " .form-control-imgcode").val();
+					if(!captcha_code) {
+						$.clearGritter();
+						$.showErrorGritter("请输入右侧的图像验证码。");
+						$(formContainer + " .form-control-imgcode").focus();
+						return false;
+					}
+					//authNumber
+					var linkSendCode = $(this);
+					$.ajaxGet(SAASAPIS.BASE.code.sms + $.toQueryString({
+						type: CODETYPE,
+						mobile: authNumber,
+						captcha_type: CODETYPE,
+						captcha_code: captcha_code
+					}, true), function(response) {
+						if(response.code != 0) {
+							$.showErrorGritter("获取手机验证码失败：" + response.msg, {
+								time: 3000
+							});
+						} else {
+							if(linkSendCode.attr("enb") != "1") {
+								return;
+							}
+							linkSendCode.removeClass("act").attr("enb", "0").attr("disabled", "disabled");
+							var ss = 60;
+							codeTimer = setInterval(function() {
+								if(ss > 0) {
+									ss--;
+									linkSendCode.text("获取(" + ss + "s)");
+								} else {
+									linkSendCode.removeAttr("disabled");
+									linkSendCode.addClass("act").attr("enb", "1").text("发送验证码");
+									resetSendCodeBtn();
+								}
+							}, 1000);
+						}
+					});
+				});
+				//img code
+				initVerifyCode();
+			}
+			//修改密码
+			function openResetPwdPop() {
+				var modalId = $.modal().showOfMini("修改密码", ".pnl-resetpwd",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var oldPwd = $(formContainer + " #txtOldPwd").val();
+						var pwd = $(formContainer + " #txtPwd").val();
+						var pwd1 = $(formContainer + " #txtPwd1").val();
+						if(pwd.length < 6 || pwd1.length < 6) {
+							$.showErrorGritter("密码长度至少6位。", {
+								clear: true
+							});
+							return false;
+						}
+						if(pwd != pwd1) {
+							$.showErrorGritter("两次密码输入不一致，请重新输入。", {
+								clear: true
+							});
+							$(formContainer + " #txtPwd1").focus();
+							return false;
+						}
+						if(!checkPassword(pwd)) {
+							return false;
+						}
+						var pwdData = {
+							old_password: oldPwd,
+							new_password: pwd
+						};
+						$.ajaxPut(SAASAPIS.BS.account.password, pwdData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("修改密码成功，返回重新登录。");
+									modal.modal('hide');
+								} else {
+									$.showErrorGritter("修改密码失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-resetpwd";
+			}
+
+			function checkPassword(str) {
+				var reg2 = /([a-zA-Z0-9!@#$%^&*()_?<>{}=+-]){6,12}/;
+				var reg3 = /[a-zA-Z]+/;
+				var reg4 = /[0-9]+/;
+				if(reg2.test(str) && reg3.test(str) && reg4.test(str)) {
+					return true;
+				} else if(!reg2.test(str)) {
+					$.showErrorGritter("密码长度在6-12位");
+					return false;
+				} else if(!reg3.test(str)) {
+					$.showErrorGritter("密码需含有字母");
+					return false;
+				} else if(!reg4.test(str)) {
+					$.showErrorGritter("密码需含有数字");
+					return false;
+				}
+			}
+			//停用账号
+			function openStopAccountPop() {
+				var modalId = $.modal().show("停用账号", ".stop-account-container", function(modal) {
+					$.ajaxPut(BSAPIURL + "/account/disabled", {}, function(resp) {
+						if(resp.code != 0) {
+							$.showErrorGritter("停用账号失败：" + resp.msg);
+							return false;
+						}
+						$("#" + modalId).modal("hide");
+						$.showSuccessGritter("停用账号成功，正在跳转登录页面......");
+						var timeOut = setTimeout(function() {
+							parent.logout();
+							clearTimeout(timeOut);
+							timeOut = null;
+						}, 1000);
+					});
+				});
+			}
+			//定位
+			function openSetLocationPop(cantSearch) {
+				var formContainer;
+				var modalId = $.modal({
+					shownCallback: function(modalId) {
+						initMap(modalId, cantSearch);
+					}
+				}).show("现住址定位", ".pnl-location",
+					function(modal) {
+						if(!myLocationPoint.employee_location_lat || !myLocationPoint.employee_location_lon) {
+							$.showErrorGritter("请现在地图上定位住址后再保存（拖动红色图标定位）。", {
+								clear: true
+							});
+							return false;
+						}
+						if(!cantSearch) {
+							var nowAddress = $(formContainer + " .form-control-location").text();
+							$(".form-control-location-show").val(nowAddress).text(nowAddress);
+						}
+						modal.modal('hide');
+					}
+				);
+				var initMap = function(modalId, cantSearch) {
+					//model pop id
+					formContainer = "#" + modalId + " .model-location";
+					var tmpId = $.uuid();
+					$(formContainer + " #pnlMap").attr("id", tmpId);
+					//map
+					var map = new BMap.Map(tmpId);
+					//default beijing
+					var point = "";
+					var isSetPoint = false;
+					if(myLocationPoint.employee_location_lat && myLocationPoint.employee_location_lon) {
+						//my point
+						point = new BMap.Point(myLocationPoint.employee_location_lon, myLocationPoint.employee_location_lat);
+						isSetPoint = true;
+					}
+					map.enableScrollWheelZoom();
+					if(point) {
+						map.centerAndZoom(point, 15);
+						var geolocation = new BMap.Geolocation();
+						geolocation.getCurrentPosition(function(r) {
+							if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+								if(!isSetPoint)
+									point = r.point;
+								var marker = new BMap.Marker(point);
+								if(!cantSearch) {
+									marker.enableDragging();
+									marker.addEventListener("dragend", function(e) {
+										var pt = e.point;
+										myLocationPoint.employee_location_lat = pt.lat
+										myLocationPoint.employee_location_lon = pt.lng;
+										getAddressByPoint(pt, (formContainer + " .form-control-location"));
+									})
+								}
+								if(!cantSearch) {
+									var label = new BMap.Label("拖动图标可以定位", {
+										offset: new BMap.Size(20, -10)
+									});
+								} else {
+									var label = new BMap.Label("定位位置", {
+										offset: new BMap.Size(20, -10)
+									});
+								}
+								marker.setLabel(label);
+								map.addOverlay(marker);
+								map.panTo(point);
+								getAddressByPoint(point, (formContainer + " .form-control-location"));
+							} else {
+								//定位失败 定位到城市
+								//new BMap.LocalCity().get(function(result) {
+								//	map.setCenter(result.name);
+								//});
+							}
+						}, {
+							enableHighAccuracy: false
+						});
+					} else {
+						locationchange($(".form-group-last input[bind='employee_now_address']").val(), map,cantSearch);
+					}
+				};
+
+				function locationchange(text, map) {
+					$("#" + modalId + " .form-control-location").text(text);
+					var myGeo = new BMap.Geocoder();
+					// 将地址解析结果显示在地图上,并调整地图视野
+					myGeo.getPoint(text, function(point) {
+						if(point) {
+							map.centerAndZoom(point, 16);
+							var marker=new BMap.Marker(point);
+							map.addOverlay(marker);
+							if(!cantSearch){
+								marker.enableDragging();
+								marker.addEventListener("dragend", function(e) {
+									var pt = e.point;
+									myLocationPoint.employee_location_lat = pt.lat
+									myLocationPoint.employee_location_lon = pt.lng;
+									getAddressByPoint(pt, (formContainer + " .form-control-location"));
+								});
+							}
+						} else {
+							alert("您选择地址没有解析到结果!");
+						}
+					}, "重庆市");
+				}
+			}
+			var getAddressByPoint = function(pt, showContainer, addLocationIcon) {
+				var gc = new BMap.Geocoder();
+				gc.getLocation(pt, function(rs) {
+					var addComp = rs.addressComponents;
+					var address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+					$(showContainer).val(address);
+					if(addLocationIcon) {
+						$(showContainer + " span").text(address);
+					} else {
+						$(showContainer).text(address);
+					}
+				});
+			};
+
+			function initVerifyCode() {
+				$(".img-code").attr("src", SAASAPIS.BASE.captcha + "?height=32&width=110&type=" + CODETYPE + "&t=" + new Date().getTime());
+				$(".form-control-imgcode").val("");
+			}
+		</script>
+	</body>
+
+</html>

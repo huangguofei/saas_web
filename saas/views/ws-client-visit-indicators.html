@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>客户拜访指标</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+			.client-visit-indicators-main {
+				border: 1px solid #e3e3e3;
+				border-bottom: none;
+			}
+			
+			.client-visit-indicators-main-menu {
+				zoom: 1;
+				background-color: #f8f8f8;
+				border-bottom: 2px solid #85beeb;
+				position: relative;
+				margin-left: -1px;
+			}
+			
+			.client-visit-indicators-main-menu:after {
+				content: "";
+				display: block;
+				height: 0;
+				visibility: hidden;
+				clear: both;
+			}
+			
+			.client-visit-indicators-main-menu li:first-child {
+				border-right: 1px solid #ccc;
+			}
+			
+			.client-visit-indicators-main-menu li {
+				width: 80px;
+				height: 35px;
+				line-height: 40px;
+				text-align: center;
+				float: left;
+				cursor: pointer;
+				border-right: 1px solid #e3e3e3;
+				color: #666;
+			}
+			
+			.client-visit-indicators-main-menu li.chenkstyle {
+				background-color: #85beeb;
+				color: #fff;
+				border: 1px solid #85beeb;
+				width: 81px;
+				height: 36px;
+				margin-top: -1px;
+			}
+			
+			.def-btn-danger {
+				line-height: 16px;
+			}
+			
+			.client-visit-indicators-main-content {
+				border-top: 1px solid #ccc;
+				padding-bottom: 60px;
+				position: relative;
+				border-top: none;
+			}
+			
+			.client-visit-indicators-main-content>div {
+				overflow: auto;
+			}
+			
+			.indicator-explain {
+				color: #cccccc;
+				margin-bottom: 10px;
+				margin-left: 10px;
+			}
+			
+			.indicator-box {
+				/*overflow: ;*/
+			}
+			
+			.indicator-box table {
+				border-collapse: collapse;
+				width: 100%;
+				border: 1px solid #e3e3e3;
+				border-top: none;
+				border-left: none;
+				table-layout: fixed;
+			}
+			
+			.indicator-box table tr {
+				height: 45px;
+				line-height: 45px;
+			}
+			
+			.indicator-box table tr:nth-child(odd) td {
+				background-color: #f8f8f8;
+			}
+			
+			.indicator-box table tr:nth-child(odd) td:first-child {
+				background-color: #fff;
+				font-weight: bold;
+				width: 15%;
+				text-align: left;
+				padding-left: 20px;
+				color: #333;
+			}
+			
+			.month-indicator-tab>table>tbody>tr>td:nth-child(0),
+			.month-indicator-tab>table>tbody>tr>td:nth-child(1) {}
+			
+			.indicator-box table tr:nth-child(odd) td:nth-child(1),
+			.indicator-box table tr:nth-child(odd) td:nth-child(2),
+			/*.indicator-box table tr:nth-child(even) td:nth-child(0),*/
+			
+			.indicator-box table tr:nth-child(even) td:nth-child(1) {
+				text-align: left;
+				padding-left: 20px;
+				width: 200px;
+			}
+			
+			.indicator-box table td {
+				width: 120px;
+				text-align: center;
+				border: 1px solid #e3e3e3;
+				border-top: none;
+				border-left: none;
+				color: #666;
+			}
+			
+			.indicator-box table {
+				border-right: 0;
+			}
+			
+			.indicator-box table th {
+				width: 150px;
+				text-align: center;
+			}
+			
+			.indicator-menu {
+				font-weight: bold;
+				border-bottom: 2px solid #C9C9C9;
+				line-height: 30px;
+				text-indent: 1rem;
+			}
+			
+			.bottom-btn {
+				line-height: 60px;
+				width: 100%;
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				text-align: right;
+				padding-right: 1%;
+				border: 1px solid #e3e3e3;
+				background-color: #fafafa;
+			}
+			
+			.bottom-btn a {
+				height: 30px;
+			}
+			
+			.next-month-indicator,
+			.btn-hide {
+				display: none;
+			}
+			
+			.tab-txt {
+				width: 95%;
+				text-align: center;
+			}
+			
+			.btn {
+				margin-right: 10px;
+			}
+			
+			.client-visit-indicators-main-content table input {
+				width: 50px;
+			}
+			
+			.border-top-none tr:first-child td,
+			.border-top-none tr:first-child,
+			.border-top-none {
+				border-top: none!important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container client-visit-indicators">
+			<div class="content">
+				<!--<div class="remark hide">
+					<img src="../resources/images/zhibiao-icon.png" alt="" /><span>*按客户单位、科室/部门、联系人等级设置月拜访指标</span>
+				</div>-->
+				<div class="client-visit-indicators-main">
+					<ul class="client-visit-indicators-main-menu">
+						<li class="chenkstyle">本月指标</li>
+						<li>下月指标</li>
+					</ul>
+
+					<div class="client-visit-indicators-main-content">
+						<!--本月指标-->
+						<div class="month-indicator">
+							<!--<p class="indicator-explain">*本月客户拜访指标设置，修改后立即生效</p>-->
+							<div class="month-indicator-company indicator-box">
+								<!--<p class="indicator-menu">客户单位</p>-->
+								<table class="month-indicator-tab border-top-none">
+									<tr>
+										<td rowspan="2">客户单位</td>
+										<td class="important-levels">重要等级</td>
+									</tr>
+									<tr>
+										<td>拜访指标(次/月)</td>
+									</tr>
+								</table>
+							</div>
+							<div class="month-indicator-department indicator-box">
+								<!--<p class="indicator-menu">科室/部门</p>-->
+								<table class="month-indicator-tab">
+									<tr>
+										<td rowspan="2">科室/部门</td>
+										<td class="important-levels">重要等级</td>
+									</tr>
+									<tr>
+										<td>拜访指标(次/月)</td>
+									</tr>
+								</table>
+							</div>
+							<div class="month-indicator-linkman indicator-box">
+								<!--<p class="indicator-menu">联系人</p>-->
+								<table class="month-indicator-tab">
+									<tr>
+										<td rowspan="2">联系人</td>
+										<td class="important-levels">重要等级</td>
+									</tr>
+									<tr>
+										<td>拜访指标(次/月)</td>
+									</tr>
+								</table>
+							</div>
+							<!--<div class="bottom-btn">
+								<a href="javascript:;" class="btn btn-sm btn-info info-addiinfo" onclick="setIndicator(this,'month')">设置</a>
+								<a href="javascript:;" class="btn btn-sm btn-info info-addiinfo btn-hide" onclick="save(this,'month')">保存</a>
+								<a href="javascript:;" class="btn btn-sm btn-info info-addiinfo btn-hide" onclick="cancel(this,'month')">取消</a>
+							</div>-->
+						</div>
+						<!--下月指标-->
+						<div class="next-month-indicator">
+							<!--<p class="indicator-explain">*下月客户拜访指标设置，默认与本月指标相同，修改后下月生效</p>-->
+							<div class="month-indicator-company indicator-box">
+								<!--<p class="indicator-menu">客户单位</p>-->
+								<table class="month-indicator-tab  border-top-none">
+									<tr>
+										<td rowspan="2">客户单位</td>
+										<td class="important-levels">重要等级</td>
+									</tr>
+									<tr>
+										<td>拜访指标(次/月)</td>
+									</tr>
+								</table>
+							</div>
+							<div class="month-indicator-department indicator-box">
+								<!--<p class="indicator-menu">科室/部门</p>-->
+								<table class="month-indicator-tab">
+									<tr>
+										<td rowspan="2">科室/部门</td>
+										<td class="important-levels">重要等级</td>
+									</tr>
+									<tr>
+										<td>拜访指标(次/月)</td>
+									</tr>
+								</table>
+							</div>
+							<div class="month-indicator-linkman indicator-box">
+								<!--<p class="indicator-menu">联系人</p>-->
+								<table class="month-indicator-tab">
+									<tr>
+										<td rowspan="2">联系人</td>
+										<td class="important-levels">重要等级</td>
+									</tr>
+									<tr>
+										<td>拜访指标(次/月)</td>
+									</tr>
+								</table>
+							</div>
+							<!--<div class="bottom-btn">
+								<a href="javascript:;" class="btn btn-sm btn-info info-addiinfo" onclick="setIndicator(this,'')">设置</a>
+								<a href="javascript:;" class="btn btn-sm btn-info info-addiinfo btn-hide" onclick="save(this,'')">保存</a>
+								<a href="javascript:;" class="btn btn-sm btn-info info-addiinfo btn-hide" onclick="cancel(this,'')">取消</a>
+							</div>-->
+						</div>
+					</div>
+					<div class="bottom-btn">
+						<a href="javascript:;" index="curr" class="btn btn-danger def-btn-danger" onclick="setIndicator(this,'')"><img src="../resources/images/btn-edit.png" alt="" />设置</a>
+						<a href="javascript:;" index="curr" class="btn btn-info def-btn-info btn-hide" onclick="save(this,'')"><img src="../resources/images/btn-save.png" alt="" />保存</a>
+						<a href="javascript:;" index="curr" class="btn btn-danger def-btn-danger btn-hide" onclick="cancel(this,'')"><img src="../resources/images/btn-cancel.png" alt="" />取消</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript" src="../resources/js/main.min.js"></script>
+	<script type="text/javascript">
+		var clientImporLenvelClassID = 102109,
+			linkmanImporLenvelClassID = 102113,
+			departmenClassID = 102112;
+		var codeList = [clientImporLenvelClassID, linkmanImporLenvelClassID, departmenClassID];
+		var clientVisitIndicatorsUrl = BSAPIURL + "/crm/visit_quotas";
+		var loadCodeUrl = BSAPIURL + "/companies/" + COMPANYID + "/class/multi";
+		$(".client-visit-indicators-main-content").css("height", $(window).height() - 70 + "px");
+		//获取当前月份
+		var nowDate = $.timeNow().Format("yyyy-MM");
+		var nowNextDate = nowDate.substring(0, nowDate.length - 2);
+
+		var dayNum = parseInt(nowDate.substr(nowDate.length - 2, 2));
+		var yearNum;
+		var codeLengthData = { "client": 0, "depar": 0, "linkman": 0 }
+		if(dayNum == 12) {
+			dayNum = 1;
+			yearNum = parseInt(nowDate.substr(0, 4)) + 1;
+			nowNextDate = String(yearNum) + "-";
+		} else {
+			dayNum = parseInt(dayNum) + 1;
+		}
+		if(dayNum < 10) {
+			nowNextDate += "0" + String(dayNum);
+		} else {
+			nowNextDate += String(dayNum);
+		}
+		//点击标签页切换
+		$(".client-visit-indicators-main-menu li").click(function() {
+			$(this).addClass("chenkstyle").siblings().removeClass("chenkstyle");
+			//切换
+			$(this).parent().next().children('div').eq($(this).index()).show().siblings().hide();
+			if($(this).text() == "本月指标") {
+				loadData("");
+				$(".bottom-btn a").attr("index", "curr");
+			} else {
+				loadData("next");
+				$(".bottom-btn a").attr("index", "next");
+			}
+		});
+		$(function() {
+			$.showLoadingPop("正在加载...");
+			var str = "<td><span class=\"tab-sp\"></span></td>";
+			$.ajaxGet(loadCodeUrl + "?class_codes=" + codeList.join(","),
+				function(response) {
+					var codeLisData = response.data.code_list;
+					codeLengthData.client = codeLisData[clientImporLenvelClassID].length;
+					codeLengthData.depar = codeLisData[departmenClassID].length;
+					codeLengthData.linkman = codeLisData[linkmanImporLenvelClassID].length;
+					var clientImporLenvelStr = "";
+					for(var i in codeLisData[clientImporLenvelClassID]) {
+						var data = codeLisData[clientImporLenvelClassID][i];
+						$(".month-indicator-company .month-indicator-tab tr:last-child").append(str);
+						clientImporLenvelStr += "<td id=" + data.code_tree + ">" + data.code_name + "</td>";
+						$(".month-indicator .month-indicator-company .month-indicator-tab tr:last-child td").eq(parseInt(i) + 1).attr("data-levels-code", data.code_tree);
+						$(".next-month-indicator .month-indicator-company .month-indicator-tab tr:last-child td").eq(parseInt(i) + 1).attr("data-levels-code", data.code_tree);
+					}
+					$(".month-indicator-company .important-levels").after(clientImporLenvelStr);
+					var departmenStr = "";
+					for(var i in codeLisData[departmenClassID]) {
+						var data = codeLisData[departmenClassID][i];
+						$(".month-indicator-department .month-indicator-tab tr:last-child").append(str);
+						departmenStr += "<td id=" + data.code_tree + ">" + data.code_name + "</td>";
+						$(".month-indicator .month-indicator-department .month-indicator-tab tr:last-child td").eq(parseInt(i) + 1).attr("data-levels-code", data.code_tree);
+						$(".next-month-indicator .month-indicator-department .month-indicator-tab tr:last-child td").eq(parseInt(i) + 1).attr("data-levels-code", data.code_tree);
+					}
+					$(".month-indicator-department .important-levels").after(departmenStr);
+					var linkmanImporLenvelStr = "";
+					for(var i in codeLisData[linkmanImporLenvelClassID]) {
+						var data = codeLisData[linkmanImporLenvelClassID][i];
+						$(".month-indicator-linkman .month-indicator-tab tr:last-child").append(str);
+						linkmanImporLenvelStr += "<td id=" + data.code_tree + ">" + data.code_name + "</td>";
+						$(".month-indicator .month-indicator-linkman .month-indicator-tab tr:last-child td").eq(parseInt(i) + 1).attr("data-levels-code", data.code_tree);
+						$(".next-month-indicator .month-indicator-linkman .month-indicator-tab tr:last-child td").eq(parseInt(i) + 1).attr("data-levels-code", data.code_tree);
+					}
+					$(".month-indicator-linkman .important-levels").after(linkmanImporLenvelStr);
+					setTableStyle();
+					//获取数据
+					loadData('');
+				});
+
+		});
+
+		function setTableStyle() {
+			//codeLengthData
+			//设置最多宽度。超出隐藏
+			var height = ($(".client-visit-indicators-main-content").width() - 400) / 120;
+			var maxWidth = parseInt(height) * 120 + 400;
+			$(".indicator-box").css("max-width", maxWidth + "px");
+			var maxChildrenDomLength = parseInt(height);
+			$(".indicator-box").each(function(i) {
+				if($(this).hasClass("month-indicator-company")) {
+					$(this).find("tr").append(childrenDom(maxChildrenDomLength - codeLengthData.client));
+				} else if($(this).hasClass("month-indicator-department")) {
+					$(this).find("tr").append(childrenDom(maxChildrenDomLength - codeLengthData.depar));
+				} else {
+					$(this).find("tr").append(childrenDom(maxChildrenDomLength - codeLengthData.linkman));
+				}
+			});
+		}
+
+		function childrenDom(index) {
+			var str = "";
+			for(var i = 0; i < index; i++) {
+				str += "<td class=\"disable\"></td>";
+			}
+			return str;
+		}
+		//加载数据
+		function loadData(isText) {
+			if(isText == "") {
+				//当月
+				$.ajaxGet(clientVisitIndicatorsUrl + "?visit_quota_month=" + nowDate, function(response) {
+					var indicatorsInfoData = response.data;
+					if(indicatorsInfoData == undefined) {
+						$.hideLoadingPop();
+					} else {
+						for(var i in indicatorsInfoData.visit_quota_data) {
+							var indicatorDataList = indicatorsInfoData.visit_quota_data[i];
+							if(indicatorDataList.visit_quota_type == 1) {
+								//加载公司
+								$(".month-indicator .month-indicator-company .month-indicator-tab tr:last-child td").each(function(index) {
+									if($(this).attr("data-levels-code") == indicatorDataList.visit_quota_data_id) {
+										$(this).children("span").html(indicatorDataList.visit_quota_value);
+									}
+								});
+
+							} else if(indicatorsInfoData.visit_quota_data[i].visit_quota_type == 2) {
+								//加载部门
+								$(".month-indicator .month-indicator-department .month-indicator-tab tr:last-child td").each(function(index) {
+									if($(this).attr("data-levels-code") == indicatorDataList.visit_quota_data_id) {
+										$(this).children("span").html(indicatorDataList.visit_quota_value);
+									}
+								});
+							} else if(indicatorsInfoData.visit_quota_data[i].visit_quota_type == 3) {
+								//加载联系人
+								$(".month-indicator .month-indicator-linkman .month-indicator-tab tr:last-child td").each(function(index) {
+									if($(this).attr("data-levels-code") == indicatorDataList.visit_quota_data_id) {
+										$(this).children("span").html(indicatorDataList.visit_quota_value);
+									}
+								});
+							}
+						}
+						$.hideLoadingPop();
+					}
+				});
+			} else {
+				//下月
+				$.ajaxGet(clientVisitIndicatorsUrl + "?visit_quota_month=" + nowNextDate, function(response) {
+					var indicatorsInfoData = response.data;
+					for(var i in indicatorsInfoData.visit_quota_data) {
+						var indicatorDataList = indicatorsInfoData.visit_quota_data[i];
+						if(indicatorDataList.visit_quota_type == 1) {
+							//加载公司
+							$(".next-month-indicator .month-indicator-company .month-indicator-tab tr:last-child td").each(function(index) {
+								if($(this).attr("data-levels-code") == indicatorDataList.visit_quota_data_id) {
+									$(this).children("span").html(indicatorDataList.visit_quota_value);
+								}
+							});
+
+						} else if(indicatorsInfoData.visit_quota_data[i].visit_quota_type == 2) {
+							//加载部门
+							$(".next-month-indicator .month-indicator-department .month-indicator-tab tr:last-child td").each(function(index) {
+								if($(this).attr("data-levels-code") == indicatorDataList.visit_quota_data_id) {
+									$(this).children("span").html(indicatorDataList.visit_quota_value);
+								}
+							});
+						} else {
+							//加载联系人
+							$(".next-month-indicator .month-indicator-linkman .month-indicator-tab tr:last-child td").each(function(index) {
+								if($(this).attr("data-levels-code") == indicatorDataList.visit_quota_data_id) {
+									$(this).children("span").html(indicatorDataList.visit_quota_value);
+								}
+							});
+						}
+					}
+
+				});
+			}
+
+		}
+		//设置
+		function setIndicator(obj, txt) {
+			$(obj).hide().siblings().show();
+
+			//			数字验证
+			//$(".month-indicator-tab .tab-txt").attr("onKeyUp", "value=value.replace(/\D/g,'')");
+			var type = $(obj).attr("index");
+			if(type == "curr") {
+				//本月
+				$(".month-indicator .month-indicator-tab .tab-sp").each(function(index) {
+					var text = $(this).text();
+					var str = "<input type='text' class='tab-txt' data-type='int' value=" + text + ">";
+					$(this).replaceWith(str);
+				});
+			} else {
+				//下月
+				$(".next-month-indicator .month-indicator-tab .tab-sp").each(function(index) {
+					var text = $(this).text();
+					var str = "<input type='text' class='tab-txt' data-type='int' value=" + text + ">";
+					$(this).replaceWith(str);
+				});
+			}
+			inputLimit();
+		}
+		//保存
+		function save(obj, txt) {
+			var monthData = {};
+			$(obj).hide().next().hide().prev().prev().show();
+			var type = $(obj).attr("index");
+			monthData.visit_quota_month = 2;
+			var container = ".next-month-indicator";
+			if(type == "curr") {
+				monthData.visit_quota_month = 1;
+				container = ".month-indicator";
+			}
+			var indicatorData = [];
+			//单位指标
+			$(container + " .month-indicator-company .tab-txt").each(function(index) {
+				indicatorData.push({
+					"visit_quota_data_id": $(this).parent().attr("data-levels-code"),
+					"visit_quota_type": 1,
+					"visit_quota_value": $(this).val()
+				});
+			});
+			//部门指标
+			$(container + " .month-indicator-department .tab-txt").each(function(index) {
+				indicatorData.push({
+					"visit_quota_data_id": $(this).parent().attr("data-levels-code"),
+					"visit_quota_type": 2,
+					"visit_quota_value": $(this).val()
+				});
+			});
+			//联系人指标
+			$(container + " .month-indicator-linkman .tab-txt").each(function(index) {
+				indicatorData.push({
+					"visit_quota_data_id": $(this).parent().attr("data-levels-code"),
+					"visit_quota_type": 3,
+					"visit_quota_value": $(this).val()
+				});
+			});
+			monthData.visit_quota_data = indicatorData;
+			$.ajaxPost(clientVisitIndicatorsUrl, monthData, function(response) {
+				if(response.code == 0) {
+					$.showSuccessGritter("保存成功，我们正在为您更新设置，若未正常显示，请你耐心等待");
+					showTextState(container);
+				} else {
+					$.showErrorGritter("保存失败：" + response.msg);
+				}
+			});
+
+		}
+
+		function showTextState(dom) {
+			$(dom + " .month-indicator-tab .tab-txt").each(function(index) {
+				var text = $(this).val();
+				var str = "<span class='tab-sp'>" + text + "</span>";
+				$(this).replaceWith(str);
+			});
+		}
+		//取消
+		function cancel(obj, txt) {
+			$(obj).hide().prev().prev().show();
+			$(obj).prev().hide();
+			var type = $(obj).attr("index");
+			if(type == "curr") {
+				//本月
+				$(".month-indicator-tab .tab-txt").each(function(index) {
+					//var text = $(this).val();
+					var str = "<span class='tab-sp'></span>";
+					$(this).replaceWith(str);
+				});
+				loadData("");
+			} else {
+				//下月
+				$(".month-indicator-tab .tab-txt").each(function(index) {
+					//var text = $(this).val();
+					var str = "<span class='tab-sp'></span>";
+					$(this).replaceWith(str);
+				});
+				loadData("next");
+			}
+
+		}
+	</script>
+
+</html>

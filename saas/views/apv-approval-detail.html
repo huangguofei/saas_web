@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>审批内容</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			body {
+				font-size: 14px;
+				color: #666;
+			}
+			
+			.page-container .content {
+			    padding-top: 10px;
+			    padding-bottom: 20px;
+			}
+			
+			.page-approval .content>.header {
+				padding: 20px;
+				border: 1px solid #ddd;
+				border-radius: 3px;
+			}
+			
+			.css-overhidden {
+				padding: 0;
+				display: inline-block;
+				max-width: 90px;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				vertical-align: middle;
+				min-height: 20px;
+				min-width: 150px;
+			}
+			
+			.page-approval .content .form-group {
+				margin: 0;
+			}
+			
+			.page-approval .content .form-group label {
+				min-width: 60px;
+				text-align: right;
+				font-weight: 700;
+			}
+			
+			.page-approval .content .form-group .form-control {
+				padding-left: 0;
+				min-width: 120px;
+				width: auto;
+			}
+			
+			.page-approval .content .summary {
+				margin-top: 10px;
+			}
+			
+			.page-approval .content .summary>label,
+			.page-approval .content .approval>label,
+			.page-approval .content .form-approval>label,
+			.page-approval .content .approval-revocation>label {
+				font-weight: 700;
+			}
+			
+			.page-approval .content .summary>.text {
+				margin-left: 30px;
+				text-indent: 2em;
+			}
+			
+			.page-approval .content .approval {
+				margin-top: 20px;
+			}
+			
+			.page-approval .content .approval .steps {
+				position: relative;
+				/*margin-left: 50px;*/
+			}
+			
+			.page-approval .content .approval .steps .step.approval-mini {
+				height: 80px;
+			}
+			
+			.page-approval .content .approval .steps .step.approval-mini.approval-creator .name-and-time {
+				top: 14px;
+			}
+			
+			.page-approval .content .approval .steps .odd-step-container,
+			.page-approval .content .approval .steps .even-step-container {
+				width: calc(50% - 20px);
+				padding: 20px 20px 20px 15px;
+			}
+			
+			.page-approval .content .approval .steps .step {
+				border: 1px solid #e9e9e9;
+				height: 130px;
+				margin-top: 70px;
+				position: relative;
+			}
+			
+			.page-approval .content .approval .steps .step:first-child {
+				margin-top: 0;
+			}
+			
+			.page-approval .content .approval .steps .even-step-container .step:first-child {
+				margin-top: 70px;
+			}
+			
+			.page-approval .content .approval .steps .head-container {
+				position: relative;
+				width: 70px;
+				height: 50px;
+				margin-right: 5px;
+			}
+			
+			.page-approval .content .approval .steps .head-container .head {
+				position: absolute;
+				width: 50px;
+				height: 50px;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				left: 0;
+				top: 0;
+				z-index: 1;
+			}
+			
+			.page-approval .content .approval .steps .head-container .head:nth-child(2) {
+				left: 10px;
+				z-index: 2;
+			}
+			
+			.page-approval .content .approval .steps .head-container .head:nth-child(3) {
+				left: 20px;
+				z-index: 3;
+			}
+			
+			.page-approval .content .approval .steps .step .user {
+				overflow-y: hidden;
+				margin-top: 5px;
+				height: 60px;
+				padding: 10px 14px;
+				position: relative;
+			}
+			
+			.name-and-time {
+				float: none;
+				left: 90px;
+				right: 160px;
+				position: absolute;
+				top: 23px;
+			}
+			
+			.name-and-time span {
+			   max-width: 100%;
+			   display: block;
+			}
+			
+			.approver-and-note-container {
+				background-color: #fafafa;
+			    padding: 10px 14px;
+			    position: absolute;
+			    left: 0;
+			    right: 0;
+			    bottom: 0;
+			    top: 70px;
+			}
+			
+			.approver-and-note-container .note {
+				margin-right: 160px;
+			}
+			
+			.approver-and-note-container .approval-real {
+				position: absolute;
+				right: 14px;
+				top: 14px;
+				width: 155px;
+				text-align: right;
+			}
+			
+			.approver-and-note-container .approval-real .real-approver {
+				max-width: 155px;
+			}
+			
+			.center-line {
+				width: 2px;
+				border: 1px solid #ddd;
+				position: relative;
+			}
+			
+			.center-line img {
+				position: absolute;
+				bottom: 0;
+				left: -1px;
+			}
+			
+			.steps .step .remark {
+				position: absolute;
+				right: -28px;
+				top: 20px;
+				width: 12px;
+				height: 12px;
+				background-color: #fff;
+				border: 3px solid #21b5a9;
+				border-radius: 6px;
+				-webkit-border-radius: 6px;
+				-moz-border-radius: 6px;
+				padding: 0;
+				z-index: 2;
+			}
+			
+			.steps .step .remark.remark-of-red {
+				border: 3px solid #ca192b;
+			}
+			
+			.steps .odd-step-container .remark {
+				right: -28px;
+			}
+			
+			.steps .even-step-container .remark {
+				left: -23px;
+			}
+			
+			.approver-and-note-container .approval-real span {
+				display: block;
+			}
+			
+			.approval-status {
+				margin-top: 10px;
+			}
+			
+			.approval-status .btn-mta {
+				margin-right: 10px;
+				height: 26px;
+				line-height: 13px;
+			}
+			
+			.approval-status .status {
+				font-size: 18px;
+				color: #21b5a9;
+			}
+			
+			.approval-status .status.status-red {
+				color: #CA192B;
+			}
+			
+			.page-approval .content .approval .steps .step .text {
+				margin-top: 20px;
+				height: 80px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			
+			.page-approval .content .approval .steps .step .text>span {
+				display: block;
+				text-align: center;
+			}
+			
+			.page-approval .content .approval .steps .step .text>span.type {
+				font-weight: 700;
+			}
+			
+			.page-approval .content .approval .steps .step .text>a {
+				margin-left: 169px;
+				margin-top: -33px;
+			}
+			
+			.page-approval .content .approval .steps .step .text>span.note {
+				height: 62px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				text-align: left;
+			}
+			
+			.page-approval .content .approval .steps .step .time {
+				text-align: center;
+			}
+			
+			.page-approval .content .form-approval {
+				padding-left: 15px;
+				padding-right: 60px;
+			}
+			
+			.page-approval .content .form-approval .opinion {
+				margin-bottom: 20px;
+			}
+			
+			.page-approval .content .form-approval .opinion .form-control-note {
+				display: block;
+				width: 100%;
+				height: 100px;
+				margin-top: 5px;
+			}
+			
+			.apv-detail-header {
+				position: relative;
+				/*max-height: 200px;*/
+				/*overflow-y: hidden;*/
+				max-width: 100%;
+				/*overflow-x: hidden;*/
+			}
+			
+			.apv-detail-header ._app_detail_content img {
+				/*position: relative;*/
+				vertical-align: text-bottom;
+			}
+			
+			.apv-detail-header ._app_detail_content.css-overhidden {
+				display: inline-block;
+				max-width: 94%;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				vertical-align: middle;
+			}
+			
+			._app_detail td {
+				max-width: 200px;
+			}
+			
+			.apv-detail-header ._app_detail_content .view-detail {
+				position: absolute;
+				bottom: -30px;
+				right: 0;
+			}
+			
+			.apv-detail-header ._app_detail_content>p:nth-child(2) {
+				position: relative;
+				/*display: inline;*/
+				/*float: left;*/
+				line-height: 20px;
+				width: 100%;
+				word-wrap: break-word;
+				word-break: break-all;
+			}
+			
+			.apv-detail-header ._app_detail_content>p:nth-child(2):after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.apv-detail-header ._app_detail_content>p .span-dom-of-hidden {
+				display: inline-block;
+				position: absolute;
+				right: 0;
+				top: 0;
+				background-color: #fff;
+				padding: 0;
+				margin: 0;
+				width: auto;
+				text-indent: 1px;
+			}
+			
+			.apv-detail-header ._app_detail_content>p img {
+				width: 100px;
+				height: auto;
+			}
+			
+			.content-detail-container {
+				width: 100%;
+				word-break: break-all;
+				word-wrap: break-word;
+			}
+			
+			.content hr {
+				margin-top: 40px;
+			}
+			
+			.cancel-approval {
+				width: 100px;
+				display: block;
+				margin-left: 14px;
+			}
+			
+			.submit-approval {
+				width: 100px;
+			}
+			
+			._app_detail td:last-child {
+				padding: 5px;
+				word-wrap: break-word;
+				word-break: break-all
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-approval">
+			<div class="content">
+				<!--<div class="header">
+					<div class="form-group form-inline">
+						<label>审批事项：</label>
+						<span class="form-control form-control-noborder" bind="routine_cn"></span>
+						<label>标题：</label>
+						<span class="form-control form-control-noborder" bind="requested_subject"></span>
+						<label>发起人：</label>
+						<span class="form-control form-control-noborder"><span bind="employee_name"></span>，<span bind="department_cn"></span></span>
+						<label>发起时间：</label>
+						<span class="form-control form-control-noborder" bind="session_start_time"></span>
+						<label>审批状态：</label>
+						<span class="form-control form-control-noborder" bind="apv_sessions_status_cn"></span>
+					</div>
+				</div>
+				<div class="summary">
+					<label>内容：</label>
+					<div class="text panel_requested_content_detail">
+
+					</div>
+					<div class="text panel_requested_content" bind='requested_content'>
+
+					</div>
+					<div class="text-align-right">
+						<button type="button" class="btn btn-default btn-sm btn-view-detail">查看详情 <i class="fa fa-angle-double-right"></i> </button>
+					</div>
+				</div>-->
+
+				<div class="apv-detail-header">
+
+				</div>
+				<hr>
+				<div class="approval">
+					<label>审批记录：</label>
+					<!--<ul class="steps">
+
+					</ul>-->
+					<div class="steps at">
+						<div class="odd-step-container lt">
+							
+						</div>
+						<div class="center-line lt">
+							<img src="../resources/images/approval-angle-down.png" alt="" />
+						</div>
+						<div class="even-step-container lt">
+							
+						</div>
+					</div>
+				</div>
+				<!--<hr>-->
+				<div class="form-approval hide">
+					<div class="opinion">
+						<label>审批意见：</label>
+						<span>
+							<label><input type="radio" class="form-control-radio" name="rdApproval" value="2" checked="checked" /> 同意 </label> 
+							<label><input type="radio" class="form-control-radio" name="rdApproval" value="3" /> 拒绝 </label>
+						</span>
+						<textarea class="form-control-note" placeholder="请填写审批意见说明"></textarea>
+					</div>
+					<button type="button" class="btn btn-info def-btn-info submit-approval" onclick="openApprovalHandlePop();">提 交</button>
+				</div>
+				<div class="approval-revocation hide">
+					<!--<label>操作：</label>-->
+					<button type="button" class="btn btn-danger def-btn-danger cancel-approval" onclick="openApprovalRevocationPop();">撤 销</button>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/jquery.dotdotdot.min.js"></script>
+		<script type="text/javascript">
+			//------------消息队列相关-----------------------
+			var publisher = parent.HHMQ.createPublisher('审批详情', 'approval');
+			//页面关闭事件
+			context.onPageClose = function() {
+				publisher.dispose();
+			};
+			//------------消息队列相关 end -------------------
+			var approvalId = $.getQueryObject().apvId;
+			var action = $.getQueryObject().action;
+			//APIS
+			var APPROVALAPIS = {
+				//详情
+				detail: BSAPIURL + "/approvals/" + approvalId,
+				handle: BSAPIURL + "/approvals/" + approvalId + "/handle",
+			};
+			var APPROVAL_SESSION_STATUS = { //整个审批的状态
+				wait_handle: 1, //待处理
+				passed: 2, //审核通过
+				refuse: 3, //审核拒绝
+				canceled: 4 //已撤销
+			};
+			var STEP_APV_STATUS = { //每一步的审批状态
+				wait_handle: 1, //待处理
+				passed: 2, //审核通过
+				refuse: 3 //审核拒绝
+			}
+			var apvSelector = ".page-approval",
+				apv_session_status, apvRoutineId;
+			var apvController = new Controller(apvSelector);
+			$(document).ready(function() {
+				if(!approvalId) {
+					$.showErrorGritter("参数有误，请返回重新选择。");
+					return;
+				}
+
+				$.showLoadingPop("正在加载审批内容，请稍候...");
+				loadApprovalDetail();
+			});
+			//加载审批详情
+			function loadApprovalDetail() {
+				$.ajaxGet(APPROVALAPIS.detail, function(response) {
+					if(response.code == 0) {
+						apvRoutineId = response.data.routine_id;
+						apv_session_status = response.data.apv_sessions_status;
+						apvController.set(response.data, function() {});
+						//审批记录
+						var apvStepsData = response.data.approval_step_data;
+						//加载头部
+						loadApprovalDetailHead(response.data.detail_callback_url);
+						if(apvStepsData) {
+							//加载步骤
+							loadApvStepsHtml(response, apvStepsData);
+						}
+						if(apv_session_status != APPROVAL_SESSION_STATUS.wait_handle||!response.data.wait_me_handle) {
+							$(".form-approval").remove();
+						}
+						//处理
+						if((action == "apv" && apv_session_status != APPROVAL_SESSION_STATUS.canceled)||apv_session_status == APPROVAL_SESSION_STATUS.wait_handle) {
+							//审批
+							$(".form-approval").removeClass("hide");
+						}
+						if(action == "my" && apv_session_status == APPROVAL_SESSION_STATUS.wait_handle) {
+							//撤销
+							$(".approval-revocation").removeClass("hide");
+						}
+						//查看详情
+						$(".btn-view-detail").click(function() {
+							$(this).hide();
+							$(".panel_requested_content").hide();
+							$(".panel_requested_content_detail").load("apv-approval-detail-announcement.html");
+						});
+					} else {
+						$.showErrorGritter("加载审批事项失败：" + response.msg);
+					}
+					$.hideLoadingPop();
+				});
+			}
+			//加载审批详情头部
+			function loadApprovalDetailHead(url) {
+				$(".apv-detail-header").load(url, function() {
+					var isExceedThreeLine = $(".apv-detail-header>div._app_detail_content>div:eq(0)").outerHeight(true) / parseInt($(".apv-detail-header>div._app_detail_content>div:eq(0)").css("line-height")) >= 3;
+					if($(".apv-detail-header>div._app_detail_content").css("display") != "none" && isExceedThreeLine) {
+						$(".apv-detail-header>div._app_detail_content").append("<button href='#' data-collapse='false' class='btn btn-default btn-sm view-detail'>展开详情</button>")
+						$.zoom({
+							container: $("._app_detail_content>div"),
+							handle: $(".view-detail"),
+							showText: "收起详情，展开详情",
+							firstState: 0,
+							changeCallback: function(state) {
+								if(state==0){
+									$("._app_detail_annx>table").show();//附件
+								}else{
+									$("._app_detail_annx>table").hide();//附件
+								}
+							}
+						});
+					}
+					$("._app_detail td:last-child").attr("colspan", "7");
+					$(".apv-detail-header a").each(function() {
+						$(this).attr("target", "_blank");
+					});
+				});
+			}
+			//加载审批步骤数据
+			function loadApvStepsHtml(response, apvStepsData) {
+				$(".approval .steps .odd-step-container").empty();
+				$(".approval .steps .even-step-container").empty();
+				var selfHeadImg = "../resources/images/default.jpg";
+				if(response.data.employee_avatar) {
+					selfHeadImg = response.data.employee_avatar;
+				}
+				//发起人
+				$(".approval .steps .odd-step-container").append(
+					"<div class=\"step approval-creator approval-mini\">"
+					+"	<div class=\"user at\">"
+					+"		<div class='head-container lt'>"
+					+"			<img class=\"head\" src=\"" + selfHeadImg + "\">"
+					+"		</div>"
+					+"		<div class='name-and-time lt'>"
+					+"			<span title='" + response.data.employee_name + "' class=\"user-name css-overhidden\">" + response.data.employee_name + "</span>"
+					+"			<span class=\"approval-time note-font-type\">" + response.data.session_start_time + "</span>"
+					+"		</div>"
+					+"		<div class=\"approval-status rt\">"
+					+"			<span class=\"status\">发起审批</span>"
+					+"		</div>"
+					+"	</div>"
+					+"	<div class='remark'></div>"
+					+"</div>");
+				var toEmployeeId = [];
+				var isOne = true;
+				for(var i in apvStepsData) {
+					var stepData = apvStepsData[i];
+					var empNames = "",titleNames="",
+						deptName = "",realApprover="";
+					var headImg = "";
+					if(stepData.approvers) {
+						for(var j in stepData.approvers) {
+							var apprData = stepData.approvers[j];
+							toEmployeeId.push(apprData.employee_id);
+							if(!apprData.employee_name) continue;
+							if(empNames) {
+								empNames += "、";
+								titleNames+= "、";
+							}
+							//多个审批人 由谁审批的 突出显示
+							if(stepData.approvers.length > 0 && apprData.employee_id == stepData.step_apv_employee_id) {
+								realApprover=apprData.employee_name;
+							}
+							empNames += apprData.employee_name;
+							titleNames+= apprData.employee_name;
+							deptName = apprData.department_name;
+							if(j < 3) {
+								/*var styleStr = "";
+								if(stepData.approvers.length == 3 && j == 0) {
+									styleStr = "margin:0 20px";
+								} else if(stepData.approvers.length == 1) {
+									styleStr = "width:100%;height:auto;";
+								} else if(stepData.approvers.length == 2) {
+									styleStr = "width:42.5%;height:auto;";
+								}*/
+								headImg += "<img class=\"head\" src=\"" + (apprData.employee_avatar ? apprData.employee_avatar : "../resources/images/default.jpg") + "\">";
+							}
+						}
+					}
+					//指定人审批无部门
+					if(stepData.step_type == 4) {
+						deptName = "";
+					}
+//					if(apprData.employee_avatar) {
+//						//headImg = apprData.employee_avatar;
+//					}
+					var stepDom=
+						$("<div class=\"step "+(stepData.step_apv_status == APPROVAL_SESSION_STATUS.wait_handle ?"approval-mini":"")+"\">"
+						+"	<div class=\"user at\">"
+						+"		<div class=\"head-container lt\">" + headImg
+						//+"		<img class=\"head\" src=\"" + selfHeadImg + "\">"
+						+"		</div>"
+						+"		<div class=\"name-and-time lt\">"
+						//+"			<span class=\"dept hide\">" + deptName + "</span>"
+						+"			<span title='" + titleNames + "' class=\"user-name css-overhidden\">" + empNames + "</span>"
+						//+"			<span class='approval-time'>"+stepData.step_apv_time+"</span>"
+						+"		</div>"
+						+"		<div class='approval-status "+(stepData.step_apv_status == APPROVAL_SESSION_STATUS.wait_handle? "status-Mta":"")+" rt'>"
+						+			(stepData.step_apv_status == APPROVAL_SESSION_STATUS.wait_handle && response.data.create_by_self && isOne ? "<a data-id=" + stepData.session_id + " class='btn btn-info def-btn-info btn-sm btn-mta-approval btn-mta'>M一下</a>" : "")
+						+"			<span class=\"status "+((stepData.step_apv_status == APPROVAL_SESSION_STATUS.wait_handle||stepData.step_apv_status == APPROVAL_SESSION_STATUS.refuse)? "status-red":"")+"\">" + (stepData.step_apv_status_cn || "待处理") + "</span>"
+						+"		</div>"
+						+"	</div>"
+						+(stepData.step_apv_status == APPROVAL_SESSION_STATUS.wait_handle?""
+						:"	<div class=\"approver-and-note-container at\">"
+						+"		<span class=\"note note-font-type lt\" title='"+stepData.step_apv_comment+"'>" + stepData.step_apv_comment + "</span>"
+						+"		<div class='approval-real rt'>"
+						+"			<span class='real-approver css-overhidden' title='"+("实际审批人："+realApprover)+"'>实际审批人："+realApprover+"</span>"
+						+"			<span class='real-approval-time note-font-type'>"+stepData.step_apv_time+"</span>"
+						+"		</div>"
+						+"	</div>")
+						+"	<div class='remark "+(stepData.step_apv_status == APPROVAL_SESSION_STATUS.wait_handle?"remark-of-red":"")+"'></div>"
+						+"</div>");
+					if((parseInt(i)+1)%2==0) {
+						$(".approval .steps .odd-step-container").append(stepDom);
+					}else {
+						$(".approval .steps .even-step-container").append(stepDom);
+					}
+					$.zoom({
+						container: $(".approval .steps .step .note"),
+						height: 50,
+						firstState: 0
+					});
+					$(".center-line").css({
+						height: $(".steps").outerHeight(true)
+					});
+					if(stepData.step_apv_status == STEP_APV_STATUS.wait_handle)
+						isOne = false;
+				}
+				//Mta
+				$(".approval .steps .btn-mta").unbind("click").click(function() {
+					var infoData = {};
+					infoData.business_type = businessInformCode.MTa;
+					infoData.data_id = $(this).attr("data-id");
+					infoData.employee_id = toEmployeeId.join(',');
+					infoData.message = {};
+					infoData.message.msg_content = response.data.requested_subject;
+					infoData.message.msg_type = MtaCode.approve;
+					infoData.business_type_cn="M一下：审批";
+					sendMtaMessage(infoData,"");
+				}); //已撤销的状态
+				/*if(apv_session_status == APPROVAL_SESSION_STATUS.canceled) {
+					//撤销人
+					$(".approval .steps").append("<li class=\"step\">" +
+						"	<p class=\"user\">" +
+						//"<span class=\"avatar-box\">" + //headImg +
+						"		<img class=\"head\" src=\"" + selfHeadImg + "\">" +
+						//"</span>" +
+						"		<span class=\"dept\">" + response.data.department_cn + "</span>" +
+						"		<span title='" + response.data.employee_name + "' class=\"user-name css-overhidden\">" + response.data.employee_name + "</span>" +
+						"	</p>" +
+						"	<p class=\"text\">" +
+						"		<span class=\"type\">撤销审批</span>" +
+						"		<span class=\"note\"></span>" +
+						"	</p>" +
+						"	<p class=\"time\">" +
+						"		<span>" + response.data.session_end_time + "</span>" +
+						"	</p>" +
+						"</li><li class=\"direction\"><i class=\"fa fa-arrow-right\"></i></li>");
+				}*/
+
+				$(".approval .steps").append("<li class=\"clear\"></li>");
+				$(".approval .steps .direction").last().remove();
+			}
+			//审批处理
+			function openApprovalHandlePop() {
+				var handleStatus = $(".form-approval input[name='rdApproval']:checked").val();
+				var handleNote = $(".form-approval .form-control-note").val();
+				if(handleStatus == 3 && !handleNote) {
+					$.showErrorGritter("请录入本次审批拒绝意见。");
+					$(".form-approval .form-control-note").focus();
+					return false;
+				}
+				$.modal().confirm("你将完成本次步骤审批，请再次确认？", function() {
+					$.ajaxPut(APPROVALAPIS.handle, {
+						step_status: handleStatus,
+						comment: handleNote
+					}, function(response) {
+						if(response.code == 0) {
+							//消息推送
+							publisher.publisheMsg({
+								action: "apv",
+								msg: "审批处理完成。"
+							});
+							$.showSuccessGritter("本次步骤审批完成。");
+							setTimeout(function() {
+								window.location = window.location.href.replace("action", "noaction");
+							}, 500);
+						} else {
+							$.showErrorGritter("提交审批失败：" + response.msg);
+							location.reload();
+						}
+					});
+				});
+			}
+			//撤销审批
+			function openApprovalRevocationPop() {
+				$.modal().confirm("你将撤销当前审批流程，撤销后当前审批将失效，请确认是否撤销？", function() {
+					$.ajaxDelete(APPROVALAPIS.detail, {}, function(response) {
+						if(response.code == 0) {
+							//消息推送
+							publisher.publisheMsg({
+								action: "revocation",
+								msg: "审批撤销。"
+							});
+							if(APV_ROUTINE_IDS.crm[apvRoutineId]) {
+								parent.mainPublisher.publisheMsg({
+									action: "refresh",
+									routin_id: apvRoutineId,
+									msg: "审批完成，请刷新CRM页面表格！"
+								});
+							}
+
+							$.showSuccessGritter("当前审批已撤销。");
+							setTimeout(function() {
+								window.location = window.location.href;
+							}, 500);
+						} else {
+							$.showErrorGritter("撤销失败：" + response.msg);
+						}
+					});
+				});
+			}
+		</script>
+	</body>
+
+</html>

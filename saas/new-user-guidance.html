@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>新手教程</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<link rel="stylesheet" href="resources/css/index.css" />
+		<style>
+			.img-banner {
+				position: relative;
+				margin-top: -3%;
+			}
+			
+			.img-banner img {
+				max-width: 100%;
+			}
+			
+			.img-banner .banner-text {
+				position: absolute;
+				left: 17%;
+				top: 32%;
+				color: #fff;
+			}
+			
+			.img-banner .banner-text h1 {
+				font-size: 70px;
+				font-weight: bold;
+			}
+			
+			.img-banner .banner-text h2 {
+				font-size: 40px;
+				font-weight: bold;
+			}
+			
+			.about-main-content {
+				margin: 20px 17%;
+				/*background-color: #999;*/
+				height: 500px;
+			}
+			
+			.guidancemain-content-nav {
+				color: #999;
+				border-bottom: 1px solid #ccc;
+			}
+			
+			.guidancemain-content-nav a {
+				display: inline-block;
+				margin: 0 10px 20px 10px;
+				color: #666;
+			}
+			
+			.guidancemain-content-nav a:first-child {
+				margin-left: 0;
+				padding-left: 18px;
+				background-image: url(resources/images/home.png);
+				background-repeat: no-repeat;
+				background-position-y: 3px;
+			}
+			
+			.guidancemain-content-nav a:last-child {
+				color: #999;
+			}
+			
+			.guidance-main-content {
+				margin: 20px 17%;
+				margin-bottom: -60px;
+			}
+			
+			.step-detail {
+				float: left;
+				margin: 5% 40px;
+				/*margin-top: 5%;*/
+			}
+			
+			.step-detail p {
+				text-align: center;
+				margin-top: 15px;
+			}
+			
+			.img-right-icon {
+				float: left;
+				margin: 7.5% 0;
+			}
+			
+			.step-container:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.go-to-register {
+				width: 180px;
+				margin: 0 auto;
+				margin-top: 2.8%;
+				margin-left: 46%;
+			}
+			
+			.go-to-register a {
+				display: block;
+				border: 1px solid #CA192B;
+				border-radius: 5px;
+				padding: 20px 12px;
+				/*-webkit-margin-: -90%;*/
+				margin-bottom: 20%;
+				text-align: center;
+				background-color: #CA192B;
+				color: #fff;
+				padding-right: 7px;
+				font-weight: bold;
+				font-size: 20px;
+			}
+			
+			.go-to-register a {
+				text-decoration: none;
+				color: #fff;
+			}
+		</style>
+	</head>
+
+	<body onload="initGuidance()">
+		<div class="common-header">
+
+		</div>
+		<div class="main-content">
+			<div class="img-banner">
+				<img src="resources/images/Banner_1.jpg" alt="" />
+				<div class="banner-text">
+					<h1>销秘</h1>
+					<h2>让天下没有难以管理的销售团队</h2>
+					<p>团队管理，尽在销秘</p>
+				</div>
+			</div>
+			<div class="guidance-main-content">
+				<div class="guidancemain-content-nav">
+					<a href="index.html">首页</a>>
+					<a href="about.html">新手入门</a>
+				</div>
+				<div class="step-container">
+					
+				</div>
+			</div>
+			<div  class="go-to-register">
+				<a href="register.html">立即注册</a>
+			</div>
+		</div>
+		<div class="common-footer">
+			
+		</div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			function initGuidance(){
+				var txt=["注册企业","登录企业账户","认证企业","购买版本","添加部门、员工","开通员工账号","员工登录使用"]
+				var str="";
+				for(var i=0;i<7;i++){
+					str+="<div index='"+(i+1)+"' class=\"step-detail\">"
+						+"<img src=\"resources/images/new-A-"+(i+1)+".png\" alt=\"\" />"
+						+"<p>"+txt[i]+"</p>"
+					+"</div>";
+					if(i<=5){
+						str+="<div index='"+(i+1)+"' class=\"img-right-icon\">"
+							+"<img src=\"resources/images/new-A.png\" alt=\"\" />"
+						+"</div>";
+					}
+				}
+				$(".step-container").append(str);
+				$(".step-detail").mouseenter(function(){
+					var index=$(this).attr("index");
+					var srcPath=$(this).find("img").attr("src");
+					$(this).find("img").attr("src",srcPath.replace("A","B"));
+					$(".step-container>div[index]").each(function(){
+						if($(this).attr("index")<index){
+							var srcPath=$(this).find("img").attr("src");
+							$(this).find("img").attr("src",srcPath.replace("A","B"));
+						}
+					});
+				});
+				$(".step-detail").mouseleave(function(){
+					var index=$(this).attr("index");
+					var srcPath=$(this).find("img").attr("src");
+					$(this).find("img").attr("src",srcPath.replace("B","A"));
+					$(".step-container>div[index]").each(function(){
+						if($(this).attr("index")<index){
+							var srcPath=$(this).find("img").attr("src");
+							$(this).find("img").attr("src",srcPath.replace("B","A"));
+						}
+					});
+				});
+			}
+		</script>
+	</body>
+
+</html>

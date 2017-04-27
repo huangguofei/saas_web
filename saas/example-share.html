@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>案例分享</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<link rel="stylesheet" href="resources/css/index.css" />
+		<link rel="stylesheet" href="resources/css/tinycarousel.css" type="text/css" media="screen">
+		<style>
+			.img-banner {
+				position: relative;
+				margin-top: -3%;
+			}
+			
+			.img-banner img {
+				width: 100%;
+			}
+			
+			.img-banner .banner-text {
+				position: absolute;
+				left: 17%;
+				top: 32%;
+				color: #fff;
+			}
+			
+			.img-banner .banner-text h1 {
+				font-size: 70px;
+				font-weight: bold;
+			}
+			
+			.img-banner .banner-text h2 {
+				font-size: 40px;
+				font-weight: bold;
+			}
+			
+			.about-main-content {
+				margin: 20px 17%;
+				/*background-color: #999;*/
+				/*height: 500px;*/
+			}
+			
+			.about-main-content-nav {
+				color: #999;
+			}
+			
+			.about-main-content-nav a {
+				display: inline-block;
+				margin: 0 10px 20px 10px;
+				color: #666;
+			}
+			
+			.about-main-content-nav a:first-child {
+				margin-left: 0;
+				padding-left: 18px;
+				background-image: url(resources/images/home.png);
+				background-repeat: no-repeat;
+				background-position-y: 3px;
+			}
+			
+			.about-main-content-nav a:last-child {
+				color: #999;
+			}
+			
+			.about-main-content-detail-left {
+				width: 25%;
+				margin-right: 5%;
+				border: 1px solid #e3e3e3;
+			}
+			
+			.about-main-content-detail-left p {
+				padding: 20px;
+				border-bottom: 1px solid #e3e3e3;
+				cursor: pointer;
+			}
+			
+			.about-main-content-detail-left p.active {
+				border-left: 3px solid #ca192b;
+				padding-left: 17px;
+			}
+			
+			.about-main-content-detail-right {
+				width: 70%;
+				border: 1px solid #e3e3e3;
+				padding: 50px;
+			}
+			
+			.about-main-content-detail-left,
+			.about-main-content-detail-right {
+				float: left;
+			}
+			
+			.cmp-detail img {
+				width: 100%;
+				/*height: 200px;*/
+			}
+			
+			.about-main-content-detail-head {
+				padding: 20px;
+				margin: -50px -50px 0 -50px;
+				border-bottom: 1px solid #e3e3e3;
+			}
+			
+			.cmp-detail-content,
+			.team-detail-content {
+				padding-top: 30px;
+			}
+			
+			.team-detail-content {
+				border-bottom: 1px solid #e3e3e3;
+			}
+			
+			.cmp-detail-content>p {
+				margin-top: 20px;
+				text-indent: 2em;
+			}
+			
+			.team-detail-content>img {
+				width: 200px;
+				height: 230px;
+				vertical-align: top;
+				float: left;
+			}
+			
+			.team-detail-content>div {
+				min-height: 250px;
+				margin-left: 230px;
+			}
+			
+			.team-detail-content .leader-header {
+				font-size: 23px;
+				margin-bottom: 10px;
+			}
+			
+			.team-detail-content .leader-header span {
+				display: inline-block;
+				font-size: 16px;
+				margin-left: 10px;
+			}
+			
+			.relation-common-container {
+				width: 100%;
+				padding-top: 20px;
+			}
+			
+			.relation-common-container .relation-common {
+				float: left;
+				width: 50%;
+			}
+			
+			.relation-common-container .relation-common img {
+				float: left;
+				vertical-align: top;
+				margin-right: 10px;
+			}
+			
+			.relation-common-container .relation-common p span {
+				margin-left: 10px;
+			}
+			
+			#mycompanyCarousel {
+				width: 100%;
+			}
+			
+			.example-container {
+				border: 1px solid #ccc;
+				padding-left: 10px;
+				padding-right: 10px;
+			}
+			
+			.example-container:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.carousel-inner {
+				width: 100%;
+			}
+			
+			.carousel-inner .item {
+				float: left;
+				/*display: inline-block;*/
+			}
+			
+			.carousel-inner .item img {
+				width: 170px;
+				height: 110px;
+			}
+			
+			#slider1 {
+				margin-top: 20px;
+			}
+			
+			#slider1 img {
+				width: 170px;
+				height: 110px;
+			}
+			
+			#slider1 .viewport {
+				width: 91%;
+			}
+			
+			.example-detail:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.example-detail img {
+				float: left;
+			}
+			
+			.example-detail {
+				padding: 20px 0;
+				margin: 0 20px;
+				border-bottom: 1px solid #ccc;
+				margin-bottom: 20px;
+			}
+			
+			.example-text-container {
+				margin-left: 29%;
+				text-indent: 2em;
+			}
+			
+			.example-text-title {
+				margin-left: 29%;
+				font-weight: bold;
+			}
+			
+			.overview li {
+				position: relative;
+				cursor: pointer;
+			}
+			
+			.overview li .img-caption {
+				position: absolute;
+				top: 45%;
+				left: 45%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="common-header">
+
+		</div>
+		<div class="main-content">
+			<div class="img-banner">
+				<img src="resources/images/Banner_1.jpg" alt="" />
+				<div class="banner-text">
+					<h1>销秘</h1>
+					<h2>让天下没有难以管理的销售团队</h2>
+					<p>团队管理，尽在销秘</p>
+				</div>
+			</div>
+			<div class="about-main-content">
+				<div class="about-main-content-nav">
+					<a href="index.html">首页</a>>
+					<a href="javascript:;">案例分享</a>
+				</div>
+				<div class="example-container">
+					<div class="examples-detail-container">
+					<!--<div class="example-detail">
+						<img src="resources/images/box-4-bg.png" alt="" />
+						<div class="example-text">
+							<h2 class="example-text-title">XX市XXXXX有限公司</h2>
+							<p class="example-text-container">
+								创创集团有限公司是以香港创维数码控股有限公司为龙头，跨越粤港两地，生产消费类电子的大型高科技上市公司，是中国三大彩电龙头企业之一。2000年4月，），是一个由公众、世界著名投资基金及企业管理层组成的市值突破60亿元国际型企业。
+       是一个由公众、世界著名投资基金及企业管理层组成的市值突破60亿元国际型企业。是一个由公众、世界著名投资基金及企业管理层组成的市值突破60亿元国际型企业。是一个由公众、世界著名投资基金及企业管理层组成的市值突破60亿元国际型企业。
+       创创集团有限公司是以香港创维数码控股有限公司为龙头，跨越粤港两地，生产消费类电子的大型高科技上市公司，是中国三大彩电龙头企业之一。2000年4月，），是一个由公众、世界著名投资基金及企业管理层组成的市值突破60亿元国际型企业。
+       是一个由公众、世界著名投资基金及企业管理层组成的市值突破60亿元国际型企业。是一个由公众、世界著名投资基金及企业管理层组成的市值突破60亿元国际型企业。是一个由公众、世界著名投资基金及企业管理层组成的市值突破60亿元国际型企业。
+       创创集团有限公司是以香港创维数码控股有限公司为龙头，跨越粤港两地，生产消费类电子的大型高科技上市公司，是中国三大彩电龙头企业之一。2000年4月，），是一个由公众、世界著名投资基金及企业管理层组成的市值突破60亿元国际型企业。
+       是一个由公众、世界著名投资基金及企业管理层组成的市值突破60亿元国际型企业。是一个由公众、世界著名投资基金及企业管理层组成的市值突破60亿元国际型企业。是一个由公众、世界著名投资基金及企业管理层组成的市值突破60亿元国际型企业。
+							</p>
+						</div>
+					</div>-->
+					</div>
+					<div id="slider1">
+						<a class="buttons prev" href="#">&lt;</a>
+						<div class="viewport">
+							<ul class="overview" style="width: 100%; left: 0px;">
+							</ul>
+						</div>
+						<a class="buttons next" href="#">&gt;</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="common-footer">
+
+		</div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<script type="text/javascript" src="resources/js/customize/jquery-latest.min.js"></script>
+		<script src="resources/js/customize/jquery.tinycarousel.js"></script>
+		<script type="text/javascript">
+
+			$(document).ready(function() {
+				var examples=[
+					{
+						id:"1",
+						nam:"XX市XXXX有限公司1",
+						text:"今天是个好日子1",
+						logo:"resources/images/box-4-bg.png",
+						img:"resources/images/box-4-bg.png",
+						short_name:"XX公司1"
+					},{
+						id:"2",
+						nam:"XX市XXXX有限公司2",
+						text:"今天是个好日子2",
+						logo:"resources/images/box-4-bg.png",
+						img:"resources/images/box-4-bg.png",
+						short_name:"XX公司2"
+					},{
+						id:"3",
+						nam:"XX市XXXX有限公司3",
+						text:"今天是个好日子3",
+						logo:"resources/images/box-4-bg.png",
+						img:"resources/images/box-4-bg.png",
+						short_name:"XX公司3"
+					},{
+						id:"4",
+						nam:"XX市XXXX有限公司4",
+						text:"今天是个好日子4",
+						logo:"resources/images/box-4-bg.png",
+						img:"resources/images/box-4-bg.png",
+						short_name:"XX公司4"
+					},{
+						id:"5",
+						nam:"XX市XXXX有限公司5",
+						text:"今天是个好日子5",
+						logo:"resources/images/box-4-bg.png",
+						img:"resources/images/box-4-bg.png",
+						short_name:"XX公司5"
+					},{
+						id:"6",
+						nam:"XX市XXXX有限公司6",
+						text:"今天是个好日子6",
+						logo:"resources/images/box-4-bg.png",
+						img:"resources/images/box-4-bg.png",
+						short_name:"XX公司6"
+					},{
+						id:"7",
+						nam:"XX市XXXX有限公司7",
+						text:"今天是个好日子7",
+						logo:"resources/images/box-4-bg.png",
+						img:"resources/images/box-4-bg.png",
+						short_name:"XX公司7"
+					},{
+						id:"8",
+						nam:"XX市XXXX有限公司8",
+						text:"今天是个好日子8",
+						logo:"resources/images/box-4-bg.png",
+						img:"resources/images/box-4-bg.png",
+						short_name:"XX公司8"
+					},{
+						id:"9",
+						nam:"XX市XXXX有限公司9",
+						text:"今天是个好日子9",
+						logo:"resources/images/box-4-bg.png",
+						img:"resources/images/box-4-bg.png",
+						short_name:"XX公司9"
+					},{
+						id:"10",
+						nam:"XX市XXXX有限公司10",
+						text:"今天是个好日子10",
+						logo:"resources/images/box-4-bg.png",
+						img:"resources/images/box-4-bg.png",
+						short_name:"XX公司10"
+					},
+				]
+				var bannerLiDom="";
+				var introduceDivDom="";
+				for(var i in  examples){
+					bannerLiDom+=
+							"<li data-company-id='"+examples[i].id+"'>"
+						+		"<img src=\""+examples[i].logo+"\">"
+						+		"<div class=\"img-caption\">"+examples[i].short_name+"</div>"
+						+	"</li>";
+					introduceDivDom+="<div class=\"example-detail "+(i==0?"":"hide")+" cmp-"+examples[i].id+"\">"
+						+				"<img src=\""+examples[i].img+"\" alt=\"\" />"
+						+				"<div class=\"example-text\">"
+						+					"<h2 class=\"example-text-title\">"+examples[i].nam+"</h2>"
+						+					"<p class=\"example-text-container\">"
+						+						/*examples[i].text*/"创创集团有限公司是以香港创维数码控股有限公司为龙头，跨越粤港两地，生产消费类电子的大型高科技上市公司，是中国三大彩电龙头企业之一。2000年4月，），是一个由公众、世界著名投资基金及企业管理层组成的市值突破60亿元国际型企业。"
+						+					"</p>"
+						+				"</div>"
+						+			"</div>";
+				}
+				$("#slider1 .overview").html(bannerLiDom);
+				$(".examples-detail-container").html(introduceDivDom);
+				$('#slider1').tinycarousel({
+					interval: false,
+					start:0
+				});
+//				$("#slider7").tinycarousel({
+//					interval: false,
+//					start:0
+//				});
+
+				$('#slider1').bind("move", function(){
+			        //console.log("do something on every move to a new slide");
+			        //console.log($("#slider1"))
+			        var left=parseInt($("#slider1 ul").css("left"));
+			        var liWidth=parseInt($("#slider1 ul li").css("width"));
+			      //  console.log(left);
+			       // console.log(liWidth);
+			        var index=Math.abs(left)/(liWidth+20);
+			        //console.log(index);
+			        var cmpId=$(this).find("li:eq("+index+")").attr("data-company-id");
+			       // console.log(cmpId);
+			        $(".example-detail").addClass("hide");
+			        $(".cmp-"+cmpId).removeClass("hide");
+			    });
+				//var slider7 = $("#slider1").data("plugin_tinycarousel");
+
+				// The move method you can use to make a
+				// anchor to a certain slide.
+				//
+//				$('#gotoslide1').click(function() {
+//					slider7.move(1);
+//
+//					return false;
+//				});
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>新消息...</title>
+	</head>
+
+	<body>
+		<div id="d1">事件1</div>
+		<div id="d2" onclick="onD2Click(this)">事件2</div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script>
+			$("#d1").click(function(e){
+				console.log(e);
+			});
+			function onD2Click(e){
+				console.log(e);
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>Document</title>
+		<style>
+			#map_container {
+				width: 1005px;
+				margin: 0 auto;
+			}
+			
+			#rMap {
+				width: 600px;
+				height: 500px;
+				float: left;
+			}
+			
+			#lSearch {
+				width: 300px;
+				height: 500px;
+				float: left;
+			}
+			
+			td {
+				width: 100px;
+			}
+		</style>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=534a6946f3345a0d3cc18a544ccaa8cb"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+		<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+	</head>
+
+	<body>
+		<input type="text" id="longitude" /><input type="text" id="longitude1" />
+		<input type="text" id="latitude" style="width: 400px;" />
+
+		<div class="bg_cover"></div>
+		<div id="map_container">
+			<div id="rMap"></div>
+			<div id="lSearch">
+				<table>
+					<tr>
+						<td>省份</td>
+						<td><input type="text" class="txtProvince" /></td>
+					</tr>
+					<tr>
+						<td>市</td>
+						<td><input type="text" class="txtCity" /></td>
+					</tr>
+					<tr>
+						<td>具体地址</td>
+						<td><input type="text" class="txtDetail" /></td>
+					</tr>
+					<tr>
+						<td>
+							<button id="btnSearch">search</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<script>
+			$(function() {
+				var map = new BMap.Map("rMap");
+				var point = new BMap.Point(116.331398, 39.897445);
+				map.centerAndZoom(point, 15);
+				map.enableScrollWheelZoom();
+				var geolocation = new BMap.Geolocation();
+				geolocation.getCurrentPosition(function(r) {
+					if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+						map.panTo(r.point);
+						point = r.point;
+						creatMarker();
+					} else {
+						//定位失败 定位到城市
+						new BMap.LocalCity().get(function(result) {
+							map.setCenter(result.name);
+						});
+					}
+				}, {
+					enableHighAccuracy: true
+				});
+
+				function creatMarker() {
+					var marker = new BMap.Marker(point); // 创建标注
+					map.addOverlay(marker); // 将标注添加到地图中
+					marker.enableDragging(); //标注可拖拽
+					marker.addEventListener("click", function(e) {});
+					marker.addEventListener("dragend", function(e) {
+						$("#longitude").val(e.point.lng);
+						$("#longitude1").val(e.point.lat);
+						var pt = e.point;
+						var gc = new BMap.Geocoder();
+						gc.getLocation(pt, function(rs) {
+							var addComp = rs.addressComponents;
+							var address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+							$("#latitude").val(address);
+						});
+					})
+					var label = new BMap.Label("拖动图标可以定位", {
+						offset: new BMap.Size(20, -10)
+					});
+					marker.setLabel(label);
+					map.addOverlay(marker); //在地图中添加marker
+					//marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+				}
+			});
+		</script>
+	</body>
+
+</html>

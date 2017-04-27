@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>公告中心</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			body {
+				overflow: hidden;
+			}
+			
+			.page-container,
+			.page-container .content {
+				padding: 0;
+			}
+			
+			.icon-close {
+				color: #d9534f;
+				cursor: pointer;
+			}
+			
+			.icon-close:hover {
+				color: red;
+			}
+			
+			.form-control-dept-select,
+			.form-control-employee-select {
+				min-height: 34px;
+				height: auto;
+			}
+			
+			.label-file-uploaded .item,
+			.list-dept-select-temp .item,
+			.form-control-dept-select .item,
+			.form-control-employee-select .item {
+				display: inline-block;
+				padding: 3px 8px;
+				margin-bottom: 5px;
+				border: 1px solid #eee;
+			}
+			
+			.form-inline.form-group-publicity label {
+				min-width: auto;
+				margin-right: 10px;
+			}
+			
+			.page-announcement .content .nav {
+				margin-bottom: 14px;
+				height: 45px;
+				background-color: #f3f3f3;
+				padding-left: 10px;
+			}
+			
+			.page-announcement .content .nav a,
+			.page-announcement .content .nav a:hover {
+				font-size: 14px;
+				display: inline-block;
+				height: 45px;
+				line-height: 45px;
+				color: #666;
+				margin-right: 30px;
+				width: 75px;
+				text-align: center;
+				text-decoration: none;
+			}
+			
+			.page-container .search,
+			.page-container .wrap-list-announcement {
+				margin-left: 10px;
+			}
+			
+			.page-announcement .content .nav a.active {
+				color: #009ed8;
+				border-bottom: 2px solid #009ed8;
+			}
+			
+			.page-announcement .wrap-list-announcement {
+				overflow: auto;
+			}
+			
+			.page-announcement .list-announcement:after {
+				clear: both;
+			}
+			
+			.page-announcement .list-announcement .item-announcement {
+				float: left;
+				margin: 10px 10px 0 0;
+				height: 150px;
+				border: 1px solid #ddd;
+				min-width: 300px;
+				width: 100px;
+			}
+			
+			.page-announcement .list-announcement .loading {
+				clear: both;
+				text-align: center;
+			}
+			
+			.page-announcement .list-announcement .item-announcement .header {
+				height: 40px;
+				line-height: 40px;
+				background-color: #f7f7f7;
+				padding-left: 20px;
+				padding-right: 20px;
+			}
+			
+			.page-announcement .list-announcement .item-announcement .header h5 {
+				margin: 0;
+				padding: 0;
+			}
+			
+			.page-announcement .list-announcement .item-announcement .header a {
+				font-size: 16px;
+				color: #333;
+			}
+			
+			.page-announcement .list-announcement .item-announcement .header .collect a {
+				font-size: 12px;
+				color: #999;
+			}
+			
+			.page-announcement .list-announcement .item-announcement .header .collect {
+				float: right;
+			}
+			
+			.page-announcement .list-announcement .item-announcement .header .collect a.active {
+				color: #CA192B;
+			}
+			
+			.page-announcement .list-announcement .item-announcement .summary {
+				cursor: pointer;
+				padding: 0px 20px;
+				/*display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 6;*/
+				overflow: hidden;
+				word-wrap: break-word;
+				height: 68px;
+				line-height: 20px;
+				color: #666;
+				font-size: 14px;
+			}
+			
+			.page-announcement .list-announcement .item-announcement .summary:hover {
+				text-decoration: none;
+			}
+			
+			.summary:hover {
+				text-decoration: underline;
+			}
+			
+			.page-announcement .list-announcement .item-announcement .footer {
+				padding: 10px 20px;
+				/*line-height: 31px;*/
+			}
+			
+			.page-announcement .list-announcement .item-announcement .footer span,
+			.page-announcement .list-announcement .item-announcement .footer a {
+				font-size: 12px;
+				color: #999;
+			}
+			
+			.page-announcement .list-announcement .item-announcement .footer a {
+				color: #009ED8;
+			}
+			
+			.label-read-detail {
+				display: inline-block;
+				margin-left: 20px;
+			}
+			
+			.page-announcement .list-announcement .item-announcement .footer a span {
+				color: #009ED8;
+			}
+			
+			.page-announcement .list-announcement .item-announcement .footer .btn-read1,
+			.page-announcement .list-announcement .item-announcement .footer .btn-read {
+				float: right;
+			}
+			
+			.page-announcement .list-announcement .item-announcement .header:after,
+			.page-announcement .list-announcement .item-announcement .footer:after {
+				clear: both;
+			}
+			
+			.list-employee .item-employee {
+				margin: 0 17px 5px 17px;
+				width: 50px;
+				height: 70px;
+				display: inline-block;
+				overflow: hidden;
+				text-align: center;
+				border: 1px solid transparent;
+				position: relative;
+				color: #999;
+			}
+			
+			.list-employee .item-employee.active img {
+				border-color: #009ed8;
+			}
+			
+			.list-employee .item-employee.active:before {
+				position: absolute;
+				top: 0;
+				right: 0;
+				display: inline-block;
+				width: 10px;
+				height: 9px;
+				box-sizing: border-box;
+				content: "";
+				background-image: url(../resources/images/read-status-icon.png);
+			}
+			
+			.list-employee .item-employee .head {
+				width: 48px;
+				height: 48px;
+				border: 1px solid #e3e3e3;
+			}
+			
+			.pnl-bottom-btns {
+				text-align: center;
+			}
+			
+			.announcementt-title {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				width: 90%;
+				display: inline-block;
+			}
+			
+			.announcementt-title:hover {
+				text-decoration: underline;
+			}
+			
+			.css-overhidden {
+				width: 50px;
+			}
+			
+			.form-group-has-read {
+				margin: 20px 0 10px 0;
+				border-bottom: 1px solid #eee;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-announcement">
+			<div class="remark">
+				<img src="../resources/images/announcement-icon.png" alt="" /><span>*公告发布及管理</span>
+			</div>
+			<div class="content">
+				<div class="nav">
+					<a href="javascript:;" class="active" data-my-favorite="0">公告中心</a>
+					<a href="javascript:;" data-my-favorite="1">我的收藏</a>
+				</div>
+				<div class="search">
+
+				</div>
+				<div class="wrap-list-announcement">
+					<div class="list-announcement">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-doc-readdetail hide">
+			<form class="form-horizontal model-doc-readdetail">
+				<div class="form-group form-inline">
+					<label>未读 <span class="label-employee-unread">0</span> 人</label>
+				</div>
+				<ul class="list-employee list-employee-unread">
+
+				</ul>
+				<hr>
+				<div class="form-group form-group-has-read form-inline">
+					<label>已读 <span class="label-employee-readed">0</span> 人</label>
+				</div>
+				<ul class="list-employee list-employee-readed">
+
+				</ul>
+				<hr>
+				<div class="pnl-bottom-btns">
+					<span class="label-remind-read">
+						<label style="font-weight: normal;"><input type="checkbox" class="form-control-radio form-control-unread-select" /> 未读同事</label>
+						<button type="button" class="btn btn-info def-btn-info btn-sm btn-remind-read">提醒阅读</button>
+					</span>
+					<button type="button" class="btn btn-primary def-btn-primary btn-sm" data-dismiss="modal">关闭</button>
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/jquery.dotdotdot.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/masonry.pkgd.min.js"></script>
+		<script type="text/javascript">
+			//公告APIS
+			var baseAPIURL = BSAPIURL + "/companies/" + COMPANYID + "/announcements";
+			var ANNOUNCEMENTAPI = {
+				base: baseAPIURL,
+				//收藏
+				favorite: baseAPIURL + "/{id}/favorite",
+				//确认阅读
+				read: baseAPIURL + "/{id}/reader",
+				//阅读情况
+				reader: baseAPIURL + "/{id}/reader/employees",
+				//提醒阅读
+				notify: baseAPIURL + "/{id}/reader/notify"
+			};
+			var filterCondition = {};
+			$(document).ready(function() {
+				//------------消息队列相关-----------------------
+				var subscriber = parent.HHMQ.createSubscriber('公告中心', 'announcement,welcome', function(flag, msgData) {
+					//console.log("收到消息")
+					if(flag == "welcome") {
+						$.showSuccessGritter(JSON.stringify(msgData), {
+							clear: false
+						});
+					}
+					//收到公告消息
+					if(msgData.action == "read") {
+						//确认已阅读
+						var readSelector = $(".item-announcement[data-announcement-id='" + msgData.announcementId + "'] .footer");
+						//readSelector.find(".btn-read").click();
+						readSelector.find(".label-read-detail .read-num").html(parseInt(readSelector.find(".label-read-detail .read-num").html()) + 1);
+						readSelector.find(".label-read-detail .unread-num").html(parseInt(readSelector.find(".label-read-detail .unread-num").html()) == 0 ? "0" : (parseInt(readSelector.find(".label-read-detail .unread-num").html()) - 1));
+						readSelector.find(".btn-read").html("已阅读");
+						readSelector.find(".btn-read").attr("disabled", "disabled");
+						//$(gridOfMy).reloadGrid();
+					} else if(msgData.action == "download") {
+						//下载
+						//$(gridOfWaitApv).reloadGrid();
+					} else if(msgData.action == "keep") {
+						//收藏
+						var collectSelector = $(".item-announcement[data-announcement-id='" + msgData.announcementId + "'] .header .collect .label-count-favorite");
+						if(msgData.msg == "收藏") {
+							collectSelector.html(parseInt(collectSelector.html()) + 1);
+							$(".item-announcement[data-announcement-id='" + msgData.announcementId + "'] .header .collect a").addClass("active");
+						} else {
+							collectSelector.html(parseInt(collectSelector.html()) == 0 ? 0 : (parseInt(collectSelector.html()) - 1));
+							$(".item-announcement[data-announcement-id='" + msgData.announcementId + "'] .header .collect a").removeClass("active");
+						}
+					}
+				});
+				//页面关闭事件
+				context.onPageClose = function() {
+					subscriber.dispose();
+				};
+				//------------消息队列相关 end -------------------
+				//search
+				$.initSearchControls4TagMode({
+					auto: false,
+					container: ".search",
+					keyName: "key",
+					keyPlaceholder: "输入公告标题进行查找",
+					onChange: function(selectTags) {
+						allLoaded = false;
+						filterCondition = selectTags;
+						loadAnnouncements(selectTags, true);
+					},
+					groups: [{
+						name: "announcement_level_arr",
+						text: "公告等级",
+						items: [{
+							key: "全部",
+							value: ""
+						}, {
+							key: "不重要",
+							value: "0"
+						}, {
+							key: "普通",
+							value: "1"
+						}, {
+							key: "重要",
+							value: "2"
+						}, {
+							key: "非常重要",
+							value: "3"
+						}]
+					}]
+				});
+				//固定高度
+				$(".wrap-list-announcement").height($(window).height() - $(".remark").outerHeight(true) - $(".nav").outerHeight(true) - $(".search").outerHeight(true) - 30);
+				//token
+				$.token();
+				//加载公告
+				loadAnnouncements({}, true);
+				//导航
+				$(".content .nav a").click(function() {
+					$(".content .nav a").removeClass("active");
+					$(this).addClass("active");
+					allLoaded = false;
+					loadAnnouncements({}, true);
+				});
+				//滚动事件
+				$(".wrap-list-announcement").scroll(function() {
+					if(isCustomizeScroll) {
+						isCustomizeScroll = false;
+						return false;
+					}
+
+					//$.showErrorGritter($(this).height() + $(this).scrollTop() - $(this)[0].scrollHeight);
+					if($(this).height() + $(this).scrollTop() >= $(this)[0].scrollHeight) {
+						loadAnnouncements({}, false);
+					}
+				});
+			});
+			//加载公告列表
+			var currPage = 0;
+			var loadingDom = $("<div class=\"loading\">数据加载中...</div>");
+			var isLoading = false;
+			var allLoaded = false;
+			var masonryObj;
+			var isCustomizeScroll = false;
+
+			function loadAnnouncements(conditionData, clear) {
+				if(isLoading || allLoaded) {
+					return false;
+				}
+				isLoading = true;
+				if(clear) {
+					currPage = 0;
+					$(".list-announcement").empty();
+				}
+				$(".list-announcement").append(loadingDom);
+				//页码
+				currPage++;
+				if(isEmptyObject(conditionData)) {
+					console.log(filterCondition)
+					conditionData = filterCondition;
+				}
+				conditionData.page = currPage;
+				//每页条数
+				conditionData.rows = 10;
+				//我的收藏
+				conditionData.my_favorite = $(".content .nav a.active").data("my-favorite");
+				var sidx = "announcement_publish_time";
+				if(conditionData.my_favorite == "1")
+					sidx = "favorite_time"
+				//排序
+				conditionData.sidx = sidx;
+				//倒叙
+				conditionData.sort = "desc";
+				console.log($.toQueryString(conditionData, true))
+				//setTimeout(function() {
+				$.ajaxGet(ANNOUNCEMENTAPI.base + $.toQueryString(conditionData, true), function(response) {
+					console.log(response)
+					$(".list-announcement .loading").remove();
+					if(response.code == 0) {
+						//已全部加载
+						allLoaded = response.data.rows.length == 0;
+						if(allLoaded) {
+							$.showSuccessGritter(currPage == 1 ? "无公告数据。" : "已加载所有公告。");
+						}
+						//success
+						for(var i in response.data.rows) {
+							var announcementData = response.data.rows[i];
+							$(".list-announcement").append(getAnnouncementItemHtml(announcementData));
+							$(".item-announcement").css({
+								width: ($(".list-announcement").outerWidth(true) - 20) / 2 + "px"
+							});
+							$.zoom({
+								container: ".item-announcement[data-announcement-id=" + announcementData.announcement_id + "] .summary",
+								showText: "off，open",
+								firstState: 0,
+								height: 35,
+								changeCallback: function(state) {
+
+								}
+							});
+						}
+						//瀑布插件
+						if(masonryObj)
+							masonryObj.masonry('destroy')
+						masonryObj = $('.list-announcement').masonry({
+							itemSelector: '.item-announcement',
+							isAnimated: true
+						});
+						if(currPage > 1) {
+							isCustomizeScroll = true;
+							$(".wrap-list-announcement").scrollTop($(".wrap-list-announcement")[0].scrollHeight);
+						}
+						//event
+						initBtnEvents();
+					} else {
+						$.showErrorGritter("加载公告列表失败：" + response.msg);
+					}
+					isLoading = false;
+				});
+				//}, 500);
+
+				var getAnnouncementItemHtml = function(announcementData) {
+					var itemDom = $("<div class=\"item-announcement\" data-announcement-id=\"" + announcementData.announcement_id + "\"></div>");
+					itemDom.append("<div class=\"header\">" +
+						"<a href='javascript:;' class='announcementt-title' title=" + announcementData.announcement_title + " onclick=\"parent.openTab('公告详情','views/announcement-detail.html?id=" + announcementData.announcement_id + "&status=" + announcementData.announcement_status + "');\">" + announcementData.announcement_title + "</a>" +
+						"	<span class=\"collect\">" +
+						"		<a href=\"javascript:;\" title=\"收藏\" data-announcement-id=\"" + announcementData.announcement_id + "\"><i class=\"fa fa-star-o\"></i> (<span class='label-count-favorite'>" + announcementData.favorite_num + "</span>) </a>" +
+						"	</span>" +
+						//"</h5>" +
+						"</div>");
+					if(announcementData.announcement_is_favorite == 1) {
+						itemDom.find(".collect a").addClass("active");
+					}
+					itemDom.append("<div class=\"summary\" onclick=\"parent.openTab('公告详情','views/announcement-detail.html?id=" + announcementData.announcement_id + "&status=" + announcementData.announcement_status + "');\">" + announcementData.announcement_content_html.replace(/<.*?>/ig, "") + "</div>");
+					itemDom.append("<div class=\"footer\">" +
+						"<span class=\"label-time\">" + announcementData.announcement_publish_time_cn + "</span>" +
+						"<a href=\"javascript:;\" class=\"label-read-detail\" data-is-published-byme='" + announcementData.is_own + "' data-announcement-id=\"" + announcementData.announcement_id + "\"> 已读<span class='read-num'> " + announcementData.reader_num + " </span>人，未读<span class='unread-num'> " + announcementData.not_reader_num + " </span>人</a>" +
+						//"<a href=\"javascript:;\" class=\"btn btn-danger def-btn-danger btn-sm btn-read1 btn-read\" data-announcement-id=\"" + announcementData.announcement_id + "\">确认已阅读</a>" +
+						"<p class=\"clear\"></p>" +
+						"</div>");
+					if(announcementData.announcement_is_read == 1) {
+						itemDom.find(".btn-read1").text("已阅读").removeClass("btn-read").attr("disabled", "disabled");
+					}
+					return itemDom;
+				};
+			}
+			//页面按钮事件绑定
+			function initBtnEvents() {
+				//收藏
+				$(".item-announcement .header .collect a").unbind("click").click(function() {
+					var linkObj = $(this);
+					var announcementId = $(this).data("announcement-id");
+					var favoriteAPIURL = ANNOUNCEMENTAPI.favorite.replace("{id}", announcementId);
+					var isCollect = !$(this).hasClass("active");
+					$(this).toggleClass("active");
+					if(isCollect) {
+						$.ajaxPut(favoriteAPIURL, {}, function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter("添加收藏成功。");
+								setFavoriteCount(linkObj, response.data.count_favorite);
+							} else {
+								$.showErrorGritter("收藏失败：" + response.msg);
+							}
+						});
+					} else {
+						$.ajaxDelete(favoriteAPIURL, {}, function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter("取消收藏成功。");
+								if($(".nav>.active").text() == "我的收藏") {
+									//$(".item-announcement[data-announcement-id=" + announcementId + "]").remove();
+									loadAnnouncements({}, true);
+								}
+								setFavoriteCount(linkObj, response.data.count_favorite);
+							} else {
+								$.showErrorGritter("取消收藏失败：" + response.msg);
+							}
+						});
+					}
+				});
+				var setFavoriteCount = function(obj, flag) {
+					$(obj).find(".label-count-favorite").text(flag);
+				};
+				//阅读详情
+				$(".item-announcement .footer a.label-read-detail").unbind("click").click(function() {
+					openReadDetailPop($(this).attr("data-is-published-byme"), $(this).data("announcement-id"));
+				});
+				//确认阅读
+				$(".item-announcement .footer .btn-read").unbind("click").click(function() {
+					openConfirmReadPop(this, $(this).data("announcement-id"));
+				});
+			}
+			//阅读详情
+			function openReadDetailPop(isOwn, announcementId) {
+				var modalId = $.modal({
+					showFooter: false,
+				}).show("阅读状态", ".pnl-doc-readdetail");
+				//model pop id
+				var formContainer = "#" + modalId + " .model-doc-readdetail";
+				//加载阅读详情
+				var employeeItemHtml = "<li class=\"item-employee\" data-employee-id=\"{ID}\">" +
+					"<img class=\"head\" src=\"{H}\">" +
+					"<p title=\"{N}\" class=\"name css-overhidden\">{N}</p>" +
+					"</li>";
+				$.ajaxGet(ANNOUNCEMENTAPI.reader.replace("{id}", announcementId), function(response) {
+					if(response.code == 0) {
+						//success
+						//未读
+						$(formContainer + " .label-employee-unread").text(response.data.not_read_list.length);
+						for(var i in response.data.not_read_list) {
+							var empData = response.data.not_read_list[i];
+							$(formContainer + " .list-employee-unread").append(employeeItemHtml.replace("{H}", empData.employee_avatar || "../resources/images/read-status-default-icon.png").replace("{N}", empData.employee_name).replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+						}
+						//已读
+						$(formContainer + " .label-employee-readed").text(response.data.read_list.length);
+						for(var i in response.data.read_list) {
+							var empData = response.data.read_list[i];
+							$(formContainer + " .list-employee-readed").append(employeeItemHtml.replace("{H}", empData.employee_avatar || "../resources/images/read-status-default-icon.png").replace("{N}", empData.employee_name).replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+						}
+						//选择事件
+						$(formContainer + " .list-employee-unread .item-employee").click(function() {
+							if(isOwn == "false") return false;
+							$(this).toggleClass("active");
+						});
+					} else {
+						$.showErrorGritter("加载公告阅读详情失败：" + response.msg);
+					}
+				});
+				if(isOwn == "false") {
+					$(formContainer + " .btn-remind-read").remove();
+					$(formContainer + " .label-remind-read>label").remove();
+					return false;
+				}
+				//提醒
+				$(formContainer + " .btn-remind-read").click(function() {
+					var selectUnreadEmployees = [];
+					$(formContainer + " .list-employee-unread .item-employee.active").each(function() {
+						selectUnreadEmployees.push($(this).data("employee-id"));
+					});
+					if(selectUnreadEmployees.length == 0) {
+						$.showErrorGritter("请先选择要提醒阅读的人员。");
+						return false;
+					}
+					var infoData = {};
+					infoData.business_type = 30;
+					infoData.data_id = announcementId;
+					infoData.employee_id = selectUnreadEmployees.join(',');
+					infoData.message = {};
+					infoData.message.msg_content = "公告提醒阅读";
+					infoData.message.msg_type = 3;
+					infoData.business_type_cn = "M一下：公告";
+					sendMtaMessage(infoData, modalId);
+				});
+				$(formContainer + " .form-control-unread-select").change(function() {
+					var isSelect = $(this).is(":checked");
+					if(isSelect) {
+						$(this).parents(".modal-content").find(".list-employee").eq(0).find("li").addClass("active");
+					} else {
+						$(this).parents(".modal-content").find(".list-employee").eq(0).find("li").removeClass("active");
+					}
+				});
+			}
+			//确认阅读
+			function openConfirmReadPop(obj, announcementId) {
+				$.modal().confirm("确认已阅读本条公告吗？", function() {
+					$.ajaxPut(ANNOUNCEMENTAPI.read.replace("{id}", announcementId), {},
+						function(response) {
+							if(response.code == 0) {
+								//loadAnnouncements({}, true);
+								//success
+								$(obj).text("已阅读").attr("disabled", "disabled").unbind("click");
+								var readSelector = $(".item-announcement[data-announcement-id='" + announcementId + "'] .footer");
+								readSelector.find(".label-read-detail .read-num").html(response.data.count_readed);
+								readSelector.find(".label-read-detail .unread-num").html(response.data.count_not_read);
+							} else {
+								$.showErrorGritter("确认阅读失败：" + response.msg);
+							}
+						});
+				});
+			}
+			//计算行数，超过则省略
+		</script>
+	</body>
+
+</html>

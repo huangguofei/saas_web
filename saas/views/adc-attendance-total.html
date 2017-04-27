@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>员工考勤汇总</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			body {
+				overflow: hidden;
+			}
+			
+			.page-container,
+			.page-container .content {
+				padding-left: 0;
+			}
+			
+			.page-attendance .content .left-menu {
+				position: relative;
+				/*float: right;*/
+				width: 220px;
+				min-height: 260px;
+				border: 1px solid #ddd;
+				border-width: 1px 1px 1px 0;
+				bottom: 0;
+			}
+			
+			.page-attendance .content .main-wrap {
+				float: right;
+				margin-left: -1px;
+			}
+			
+			.type-nav a,
+			.type-nav a:hover {
+				display: inline-block;
+				width: 108.5px;
+				text-align: center;
+				line-height: 36px;
+				color: #999;
+				background-color: #f3f3f3;
+				border: 1px solid #e9e9e9;
+				border-top: none;
+				text-decoration: none;
+				cursor: pointer;
+				font-size: 14px;
+				/*border-right: none;*/
+			}
+			
+			.type-nav a.active {
+				width: 106px;
+				color: #666;
+				border: none;
+				background-color: #fff;
+			}
+			
+			.page-attendance .content .left-menu .group-item {
+				margin-bottom: 10px;
+				padding: 10px 0 10px 10px;
+				height: 112px;
+				border-bottom: 1px dashed #eee;
+			}
+			
+			.page-attendance .content .left-menu .group-item.last {
+				border: none;
+			}
+			
+			.page-attendance .content .left-menu .group-item label {
+				/*font-weight: bold;*/
+			}
+			
+			.page-attendance .content .left-menu .group-item .form-control-radio {
+				/*width: 16px;*/
+				/*height: 16px;*/
+			}
+			
+			.page-attendance .content .left-menu .group-item .btn-select {
+				/*float: right;*/
+				width: 196px;
+				margin-bottom: 10px;
+			}
+			
+			.page-attendance .content .left-menu .group-item .date-picker {
+				width: 84px;
+				height: 24px;
+				display: inline-block;
+				border-color: #e9e9e9;
+				border-radius: 0;
+				font-size: 12px;
+				color: #666;
+			}
+			
+			.page-attendance .content .left-menu .group-btns {
+				width: 100%;
+				position: absolute;
+				bottom: 10px;
+				/*padding: 10px 0 0 110px;*/
+				/*border-top: 1px solid #ccc;*/
+				text-align: center;
+			}
+			
+			.page-attendance .content .left-menu .group-btns .btn {
+				width: 90px;
+				height: 30px;
+				line-height: 15px;
+			}
+			
+			.page-attendance .content .left-menu .group-btns {
+				/*margin-top: 10px;*/
+				/*text-align: center;*/
+			}
+			
+			.page-attendance .content .left-menu .group-btns .btn {
+				/*padding-left: 22px;*/
+				/*padding-right: 22px;*/
+			}
+			
+			.page-attendance .content .group-dept-select,
+			.page-attendance .content .group-employee-select {
+				color: #aaa;
+				font-size: 12px;
+			}
+			
+			.page-attendance .content .group-dept-select span,
+			.page-attendance .content .group-employee-select span {
+				line-height: 20px;
+			}
+			
+			.page-attendance .content .group-dept-select .item,
+			.page-attendance .content .group-employee-select .item {
+				display: inline-block;
+				padding: 3px 8px;
+				margin-left: 5px;
+				margin-bottom: 5px;
+				border: 1px solid #ddd;
+			}
+			
+			button:focus {
+				outline: none;
+			}
+			
+			.leave-or-overtime-reason {
+				display: inline-block;
+				width: 80px;
+				word-break: break-all;
+				word-wrap: break-word;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-attendance">
+			<div class="content">
+				<div class="main-wrap">
+					<div class="grid-wrap-dept">
+						<table id="grid-table-dept" class="grid-module">
+						</table>
+						<div id="grid-pager-dept">
+						</div>
+					</div>
+					<div class="grid-wrap-emp hide">
+						<table id="grid-table-emp" class="grid-module">
+						</table>
+						<div id="grid-pager-emp">
+						</div>
+					</div>
+				</div>
+				<div class="left-menu">
+					<div class="type-nav">
+						<a class="active" index="depa">按部门统计</a>
+						<a index="emp">按员工统计</a>
+					</div>
+					<div class="group-item group-item-depa">
+						<!--<label><input type="radio" class="form-control-radio" name="rdType" value="1" checked="checked" /> 按部门统计 </label>-->
+						<a class="btn btn-info def-btn-info btn-select btn-dept-select">
+							<img src="../resources/images/plus-icon.png" alt="" />选择部门
+						</a>
+						<div class="group-dept-select">
+						</div>
+					</div>
+					<div class="group-item group-item-emp hide">
+						<!--<label><input type="radio" class="form-control-radio" name="rdType" value="2" /> 按员工统计 </label>-->
+						<a class="btn btn-info def-btn-info btn-select btn-employee-select">
+							<img src="../resources/images/plus-icon.png" alt="" />选择员工
+						</a>
+						<div class="group-employee-select">
+						</div>
+					</div>
+					<div class="group-item group-item-time last">
+						<label>请选择考勤日期：</label>
+						<div>
+							<input type="text" class="form-control date-picker form-control-date-start" data-date-format="yyyy-mm" placeholder="开始日期" />
+							<span>至</span>
+							<input type="text" class="form-control date-picker form-control-date-end" data-date-format="yyyy-mm" placeholder="结束日期" />
+						</div>
+					</div>
+					<div class="group-btns">
+						<a class="btn btn-info def-btn-info btn-search">统 计</a>
+						<a class="btn btn-info def-btn-info btn-reset">重 置</a>
+						<!--<button type="button" class="btn btn-default btn-export">导 出</button>-->
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-danger def-btn-danger btn-print" onclick="printDom();"><img src="../resources/images/print.png" alt="" />打印</a>
+			<a class="btn btn-danger def-btn-danger btn-export" onclick="loadAttendanceGrid(true)"><img class="btn-export-img" src="../resources/images/export-icon.png" alt="" />导出</a>
+		</div>
+
+		<div id="grid-footer-container-emp">
+			<a class="btn btn-danger def-btn-danger btn-print" onclick="printDom();"><img src="../resources/images/print.png" alt="" />打印</a>
+			<a class="btn btn-danger def-btn-danger btn-export" onclick="loadAttendanceGrid(true)"><img class="btn-export-img" src="../resources/images/export-icon.png" alt="" />导出</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/approval.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/attendance.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			//APIS
+			var ATTENDANCEAPIS = {
+				//员工考勤汇总
+				attendanceSummaryByEmp: BSAPIURL + "/manage_attendances/by_employees",
+				attendanceSummaryByDept: BSAPIURL + "/manage_attendances/by_departments",
+				//考勤详情
+				attendanceDetail4Emp: BSAPIURL + "/manage_attendances/employee_attendance_by_month",
+				attendanceDetail4Dept: BSAPIURL + "/manage_attendances/department_attendance_by_month"
+			};
+			//按部门统计 
+			var gridOfTotal4Dept, selectDepts;
+			var gridSelectorOfTotal4Dept = "#grid-table-dept";
+			var pagerSelectorOfTotal4Dept = "#grid-pager-dept";
+			var isFirstLoadGridOfTotal4Dept = true;
+			//按员工统计 
+			var gridOfTotal4Emp;
+			var gridSelectorOfTotal4Emp = "#grid-table-emp";
+			var pagerSelectorOfTotal4Emp = "#grid-pager-emp";
+			var isFirstLoadGridOfTotal4Emp = true;
+
+			$(".left-menu").css({
+				"height": $(window).height() - 28 + "px",
+				"max-height": $(window).height() - 28 + "px",
+			});
+			//导航条点击事件
+			$(".type-nav a").unbind("click").click(function() {
+				$(".type-nav a").removeClass("active");
+				$(this).addClass("active");
+				$(".group-item").addClass("hide");
+				$(".group-item-time,.group-item-" + $(this).attr("index")).removeClass("hide");
+			});
+			//当前条件
+			var selectConditions = {};
+			var with_lowers = "";
+			//获取考情详情URL地址 (1半天旷工,2旷工一天,3出差,4正常签到,5迟到,6正常签退,7早退,8未签)
+			//type:1-for employee 2-for dept
+			function getAttendanceDetailUrl(type, status, deptId, employeeId) {
+				var baseUrl = "";
+				if(type == 1) {
+					baseUrl = ATTENDANCEAPIS.attendanceDetail4Emp;
+				} else if(type == 2) {
+					baseUrl = ATTENDANCEAPIS.attendanceDetail4Dept;
+				}
+				var condition = selectConditions;
+				condition.attendance_begin_date = condition.attendance_date_begin;
+				condition.attendance_end_date = condition.attendance_date_end;
+				condition.result_status = status;
+				//按部门时
+				condition.depa_tree_code = deptId;
+				//按员工时
+				condition.employee_id = employeeId;
+				condition.type = type;
+				return baseUrl + $.toQueryString(condition, true);
+			}
+			//加载统计数据(按部门)
+			function initAttendanceGridOfDept() {
+				if(!isFirstLoadGridOfTotal4Dept) {
+					return false;
+				}
+
+				//grid
+				var colNames = ['部门', '日期', '应出勤(天)', '迟到(次)', '早退(次)', '未签(次)', '旷工半天(次)', '旷工一天(次)', '请假(次数)', '请假(天数)', '加班(次数)', '加班时长(小时)'];
+				var colModel = [{
+					name: 'depa_name'
+				}, {
+					name: '__date',
+					width: 140,
+					formatter: function(cellvalue, options, rowObject) {
+						return selectConditions.attendance_date_begin + "----" + selectConditions.attendance_date_end;
+					}
+				}, {
+					name: 'count_should'
+				}, {
+					name: 'count_in_status_late',
+					width: 80,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(2, 5, rowObject.depa_id, '') + "',5);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return e.message;
+						}
+					}
+				}, {
+					name: 'count_out_status_early',
+					width: 80,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(2, 7, rowObject.depa_id, '') + "',7);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_status_not',
+					width: 80,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(2, 8, rowObject.depa_id, '') + "',8);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_status_half',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(2, 1, rowObject.depa_id, '') + "',1);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_status_full',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(2, 2, rowObject.depa_id, '') + "',2);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_leave_num',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if((cellvalue == 0 || !cellvalue) && !rowObject.has_leave) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAdcTotalLeaveRecordsPop('" + with_lowers + "','" + selectConditions.attendance_date_begin + "','" + selectConditions.attendance_date_end + "','" + rowObject.depa_id + "','2');\">" + (cellvalue||0) + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_leave_limit',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if((cellvalue == 0 || !cellvalue) && !rowObject.has_leave) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAdcTotalLeaveRecordsPop('" + with_lowers + "','" + selectConditions.attendance_date_begin + "','" + selectConditions.attendance_date_end + "','" + rowObject.depa_id + "','2');\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_overtime_num',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAdcTotalOvertimeRecordsPop('" + with_lowers + "','" + selectConditions.attendance_date_begin + "','" + selectConditions.attendance_date_end + "','" + rowObject.depa_id + "','2');\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_overtime_limit',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAdcTotalOvertimeRecordsPop('" + with_lowers + "','" + selectConditions.attendance_date_begin + "','" + selectConditions.attendance_date_end + "','" + rowObject.depa_id + "','2');\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				gridOfTotal4Dept = $(gridSelectorOfTotal4Dept).initJqGrid({
+					datatype: "local",
+					pager: pagerSelectorOfTotal4Dept,
+					footerBtnContainer: "#grid-footer-container",
+					colNames: colNames,
+					colModel: colModel,
+					thDefaultWidth: 100
+				});
+				isFirstLoadGridOfTotal4Dept = false;
+			}
+			//加载统计数据(按员工)
+			function initAttendanceGridOfEmp() {
+				if(!isFirstLoadGridOfTotal4Emp) {
+					return false;
+				}
+
+				//grid
+				var colNames = ['姓名', '部门职务', '日期', '应出勤(天)', '实际出勤(天)', '迟到(次)', '早退(次)', '未签(次)', '旷工半天(次)', '旷工一天(次)', '请假(次数)', '请假(天数)', '加班(次数)', '加班时长(小时)'];
+				var colModel = [{
+					name: 'employee_name',
+					width: 80
+				}, {
+					name: '__dept',
+					width: 130,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.department_name + "、" + rowObject.post_name;
+					}
+				}, {
+					name: '__date',
+					width: 140,
+					formatter: function(cellvalue, options, rowObject) {
+						return selectConditions.attendance_date_begin + " - " + selectConditions.attendance_date_end;
+					}
+				}, {
+					name: 'count_should'
+				}, {
+					name: 'count_work'
+				}, {
+					name: 'count_in_status_late',
+					width: 80,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(1, 5, '', rowObject.employee_id) + "',5);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_out_status_early',
+					width: 80,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(1, 7, '', rowObject.employee_id) + "',7);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_status_not',
+					width: 80,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(1, 8, '', rowObject.employee_id) + "',8);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_status_half',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(1, 1, '', rowObject.employee_id) + "',1);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_status_full',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAttendanceRecordsPop('" + getAttendanceDetailUrl(1, 2, '', rowObject.employee_id) + "',2);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_leave_num',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(!rowObject.leave_record_count && cellvalue == 0) {
+								return 0;
+							}
+
+							return "<a href='javascript:;' onclick=\"openAdcTotalLeaveRecordsPop('" + with_lowers + "','" + selectConditions.attendance_date_begin + "','" + selectConditions.attendance_date_end + "','" + rowObject.employee_id + "',1);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_leave_limit',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(!rowObject.leave_record_count && cellvalue == 0) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAdcTotalLeaveRecordsPop('" + with_lowers + "','" + selectConditions.attendance_date_begin + "','" + selectConditions.attendance_date_end + "','" + rowObject.employee_id + "',1);\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_overtime_num',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAdcTotalOvertimeRecordsPop('" + with_lowers + "','" + selectConditions.attendance_date_begin + "','" + selectConditions.attendance_date_end + "','" + rowObject.employee_id + "');\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'count_overtime_limit',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							if(cellvalue == 0 || !cellvalue) {
+								return 0;
+							}
+							return "<a href='javascript:;' onclick=\"openAdcTotalOvertimeRecordsPop('" + with_lowers + "','" + selectConditions.attendance_date_begin + "','" + selectConditions.attendance_date_end + "','" + rowObject.employee_id + "');\">" + cellvalue + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				gridOfTotal4Emp = $(gridSelectorOfTotal4Emp).initJqGrid({
+					datatype: "local",
+					pager: pagerSelectorOfTotal4Emp,
+					footerBtnContainer: "#grid-footer-container-emp",
+					colNames: colNames,
+					colModel: colModel,
+					thDefaultWidth: 100
+				});
+				isFirstLoadGridOfTotal4Emp = false;
+			}
+			//加载表格数据
+			var selectDeptIds = [],
+				selectEmpIds = [],
+				defaultCheckedArea;
+
+			function getGridSearchCondition() {
+				var condition = {};
+				//2-按员工，1-按部门
+				var type = $("input[name='rdType']:checked").val();
+				if(type == 1 && selectDeptIds.length == 0) {
+
+					$.showErrorGritter("请先选择部门后再统计。");
+					return undefined;
+				}
+				if(type == 2 && selectEmpIds.length == 0) {
+					$.showErrorGritter("请先选择员工后再统计。");
+					return undefined;
+				}
+				condition.depa_code_arr = selectDeptIds;
+				condition.employee_id_arr = selectEmpIds;
+				condition.attendance_date_begin = $(".form-control-date-start").val();
+				condition.attendance_date_end = $(".form-control-date-end").val();
+				return condition;
+			}
+
+			function loadAttendanceGrid(isExport) {
+				var condition = getGridSearchCondition();
+				if(!condition) {
+					return false;
+				}
+				var gridObj = gridOfTotal4Dept;
+				//2-按员工，1-按部门
+				var type = $(".type-nav a.active").attr("index");
+				if(type == "emp") {
+					$(".grid-wrap-emp").removeClass("hide");
+					$(".grid-wrap-dept").addClass("hide");
+					if(isFirstLoadGridOfTotal4Emp) {
+						initAttendanceGridOfEmp();
+					}
+					gridObj = gridOfTotal4Emp;
+				} else {
+					$(".grid-wrap-dept").removeClass("hide");
+					$(".grid-wrap-emp").addClass("hide");
+				}
+				condition.with_lowers = with_lowers;
+				var url = type == "emp" ? ATTENDANCEAPIS.attendanceSummaryByEmp : ATTENDANCEAPIS.attendanceSummaryByDept;
+				if(isExport) {
+					$.downloadFile(url+ $.toQueryString(condition, true) + "&export=1");
+					return;
+				}
+				$(gridObj).jqGrid('setGridParam', {
+					page: 1,
+					datatype: "json",
+					url: url + $.toQueryString(condition, true)
+				}).trigger("reloadGrid", {});
+				//tmp conditions
+				selectConditions = condition;
+			}
+			$(document).ready(function() {
+				$(".main-wrap").width($(document).width() - $(".left-menu").outerWidth(true) - 20);
+				//token
+				$.token();
+				$(".form-control-radio[name='rdType']").click(function() {
+					if($(this).val() == 1) { //部门
+						$(".btn-employee-select").next().html("");
+						$(".btn-employee-select").attr("disabled", "disabled");
+						$(".btn-employee-select").css("color", "#999");
+						$(".btn-dept-select").css("color", "#4F7DDA");
+						$(".btn-dept-select").removeAttr("disabled");
+						selectDeptIds = [];
+					} else { //按员工
+						$(".btn-dept-select").next().html("");
+						$(".btn-dept-select").attr("disabled", "disabled");
+						$(".btn-dept-select").css("color", "#999");
+						$(".btn-employee-select").css("color", "#4F7DDA");
+						$(".btn-employee-select").removeAttr("disabled");
+						selectEmpIds = [];
+					}
+				});
+				$(".form-control-radio[value='1']").click();
+				//部门选择
+				$(".btn-dept-select").click(function() {
+					$(".seld-emp-span").html("");
+					selectEmps = [];
+					var options = {
+						url: SAASAPIS.BS.company.departments.replace("{id}", $.uuid()),
+						leftTitle: "请以部门为单位选择适用范围：",
+						rightTitle: "已选择的范围：",
+						//isNeedRightPanel: true, //是否需要右边的模块
+						areaItems: [{
+							name: "with_lowers",
+							value: 2,
+							text: "仅本部门"
+						}, {
+							name: "with_lowers",
+							value: 1,
+							text: "本部门及下属部门"
+						}],
+						linkageType: 0, //联动类型   0统计(不联动)   1（下联动） 2 （双联动）
+						//modalId: modalIdOfDeptId, //打开的modal的id
+						defaultCheckedIds: selectDeptIds,
+						defaultCheckedArea: defaultCheckedArea,
+						clickCallback: function(data) { //为关闭modal时需要的数据赋值
+							selectDepts = data.selectDepts;
+							with_lowers = data.area_value;
+							var areaText = "<br>统计范围：" + (data.area_value == 2 ? "所选部门" : "所选部门及其下属部门");
+							defaultCheckedArea = data.area_value;
+							selectDeptIds = [];
+							var tempHtml = "<span class=\"item\" data-dept-id=\"{ID}\">{N} <img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span> ";
+							var selectDeptDom = $(".group-dept-select");
+							selectDeptDom.empty();
+							for(var i in selectDepts) {
+								var deptData = selectDepts[i];
+								selectDeptIds.push(deptData.dept_id);
+								if(selectDeptDom.find("span[data-dept-id='" + deptData.dept_id + "']").length > 0) {
+									continue;
+								}
+								//selectDeptDom.append(tempHtml.replace("{N}", deptData.dept_name).replace("{ID}", deptData.dept_id));
+							}
+							selectDeptDom.append("<span>已选择" + selectDeptIds.length + "个部门，" + areaText + "</span>");
+						}
+					}
+					initDeptTreeOfTwoStep(options);
+				});
+				//员工选择
+				$(".btn-employee-select").click(function() {
+					$(".seld-dept-span").html("");
+					selectDeptIds = [];
+					$.showEmployeeSelectPop({
+						title: "选择员工",
+						subTitle: "请以员工为单位选择统计范围：",
+						selectedEmployeeIds: selectEmpIds,
+						isIncludeSelf: true,
+						isSignResign: true,
+						okCallback: function(employeesData) {
+							selectEmpIds = [];
+							var selectEmployeeDom = $(".group-employee-select");
+							var tempHtml4EmployeeSelect = "<span class=\"item\" data-employee-id=\"{ID}\">{N} <i class=\"fa fa-times icon-close\" onclick=\"$(this).parent().remove();\"></i></span> ";
+							selectEmployeeDom.empty();
+							for(var i in employeesData) {
+								var empData = employeesData[i];
+								selectEmpIds.push(empData.employee_id);
+								if(selectEmployeeDom.find("span[data-employee-id='" + empData.employee_id + "']").length > 0) {
+									continue;
+								}
+								//selectEmployeeDom.append(tempHtml4EmployeeSelect.replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id));
+							}
+							selectEmployeeDom.append("<span>已选择" + selectEmpIds.length + "位员工</span>")
+							$("input[name='rdType'][value='2']").attr("checked", "checked");
+						}
+					});
+				});
+				//日期选择
+				$(".date-picker").datepicker({
+					startView: 1,
+					maxViewMode: 1,
+					minViewMode: 1,
+					autoclose: true,
+					clearBtn: true
+				});
+				//时间验证
+				$(".date-picker").change(function() {
+					var startTime = $(".form-control-date-start").val();
+					var endTime = $(".form-control-date-end").val();
+					var isAlikeYear = (startTime.substring(0, 4) <= endTime.substring(0, 4));
+					var isAlikeMonth = (startTime.substring(5, startTime.length) <= endTime.substring(5, endTime.length));
+					/*if($(this).hasClass("form-control-date-end")) {
+						if((!isAlikeYear || !isAlikeMonth) && endTime != "") {
+							$(".form-control-date-end").val("");
+							$.showErrorGritter("时间应在" + endTime + "之前");
+						}
+					} else {
+						if((!isAlikeYear || !isAlikeMonth) && startTime != "") {
+							$(".form-control-date-end").val("");
+							$.showErrorGritter("时间应在" + startTime + "之后");
+						}
+					}*/
+				})
+				//统计
+				$(".btn-search").click(function() {
+					loadAttendanceGrid();
+				});
+				//重置
+				$(".btn-reset").click(function() {
+					$(".group-dept-select").empty();
+					$(".group-employee-select").empty();
+					$(".date-picker").val("");
+				});
+				//导出
+				$(".btn-export").click(function() {
+					var condition = getGridSearchCondition();
+					if(!condition) {
+						return false;
+					}
+					//2-按员工，1-按部门
+					var type = $("input[name='rdType']:checked").val();
+					if(type == 2) {
+						$(".grid-wrap-emp").removeClass("hide");
+						$(".grid-wrap-dept").addClass("hide");
+						if(isFirstLoadGridOfTotal4Emp) {
+							initAttendanceGridOfEmp();
+						}
+						gridObj = gridOfTotal4Emp;
+					} else {
+						$(".grid-wrap-dept").removeClass("hide");
+						$(".grid-wrap-emp").addClass("hide");
+					}
+
+					var url = type == 2 ? ATTENDANCEAPIS.attendanceSummaryByEmp : ATTENDANCEAPIS.attendanceSummaryByDept;
+					type == 2 ? condition.depa_code_arr = "" : condition.employee_id_arr = "";
+					url = url + $.toQueryString(condition, true) + "&export=1";
+					$.downloadFile(url);
+				});
+				//初始默认值
+				var now = $.timeNow();
+				$(".form-control-date-end").val(now.Format("yyyy-MM"));
+				$(".form-control-date-start").val(now.addMonth(-3).Format("yyyy-MM"));
+				//按部门统计
+				initAttendanceGridOfDept();
+			});
+			function printDom(){
+				var type = $(".type-nav a.active").attr("index");
+				if(type == "emp") {
+					print($(gridSelectorOfTotal4Emp.replace("#","#gview_")));
+				} else {
+					print($(gridSelectorOfTotal4Dept.replace("#","#gview_")));
+				}
+				
+			}
+		</script>
+	</body>
+
+</html>

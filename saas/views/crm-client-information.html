@@ -1,0 +1,5308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>客户信息</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-datetimepicker.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<link rel="stylesheet" href="../resources/css/hgf.css" />
+		<style type="text/css">
+			.crm-client-information {
+				/*min-width: 1200px;*/
+			}
+			
+			body {
+				background: #f3f3f3;
+			}
+			
+			.main-top {
+				height: 130px;
+				padding: 15px 10px;
+				background: #fff;
+				border: 1px solid #e3e3e3;
+			}
+			
+			.client-logo {
+				width: 100px;
+				height: 100px;
+				float: left;
+			}
+			
+			.client-info {
+				margin-left: 120px;
+				font-size: 12px;
+			}
+			
+			.main-top-left {
+				width: auto;
+				position: relative;
+			}
+			
+			.main-top-left-info>i {
+				cursor: pointer;
+				color: #EA8010;
+			}
+			
+			.main-top-left span {
+				margin-right: 10px;
+				font-size: 14px;
+				color: #999999;
+			}
+			
+			.main-top-left i {
+				font-size: 20px;
+				display: inline-block;
+				width: 20px;
+				height: 20px;
+				vertical-align: bottom;
+			}
+			
+			.main-top-left i.fa-map-marker {
+				font-size: 14px;
+				color: orange;
+				width: auto;
+				vertical-align: initial;
+			}
+			
+			.briefintroduction-site {
+				/*line-height: 40px;*/
+				/*margin-top: -10px;*/
+				margin-left: 18px;
+				margin-bottom: 5px;
+				font-size: 12px;
+			}
+			
+			.government-area {
+				line-height: 40px;
+				color: #666;
+			}
+			
+			.government-area span {
+				color: #666;
+			}
+			
+			.briefintroduction-site span {
+				font-size: 12px;
+			}
+			
+			.main-top-right {
+				min-width: 160px;
+				height: 100px;
+				border-right: 1px solid #eee;
+				text-align: right;
+				padding-right: 20px;
+			}
+			
+			.client-info-left {
+				padding-left: 0;
+				height: 100px;
+			}
+			
+			.client-info-right p {
+				text-align: center;
+				line-height: 40px;
+				font-size: 16px;
+			}
+			
+			.client-info-right div {
+				width: 50%;
+				float: left;
+			}
+			
+			.client-info-right div p:first-child {
+				font-size: 12px;
+				color: #999;
+				line-height: 40px;
+			}
+			
+			.main-top-left .info-name {
+				font-size: 20px;
+				color: #000;
+				font-weight: bold;
+				vertical-align: bottom;
+			}
+			
+			.main-top-left-class {
+				margin-top: 10px;
+				color: #999;
+			}
+			
+			.main-top-left-class span[bind],
+			span[bind="client_addr"] {
+				color: #666;
+			}
+			
+			.state-show {
+				display: inline-block;
+				width: 70px;
+				height: 30px;
+				background: #21b5a9;
+				text-align: center;
+				line-height: 30px;
+				color: #fff;
+			}
+			
+			.personage-option .state-show {
+				margin-left: 50px;
+			}
+			
+			.personage-option .personage-state {
+				margin-bottom: 10px;
+			}
+			
+			.personage-option .personage-state+span {
+				margin-left: 40px;
+			}
+			
+			.state-bad {
+				display: inline-block;
+				width: 70px;
+				height: 30px;
+				background: #ca192b;
+				text-align: center;
+				line-height: 30px;
+				color: #fff;
+				border-radius: 5px;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+			}
+			
+			.main-top-right>p {
+				margin-bottom: 10px;
+				position: relative;
+			}
+			
+			.main-top-right>span {
+				margin-top: 30px;
+				display: inline-block;
+				font-size: 12px;
+			}
+			
+			.main-center {
+				margin-top: 10px;
+				position: relative;
+			}
+			
+			.department-tree {
+				margin-top: 10px;
+				margin-left: 10px;
+				height: calc(100% - 66px);
+				overflow: auto;
+			}
+			
+			.department-tree li {
+				line-height: 20px;
+			}
+			
+			.department-tree li .css-overhidden {
+				width: 130px;
+			}
+			
+			.department-tree li li ul {
+				border-left: 1px dashed #ccc;
+				margin-left: 5px;
+			}
+			
+			.department-tree>li>ul>li {
+				padding-left: 20px;
+			}
+			
+			.department-tree li li li {
+				padding-left: 0px;
+			}
+			
+			.department-tree li li li:before {
+				content: "";
+				display: inline-block;
+				width: 30px;
+				height: 6px;
+				border-top: 1px dashed #ccc;
+			}
+			
+			.main-center-left {
+				position: relative;
+				width: 200px;
+				background: #fff;
+				border: 1px solid #e3e3e3;
+				margin-right: 15px;
+			}
+			
+			.main-center-left input {
+				border: 1px solid #169BD5;
+				background: #169BD5;
+				color: #fff;
+				height: 30px;
+				line-height: 25px;
+				border-radius: 5px;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				margin: 10px auto;
+				margin-left: 20px;
+			}
+			
+			.add-deparment {
+				position: absolute;
+				bottom: 20px;
+				width: 130px;
+				left: 35px;
+				background: #009ed8;
+				color: #fff;
+			}
+			
+			.add-deparment:hover {
+				color: #fff
+			}
+			
+			.main-center-right {
+				width: calc(100% - 215px);
+			}
+			
+			.client-menu {
+				height: 25px;
+				line-height: 25px;
+				color: #999999;
+				font-size: 12px;
+			}
+			
+			.client-menu span {
+				cursor: pointer;
+			}
+			
+			.main-center-right>div {
+				display: none;
+				background: #fff;
+				border: 1px solid #e3e3e3;
+			}
+			
+			.main-center-right>div:nth-child(2) {
+				display: block;
+			}
+			
+			.company-main {
+				overflow-y: auto;
+			}
+			
+			.company-menu {
+				zoom: 1;
+				border-bottom: 0;
+				height: 40px;
+				background: #fafafa;
+				border-bottom: 1px solid #e3e3e3;
+			}
+			
+			.company-menu:after {
+				content: ".";
+				clear: both;
+				height: 0;
+				visibility: hidden;
+				display: block;
+			}
+			
+			.company-menu li {
+				float: left;
+				cursor: pointer;
+				width: 100px;
+				line-height: 40px;
+				text-align: center;
+				border-left: 1px solid #e3e3e3;
+			}
+			
+			.company-menu li:last-child {
+				border-right: 1px solid #e3e3e3;
+			}
+			
+			.company-menu li.checkstyle {
+				background: #fff;
+				line-height: 36px;
+				border-top: 2px solid #ca192b;
+				border-bottom: 2px solid #fff;
+			}
+			
+			.company-menu li:first-child {
+				border-left: 0;
+			}
+			
+			.company-main>div:not(.company-record) {
+				display: none;
+			}
+			
+			.company-info {
+				/*margin-top: -20px;*/
+				/*border-top: 1px solid #ccc;*/
+				padding-top: 10px;
+				padding-left: 20px;
+			}
+			
+			.company-info-briefintroduction {
+				width: calc(100% - 400px);
+				padding: 10px;
+				padding-top: 0;
+				margin-left: 20px;
+			}
+			
+			.company-info-briefintroduction p {
+				text-indent: 1rem;
+				margin-bottom: 40px;
+				word-wrap: break-word;
+				word-break: break-all;
+			}
+			
+			.company-info-briefintroduction p.briefintroduction-title {
+				display: inline;
+			}
+			
+			.company-info-briefintroduction .group-menu {
+				left: 200px;
+			}
+			
+			.company-info-banner {
+				width: 380px;
+				height: 200px;
+			}
+			
+			.company-info-banner img {
+				width: auto;
+				height: 220px;
+			}
+			
+			.info-menu {
+				font-weight: bold;
+				border-left: 3px solid #ca192b;
+				margin-left: 20px;
+				padding-left: 5px;
+			}
+			
+			.info-menu:after {
+				content: " ";
+				width: 90%;
+				border-top: 1px solid #ccc;
+				display: inline-block;
+				height: 5px;
+				margin-left: 10px;
+			}
+			
+			.info-list {
+				margin: 15px 30px;
+				text-align: left;
+			}
+			
+			.info-list span[bind],
+			.text {
+				padding-left: 20px;
+				color: #999999;
+			}
+			
+			.info-list>span {}
+			
+			.info-list>span span:first-child {
+				/*width: 30%;*/
+				/*text-indent: 2rem;*/
+			}
+			
+			.info-list>span span:last-child {
+				/*width: 60%;*/
+			}
+			
+			.company-otherinfo span:first-child {
+				width: 150px;
+				display: inline-block;
+			}
+			
+			.company-otherinfo span:last-child {
+				width: 800px;
+				display: inline-block;
+			}
+			
+			.allmap {
+				width: 100%;
+				height: 400px;
+				margin-top: 10px;
+			}
+			
+			.imgshow {
+				/*min-width: 500px;*/
+				max-width: 1100px;
+				margin: 0 auto;
+			}
+			
+			.img-content {
+				height: 1000px;
+			}
+			
+			.client-tree i {
+				text-indent: 0;
+			}
+			
+			.fa-check-circle {
+				color: #B5B5B5;
+			}
+			
+			i.checkstyle {
+				color: #169BD5;
+			}
+			
+			.client-tree li {
+				line-height: 25px;
+				cursor: pointer;
+			}
+			
+			.client-tree li .tree-name {
+				font-weight: initial;
+			}
+			
+			.shake-client-left {
+				height: 600px;
+			}
+			
+			.shake-client-left>input {
+				border: 1px solid #ccc;
+				background: #fff;
+				border-radius: 3px;
+				-webkit-border-radius: 3px;
+				-moz-border-radius: 3px;
+				margin-bottom: 40px;
+				width: 170px;
+				height: 40px;
+				line-height: 40px;
+				text-align: center;
+			}
+			
+			.share-info {
+				height: 100%;
+			}
+			
+			.share-info>ul {
+				width: 100%;
+				height: 90%;
+				margin-top: 10px;
+				border: 1px solid #ccc;
+				border-radius: 0;
+				-webkit-border-radius: 0;
+				-moz-border-radius: 0;
+				padding: 10px;
+				overflow: auto;
+				margin-bottom: 10px;
+			}
+			
+			.tree-status {
+				float: right;
+				margin-right: 20px;
+				font-size: 20px;
+			}
+			
+			.tree-status label {
+				color: #999;
+				font-size: 12px;
+				display: inline-block;
+				width: auto;
+			}
+			
+			.tree-status label span {
+				color: #999;
+				font-size: 12px;
+				display: inline-block;
+				width: auto;
+			}
+			
+			.share-object>p {
+				line-height: 30px;
+				margin-bottom: 10px;
+			}
+			
+			.share-object p a {
+				float: right;
+			}
+			
+			.share-object .share-object-list {
+				border: 1px solid #e3e3e3;
+				zoom: 1;
+				padding: 10px;
+				margin-bottom: 10px;
+				overflow: auto;
+			}
+			
+			.share-object-list:after {
+				content: "";
+				height: 0;
+				display: block;
+				clear: both;
+				visibility: hidden;
+			}
+			
+			.object-box {
+				margin-left: 25px;
+				margin-bottom: 10px;
+				float: left;
+				position: relative;
+			}
+			
+			.object-box:nth-child(5n+1) {
+				/*margin-left: 0;*/
+			}
+			
+			.object-box-off {
+				cursor: pointer;
+				position: absolute;
+				top: 5px;
+				left: 40px;
+				width: 16px;
+				height: 16px;
+				background: red;
+				color: #fff;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+				-webkit-border-radius: 8px;
+				-moz-border-radius: 8px;
+				text-align: center;
+				line-height: 12px;
+			}
+			
+			.object-box-name {
+				line-height: 20px;
+				font-size: 14px;
+				text-align: center;
+				width: 100%;
+			}
+			
+			.share-object-reason {
+				width: 100%;
+				resize: none;
+				height: 100px;
+			}
+			
+			.company-department,
+			.department-linkman {
+				padding-left: 10px;
+				/*margin-top: -20px;*/
+				/*border-top: 1px solid #ccc;*/
+			}
+			
+			.department-linkman {
+				padding-top: 10px;
+			}
+			
+			.border {
+				border: 1px solid #ccc;
+			}
+			
+			.departmen-basisinfo {
+				margin-bottom: 10px;
+				line-height: 30px;
+			}
+			
+			.departmen-info-menu {
+				background: #F2F2F2;
+				font-weight: bold;
+				border-bottom: 1px solid #ccc;
+				text-indent: 1rem;
+			}
+			
+			.impor {
+				color: red;
+			}
+			
+			.form-group {
+				zoom: 1;
+			}
+			
+			.form-group:after {
+				content: ".";
+				height: 0;
+				display: block;
+				clear: both;
+				visibility: hidden;
+			}
+			
+			.form-group>label {
+				display: inline-block;
+				width: 18%;
+				text-align: right;
+			}
+			
+			.form-group>label .set-menu {
+				display: inline-block;
+				width: 34%;
+				text-align: right;
+			}
+			
+			.form-group>label.set-left {
+				width: 50%;
+				text-align: left;
+			}
+			
+			.set-left .set-menu {
+				text-align: left;
+			}
+			
+			.form-group>label.set-right {
+				text-align: left;
+				width: 50%;
+			}
+			
+			.form-group .form-control {
+				width: 170px;
+			}
+			
+			.form-group>p {
+				width: 50%;
+			}
+			
+			.departmen-info-menu {
+				line-height: 30px;
+				margin-bottom: 10px;
+			}
+			
+			.other-info-set {
+				line-height: 30px;
+			}
+			
+			.other-info-set .other-info-example {
+				line-height: 40px;
+				margin-left: 10px;
+			}
+			
+			.other-info-set .other-info-example .btn-a-default {
+				margin-right: 10px;
+			}
+			
+			.other-info-example input {
+				line-height: 20px;
+			}
+			
+			.other-info-list {
+				margin-bottom: 10px;
+			}
+			
+			.other-info-list li input {
+				border: 0;
+				border: 1px solid #e3e3e3;
+				margin: 0px 10px;
+				margin-bottom: 10px;
+			}
+			
+			.info-dome-name {
+				width: 20%;
+			}
+			
+			.info-dome-text {
+				width: 56%;
+			}
+			
+			i.fa-trash {
+				font-size: 20px;
+				cursor: pointer;
+				margin-left: 10px;
+			}
+			
+			.departmen-info-bottom {
+				text-align: center;
+				position: absolute;
+				bottom: 8px;
+				background: #fff;
+				width: 95%;
+				border-top: 1px solid #ccc;
+				padding: 10px 0;
+			}
+			
+			.company-info {
+				padding-right: 20px;
+				/*margin-bottom: 20px;*/
+			}
+			/*.departmen-info-bottom input {
+				margin: 0 10px;
+			}*/
+			
+			.department-option .company-info-briefintroduction p {
+				margin-bottom: 10px;
+			}
+			
+			.briefintroduction-principal {
+				color: #ca192b;
+			}
+			
+			.company-info .briefintroduction-site span span {
+				color: #999999;
+			}
+			
+			.company-info-briefintroduction .briefintroduction-principal {
+				text-indent: 0;
+			}
+			
+			.department-option .company-info-briefintroduction p span {
+				color: #333;
+			}
+			
+			.briefintroduction-title .briefintroduction-name {
+				font-size: 20px;
+				margin-right: 10px;
+			}
+			
+			.briefintroduction-txt {
+				color: #999999;
+			}
+			
+			.department-option .company-info-briefintroduction .briefintroduction-txt {
+				border-top: 1px solid #eeeeee;
+				padding-top: 5px;
+			}
+			
+			.department-option .briefintroduction-site {
+				text-indent: 0;
+			}
+			
+			.department-option .company-info-briefintroduction {
+				padding-bottom: 10px;
+			}
+			
+			.linkman-info-menu {
+				display: inline-block;
+				width: 90px;
+				text-align: right;
+				/*margin-right: 20px;*/
+				vertical-align: top;
+			}
+			
+			.form-group>p>input {
+				width: 55%;
+			}
+			
+			.form-group .info-text-worksite,
+			.info-text-familysite {
+				width: 78%;
+			}
+			
+			.goodat-txt {
+				width: 86%;
+				resize: none;
+				height: 40px;
+			}
+			
+			.interest-txt {
+				width: 86%;
+				resize: none;
+				height: 80px;
+			}
+			
+			.work-tab {
+				width: 88%;
+			}
+			
+			.work-tab tr {
+				line-height: 30px;
+				text-align: center;
+			}
+			
+			.work-tab tr th {
+				text-align: center;
+				background: #F2F2F2;
+				line-height: 40px;
+			}
+			
+			.family-tab {
+				width: 99%;
+				text-align: center;
+				margin: 0 auto;
+			}
+			
+			.family-tab th {
+				text-align: center;
+				line-height: 40px;
+				background: #FDFDFD;
+			}
+			
+			.family-tab td {
+				line-height: 30px;
+			}
+			
+			.family-tab input {
+				border: 0;
+				width: 100%;
+				text-align: center;
+			}
+			
+			.family-tab select.family-tab-relation {
+				border: 0;
+				width: 100%;
+			}
+			
+			.family-tab select.family-tab-sex {
+				border: 0;
+				width: 100%;
+			}
+			
+			.add-family {
+				margin-left: 10px;
+				margin-bottom: 10px;
+			}
+			
+			.linkmanstate {
+				margin-left: 40px;
+			}
+			
+			.linkmanstate:first-child {
+				margin-top: 10px;
+			}
+			
+			.amend-reason {
+				width: 90%;
+				resize: none;
+				height: 60px;
+				margin-top: 10px;
+				margin-left: 40px;
+			}
+			
+			.personage-title {
+				margin: 20px;
+				padding: 20px;
+				background: #f8f8f8;
+			}
+			
+			.personage-title>div:first-child {
+				width: auto;
+			}
+			
+			.personage-title>div:first-child>p:first-child {
+				margin-bottom: 10px;
+			}
+			
+			.personage-title>.pull-right {
+				width: 10%;
+			}
+			
+			.personage-title>.pull-right>p {
+				width: 70px;
+				height: 30px;
+				color: #fff;
+				text-align: center;
+				line-height: 30px;
+			}
+			
+			.personage-title-name {
+				/*width:;*/
+				font-size: 20px;
+			}
+			
+			.personage-title-level,
+			.linkman-principal {
+				color: #333;
+			}
+			
+			.famliy-infotab {
+				width: 100%;
+				text-align: left;
+				line-height: 30px;
+				border-top: 0;
+			}
+			
+			table.famliy-infotab tbody tr th {
+				background: #F6F6F6;
+				text-align: center;
+				border-top: 0;
+				border-right: 1px solid #E3E3E3;
+			}
+			
+			.upload .filelist {
+				/*width: 100px;*/
+				/*height: 100px;*/
+			}
+			
+			.linkman-family {
+				border-top: 2px solid #85BEEB;
+				min-height: 500px;
+			}
+			
+			.filelist {
+				display: inline-block;
+				width: 60px;
+				height: 50px;
+				position: relative;
+				margin-left: 10px;
+				margin-top: 10px;
+				margin-bottom: 10px;
+				vertical-align: bottom;
+			}
+			
+			.fileimg {
+				width: 50px;
+				height: auto;
+				cursor: pointer;
+			}
+			
+			.deletefile {
+				display: inline-block;
+				width: 20px;
+				height: 20px;
+				background: red;
+				color: #fff;
+				border-radius: 10px;
+				-webkit-border-radius: 10px;
+				-moz-border-radius: 10px;
+				cursor: pointer;
+				text-align: center;
+				line-height: 20px;
+				position: absolute;
+				left: 40px;
+			}
+			
+			.other-info-single .info-dome-text {
+				margin-left: 16px;
+			}
+			
+			.other-info-single .fa-trash {
+				margin-left: 13px;
+			}
+			
+			.work-tab td {
+				cursor: pointer;
+			}
+			
+			.new-family-info td {
+				border: 1px solid #ddd;
+			}
+			
+			.info-list span.establish-name {
+				width: auto;
+			}
+			
+			.fa-sort-desc {
+				vertical-align: text-top;
+			}
+			
+			.abolish-sharereason {
+				resize: none;
+				height: 100px;
+				width: 100%;
+				margin-top: 10px;
+			}
+			
+			.besuchsbericht {
+				padding: 10px;
+			}
+			
+			.besuchsbericht-top {
+				margin-bottom: 10px;
+			}
+			
+			.besuchsbericht-searchinfo {
+				border: 1px solid #E3E3E3;
+				padding: 10px;
+				line-height: 35px;
+				padding: 5px 10px;
+				border-bottom: 0;
+				height: 40px;
+				background: #F8F8F8;
+				margin-right: 1px;
+				font-size: 12px;
+			}
+			
+			.besuchsbericht-searchinfo .searchinfo-left {
+				width: 80%;
+			}
+			
+			.searchinfo-left label {
+				margin-right: 20px;
+				margin-bottom: 0;
+			}
+			
+			.view-visit-indicators-tab {
+				width: 100%;
+				margin-top: 10px;
+			}
+			
+			.view-visit-indicators-tab th {
+				background: #F2F2F2;
+				width: 50%;
+			}
+			
+			.view-visit-indicators-tab tr,
+			.view-visit-indicators-tab th {
+				text-align: center;
+				line-height: 30px;
+			}
+			
+			.off-view-visit-indicators {
+				display: block;
+				margin: 0 auto;
+			}
+			
+			.view-visit-indicators-main {
+				min-height: 350px;
+			}
+			
+			.applyfor-reason label {
+				display: inline-block;
+				width: 100%;
+			}
+			
+			.applyfor-indicators {
+				margin: 10px 0;
+			}
+			
+			.indicators-text {
+				margin: 0 10px;
+			}
+			
+			.applyfor-reason textarea {
+				resize: none;
+				width: 100%;
+				height: 100px;
+				margin-top: 10px;
+			}
+			
+			.date-picker {
+				margin-right: 10px;
+			}
+			
+			.company-image,
+			.deparment-image {
+				height: 200px!important;
+			}
+			
+			.btn-upload-anx {
+				/*margin-top: 20px;*/
+			}
+			
+			.family-tab-date {
+				margin-left: 0;
+			}
+			
+			.map-box-site i {
+				font-size: 20px;
+				color: red;
+				margin-right: 5px;
+			}
+			
+			.info-list span.work-time {
+				width: 60%;
+			}
+			
+			.group-menu {
+				border: 1px solid #ccc;
+				background: #fff;
+				width: 120px;
+				position: absolute;
+				z-index: 15;
+				right: -70px;
+				display: none;
+			}
+			
+			.group-menu>li {
+				line-height: 30px;
+				text-align: center;
+				cursor: pointer;
+				width: 100%;
+			}
+			
+			.group-menu>li:hover {
+				background: #ccc;
+			}
+			
+			.add-group {
+				border-bottom: 1px solid #ccc;
+			}
+			
+			.fa-users {
+				font-size: 20px;
+				cursor: pointer;
+				color: #EA8010;
+			}
+			
+			.view-chart-history-container {
+				position: relative;
+				bottom: 0;
+				top: 0;
+				right: 0;
+				height: 520px;
+				width: 100%;
+				z-index: 100;
+				background-color: #fff;
+				transition: all 0.5s linear;
+			}
+			
+			.fade-in {
+				right: 0;
+			}
+			
+			.view-chart-history-content-header {
+				padding: 5px 15px 5px 40%;
+				border-bottom: 1px solid #ccc;
+				height: 4%;
+			}
+			
+			.view-chart-history-content-header i {
+				float: right;
+			}
+			
+			.view-chart-history-content-body {
+				height: 91%;
+				max-width: 99%;
+				/*padding: 0 10px 20px 20px;*/
+				overflow-y: scroll;
+				position: relative;
+			}
+			
+			.key-word-search {
+				width: 97%;
+				height: 50px;
+				border: 1px solid #ccc;
+				position: absolute;
+				bottom: 40px;
+				left: 0;
+				padding: 5px 20px;
+				background-color: #fff;
+			}
+			
+			.key-word-search a,
+			.key-word-search a:hover,
+			.key-word-search a:focus {
+				display: inline-block;
+				width: 15%;
+				line-height: 30px;
+				text-align: center;
+				background-color: #fff;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				color: #333;
+				text-decoration: none;
+				margin-left: 20px;
+			}
+			
+			.this-chart-record-history-time span {
+				display: inline-block;
+				padding: 10px;
+			}
+			
+			.this-chart-record-history-time i {
+				display: inline-block;
+				border-bottom: 1px solid #ccc;
+				width: 40%;
+			}
+			
+			.view-chart-history-content-footer {
+				/*padding: 5px 0 5px 20px;*/
+				border-top: 1px solid #ccc;
+			}
+			
+			.view-chart-history-content-footer>div {
+				float: left;
+			}
+			
+			.departmen-info-top {
+				overflow: auto;
+				height: 600px;
+			}
+			
+			.steps-panel {
+				height: 400px;
+			}
+			
+			.state-reason {
+				position: absolute;
+				top: 35px;
+				color: #999;
+			}
+			
+			.visit-info-tab {
+				width: 100%;
+				line-height: 30px;
+			}
+			
+			.model-employee-import-1 h4 {
+				font-weight: bold;
+			}
+			
+			.model-employee-import-1>div {
+				font-size: 14px;
+				margin: 10px;
+			}
+			
+			.table-employee-import td {
+				border: 1px solid #fff;
+			}
+			
+			.table-employee-import thead tr {
+				background-color: #919fac;
+			}
+			
+			.table-employee-import tbody tr:nth-child(odd) {
+				background-color: #fafafa;
+			}
+			
+			.table-employee-import tbody tr:nth-child(even) {
+				background-color: #eef3f9;
+			}
+			
+			.employee-name-container {
+				width: auto!important;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				vertical-align: middle;
+				margin-right: 10px;
+			}
+			
+			.depa_status {
+				position: absolute;
+				right: 0%;
+			}
+			
+			.carousel-inner .item img {
+				margin: 0 auto;
+			}
+			
+			.share-ico {
+				background-image: url(../resources/images/share.png);
+			}
+			
+			.add-group-ico {
+				width: 20px;
+				height: 20px;
+				display: inline-block;
+				background-image: url(../resources/images/add-group-icon.png);
+			}
+			
+			.map-site-text,
+			.main-top-right>span {
+				color: #ca192b;
+			}
+			
+			#principal-name {
+				color: #333;
+			}
+			
+			.text-content {
+				width: 90%;
+				vertical-align: text-top;
+				display: inline-block;
+			}
+			
+			.tree-top a {
+				color: #666;
+			}
+			
+			.text-col-666 {
+				color: #666;
+			}
+			
+			.tree-top li a {
+				font-size: 12px;
+			}
+			
+			.tree-top img {
+				vertical-align: baseline;
+			}
+			
+			.tree-top>a {
+				font-weight: bold;
+			}
+			
+			.tree-zoom {
+				cursor: pointer;
+			}
+			
+			.ui-jqgrid .ui-pager-control {
+				height: 60px;
+			}
+			
+			.share-list-item {
+				height: 55px;
+				border: 1px solid #eee;
+				padding: 8px 10px;
+				margin: 5px;
+				margin-left: 0;
+				margin-bottom: 15px;
+			}
+			
+			.share-list li.clickstyle {
+				/*box-shadow:-5px 0 5px rgba(0,0,0,.05),
+				5px 0 5px rgba(0,0,0,.05),
+				0 -5px 5px rgba(0,0,0,.05),
+				0 5px 5px rgba(0,0,0,.05);*/
+				border: 1px solid #CA192B;
+			}
+			
+			.share-list-item img {
+				width: 40px;
+				height: 40px;
+				margin-right: 10px;
+				border: 1px solid #eee;
+			}
+			
+			.share-list-item div {
+				height: 40px;
+			}
+			
+			.share-list-item>div span:first-child {
+				display: inline-block;
+				margin: 2px 0;
+			}
+			
+			.share-list-item>div .note-font-type {
+				display: inline-block;
+			}
+			
+			.share-list-item div {
+				color: #666;
+				font-size: 14px;
+			}
+			
+			.share-list-item .btn-a-default {
+				display: inline-block;
+				height: 40px;
+				line-height: 40px;
+				font-size: 12px;
+				text-decoration: none;
+			}
+			
+			.new-share,
+			.new-share:hover,
+			.new-share:focus,
+			.new-share:active {
+				display: block;
+				border: 1px dashed #eee;
+				background-color: #f8f8f8;
+				color: #bbb;
+				height: 55px;
+				line-height: 55px;
+				text-align: center;
+				margin: 5px;
+				margin-left: 0;
+				text-decoration: none;
+				cursor: pointer;
+			}
+			
+			.new-share.active {
+				border: 1px solid #CA192B;
+			}
+			
+			.new-share img {
+				margin: -2px 5px 0 0;
+			}
+			
+			.share-info>ul>li li {
+				margin-left: 20px;
+			}
+			
+			.share-info ul li {}
+			
+			.dashed-line-container {
+				position: relative;
+				height: 30px;
+			}
+			
+			.dashed-line-container>div,
+			.dashed-line-container>label {
+				position: absolute;
+				z-index: 2;
+			}
+			
+			.dashed-line-container>label {
+				cursor: pointer;
+			}
+			
+			.dashed-line-container>label img {
+				vertical-align: baseline;
+				margin-right: 3px;
+			}
+			
+			.dashed-line-container>label {
+				left: 0;
+				top: 0;
+				padding-right: 10px;
+				background-color: #fff;
+			}
+			
+			.tree-status {
+				font-size: 12px;
+				text-align: left;
+				width: 170px;
+				right: -10px;
+				top: 0;
+				margin-right: 0;
+				background-color: #fff;
+			}
+			
+			.tree-status label {
+				display: inline-block;
+				margin-right: 10px;
+				cursor: pointer;
+			}
+			
+			.tree-status label input {
+				vertical-align: sub;
+			}
+			
+			.dashed-line {
+				border-bottom: 1px dashed #e3e3e3;
+				display: inline-block;
+				position: absolute;
+				left: 20px;
+				right: 180px;
+				top: 13px;
+				z-index: 1;
+			}
+			
+			.hand-over-foot-btn {
+				padding-left: 60%;
+				padding-top: 10px;
+				margin-top: 20px;
+				border-top: 1px solid #ccc;
+			}
+			
+			.shake-client-right label {
+				width: 108px;
+				text-align: right;
+				vertical-align: top;
+			}
+			
+			.shake-client-right .form-control {
+				width: 430px;
+				min-height: 140px;
+				margin-bottom: 20px;
+			}
+			
+			.object-box p {
+				padding: 3px 15px;
+				border: 1px solid #eee;
+				color: #666;
+				cursor: pointer;
+			}
+			
+			.object-box .close-icon-container .close-icon {
+				top: 3px;
+				right: 3px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container crm-client-information">
+			<div class="content">
+				<div class="remark">
+					<i class="fa fa-list-ol fa-2x"></i><span>*客户详细信息</span>
+				</div>
+				<div class="content-main">
+					<div class="main-top">
+						<div class="client-info-left pull-left" style="width: 70%;">
+							<div class="main-top-left pull-left">
+								<img class="client-logo" src=".." />
+								<div class="client-info">
+									<p class="main-top-left-info">
+										<span class="info-name css-overhidden" bind="client_full_name"></span>
+										<span>（<span style="margin: 0;" bind="client_short_names"></span>）</span>
+										<i class="fa share-ico" aria-hidden="true" onclick="shareClient(this)"></i>
+										<i class="fa add-group-ico" aria-hidden="true" onclick="showAddGroup(this)"></i>
+									</p>
+									<p class="main-top-left-class">
+										客户类型 <span bind="client_type_cn"></span> 资质 <span bind="client_level_cn"></span> 客户等级 <span bind="client_important_level_cn">A级客户</span>
+										<span class="hide" bind="client_administrative_division_cn">地址</span>
+									</p>
+									<p class="government-area">
+										<i class="fa fa-map-marker" aria-hidden="true"></i>
+										<span bind="client_administrative_division_cn"></span>
+										<a href="javascript:;" class="map-site-text" onclick="openMap(this)">查看地图</a>
+									</p>
+								</div>
+
+							</div>
+							<div class="main-top-right pull-right">
+								<p class="main-top-right-state"><span class="state-reason">(<span bind="client_status_reason"></span>)</span>
+								</p>
+								<span>业务负责人：<span id="principal-name"></span></span>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="client-info-right pull-left" style="width: 30%;">
+							<div class="hide">
+								<p>门诊量</p>
+								<p bind="client_outpatients_count"></p>
+							</div>
+							<div class="hide">
+								<p>床位数</p>
+								<p bind="client_sickbeds_count"></p>
+							</div>
+							<div class="">
+								<p>年销量（万元）</p>
+								<p>无</p>
+							</div>
+							<div class="">
+								<p>最近拜访数</p>
+								<p>无</p>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="main-module">
+						<!--内容待定-->
+					</div>
+					<div class="main-center">
+						<div class="main-center-left pull-left">
+							<ul class="department-tree">
+
+							</ul>
+						</div>
+						<input type="button" class="btn add-deparment" value="+新建部门/科室" onclick="openDepartmentModelInfo('add');" />
+						<div class="main-center-right pull-right">
+							<p class="client-menu"><span class="client">单位</span></p>
+							<!--单位选项卡----------------------------------------------------->
+							<div class="company-option">
+								<ul class="company-menu">
+									<li class="checkstyle">单位档案</li>
+									<li>科室/部门</li>
+									<li>拜访信息</li>
+								</ul>
+								<div class="company-main">
+									<!--单位档案-->
+									<div class="company-record">
+										<div class="company-info">
+											<div class="company-info-banner carousel slide pull-left" id="mycompanyCarousel">
+												<!-- 轮播（Carousel）指标 -->
+												<ol class="carousel-indicators">
+													<li data-target="#mycompanyCarousel" data-slide-to="0" class="active"></li>
+													<li data-target="#mycompanyCarousel" data-slide-to="1"></li>
+													<li data-target="#mycompanyCarousel" data-slide-to="2"></li>
+												</ol>
+												<!-- 轮播（Carousel）项目 -->
+												<div class="carousel-inner">
+												</div>
+												<!-- 轮播（Carousel）导航 -->
+												<a class="carousel-control left" href="#mycompanyCarousel" data-slide="prev">&lsaquo;</a>
+												<a class="carousel-control right" href="#mycompanyCarousel" data-slide="next">&rsaquo;</a>
+											</div>
+											<div class="company-info-briefintroduction pull-left">
+												<p class="briefintroduction-txt" bind="client_desc"></p>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+										<p class="briefintroduction-site hide" style="margin-top: -10px;">
+											<i class="fa fa-map-marker" aria-hidden="true"></i>
+											<span bind="client_addr"></span>
+											<!--<a href="javascript:;" class="map-site-text" onclick="openMap(this)">查看地图</a>-->
+										</p>
+										<div class="company-contactinfo">
+											<p class="info-menu">联系方式</p>
+											<p class="info-list row">
+												<span class="col-sm-4">联系电话<span bind="client_tel"></span></span>
+												<span class="col-sm-4">网址<span bind="client_website"></span></span>
+												<span class="col-sm-4">微信公众号<span bind="client_weixin_public_number"></span></span>
+											</p>
+										</div>
+										<div class="company-detailedinfo">
+											<p class="info-menu">详细信息</p>
+											<p class="info-list row">
+												<span class="col-sm-4">负责人<span bind="client_primary_person"></span></span>
+												<span class="col-sm-4">次要负责人<span bind="client_secondary_person"></span></span>
+												<span class="col-sm-4">床位数<span bind="client_sickbeds_count"></span></span>
+											</p>
+											<p class="info-list row">
+												<span class="col-sm-4">门诊量<span bind="client_outpatients_count"></span></span>
+											</p>
+										</div>
+										<div class="company-otherinfo">
+											<p class="info-menu">其他信息</p>
+											<div class="info-list">
+												<!--<span><span>值班室电话</span><span>12580</span></span>-->
+											</div>
+										</div>
+										<div class="company-establishinfo">
+											<p class="info-menu">创建信息</p>
+											<p class="info-list row">
+												<span class="col-sm-6">创建人
+													<span bind="create_info.creator.employee_name" class="establish-name"></span>，
+												<span bind="create_info.creator.depa_name" style="width: auto;"></span>
+												</span>
+											</p>
+											<p class="info-list row">
+												<span class="col-sm-6">创建时间<span class="establish-time" bind="create_info.create_time"></span></span>
+											</p>
+											<p class="info-list row">
+												<span class="col-sm-6">最近更改时间<span class="turnover-time" bind="create_info.update_time"></span></span>
+											</p>
+										</div>
+									</div>
+									<!--部门科室-->
+									<div class="company-department">
+										<table id="department-tab">
+										</table>
+										<div id="department-grid-bottom">
+										</div>
+									</div>
+									<!--拜访信息-->
+									<div class="company-besuchsbericht besuchsbericht">
+										<div class="besuchsbericht-top">
+											<input type="text" class="company-visit-info date-picker" onchange="loadClientVisitInfo('1')">
+											<label class="text-col-666">
+												<img style="margin-right: 5px;" src="../resources/images/view-icon.png">拜访指标：
+												<span bind='visit_quota'></span>
+											</label>
+											<a class="searchinfo-right pull-right" onclick="viewVisitIndicators()">查看拜访指标特批</a>
+										</div>
+										<div class="besuchsbericht-searchinfo">
+											<div class="searchinfo-left pull-left text-col-666">
+												<label>计划拜访：<span bind="plan_visit_count"></span></label>
+												<label>实际拜访：<span class="client-visit"></span></label>
+												<!--<label>实际拜访：<span bind="planned_visit_count"></span></label>
+												<label>计划外已拜访：<span bind="outofplan_visit_count"></span></label>-->
+												<a href="javascript:;" onclick="viewVisitInfo()">查看完成状态</a>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+										<table id="company-besuchsbericht-tabs">
+
+										</table>
+									</div>
+								</div>
+
+							</div>
+							<!--部门选项卡--------------------------------------------------->
+							<div class="department-option">
+								<ul class="company-menu">
+									<li class="checkstyle">部门档案</li>
+									<li>联系人</li>
+									<li>拜访信息</li>
+									<li>销量</li>
+								</ul>
+								<div class="company-main">
+									<!--部门档案-->
+									<div class="company-record">
+										<div class="company-info">
+											<div class="company-info-banner carousel slide pull-left" id="mydepartmentCarousel">
+												<!-- 轮播（Carousel）指标 -->
+												<ol class="carousel-indicators">
+													<li data-target="#mydepartmentCarousel" data-slide-to="0" class="active"></li>
+													<li data-target="#mydepartmentCarousel" data-slide-to="1"></li>
+													<li data-target="#mydepartmentCarousel" data-slide-to="2"></li>
+												</ol>
+												<!-- 轮播（Carousel）项目 -->
+												<div class="carousel-inner">
+
+												</div>
+												<!-- 轮播（Carousel）导航 -->
+												<a class="carousel-control left" href="#mydepartmentCarousel" data-slide="prev">&lsaquo;</a>
+												<a class="carousel-control right" href="#mydepartmentCarousel" data-slide="next">&rsaquo;</a>
+											</div>
+
+											<div class="company-info-briefintroduction pull-right" style="position: relative;">
+												<!--<span class="depa_status" bind="depa_status_cn"></span>-->
+												<p class="briefintroduction-title">
+													<span class="briefintroduction-name" bind="depa_name"></span> （
+													<span class="briefintroduction-state" bind="depa_important_level_cn"></span>）
+													<i class="add-group-ico" aria-hidden="true" onclick="showAddGroup(this)"></i>
+												</p>
+												<p class="briefintroduction-principal">业务负责人：<span></span></p>
+												<p class="briefintroduction-txt" bind="depa_desc"></p>
+
+											</div>
+											<p class="briefintroduction-site pull-left">
+												<span>门诊部/部门地址：<span bind="depa_outpatient_location"></span></span><br>
+												<span>住院部地址：<span bind="depa_resident_location"></span></span>
+											</p>
+											<div class="clearfix"></div>
+										</div>
+										<div class="company-contactinfo">
+											<p class="info-menu">科室/部门信息</p>
+											<p class="info-list row">
+												<span class="col-sm-4">科室/部门负责人<span class="principalA text"></span></span>
+												<span class="col-sm-4">次要负责人<span class="principalB text"></span></span>
+												<span class="col-sm-4">科室/部门电话<span bind="depa_phone_number"></span></span>
+											</p>
+											<p class="info-list row">
+												<span class="col-sm-4">科室/部门总人数<span bind="depa_doctor_count"></span></span>
+												<span class="col-sm-4">床位数<span bind="depa_sickbeds_count"></span></span>
+												<span class="col-sm-4">门诊量<span bind="depa_outpatients_count"></span></span>
+
+											</p>
+											<p class="info-list row">
+												<span class="col-sm-4">联系人总数<span class="all-linkmannumber" bind="contact_count"></span></span>
+												<span class="col-sm-4">联系人覆盖率<span bind="coverage-rate" class="coverage-rate"></span></span>
+
+											</p>
+										</div>
+										<div class="company-otherinfo">
+											<p class="info-menu">其他信息</p>
+											<div class="info-list">
+											</div>
+										</div>
+										<div class="company-establishinfo">
+											<p class="info-menu">创建信息</p>
+											<p class="info-list">
+												<span style="width:100%"><span style="width:10%">创建人</span><span bind="create_info.creator.employee_name" class="establish-name"></span>，<span bind="create_info.creator.depa_name" style="width: auto;" class="establish-deparment">销售部</span></span>
+											</p>
+											<p class="info-list">
+												<span><span>创建时间</span><span class="establish-time" bind="create_info.create_time"></span></span>
+											</p>
+											<p class="info-list">
+												<span><span>最近更改时间</span><span class="turnover-time" bind="create_info.update_time"></span></span>
+											</p>
+										</div>
+									</div>
+									<!--联系人-->
+									<div class="department-linkman">
+										<div class="search">
+										</div>
+										<div class="">
+											<table id="department-linkman-tab">
+											</table>
+											<div id="department-linkmangrid-bottom">
+											</div>
+										</div>
+
+									</div>
+									<!--拜访信息-->
+									<div class="deparment-besuchsbericht besuchsbericht">
+										<div class="besuchsbericht-top">
+											<input type="text" class="deparment-visit-info date-picker" onchange="loadClientVisitInfo('1')">
+											<label class="text-col-666">
+												<img style="margin-right: 5px;" src="../resources/images/view-icon.png">拜访指标：
+												<span bind='visit_quota'></span>
+											</label>
+											<a class="searchinfo-right pull-right" onclick="viewVisitIndicators()">查看拜访指标特批</a>
+										</div>
+										<div class="besuchsbericht-searchinfo">
+											<div class="searchinfo-left pull-left text-col-666">
+												<label>计划拜访：<span bind="plan_visit_count"></span></label>
+												<label>实际拜访：<span class="depar-visit"></span></label>
+												<!--<label>计划内已拜访<span bind="planned_visit_count"></span></label>
+												<label>计划外已拜访<span bind="outofplan_visit_count"></span></label>-->
+												<a href="javascript:;" onclick="viewVisitInfo()">查看完成状态</a>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+										<table id="deparment-besuchsbericht-tabs">
+
+										</table>
+									</div>
+									<!--销量-->
+									<div class="department-salesvolume">
+
+									</div>
+								</div>
+							</div>
+							<!--个人选项卡-->
+							<div class="personage-option">
+								<ul class="company-menu">
+									<li class="checkstyle">联系人档案</li>
+									<li>家庭信息</li>
+									<li>拜访信息</li>
+									<li>销量</li>
+								</ul>
+								<div class="company-main">
+									<!--联系人档案-->
+									<div class="company-record">
+										<div class="personage-title">
+											<div class="pull-left" style="position: relative;">
+												<p class="contact-title">
+													<span class="personage-title-name" bind="contact_name"></span>
+													<span style="color:#999;">（<span class="personage-depa_name"></span>，<span bind="depa_name"></span>）</span>
+													<i class="add-group-ico" aria-hidden="true" onclick="showAddGroup(this)"></i>
+												</p>
+												<p style="color:#999; font-size: 12px;">客户等级：<span class="personage-title-level" bind="contact_important_level_cn"></span>
+													<span style="color: orange; margin-left: 20px;">业务负责人：<span class="linkman-principal"></span></span>
+													</span>
+												</p>
+											</div>
+											<div class="pull-right">
+												<p class="personage-state"></p>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+										<div class="company-detailedinfo">
+											<p class="info-menu">基础信息</p>
+											<p class="info-list row">
+												<span class="col-sm-4">性别<span class="contact_sex text"></span></span>
+												<span class="col-sm-4">年龄<span class="linkman-age text" bind="contact_age"></span></span>
+												<span class="col-sm-4">身份证号<span bind="contact_id_number"></span></span>
+											</p>
+											<p class="info-list row">
+												<span class="col-sm-12">出生日期<span bind="contact_born_date"></span></span>
+											</p>
+											<p class="info-list row" style="word-break: break-all;word-wrap: break-word;">
+												<span class="col-sm-12">兴趣爱好<span class="text-content" bind="contact_interest"></span></span>
+											</p>
+											<p class="info-list row" style="word-break: break-all;word-wrap: break-word;">
+												<span class="col-sm-12">擅长领域<span class="text-content" bind="contact_skilled_field"></span></span>
+											</p>
+										</div>
+										<div class="company-detailedinfo">
+											<p class="info-menu">联系方式</p>
+											<p class="info-list row">
+												<span class="col-sm-4">手机(主)<span bind="contact_primary_mobile_number"></span></span>
+												<span class="col-sm-4">手机(次)<span bind="contact_secondary_mobile_number"></span></span>
+												<span class="col-sm-4">办公电话<span bind="contact_office_phone_number"></span></span>
+											</p>
+											<p class="info-list row">
+												<span class="col-sm-4">邮箱<span bind="contact_email"></span></span>
+												<span class="col-sm-4">微信<span bind="contact_weixin"></span></span>
+												<span class="col-sm-4">QQ<span bind="contact_qq_number"></span></span>
+											</p>
+											<p class="info-list">
+												<span style="width: 100%;"><span style="width: 10%;">家庭住址</span><span style="width: 90%;" bind="contact_home_address"></span></span>
+											</p>
+										</div>
+										<div class="company-establishinfo">
+											<p class="info-menu">工作信息</p>
+											<p class="info-list row">
+												<span class="col-sm-4">职务<span bind="contact_job_position_cn"></span></span>
+												<span class="col-sm-4">职称<span bind="contact_positional_titles_cn"></span></span>
+											</p>
+											<p class="info-list row">
+												<span class="col-sm-12">办公地址
+												<span style="" bind="contact_work_address"></span></span>
+											</p>
+											<p class="info-list row">
+												<span class="col-sm-12">出诊时间
+												<span class="work-time text-content" bind></span></span>
+											</p>
+										</div>
+										<div class="company-otherinfo">
+											<p class="info-menu">其他信息</p>
+										</div>
+										<div class="company-establishinfo">
+											<p class="info-menu">创建信息</p>
+											<p class="info-list">
+												<span style="width:100%"><span style="width:10%">创建人</span><span bind="create_info.creator.employee_name" class="establish-name">李五</span>，<span bind="create_info.creator.depa_name" class="establish-deparment" style="width: auto;">销售部</span></span>
+											</p>
+											<p class="info-list">
+												<span><span>创建时间</span><span class="establish-time" bind="create_info.create_time">2016-2-19  10：00</span></span>
+											</p>
+											<p class="info-list">
+												<span><span>最近更改时间</span><span class="turnover-time" bind="create_info.update_time">2016-2-19  10：00</span></span>
+											</p>
+										</div>
+									</div>
+									<!--家庭信息-->
+									<div class="linkman-family">
+										<table class="famliy-infotab table table-hover">
+											<tr>
+												<th width="20%">姓名</th>
+												<th width="5%">性别</th>
+												<th width="5%">关系</th>
+												<th width="8%">出生日期</th>
+												<th>兴趣爱好</th>
+												<th>其他</th>
+											</tr>
+										</table>
+									</div>
+									<!--拜访信息-->
+									<div class="personage-besuchsbericht besuchsbericht">
+										<div class="besuchsbericht-top">
+											<input type="text" class="linkman-visit-info date-picker" onchange="loadClientVisitInfo('1')">
+											<label class="text-col-666">
+												<img style="margin-right: 5px;" src="../resources/images/view-icon.png">拜访指标：
+												<span bind='visit_quota'></span>
+											</label>
+											<a class="searchinfo-right pull-right" onclick="viewVisitIndicators()">查看拜访指标特批</a>
+										</div>
+										<div class="besuchsbericht-searchinfo">
+											<div class="searchinfo-left pull-left text-col-666">
+												<label>计划拜访：<span bind="plan_visit_count"></span></label>
+												<label>计划内实际拜访/协访：<span bind="planned_visit_count"></span></label>
+												<label>计划外实际拜访/协访：<span bind="outofplan_visit_count"></span></label>
+												<a href="javascript:;" onclick="viewVisitInfo()">查看完成状态</a>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+										<table id="personage-besuchsbericht-tabs">
+
+										</table>
+									</div>
+									<!--销量-->
+									<div class="">
+
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--地图弹窗-->
+		<div class="map-box hide">
+			<p class="map-box-site"><i class="fa fa-map-marker" aria-hidden="true"></i><span>无</span></p>
+
+		</div>
+		<!--图片弹窗-->
+		<div class="picture hide">
+			<div class="img-content">
+				<img alt="大图" class="imgshow">
+			</div>
+		</div>
+		<!--共享客户弹窗-->
+		<div class="shake-client hide">
+			<!--第一步-->
+			<div class="shake-client-left steps-panel-share step-1">
+				<p>共享记录：</p>
+				<div class="share-list">
+					<ul>
+						<!--<li>暂无共享记录！</li>-->
+					</ul>
+				</div>
+				<a class="new-share" onclick="openAddShare(this)"><img src="../resources/images/add-share-icon.png" alt="" />新增共享</a>
+			</div>
+			<!--第二步-->
+			<div class="steps-panel-share step-2 hide">
+				<div class="share-info">
+					<p><span style="color:red;">*</span>共享内容及权限：</p>
+					<ul class="client-tree">
+
+					</ul>
+				</div>
+			</div>
+			<!--第三步-->
+			<div class="shake-client-right steps-panel-share step-3 hide">
+				<div class="share-object">
+					<div class="form-inline">
+						<label class="input-flag">选择共享对象：</label>
+						<div class="share-object-list form-control">
+
+						</div>
+						<a class="btn-a-default" onclick="selectObject()">选择共享对象</a>
+					</div>
+					<div class="form-inline">
+						<label class="input-flag">共享原因：</label>
+						<textarea class="share-object-reason form-control"></textarea>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<!--底部按钮-->
+			<div class="hand-over-foot-btn">
+				<a class="btn btn-info def-btn-info prev-step" data-curr-step="1">上一步</a>
+				<a class="btn btn-danger def-btn-danger next-step" data-curr-step="1">下一步</a>
+				<a class="btn btn-primary def-btn-primary cancel-hand-over" data-curr-step="1">取消</a>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<!--取消共享弹窗-->
+		<div class="abolish-share hide">
+			<p><span style="color: red;">*</span>请输入取消原因：</p>
+			<textarea style="width:100%;height:100px;" class="abolish-sharereason" placeholder=""></textarea>
+		</div>
+		<!--新增、修改部门-->
+		<div class="departmen-info hide">
+			<div class="departmen-info-top">
+				<div class="departmen-basisinfo border">
+					<p class="departmen-info-menu">基本信息：</p>
+
+					<div class="form-group form-inline">
+						<label class="set-left pull-left">
+								<span class="set-menu"><span class="impor">*</span>科室/部门名称：</span>
+								<input type="text" bind="depa_name" maxlength="10" nulltip="科室/部门名称">
+						</label>
+						<label class="set-right pull-right">
+								<span class="set-menu"><span class="impor">*</span>重要等级：</span>
+								<select class="form-control form-control-height-30 clientimporlevel" bind="depa_important_level">
+									<!--<option value="3">A级</option>
+									<option value="1">B级</option>-->
+								</select>
+						</label>
+					</div>
+					<div class="form-group form-inline">
+						<label class="set-left pull-left">
+								<span class="set-menu"><span class="impor">*</span>科室/部门人数：</span>
+								<input type="text" bind="depa_doctor_count" maxlength="5" nulltip="科室/部门人数" onKeyUp="value=value.replace(/\D/g,'');this.onchange();" onafterpaste="value=value.replace(/\D/g,'');this.onchange();">
+						</label>
+						<label class="set-right pull-right">
+								<span class="set-menu">科室/部门电话：</span>
+								<input type="text" bind="depa_phone_number" valitype="tel" onKeyUp="value=value.replace(/[^\d\-]/g,'');this.onchange();" onafterpaste="value=value.replace(/\D/g,'');this.onchange();" maxlength="12">
+						</label>
+					</div>
+					<div class="form-group form-inline" style="height: 90px; line-height: 70px;">
+						<label class="pull-left">科室/部门图片：</label>
+						<a class="btn-a-default btn-upload-anx pull-left">选择文件</a>
+						<div class="upload pull-left" style="margin-left: 20px;width: 40%;margin-top:-10px;">
+							<!--<span class="filelist"><img src="../resources/images/hot.png" class="fileimg img-thumbnail" onclick="openImg(this)"><span class='deletefile' onclick='deleteFile(this)'>×</span></span>
+					<span class="filelist"><img src="../resources/images/hot.png" class="fileimg img-thumbnail" onclick="openImg(this)"><span class='deletefile' onclick='deleteFile(this)'>×</span></span>
+					<span class="filelist"><img src="../resources/images/hot.png" class="fileimg img-thumbnail" onclick="openImg(this)"><span class='deletefile' onclick='deleteFile(this)'>×</span></span>-->
+						</div>
+					</div>
+					<div class="form-group form-inline">
+						<label><span class="impor">*</span>科室/部门简介：</label>
+						<textarea class="form-control form-control-content" maxlength="500" style="width: 70%;" bind="depa_desc" nulltip="科室/部门简介"></textarea>
+					</div>
+					<div class="form-group form-inline">
+						<label class="set-left pull-left">
+								<span class="set-menu">床位数：</span>
+								<input type="text" maxlength="10" bind="depa_sickbeds_count" onKeyUp="value=value.replace(/\D/g,'');this.onchange();" onafterpaste="value=value.replace(/\D/g,'');this.onchange();">
+						</label>
+						<label class="set-right pull-right">
+								<span class="set-menu">门诊量：</span>
+								<input type="text" maxlength="10" bind="depa_outpatients_count">
+						</label>
+					</div>
+					<div class="form-group form-inline">
+						<label><span class="impor">*</span>科室门诊/部门地址：</label>
+						<input type="text" maxlength="50" bind="depa_outpatient_location" nulltip="科室门诊/部门地址">
+					</div>
+					<div class="form-group form-inline">
+						<label>科室住院部地址：</label>
+						<input type="text" maxlength="50" bind="depa_resident_location">
+					</div>
+				</div>
+				<div class="other-info border">
+					<p class="departmen-info-menu">其他信息：</p>
+					<div class="other-info-set">
+						<p class="other-info-example">
+							<a class="btn-a-default" style="font-size: 14px;" onclick="addOtherInfo(this)">+添加</a>
+							<span>例：门诊电话    023-8888888</span>
+						</p>
+						<ul class="other-info-list">
+							<li class="other-info-dome close-icon-container">
+								<input type="text" id="" value="" maxlength="10" class="info-dome-name" placeholder="其他信息名称" />:
+								<input type="text" id="" value="" maxlength="50" class="info-dome-text" placeholder="其他信息内容" />
+								<img class="close-icon" src="../resources/images/filter-close.png" aria-hidden="true" onclick="deleteOtherInfo(this)" />
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--<div class="departmen-info-bottom">
+				<input type="button" value="保存" class="btn btn-default btn-info-save" />
+				<input type="button" value="取消" data-dismiss="modal" class="btn btn-default" />
+			</div>-->
+		</div>
+		<!--删除部门科室-->
+		<div class="detele-departmen hide">
+			<i class="fa fa-exclamation-triangle" style="font-size: 26px;color: red; " aria-hidden="true"></i>
+			<span>部门/科室内有联系人，无法删除。</span>
+		</div>
+		<!--更改部门状态-->
+		<div class="update-depa-status hide">
+			<form class="form-horizontal update-depa-status-container">
+				<div class="form-group">
+					<label style="width:22%;" class="input-flag">请选择客户状态：</label>
+					<div style="margin-left: 50px;" class="">
+						<!--<label class="form-control">-->
+						<input name="depa_status" bind="depa_status" type="radio" value="1" />正常 <br />
+						<!--</label>-->
+						<!--<label class="form-control">-->
+						<input name="depa_status" bind="depa_status" type="radio" value="99" />异常
+						<!--</label>-->
+					</div>
+
+					<!--<label class="form-control">
+						<input name="depa_status" type="radio" />其他
+					</label>-->
+				</div>
+				<div class="form-group">
+					<label style="width:22%;text-align: left;" class="input-flag">更改原因：</label>
+					<textarea style="margin-left: 50px;" rows="5" cols="60" bind="change_reason"></textarea>
+				</div>
+			</form>
+		</div>
+		<!--新增/修改联系人弹窗-->
+		<div class="linkman-info hide">
+			<div class="departmen-info-top">
+				<div class="departmen-basisinfo border">
+					<p class="departmen-info-menu">基本信息</p>
+					<div class="form-group form-inline">
+						<p class="pull-left">
+							<span class="linkman-info-menu">
+							<span class="impor">*</span>姓名：
+							</span>
+							<input type="text" class="info-text-name" maxlength="20" bind="contact_name" nulltip="姓名" />
+						</p>
+						<p class="pull-right">
+							<span class="linkman-info-menu">
+							<span class="impor">*</span>性别：
+							</span>
+							<label><input type="radio" name="huang" class="info-text-sex" bind="contact_sex" checked="checked" value="1"/>男</label>
+							<label><input type="radio" name="huang" class="info-text-sex" bind="contact_sex" value="2"/>女</label>
+						</p>
+					</div>
+					<div class="form-group form-inline">
+						<span class="linkman-info-menu">
+							<span class="impor">*</span>重要等级：</span>
+						<select class="form-control form-control-height-30 linkmanimporlevel" style="width: 27.5%;" bind="contact_important_level">
+							<!--<option value="3">A级</option>
+						<option value="1">B级</option>-->
+						</select>
+
+					</div>
+					<div class="form-group form-inline">
+						<p class="pull-left">
+							<span class="linkman-info-menu">
+							<!--<span class="impor">*</span>-->身份证号：
+							</span>
+							<input type="text" class="info-text-IDcard" onKeyUp="value=value.replace(/[^\d|xX]/g,'')" bind="contact_id_number" maxlength="18" />
+						</p>
+						<p class="pull-right">
+							<span class="linkman-info-menu">
+							<span class="impor">*</span>出生日期：
+							</span>
+							<select class="form-control form-control-height-30" style="width: 16%;" bind="contact_born_date_type">
+								<option value="1">阳历</option>
+								<option value="2">农历</option>
+							</select>
+							<input type="text" bind="contact_born_date" class="info-text-date" placeholder="年/月/日：YY-mm-dd" />
+						</p>
+					</div>
+					<div class="form-group form-inline">
+						<span class="linkman-info-menu">
+							<span class="impor">*</span>擅长领域：
+						</span>
+						<textarea class="goodat-txt" maxlength="150" bind="contact_skilled_field" nulltip="擅长领域"></textarea>
+					</div>
+					<div class="form-group form-inline">
+						<span class="linkman-info-menu">
+							<span class="impor">*</span>兴趣爱好：
+						</span>
+						<textarea class="interest-txt" maxlength="150" bind="contact_interest" nulltip="兴趣爱好"></textarea>
+					</div>
+				</div>
+				<div class="departmen-contactinfo border">
+					<p class="departmen-info-menu">联系方式</p>
+					<div class="form-group form-inline">
+						<p class="pull-left">
+							<span class="linkman-info-menu">
+							<span class="impor">*</span>手机(主)：</span>
+							<input type="text" onkeyup="value=value.replace(/[^\d]/g,'');this.onchange();" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g, ''));this.onchange();" class="info-text-phonenumber-a" bind="contact_primary_mobile_number" nulltip="手机号" valitype="mobile" maxlength="11" />
+						</p>
+						<p class="pull-right">
+							<span class="linkman-info-menu">
+							手机(次)：</span>
+							<input type="text" onkeyup="value=value.replace(/[^\d]/g,'');this.onchange();" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g, ''));this.onchange();" class="info-text-phonenumber-b" bind="contact_secondary_mobile_number" valitype="mobile" maxlength="11" />
+						</p>
+					</div>
+					<div class="form-group form-inline">
+						<p class="pull-left">
+							<span class="linkman-info-menu">
+							办公电话：</span>
+							<input type="text" class="info-text-workphonenumber" bind="contact_office_phone_number" valitype="tel" onkeyup="value=value.replace(/[^\d\-]/g,'');this.onchange();" onafterpaste="value=value.replace(/\D/g,'');this.onchange();" maxlength="12" />
+						</p>
+						<p class="pull-right">
+							<span class="linkman-info-menu">
+							邮箱：</span>
+							<input type="text" class="info-text-emali" bind="contact_email" valitype="email" maxlength="50px" />
+						</p>
+					</div>
+					<div class="form-group form-inline">
+						<p class="pull-left">
+							<span class="linkman-info-menu">
+							微信号：</span>
+							<input type="text" maxlength="20" class="info-text-WeChatnumber" bind="contact_weixin" />
+						</p>
+						<p class="pull-right">
+							<span class="linkman-info-menu">
+							QQ：</span>
+							<input type="text" maxlength="20" class="info-text-QQnumber" bind="contact_qq_number" onKeyUp="value=value.replace(/\D/g,'')" onafterpaste="value=value.replace(/\D/g,'')" />
+						</p>
+					</div>
+					<div class="form-group form-inline">
+						<span class="linkman-info-menu">
+							家庭住址：</span>
+						<input type="text" maxlength="50" class="info-text-familysite" bind="contact_home_address" />
+
+					</div>
+				</div>
+				<div class="departmen-workcondition border">
+					<p class="departmen-info-menu">工作情况</p>
+					<div class="form-group form-inline">
+						<span class="linkman-info-menu">
+						<span class="impor">*</span>办公地址：</span>
+						<input type="text" maxlength="50" class="info-text-worksite" bind="contact_work_address" nulltip="办公地址" />
+					</div>
+					<div class="form-group form-inline">
+						<p class="pull-left">
+							<span class="linkman-info-menu">
+							<span class="impor">*</span>职务：</span>
+							<select class="form-control form-control-height-30 linkman-position-titles" style="width: 56%;" bind="contact_job_position">
+							</select>
+						</p>
+						<p class="pull-right">
+							<span class="linkman-info-menu">
+							<span class="impor">*</span>职称：</span>
+							<select class="form-control form-control-height-30 linkman-position" style="width: 56%;" bind="contact_positional_titles">
+							</select>
+						</p>
+					</div>
+					<div class="form-group form-inline">
+						<span class="linkman-info-menu pull-left">
+							出诊时间：</span>
+						<table class="work-tab table-bordered pull-right">
+							<tr>
+								<th>日期</th>
+								<th>周一</th>
+								<th>周二</th>
+								<th>周三</th>
+								<th>周四</th>
+								<th>周五</th>
+								<th>周六</th>
+								<th>周日</th>
+							</tr>
+							<tr class="am">
+								<td class="time-name">上午</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr class="pm">
+								<td class="time-name">下午</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="departmen-family border">
+					<p class="departmen-info-menu">家庭成员</p>
+					<div class="form-group form-inline">
+						<input type="button" value="+添加" class="add-family" />
+						<table class="family-tab table-bordered">
+							<tr>
+								<th width="10%"><span class="impor">*</span>姓名</th>
+								<th width="10%"><span class="impor">*</span>性别</th>
+								<th width="10%"><span class="impor">*</span>关系</th>
+								<th width="15%"><span class="impor">*</span>出生日期</th>
+								<th width="20%">兴趣爱好</th>
+								<th width="25%">其他</th>
+								<th width="10%">操作</th>
+							</tr>
+							<tr>
+								<td><input class="family-tab-name" maxlength="20"></td>
+								<td>
+									<select class="form-control form-control-height-30 family-tab-sex">
+										<option value="0" selected="selected">请选择</option>
+										<option value="1">男</option>
+										<option value="2">女</option>
+									</select>
+								</td>
+								<td>
+									<select class="form-control form-control-height-30 family-tab-relation">
+										<option value="0" selected="selected">请选择</option>
+									</select>
+								</td>
+								<td><input class="family-tab-date date-picker"></td>
+								<td><input class="family-tab-interest" maxlength="50"></td>
+								<td><input class="family-tab-other" maxlength="50"></td>
+								<td><img src="../resources/images/filter-close.png" onclick="deleteFamilyInfo(this)" /></td>
+							</tr>
+
+						</table>
+					</div>
+				</div>
+				<div class="other-info border">
+					<p class="departmen-info-menu">其他信息</p>
+					<div class="other-info-set">
+						<p class="other-info-example">
+							<input type="button" class="btn btn-default btn-sm" value="+添加" onclick="addOtherInfo(this)" />
+							<span>例：门诊电话    023-8888888</span>
+						</p>
+						<ul class="other-info-list">
+							<li class="other-info-dome">
+								<input type="text" id="" maxlength="10" value="" class="info-dome-name" placeholder="其他信息名称" />:
+								<input type="text" id="" maxlength="50" value="" class="info-dome-text" placeholder="其他信息内容" />
+								<img class="close-icon" src="../resources/images/filter-close.png" aria-hidden="true" onclick="deleteOtherInfo(this)" />
+								<!--<i class="fa fa-trash" aria-hidden="true" onclick="deleteOtherInfo(this)"></i>-->
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--<div class="departmen-info-bottom">
+				<input type="button" value="保存" class="btn btn-default info-Save" />
+				<input type="button" value="取消" data-dismiss="modal" class="btn btn-default" />
+			</div>-->
+		</div>
+		<!--导入客户联系人-->
+		<div class="pnl-employee-import hide">
+			<form class="form-horizontal model-employee-import hdie">
+				<div class="form-group form-group-line form-inline">
+					<div class="model-employee-import-1">
+						<h4>操作说明</h4>
+						<div>
+							<span>1、下载《客户联系人批量导入模板》 </span>
+							<a href="javascript:;" onclick='downloadImportModel();'>立即下载《客户联系人批量导入模板》</a>
+						</div>
+						<div>
+							<span>2、在模板填写对应信息，为保障信息能有效导入，请使用纯文本或数字，请勿增加、删除或修改表头。</span>
+						</div>
+						<div>
+							<span>3、上传填写完毕后的模板</span>
+							<a id="btnUploadExcel" href="javascript:;">上传模板</a>
+							<div class="upload"></div>
+						</div>
+					</div>
+					<!--<label>请先上传员工Excel表格</label>-->
+					<!--<button type="button" class="btn btn-default btn-sm" id="btnUploadExcel" style="margin-left: 50px;"><i class="fa fa-cloud-upload"></i> 上传Excel</button>-->
+					<!--<p class="upload" style="margin-left: 0; width: 100%;"></p>-->
+				</div>
+				<table class="table table-employee-import">
+					<caption class="hide">请设置数据对应关系</caption>
+					<thead>
+
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+			</form>
+		</div>
+
+		<!--更改联系人状态弹窗-->
+		<div class="amend-linkmanstate hide">
+			<span class="linkman-info-menu pull-left">
+							<span class="impor">*</span>选择联系人状态：
+			</span><br>
+			<label class="linkmanstate"><input type="radio" name="hgf" id="" value="1" />正常</label><br>
+			<label class="linkmanstate"><input type="radio" name="hgf" id="" value="2" />离职</label><br>
+			<label class="linkmanstate"><input type="radio" name="hgf" id="" value="3" />进修</label><br>
+			<label class="linkmanstate"><input type="radio" name="hgf" id="" value="4" />离世</label><br>
+			<label class="linkmanstate"><input type="radio" name="hgf" id="" value="5" />退休</label><br>
+			<label class="linkmanstate"><input type="radio" name="hgf" id="" value="99" />其他</label><br>
+			<span class="linkman-info-menu pull-left">
+							<span class="impor">*</span>更改原因：
+			</span><br>
+			<textarea class="amend-reason"></textarea>
+		</div>
+		<!--取消共享弹窗-->
+		<div class="abolish-share hide">
+			<p><span style="color: red;">*</span>请输入取消原因：</p>
+			<textarea class="abolish-sharereason" placeholder=""></textarea>
+		</div>
+		<!--查看拜访指标弹窗-->
+		<div class="view-visit-indicators hide">
+			<div class="view-visit-indicators-main">
+				<p>*该客户拜访指标特批列表</p>
+				<table class="view-visit-indicators-tab table-bordered">
+					<tr>
+						<th>姓名</th>
+						<th>月拜访指标</th>
+					</tr>
+				</table>
+			</div>
+
+			<input type="button" class="off-view-visit-indicators" value="关闭" data-dismiss="modal" />
+		</div>
+		<!--更改拜访指标弹窗-->
+		<div class="change-visit-indicators hide">
+			<p class="applyfor-menu">你已经选择<span>77</span>个申请对象</p>
+			<div class="applyfor-indicators">
+				<label><span class="important">*</span>申请指标：<input type="text" class="indicators-text" nulltip="申请指标" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">次/月</label>
+			</div>
+			<div class="applyfor-reason">
+				<label><span class="important">*</span>申请原因：<textarea class="indicators-reason" placeholder="请输入申请原因" nulltip="更改指标申请原因" maxlength="100"></textarea></label>
+			</div>
+		</div>
+		<div class="visit-info-page hide">
+			<table class="visit-info-tab table table-bordered">
+				<tr>
+					<th>姓名</th>
+					<th>拜访指标</th>
+					<th>计划拜访</th>
+					<th>计划内已拜访</th>
+					<th>计划外已拜访</th>
+				</tr>
+			</table>
+		</div>
+		<!--部门表格按钮---------------------------------------->
+		<div id="department-grid-footer-container" class="hide">
+			<!-- -->
+			<a class="btn btn-sm btn-info info-addiinfo" onclick="openDepartmentModelInfo('update');" enable-on="singleselect" enable-tip="多选时不能进行编辑操作。"> 修改部门</a>
+			<a class="btn btn-sm btn-info info-addiinfo" onclick="setPrincipal();" enable-on="singleselect" enable-tip="多选时不能进行该操作。"> 设置负责人</a>
+			<!--<a class="btn btn-sm btn-info info-addiinfo" onclick="deteleDepartmen();"> 删除部门</a>-->
+			<a class="btn btn-sm btn-info info-addiinfo" onclick="changeDepaStatus();"> 更改部门状态</a>
+			<a class="btn btn-sm btn-info info-addiinfo" onclick="changeVisitIndicators();">更改拜访指标</a>
+			<a class="btn btn-sm btn-info info-addiinfo" onclick="cancelVisit();"> 取消拜访特批</a>
+		</div>
+		<!--//联系人列表按钮-->
+		<div id="linkman-grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info info-addiinfo" onclick="openLinkmanModelInfo('add');"> 新增联系人</a>
+			<a href="javascript:;" class="btn btn-info btn-sm" onclick="openContactImportPop()">导入客户联系人</a>
+			<a href="javascript:;" class="btn btn-info btn-sm" onclick="openContactDownloadPop()">导出客户联系人</a>
+			<a class="btn btn-sm btn-info info-addiinfo" onclick="openLinkmanModelInfo('update');" enable-on="singleselect" enable-tip="多选时不能进行编辑操作。"> 修改联系人</a>
+			<a class="btn btn-sm btn-info info-addiinfo" onclick="amendLinkmanState();"> 更改联系人状态</a>
+			<!--<a class="btn btn-sm btn-info info-addiinfo" onclick="deteleLinkman();"> 删除联系人</a>-->
+			<a class="btn btn-sm btn-info info-addiinfo" onclick="changeVisitIndicators();">更改拜访指标</a>
+			<a class="btn btn-sm btn-info info-addiinfo" onclick="cancelVisit();"> 取消拜访特批</a>
+		</div>
+	</body>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/js/main.min.js"></script>
+	<script type="text/javascript" src="../resources/js/customize/websocket.js"></script>
+	<script type="text/javascript" src="../resources/js/customize/hgf.js"></script>
+	<script type="text/javascript" src="../resources/js/customize/IM.js"></script>
+	<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+	<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG"></script>-->
+	<script type="text/javascript">
+		//------------消息队列相关   订阅者-----------------------
+		var subscriber = parent.HHMQ.createSubscriber('客户管理内页', 'main', function(flag, msgData) {
+			if(flag == "welcome") {
+				$.showSuccessGritter(JSON.stringify(msgData), {
+					clear: false
+				});
+			}
+			//收到审批处理消息
+			if(msgData.action == "refresh") {
+				//认证通过
+				if(APV_ROUTINE_IDS.crm[msgData.routin_id]) {
+					if(departmenGrid) $(departmenGrid).reloadGrid();
+					if(linkmanGrid) $(linkmanGrid).reloadGrid();
+				}
+			}
+		});
+		//页面关闭事件
+		context.onPageClose = function() {
+			subscriber.dispose();
+		};
+		//------------消息队列相关   订阅者end -------------------
+		//客户ID
+		var clientID = $.getQueryObject().client_id;
+		var thisClientData;
+		var clientType = $.getQueryObject().type;
+		var depaID = "",
+			currDepaData;
+		var linkmanID = "";
+		//接口URL
+		var departmenTableUrl = BSAPIURL + "/crm/offices?client_id=" + clientID;
+		var linkmanTableUrl = BSAPIURL + "/crm/contacts";
+		var departmenTreeUrl = BSAPIURL + "/crm/customers/" + clientID + "/sub_data";
+		var shareTreeUrl = BSAPIURL + "/crm/responsible_tree?check_permissions=share&clients=" + clientID + "&employee_ids=";
+		var clientImporLevelUrl = BSAPIURL + "/crm/statics/customer/important_level_columns";
+		var linkmanImporLevelUrl = BSAPIURL + "/crm/statics/contacts/important_level_columns";
+		var clientInfoUrl = BSAPIURL + "/crm/customers/" + clientID;
+		var departmenInfoUrl = BSAPIURL + "/crm/offices/";
+		var imgUrl = BASEAPIURL;
+		var linkManStateUrl = BSAPIURL + "/crm/contacts_status";
+		var deteleLinkmanUrl = BSAPIURL + "/crm/contacts";
+		var deteleDepartUrl = BSAPIURL + "/crm/offices";
+		var linkmanInfoUrl = BSAPIURL + "/crm/contacts/";
+		var shareListInfoUrl = BSAPIURL + "/crm/customer/shared/" + clientID;
+		var shareUpdateUrl = BSAPIURL + "/crm/customer/shared/customer_id/" + clientID;
+		var changeDepaStatusUrl = BSAPIURL + "/crm/office_status";
+		var cancelVisitIndicatorsSpecialapprovalUrl = BSAPIURL + "/crm/visit_quota_apply/special_cancel";
+		var visitInfoTableUrl = BSAPIURL + "/crm/visit_record/query";
+		var loadCodeUrl = BSAPIURL + "/companies/" + COMPANYID + "/class/multi";
+		var tempLoadLinkmanUrl = "";
+		//弹窗对象
+		var shareClientModalId;
+		//表格加载状态(已经加载完成：true；未加载：false)
+		var departmenIsTable = false,
+			departmenBesuchsberichtIsTable = false,
+			linkmanIsTable = false,
+			linkmanBesuchsberichtIsTable = false,
+			personageBesuchsberichtIsTable = false,
+			isShareAddAndUpdate = "add",
+			loadLevel = 1;
+		//表格对象名
+		var departmenGrid, departmenBesuchsberichtGrid,
+			linkmanGrid, linkmanBesuchsberichtGrid, personageBesuchsberichtGrid;
+		//表格加载区域
+		var departmenGridPlace = "#department-tab";
+		var departmenBesuchsberichtGridPlace = "#company-besuchsbericht-tabs";
+		var linkmanGridPlace = "#department-linkman-tab";
+		var linkmanBesuchsberichtGridPlace = "#deparment-besuchsbericht-tabs";
+		var personageBesuchsberichtGridPlace = "#personage-besuchsbericht-tabs";
+		var changeVisitIndicatorsUrl = BSAPIURL + "/crm/visit_quota_apply/special";
+		var shareInfo = [];
+		//企业ID
+		var codeData = [102113, 102115, 102114, 102116, 102112]; //联系人重要等级、职称、职务、家属关系、部门等级
+		var codeLisData = {};
+		var visitIndexInfo = [],
+			visitInfoData = [],
+			relationshipStr = "";
+		var clientIsNormal = false,
+			deparIsNormal = false;
+		var linkmanSearchData = [];
+		//客户单位状态	
+		var crm = {
+			client_status: { //客户单位状态
+				NORMAL: 1, //正常
+				CLOSED: 2, //已关闭
+				MOVED: 3, //已迁址
+				BEEN_BUY: 4, //以收购
+				OTHER: 99, //其他
+			},
+			data_scope: { //数据范围
+				SHARE: 1, //共享
+				RESPONSE: 2 //负责
+			},
+			emp_scope: { //员工范围
+				OWN: 1, //本人
+				LOWER: 2 //下属
+			},
+			share_status: { //共享状态
+				UN_SHARED: 1, //未共享
+				SHARED: 2 //已共享
+			},
+			share_permissons: { //共享权限
+				VIEW: 1, //查看
+				UPDATE: 2, //修改
+				ADD: 4 //新增
+			},
+			share_type: { //共享资源类型
+				COMPANY: 1, //单位
+				DEPA: 2, //科室
+				CONTACT: 3 //联系人
+			}
+		}
+		window.onload = function() {
+			var script = document.createElement("script");
+			script.src = "http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG&callback=doApi";
+			$("body").append(script);
+		};
+		$(function() {
+			$.showLoadingPop("正在加载...");
+			var departmenTreeHeight = $(window).height() - $(".remark").outerHeight(true) - $(".main-top").outerHeight(true) - 27;
+			$(".main-center-left").height(departmenTreeHeight);
+			//$(".main-center-right").css("height", departmenTreeHeight);
+			$(".company-main").css("max-height", parseInt(departmenTreeHeight) - 70 + "px");
+			//加载客户部门树
+			loadDeparmentTree();
+			loadCode(codeData); //加载企业代码
+			//绑定时间插件
+			$(".besuchsbericht .date-picker").datetimepicker({
+				startView: '3',
+				minView: '3',
+				viewSelect: 'decade',
+				format: "yyyy-mm", //选择日期后，文本框显示的日期格式 
+				language: 'zh-CN', //汉化 
+				autoclose: true //选择日期后自动关闭 
+			});
+			//默认本月
+			$(".besuchsbericht .date-picker").val($.timeNow().Format("yyyy-MM"));
+			//获取单个客户(单位)数据
+			$.ajaxGet(clientInfoUrl, function(response) {
+				thisClientData = response.data;
+				var formSelector = ".main-top";
+				var companyoption = ".company-option";
+				var comController = new Controller(formSelector);
+				var comController2 = new Controller(companyoption);
+				var clientInfoData = response.data;
+				comController.set(clientInfoData);
+				comController2.set(clientInfoData);
+				changeClientNav(1, thisClientData.client_full_name, thisClientData.client_id);
+				$(formSelector + " .main-top-left-info i:last-child").data({
+					"id": clientInfoData.client_id,
+					"name": clientInfoData.client_full_name,
+					"type": businessGroupCode.client
+				});
+				//客户状态
+				$(".state-reason").after(clientState(clientInfoData.client_status));
+				$(".info-name").attr("id", clientInfoData.client_id);
+				//联系人
+				var str = "";
+				if(clientInfoData.responsible_person_data.length != 0) {
+					for(var i in clientInfoData.responsible_person_data) {
+						if(i != clientInfoData.responsible_person_data.length - 1) {
+							str += clientInfoData.responsible_person_data[i].employee_name + "，";
+						} else {
+							str += clientInfoData.responsible_person_data[i].employee_name;
+						}
+					}
+				} else {
+					str = "无";
+				}
+				$("#principal-name").html(str);
+				//单位档案
+				//				var strs = "<a href='javascript:;' onclick='openMap(" + clientInfoData.client_addr + ")'><i class='fa fa-map-marker' aria-hidden='true'></i>查看地图</a>"
+				//				$(".company-option .briefintroduction-site span").after(strs);
+				//其他信息
+				if(clientInfoData.client_extend_data && clientInfoData.client_extend_data.length != 0) {
+					for(var i in clientInfoData.client_extend_data) {
+						var str = "<p class='text'><span style=\"width:13%\">" + clientInfoData.client_extend_data[i].label + "</span><span style='width:80%'>" + clientInfoData.client_extend_data[i].value + "</span></p>";
+						$(".company-option .company-otherinfo .info-list").append(str);
+					}
+				} else {
+					$(".company-option .company-otherinfo .info-list").append("<span>无</span>");
+				}
+				//图片加载
+				$(".client-logo").attr("src", clientInfoData.client_images[0]);
+				$(".company-option .carousel-inner").empty();
+				if(clientInfoData.client_images.length != 0) {
+					for(var i in clientInfoData.client_images) {
+						var str = "";
+						if(i == 0) {
+							str += "<div class=\"item active\">";
+						} else {
+							str += "<div class=\"item\">";
+						}
+						str += "<img src='" + clientInfoData.client_images[i] + "' class=\"company-image\" alt=\"First slide\" onclick=\"openImg(this)\">";
+						str += "</div>";
+						$(".company-option .carousel-inner").append(str);
+					}
+					//初始化轮播
+					$('#mycompanyCarousel').carousel({
+						interval: 2000
+					});
+				}
+				//地图绑定定位地址
+				$(".map-site-text").attr("data-mapsearchsite", clientInfoData.client_addr_map_address);
+				//客户状态非正常则不能进行任何操作
+				if(thisClientData.is_abnormal) {
+					clientIsNormal = thisClientData.is_abnormal;
+				}
+				$(".main-top-left-info i").first().attr("data-isResponsible", thisClientData.can_share);
+				//$.hideLoadingPop();
+				endLoad();
+			});
+			$(".company-menu li").click(function() {
+				$(this).addClass("checkstyle").siblings().removeClass("checkstyle");
+				var index = $(this).index();
+				$(this).parent().next().children("div").eq(index).show().siblings().hide();
+				if(loadLevel == 1) {
+					//部门/科室表加载。。。。。。。。。。
+					if(index == 1) {
+						if(!departmenIsTable) {
+							var gridHeight = $(window).height() - $(".main-top").outerHeight(true) - $(".company-menu").outerHeight(true) - $(".client-menu").outerHeight(true) - 133;
+							//alert($(".remark").height());
+							var colNames = ['', '', '部门名称', '重要等级', '联系人数量', '门诊量', '床位数', '本月拜访/指标', /*'本月协访/指标', */ '销量（元）本月/上月', '地址', '跟进负责人', '更新时间'];
+							var colModel = [{
+									name: 'id',
+									hidden: true,
+									formatter: function(cellvalue, options, rowObject) {
+										return rowObject.depa_id;
+									}
+								}, {
+									name: 'delete_approval_session_status',
+									hidden: true
+								}, {
+									name: '__depa_name',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' role-auth1=\"os/roles/0|put\" onclick=\"openDepartmentModelInfo('update','" + rowObject.depa_id + "');\" role-auth1-tip=\"你无权限修改角色信息。\">" + rowObject.depa_name + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__depa_important_level_cn',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadDepart('" + rowObject.depa_id + "');\">" + rowObject.depa_important_level_cn + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__contact_count',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadDepart('" + rowObject.depa_id + "');\">" + rowObject.contact_count + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__depa_outpatients_count',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadDepart('" + rowObject.depa_id + "');\">" + rowObject.depa_outpatients_count + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__depa_sickbeds_count',
+									sortable: true,
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadDepart('" + rowObject.depa_id + "');\">" + rowObject.depa_sickbeds_count + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+
+								}, { //客户拜访指标
+									name: '__depa_share_status',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											// "<a href='javascript:;' onclick=openVistPop('1','"+rowObject.client_id+"')>"+rowObject.visit_count_real + "/" + rowObject.visit_count_target+"</a>";
+											return "<a href='javascript:;' onclick=openVistPop('2','" + rowObject.depa_id + "')>" + rowObject.visit_count_real + "/" + rowObject.visit_count_target + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}
+								/*, { //客户协访指标
+																name: '__depa_share_status',
+																formatter: function(cellvalue, options, rowObject) {
+																	try {
+																		// 
+																		return "<a href='javascript:;' onclick=openVistPop('2','" + rowObject.depa_id + "')>" + rowObject.visit_count_real + "/" + rowObject.visit_count_target + "</a>";
+																	} catch(e) {
+																		return '';
+																	}
+																}
+															}*/
+								, { //月销量
+									name: '__depa_phone_number',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											var str = rowObject.sale_count_month + "/" + rowObject.sale_count_pre_month;
+											str += rowObject.sale_count_month > rowObject.sale_count_pre_month ? "<span style='color:#008FA7'>↑</span>" : "<span style='color:red'>↓</span>";
+											return str;
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__depa_outpatient_location',
+									//								sortable: false,
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadDepart('" + rowObject.depa_id + "');\">" + rowObject.depa_outpatient_location + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, { //负责人
+									name: 'linkman',
+									sortable: false,
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											var str = "";
+											for(var i in rowObject.responsible_person_data) {
+												if(i != rowObject.responsible_person_data.length - 1) {
+													str += rowObject.responsible_person_data[i].employee_name + ",";
+												} else {
+													str += rowObject.responsible_person_data[i].employee_name;
+												}
+											}
+											return str;
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: 'update_time',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return rowObject.create_info.update_time;
+										} catch(e) {
+											return '';
+										}
+									}
+								}
+							];
+							departmenGrid = $(departmenGridPlace).initJqGrid({
+								showPager: false,
+								grid_selector: departmenGridPlace,
+								storeRowDataInCache: true,
+								pager: "#department-grid-bottom",
+								rowNum: 10,
+								footerBtnContainer: "#department-grid-footer-container",
+								url: departmenTableUrl,
+								colNames: colNames,
+								colModel: colModel,
+								height: gridHeight
+							});
+							//加载完成
+							departmenIsTable = true;
+						}
+					} else if(index == 2) {
+						loadClientVisitInfo(loadLevel);
+						//加载完成
+					}
+				} else if(loadLevel == 2) {
+					//console.log(depaID)
+					if(index == 1) {
+						$(".department-option .search").empty();
+						//搜索
+						$.initSearchControls4TagMode({
+							auto: true,
+							url: linkmanTableUrl + "?client_id=" + clientID + "&depa_id=" + depaID,
+							grid: linkmanGridPlace,
+							removeHeight4Grid: 83,
+							container: ".search",
+							key_name: "key",
+							key_placeholder: "请输入联系人姓名、负责人进行查找",
+							onChange: function(selectTags) {
+								linkmanSearchData = selectTags;
+							},
+							groups: [{
+								name: "important_level",
+								text: "联系人等级",
+								items: loadCode("", codeData[0], true)
+							}, {
+								name: "status",
+								text: "联系人状态",
+								items: [{
+									key: "正常",
+									value: "1"
+								}, {
+									key: "离职",
+									value: "2"
+								}, {
+									key: "进修",
+									value: "3"
+								}, {
+									key: "离世",
+									value: "4"
+								}, {
+									key: "退休",
+									value: "5"
+								}, {
+									key: "其他",
+									value: "99"
+								}]
+							}]
+						});
+						$.token();
+						//联系人表格加载。。。。。
+						if(!linkmanIsTable) {
+
+							var gridHeights = $(window).height() - $(".remark").outerHeight(true) - $(".main-top").outerHeight(true) - $(".company-menu").outerHeight(true) - $(".search").outerHeight(true) - 170;
+							//alert($(".remark").height());
+							var colNames = ['', '', '', '姓名', '重要等级', '职务', '职称', '本月拜访/指标', /*'本月协访/指标', */ '手机', '办公电话', '邮箱', '生日', '跟进负责人', '状态', '更新时间'];
+							var colModel = [{
+									name: 'id',
+									hidden: true,
+									formatter: function(cellvalue, options, rowObject) {
+										return rowObject.contact_id;
+									}
+								}, {
+									name: 'delete_approval_session_status',
+									hidden: true
+								}, {
+									name: 'change_status_approval_session_status',
+									hidden: true
+								}, {
+									name: '__contact_name',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' role-auth1=\"os/roles/0|put\" onclick=\"openLinkmanModelInfo('update','" + rowObject.contact_id + "');\" role-auth1-tip=\"你无权限修改角色信息。\">" + (rowObject.contact_name || "") + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__contact_important_level_cn',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadlinkman('" + rowObject.contact_id + "');\">" + rowObject.contact_important_level_cn + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__contact_job_position_cn',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadlinkman('" + rowObject.contact_id + "');\">" + rowObject.contact_job_position_cn + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__contact_positional_titles_cn',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadlinkman('" + rowObject.contact_id + "');\">" + rowObject.contact_positional_titles_cn + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__depa_name',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											// 
+											return "<a href='javascript:;' onclick=openVistPop('3','" + rowObject.contact_id + "')>" + rowObject.visit_count_real + "/" + rowObject.visit_count_target + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								},
+								/* {
+																name: '__depa_name',
+																formatter: function(cellvalue, options, rowObject) {
+																	try {
+																		// "<a href='javascript:;' onclick=openVistPop('1','"+rowObject.client_id+"')>"+rowObject.visit_count_real + "/" + rowObject.visit_count_target+"</a>";
+																		return "<a href='javascript:;' onclick=openVistPop('3','" + rowObject.contact_id + "')>" + rowObject.visit_count_real + "/" + rowObject.visit_count_target + "</a>";
+																	} catch(e) {
+																		return '';
+																	}
+																}
+															},*/
+								{
+									name: '__contact_primary_mobile_number',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadlinkman('" + rowObject.contact_id + "');\">" + rowObject.contact_primary_mobile_number + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__contact_office_phone_number',
+									sortable: true,
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadlinkman('" + rowObject.contact_id + "');\">" + rowObject.contact_office_phone_number + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__contact_email',
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadlinkman('" + rowObject.contact_id + "');\">" + rowObject.contact_email + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__contact_born_date',
+									sortable: true,
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadlinkman('" + rowObject.contact_id + "');\">" + rowObject.contact_born_date + "（" + rowObject.contact_born_date_type_cn + "）</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__information_update_time_cn',
+									sortable: false,
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											var str = "";
+											for(var i in rowObject.responsible_person_data) {
+												if(i != rowObject.responsible_person_data.length - 1) {
+													str += rowObject.responsible_person_data[i].employee_name + ",";
+												} else {
+													str += rowObject.responsible_person_data[i].employee_name;
+												}
+											}
+											return str;
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__contact_status_cn',
+									sortable: false,
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadlinkman('" + rowObject.contact_id + "');\">" + rowObject.contact_status_cn + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}, {
+									name: '__contact_update_time',
+									sortable: false,
+									formatter: function(cellvalue, options, rowObject) {
+										try {
+											return "<a href='javascript:;' onclick=\"loadlinkman('" + rowObject.contact_id + "');\">" + rowObject.contact_update_time + "</a>";
+										} catch(e) {
+											return '';
+										}
+									}
+								}
+							];
+							linkmanGrid = $(linkmanGridPlace).initJqGrid({
+								showPager: false,
+								grid_selector: linkmanGridPlace,
+								storeRowDataInCache: true,
+								pager: "#department-linkmangrid-bottom",
+								footerBtnContainer: "#linkman-grid-footer-container",
+								url: linkmanTableUrl + "?client_id=" + clientID + "&depa_id=" + depaID,
+								colNames: colNames,
+								colModel: colModel,
+								height: gridHeights,
+								rowNum: 10
+							});
+							tempLoadLinkmanUrl = linkmanTableUrl + "?client_id=" + clientID + "&depa_id=" + depaID;
+							linkmanIsTable = true;
+						} else {
+							$(linkmanGrid).jqGrid('setGridParam', {
+								page: 1,
+								url: linkmanTableUrl + "?client_id=" + clientID + "&depa_id=" + depaID
+							}).trigger("reloadGrid", {});
+							tempLoadLinkmanUrl = linkmanTableUrl + "?client_id=" + clientID + "&depa_id=" + depaID;
+							$(linkmanGrid).setGridHeight($(window).height() - $(".remark").outerHeight(true) - $(".main-top").outerHeight(true) - $(".company-menu").outerHeight(true) - $(".search").outerHeight(true) - 180);
+						}
+					} else if(index == 2) {
+						loadClientVisitInfo(loadLevel);
+						//加载完成
+					} else if(index == 0) {
+						loadDepart(depaID);
+					}
+
+				} else {
+					if(index == 2) {
+						//加载联系人表格
+						loadClientVisitInfo(loadLevel);
+					}
+				}
+			});
+		});
+
+		//加载客户部门树
+		function loadDeparmentTree() {
+			$(".department-tree").empty();
+			$.ajaxGet(departmenTreeUrl + "?type=" + clientType, function(response) {
+				var deparmentTreeInfo = response.data;
+				var clientStr = "<li class=\"tree-top\">" + "<img style=\"vertical-align: baseline;\" src=\"../resources/images/cmp-icon.png\">" +
+					"<a href='javascript:;' class=\"css-overhidden\" style=\"width:150px; margin-left:5px\" onclick='deparmentMenuExcheng(this)' data-tier='1' data-id=" +
+					deparmentTreeInfo.client_id + " title=" + deparmentTreeInfo.client_name + ">" + deparmentTreeInfo.client_name + "</a>" +
+					"<ul></ul></li>";
+				$(".department-tree").append(clientStr);
+				$(".personage-depa_name").html(deparmentTreeInfo.client_name)
+				//部门
+				for(var i in deparmentTreeInfo.departments) {
+					var deparLinkmanNum = deparmentTreeInfo.departments[i].contacts.length;
+					var deparStr = "<li class=deparment-tree" + i + "><img class=\"tree-zoom\" onclick=\"deparTreeZoom(this);\" src=\"../resources/images/minus-o-icon.png\"/> " + //
+						"<a href='javascript:;' onclick='deparmentMenuExcheng(this)' data-tier='2' data-id=" +
+						deparmentTreeInfo.departments[i].department_id + ">" + deparmentTreeInfo.departments[i].department_name + "(" +
+						deparLinkmanNum + ")</a><ul></ul></li>";
+					$(".department-tree>li>ul").append(deparStr);
+					//联系人
+					for(var j in deparmentTreeInfo.departments[i].contacts) {
+						var linkmanStr = "<li>" +
+							"<a href='javascript:;' class=\"css-overhidden\" onclick='deparmentMenuExcheng(this)' " +
+							"data-tier='3' data-id=" + deparmentTreeInfo.departments[i].contacts[j].contact_id +
+							">" + deparmentTreeInfo.departments[i].contacts[j].contact_name + "</a><ul></ul></li>";
+						$(".department-tree .deparment-tree" + i + ">ul").append(linkmanStr);
+					}
+				}
+				endLoad();
+				//$.hideLoadingPop();
+			});
+		}
+		var isOneEnd = true;
+
+		function deparTreeZoom(obj) {
+			if($(obj).nextAll("ul").css("display") == "none") {
+				$(obj).attr("src", "../resources/images/minus-o-icon.png");
+				$(obj).nextAll("ul").slideDown();
+			} else {
+				$(obj).attr("src", "../resources/images/plus-o-icon.png");
+				$(obj).nextAll("ul").slideUp();
+			}
+		}
+
+		function endLoad() {
+			if(isOneEnd) {
+				isOneEnd = false;
+			} else {
+				$.hideLoadingPop();
+			}
+		}
+		//左边列表切换
+		//$(".department-tree>li a").click(function() {
+		function deparmentMenuExcheng(obj) {
+			$(".company-main>div:first-child").show().siblings().hide();
+			$(".company-menu>li:first-child").addClass("checkstyle").siblings().removeClass("checkstyle");
+			loadLevel = $(obj).attr("data-tier");
+			var id = $(obj).attr("data-id");
+			//console.log(id);
+			switch(loadLevel) {
+				case "1":
+					$(".company-option").show().siblings("div").hide();
+					changeClientNav(1);
+					break;
+				case "2":
+					$(".department-option").show().siblings("div").hide();
+					//加载部门详情
+					depaID = id;
+					loadDepart(id);
+					break;
+				default:
+					$(".personage-option").show().siblings("div").hide();
+					//加载联系人详情
+					loadlinkman(id);
+			}
+		};
+
+		//加载单个部门数据
+		function loadDepart(departId) {
+			loadLevel = 2;
+			$(".department-option").show().siblings("div").hide();
+			depaID = departId;
+			$.ajaxGet(departmenInfoUrl + departId, function(response) {
+				var infoData = response.data;
+				currDepaData = response.data;
+				changeClientNav(2, infoData.depa_name, infoData.depa_id);
+				$(".briefintroduction-title").before(deparState(infoData.depa_status));
+				var departmentoption = ".department-option";
+				var comController = new Controller(departmentoption);
+				comController.set(infoData);
+				$(".briefintroduction-name").attr("id", infoData.depa_id);
+				$(".briefintroduction-title i").data({
+					"id": infoData.depa_id,
+					"name": infoData.depa_name + "(" + $(".info-name").text() + ")",
+					"type": businessGroupCode.depar
+				});
+				var str = "";
+				for(var i in infoData.responsible_person_data) {
+					console.log(infoData.responsible_person_data);
+					if(i != infoData.responsible_person_data.length - 1) {
+						str += infoData.responsible_person_data[i].employee_name + "，";
+					} else {
+						str += infoData.responsible_person_data[i].employee_name;
+					}
+				}
+				$(".department-option .briefintroduction-principal span").html(str);
+
+				//联系人覆盖率
+				$(".department-option .coverage-rate").html((infoData.contact_count * 100 / infoData.depa_doctor_count).toFixed(2) + "%");
+				//负责人信息------------------------------------------------
+				if(infoData.office_leader) {
+					var principalAName = [],
+						principalBName = [];
+					for(var i in infoData.depa_leaders) {
+						var leadersData = infoData.depa_leaders[i];
+						if(leadersData.leader_type == 1) {
+							principalAName.push(leadersData.contact_name);
+						} else {
+							principalBName.push(leadersData.contact_name);
+						}
+					}
+					$(".department-option .principalA").html(principalAName.join(","));
+					$(".department-option .principalB").html(principalBName.join(","));
+				}
+
+				//其他信息
+				$(".department-option .company-otherinfo .info-list").empty();
+				if(infoData.depa_extend_data.length != 0) {
+					for(var i in infoData.depa_extend_data) {
+						var str = "<p class='text'><span style=\"width:13%\">" + infoData.depa_extend_data[i].label + "</span><span style=\"width:80%\">" + infoData.depa_extend_data[i].value + "</span></p>";
+						$(".department-option .company-otherinfo .info-list").append(str);
+					}
+				} else {
+					$(".department-option .company-otherinfo .info-list").append("<span>无</span>");
+				}
+
+				//创建信息
+				$(".department-option .establishman-name").html(infoData.create_info.creator.employee_name + "," + infoData.create_info.creator.depa_name);
+				//图片加载
+				$(".department-option .carousel-inner").empty();
+				if(infoData.depa_images.length != 0) {
+					for(var i in infoData.depa_images) {
+						var str = "";
+						if(i == 0) {
+							str += "<div class=\"item active\">";
+						} else {
+							str += "<div class=\"item\">";
+						}
+						str += "<img src='" + infoData.depa_images[i] + "' class=\"deparment-image\" alt=\"First slide\" onclick=\"openImg(this)\">";
+						str += "</div>";
+						$(".department-option .carousel-inner").append(str);
+					}
+					//初始化轮播
+					$('#mydepartmentCarousel').carousel({
+						interval: 2000
+					});
+				}
+				deparIsNormal = infoData.is_abnormal;
+			});
+
+		} //加载联系人详情
+		function loadlinkman(id) {
+			loadLevel = 3;
+			$(".personage-option").show().siblings("div").hide();
+			linkmanID = id;
+			$.ajaxGet(linkmanInfoUrl + id, function(response) {
+				var infoData = response.data;
+				var linkmanoption = ".personage-option";
+				var comController = new Controller(linkmanoption);
+				comController.set(infoData);
+				$("span[bind='contact_born_date']").prev().text("出生日期（" + infoData.contact_born_date_type_cn + "）");
+				$(".personage-title-name").attr("id", infoData.contact_id);
+				$(".personage-option .personage-state").html(linkmanState(infoData.contact_status));
+				$(".contact-title i").data({
+					"id": infoData.contact_id,
+					"name": infoData.contact_name + "(" + $(".info-name").text() + "," + infoData.depa_name + ")",
+					"type": businessGroupCode.linkman
+				});
+				changeClientNav(3, infoData.contact_name, infoData.contact_id);
+				var str = "";
+				for(var i in infoData.responsible_person_data) {
+					if(i != infoData.responsible_person_data.length - 1) {
+						str += infoData.responsible_person_data[i].employee_name + ",";
+					} else {
+						str += infoData.responsible_person_data[i].employee_name;
+					}
+				}
+				$(".linkman-principal").text(str);
+				var Strs = "";
+				for(var i in infoData.contact_work_time) {
+					var weekNum = parseInt(infoData.contact_work_time[i].weekday);
+					var dayNum = infoData.contact_work_time[i].am_or_pm;
+					switch(weekNum) {
+						case 1:
+							Strs += "周一";
+							break;
+						case 2:
+							Strs += "周二";
+							break;
+						case 3:
+							Strs += "周三";
+							break;
+						case 4:
+							Strs += "周四";
+							break;
+						case 5:
+							Strs += "周五";
+							break;
+						case 6:
+							Strs += "周六";
+							break;
+						case 7:
+							Strs += "周日";
+							break;
+						default:
+							Strs += "";
+					}
+					Strs += i == infoData.contact_work_time.length - 1 ? (dayNum == 1 ? "(上午)" : "(下午)") : (dayNum == 1 ? "(上午)," : "(下午),");
+				}
+				$(".personage-option .contact_sex").html(infoData.contact_sex == "1" ? "男" : "女");
+				$(".personage-option .work-time").html(Strs);
+				//获取家庭成员
+				$(".famliy-infotab tr:first-child").siblings().remove();
+				for(var i in infoData.family_data) {
+					var str = "<tr>";
+					str += "<td>" + infoData.family_data[i].family_name + "</td>";
+					str += "<td>" + infoData.family_data[i].family_sex_cn + "</td>";
+					str += "<td>" + infoData.family_data[i].family_relationship_cn + "</td>";
+					str += "<td>" + infoData.family_data[i].family_birthday + "</td>";
+					str += "<td>" + infoData.family_data[i].family_interest + "</td>";
+					str += "<td>" + infoData.family_data[i].family_other_desc + "</td>";
+					str += "</tr>";
+					$(".famliy-infotab tr:first-child").after(str);
+				}
+				$(".personage-option .company-record>p").remove();
+				if(infoData.extend_data.length > 0) {
+					for(var i in infoData.extend_data) {
+						var strs = "<p class='info-list text'><span style=\"width:13%;display: inline-block;\">" + infoData.extend_data[i].label + "</span><span style=\"width:80%\">" + infoData.extend_data[i].value + "</span></p>";
+						$(".personage-option .company-record>div:last-child").prev().after(strs);
+					}
+				} else {
+					$(".personage-option .company-record>div:last-child").prev().after("<p style='padding-left: 30px;line-height: 30px;'>无</p>");
+				}
+				//				//如果联系人状态非正常，则不能进行任何操作
+				//				if(infoData.contact_status != 1) {
+				//					$("body .btn-linkman").attr("disabled", "disabled");
+				//					$("body .btn-linkman").addClass("disabled");
+				//				}
+			});
+		}
+		//加载客户单位，部门，联系人拜访信息
+		function loadClientVisitInfo(loadLevel) {
+			var gridHeight = $(window).height() - $(".main-top").outerHeight(true) - $(".company-menu").outerHeight(true) - $(".client-menu").outerHeight(true) - $(".besuchsbericht-searchinfo").outerHeight(true) - $(".besuchsbericht-top").outerHeight(true) - 120;
+			if(loadLevel == 1) {
+				if(!departmenBesuchsberichtIsTable) {
+					//部门拜访信息表格
+					//alert($(".remark").height());
+					var colNames = ['姓名', '日期', '上/下午', '拜访对象'];
+					var colModel = [{
+						name: '__depa_name',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return rowObject.employee_name + "," + rowObject.depa_name;
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: 'visit_date'
+					}, {
+						name: 'am_or_pm_cn'
+					}, { //拜访对象
+						name: 'visit_target_name',
+//						formatter: function(cellvalue, options, rowObject) {
+//							try {
+//								var str = "";
+//								for(var key in rowObject.visit_contacts) {
+//									str += key + ">";
+//									if(rowObject.visit_contacts[key].length != 0) {
+//										for(var i in rowObject.visit_contacts[key]) {
+//											if(i != rowObject.visit_contacts[key].length - 1) {
+//												str += rowObject.visit_contacts[key][i] + ",";
+//											}
+//											str += rowObject.visit_contacts[key][i];
+//										}
+//									}
+//									str += "<br>";
+//								}
+//								return str;
+//							} catch(e) {
+//								return '';
+//							}
+//						}
+					}];
+					departmenBesuchsberichtGrid = $(departmenBesuchsberichtGridPlace).initJqGrid({
+						showPager: false,
+						storeRowDataInCache: true,
+						grid_selector: departmenBesuchsberichtGridPlace,
+						url: visitInfoTableUrl + "?visit_month=" + $(".company-visit-info").val() + "&query_type=" + loadLevel + "&client_id=" + clientID,
+						colNames: colNames,
+						colModel: colModel,
+						height: gridHeight,
+						rowNum: 10,
+						afterLoadComplete: function(response) {
+							var datainfo = response.data.visit_count;
+							visitIndexInfo = "";
+							visitIndexInfo = response.data.sp_quotas;
+							visitInfoData = "";
+							visitInfoData = response.data.visit_count_detail;
+							if(response.data.sp_quotas.length == 0) {
+								$(".company-besuchsbericht .searchinfo-right").css("cursor", "not-allowed");
+							}
+							var infoOption = ".company-besuchsbericht";
+							var comController = new Controller(infoOption);
+							comController.set(datainfo);
+							$(".client-visit").text(datainfo.planned_visit_count + datainfo.outofplan_visit_count);
+						}
+					});
+					departmenBesuchsberichtIsTable = true;
+				} else {
+					$(departmenBesuchsberichtGrid).jqGrid('setGridParam', {
+						page: 1,
+						url: visitInfoTableUrl + "?visit_month=" + $(".company-visit-info").val() + "&query_type=" + loadLevel + "&client_id=" + clientID
+					}).trigger("reloadGrid", {});
+				}
+			} else if(loadLevel == 2) {
+
+				if(!linkmanBesuchsberichtIsTable) {
+					//联系人拜访信息表格
+					var colNames = ['姓名', '日期', '上/下午', '总结','跟踪事项'];
+					var colModel = [{
+						name: '__depa_name',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return rowObject.employee_name + "," + rowObject.depa_name;
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: 'visit_date'
+					}, {
+						name: 'am_or_pm_cn'
+					}, { //拜访对象
+						name: 'summary_content',
+//						formatter: function(cellvalue, options, rowObject) {
+//							try {
+//								var str = "";
+//								for(var key in rowObject.visit_contacts) {
+//									str += key + ">";
+//									if(rowObject.visit_contacts[key].length != 0) {
+//										for(var i in rowObject.visit_contacts[key]) {
+//											if(i != rowObject.visit_contacts[key].length - 1) {
+//												str += rowObject.visit_contacts[key][i] + ",";
+//											}
+//											str += rowObject.visit_contacts[key][i];
+//										}
+//									}
+//									str += "<br>";
+//								}
+//								return str;
+//							} catch(e) {
+//								return '';
+//							}
+//						}
+					},{
+						name: "follow_up_content"
+					}];
+					linkmanBesuchsberichtGrid = $(linkmanBesuchsberichtGridPlace).initJqGrid({
+						showPager: false,
+						storeRowDataInCache: true,
+						grid_selector: linkmanBesuchsberichtGridPlace,
+						url: visitInfoTableUrl + "?visit_month=" + $(".deparment-visit-info").val() + "&query_type=" + loadLevel + "&depa_id=" + depaID,
+						colNames: colNames,
+						colModel: colModel,
+						height: gridHeight,
+						rowNum: 10,
+						afterLoadComplete: function(response) {
+							var datainfo = response.data.visit_count;
+							visitIndexInfo = "";
+							visitIndexInfo = response.data.sp_quotas;
+							visitInfoData = "";
+							visitInfoData = response.data.visit_count_detail;
+							if(response.data.sp_quotas.length == 0) {
+								$(".deparment-besuchsbericht .searchinfo-right").css("cursor", "not-allowed");
+							}
+							var infoOption = ".deparment-besuchsbericht";
+							var comController = new Controller(infoOption);
+							comController.set(datainfo);
+							$(".depar-visit").text(datainfo.planned_visit_count + datainfo.outofplan_visit_count);
+						}
+					});
+					linkmanBesuchsberichtIsTable = true;
+				} else {
+					$(linkmanBesuchsberichtGrid).jqGrid('setGridParam', {
+						page: 1,
+						url: visitInfoTableUrl + "?visit_month=" + $(".deparment-visit-info").val() + "&query_type=" + loadLevel + "&depa_id=" + depaID
+					}).trigger("reloadGrid", {});
+				}
+			} else {
+				if(!personageBesuchsberichtIsTable) {
+					//联系人拜访信息表格
+					var colNames = ['姓名', '日期', '上/下午', '总结', '跟踪事项'];
+					var colModel = [{
+						name: '__depa_name',
+						formatter: function(cellvalue, options, rowObject) {
+							try {
+								return rowObject.employee_name + "," + rowObject.depa_name;
+							} catch(e) {
+								return '';
+							}
+						}
+					}, {
+						name: 'visit_date'
+					}, {
+						name: 'am_or_pm_cn'
+					}, {
+						name: 'summary_content'
+					}, { //拜访对象
+						name: 'visit_target_name',
+//						formatter: function(cellvalue, options, rowObject) {
+//							try {
+//								var str = "";
+//								for(var key in rowObject.visit_contacts) {
+//									str += key + ">";
+//									if(rowObject.visit_contacts[key].length != 0) {
+//										for(var i in rowObject.visit_contacts[key]) {
+//											if(i != rowObject.visit_contacts[key].length - 1) {
+//												str += rowObject.visit_contacts[key][i] + ",";
+//											}
+//											str += rowObject.visit_contacts[key][i];
+//										}
+//									}
+//									str += "<br>";
+//								}
+//								return str;
+//							} catch(e) {
+//								return '';
+//							}
+//						}
+					}];
+					personageBesuchsberichtGrid = $(personageBesuchsberichtGridPlace).initJqGrid({
+						showPager: false,
+						storeRowDataInCache: true,
+						grid_selector: personageBesuchsberichtGridPlace,
+						url: visitInfoTableUrl + "?visit_month=" + $(".linkman-visit-info").val() + "&query_type=" + loadLevel + "&contact_id=" + linkmanID,
+						colNames: colNames,
+						colModel: colModel,
+						height: gridHeight,
+						rowNum: 10,
+						afterLoadComplete: function(response) {
+							var datainfo = response.data.visit_count;
+							visitIndexInfo = "";
+							visitIndexInfo = response.data.sp_quotas;
+							visitInfoData = "";
+							visitInfoData = response.data.visit_count_detail;
+							if(response.data.sp_quotas.length == 0) {
+								$(".personage-besuchsbericht .searchinfo-right").css("cursor", "not-allowed");
+							}
+							var infoOption = ".personage-besuchsbericht";
+							var comController = new Controller(infoOption);
+							comController.set(datainfo);
+						}
+					});
+					//加载完成
+					personageBesuchsberichtIsTable = true;
+				} else {
+					$(personageBesuchsberichtGrid).jqGrid('setGridParam', {
+						page: 1,
+						url: visitInfoTableUrl + "?visit_month=" + $(".linkman-visit-info").val() + "&query_type=" + loadLevel + "&contact_id=" + linkmanID
+					}).trigger("reloadGrid", {});
+				}
+			}
+		}
+
+		function changeClientNav(level, name, id) {
+			var iconStr = " <i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i> ";
+			if(name && id && level) {
+				if(level == 1) {
+					$(".client-menu .client").text(name).data("id", id);
+				} else if(level == 2) {
+					$(".client-menu .client").siblings().remove();
+					var $depar = $("<span class='depar'>" + iconStr + name + "</span>");
+					$depar.data("id", id);
+					$(".client-menu").append($depar);
+				} else {
+					$(".client-menu .linkman").remove();
+					$(".client-menu").append("<span class='linkman'>" + iconStr + name + "</span>");
+					$(".client-menu .linkman").data("id", id);
+				}
+			} else {
+				if(level == 1)
+					$(".client-menu .client").siblings().remove();
+				if(level == 2)
+					$(".client-menu .linkman").remove();
+
+			}
+			$(".client-menu span").unbind("click").click(function() {
+				if($(this).hasClass("client")) {
+					$(".company-option").show().siblings("div").hide();
+					changeClientNav(1);
+				} else if($(this).hasClass("depar")) {
+					changeClientNav(2);
+					$(".department-option").show().siblings("div").hide();
+				} else {
+					$(".personage-option").show().siblings("div").hide();
+				}
+			});
+		}
+		//放大图片
+		function openImg(obj) {
+			var url = $(obj).attr("src");
+			var modalId = $.modal({
+				showFooter: false,
+				width: 1200,
+
+			}).show("查看大图", ".picture", function(modal) {
+				$("#" + modalId).modal('hide');
+			});
+			$("#" + modalId + " img").attr("src", url);
+			$("#" + modalId + " img").parent().css("text-align", "center");
+
+		}
+		//打开地图
+		function openMap(obj) {
+			var site = $(obj).attr("data-mapsearchsite");
+			var mapdome = [106.568039, 29.541198];
+			var modalId = $.modal({
+				showFooter: false,
+				shownCallback: function(modalId) {
+					initMap(modalId, site);
+				}
+			}).show("地图", ".map-box", function() {
+
+			});
+			$("#" + modalId + " .map-box-site span").html(site);
+		}
+		//生成地图
+		function initMap(modalId, site) {
+			$("#" + modalId + " .map-box-site").after("<div id='allmap' class='allmap'></div>");
+			var map = new BMap.Map("allmap"); // 创建Map实例
+			var point = new BMap.Point(116.331398, 39.897445);
+			map.centerAndZoom(point, 12);
+			map.enableScrollWheelZoom(); //可缩放
+			var localSearch = new BMap.LocalSearch(map);
+			//localSearch.enableAutoViewport();
+			localSearch.setSearchCompleteCallback(function(searchResult) {
+				map.clearOverlays();
+				var poi = searchResult.getPoi(0);
+				var pt = poi.point;
+				//poi.point
+				setMapMarker(pt, '');
+				//保存位置信息
+				//myLocationPoint.employee_location_lat = pt.lat
+				//myLocationPoint.employee_location_lon = pt.lng;
+				//getAddressByPoint(pt, (formContainer + " .form-control-now-address"));
+			});
+			localSearch.search(site);
+			var setMapMarker = function(point, formContainer) {
+				var marker = new BMap.Marker(point);
+				marker.enableDragging();
+				marker.addEventListener("dragend", function(e) {
+					var pt = e.point;
+					//myLocationPoint.employee_location_lat = pt.lat
+					//myLocationPoint.employee_location_lon = pt.lng;
+					//getAddressByPoint(pt, (formContainer + " .form-control-now-address"));
+				});
+				//				var label = new BMap.Label("拖动图标可以定位", {
+				//					offset: new BMap.Size(20, -10)
+				//				});
+				//				marker.setLabel(label);
+				map.addOverlay(marker);
+				map.panTo(point);
+			};
+		}
+		//权限开通与关闭
+		function jurisdiction(obj) {
+			if($(obj).parent().parent().parent().attr('data-isopen') == "false") {
+				$.showErrorGritter("当前内容处于" + $(obj).parent().parent().parent().data("permissions").can_share.reason + "不能共享！");
+				return false;
+			}
+			if($(obj).hasClass("checkstyle")) { //关闭
+				$(obj).removeClass("checkstyle");
+				if($(obj).hasClass("fa-eye-slash")) {
+					$(obj).parent().removeAttr("data-seepower");
+					$(obj).siblings().removeClass("checkstyle");
+				}
+				if($(obj).hasClass("fa-pencil-square-o")) {
+					$(obj).parent().removeAttr("data-amendpower");
+				}
+				if($(obj).hasClass("fa-plus-circle")) {
+					$(obj).parent().removeAttr("data-addpower");
+				}
+
+			} else { //打开
+				$(obj).addClass("checkstyle");
+				//开通查看权限
+				if($(obj).hasClass("fa-eye-slash")) {
+					$(obj).parent().attr("data-seepower", "1");
+				}
+				//开通修改权限
+				if($(obj).hasClass("fa-pencil-square-o")) {
+					$(obj).prevAll(".fa-eye-slash").addClass("checkstyle");
+					$(obj).parent().attr({
+						"data-amendpower": "2",
+						"data-seepower": "1"
+					});
+				}
+				//开通添加权限
+				if($(obj).hasClass("fa-plus-circle")) {
+					$(obj).prevAll(".fa-eye-slash").addClass("checkstyle");
+					$(obj).parent().attr({
+						"data-addpower": "4",
+						"data-seepower": "1"
+					});
+				}
+			}
+		}
+		//查看个人共享内容
+		function clickChange(obj) {
+			clearShareInfo();
+			isShareAddAndUpdate = "update";
+			$(obj).addClass("clickstyle").siblings().removeClass("clickstyle");
+			var shareData = $(obj).attr("data-share");
+			var id = $(obj).attr("data-shareid");
+			loadShareData(id);
+		}
+
+		function openAddShare(obj) {
+			clearShareInfo();
+			$(obj).parents(".modal-body").find(".next-step").trigger("click");
+		}
+		//树下拉上收
+		function treeZoom(obj) {
+			if($(obj).children("i").hasClass("fa-sort-desc")) {
+				$(obj).children("i").removeClass("fa-sort-desc").addClass("fa-caret-right");
+				$(obj).parent().next().slideUp();
+			} else {
+				$(obj).children("i").removeClass("fa-caret-right").addClass("fa-sort-desc");
+				$(obj).parent().next().slideDown();
+			}
+		}
+		//共享
+		function shareClient() {
+			console.log(thisClientData);
+			isShareAddAndUpdate = "add";
+			if(!boolCanClickBtn([thisClientData], "share", 1)) return false;
+			shareListInfoUrl = BSAPIURL + "/crm/customer/shared/" + clientID;
+			shareUpdateUrl = shareUpdateUrl.replace("{client_id}", clientID);
+			departmenTreeUrl = BSAPIURL + "/crm/customers/" + clientID + "/sub_data?type=" + clientType;
+			shareClientModalId = $.modal({
+				showFooter: false,
+				height: $(window).height() - 200,
+				width: 650,
+				shownCallback: function() {
+					$("#" + shareClientModalId + " .steps-panel-share").css("height", $("#" + shareClientModalId + " .modal-body").outerHeight(true) - 100 + "px");
+				}
+			}).show("共享客户", ".shake-client", function() {});
+			//				$("#" + shareClientModalId + " .new-share").click(function() {
+			//					$("#" + shareClientModalId + " .next-step").click();
+			//				});
+			//上一步
+			$("#" + shareClientModalId + " .prev-step").click(function() {
+				onShareModalPrevStepBtnClick(this, shareClientModalId);
+
+				function onShareModalPrevStepBtnClick(obj, modalId) {
+					var stepNum = $(obj).attr("data-curr-step");
+					var prevStepNum = parseInt(stepNum) - 1;
+					if(prevStepNum == 0) {
+						$.showErrorGritter("当前已经是第一页！");
+						return false;
+					}
+					$("#" + modalId + " .steps-panel-share").addClass("hide");
+					$("#" + modalId + " .step-" + prevStepNum).removeClass("hide");
+					transCurrStepNum(prevStepNum, modalId);
+				}
+
+			});
+			//下一步
+			$("#" + shareClientModalId + " .next-step").click(function() {
+				var stepNum = $(this).attr("data-curr-step");
+				if(stepNum == 2 && $("#" + shareClientModalId + " .client-tree input:checked").length < 1) {
+					$.showErrorGritter("请先选择共享权限！");
+					return false;
+				}
+				if(stepNum == 3) {
+					var shareId = $("#" + shareClientModalId + " .clickstyle").attr("data-shareid");
+					//获取数据
+					var shareDatas = getShareDatas(this, shareClientModalId);
+					//添加共享or更新共享
+					editShareClientRequest(isShareAddAndUpdate, shareClientModalId, shareDatas, shareId);
+					return false;
+				}
+				if(stepNum == 1) {
+					loadShareData($("#" + shareClientModalId + " .share-list-item.clickstyle").attr("data-shareid"), clientID);
+				}
+				var nextStepNum = parseInt(stepNum) + 1;
+				$("#" + shareClientModalId + " .steps-panel-share").addClass("hide");
+				$("#" + shareClientModalId + " .step-" + nextStepNum).removeClass("hide");
+				transCurrStepNum(nextStepNum, shareClientModalId);
+			});
+			//取消
+			$("#" + shareClientModalId + " .cancel-hand-over").click(function() {
+				$("#" + shareClientModalId).modal('hide');
+			});
+			loadShareData('', clientID);
+
+		}
+		//负责改变当前步数属性值和按钮文本
+		function transCurrStepNum(num, modalId) {
+			$("#" + modalId + " .hand-over-foot-btn a").each(function() {
+				$(this).attr("data-curr-step", num);
+				if(num == 3) {
+					$("#" + modalId + " .next-step").text("完成");
+				} else {
+					$("#" + modalId + " .next-step").text("下一步");
+				}
+			});
+		}
+		//获取分享内容
+		function getShareDatas(obj, modalId) {
+			var shareContent = [];
+			$("#" + modalId + " .client-tree li .tree-status").each(function(index) {
+				var shareResources = {};
+				var resourcesId = $(this).parent().find(">label").attr("data-id");
+				var shareTier = $(this).parent().find(">label").attr("data-tier");
+				var sharePower = [];
+				$(this).find("input").each(function() {
+					if($(this).prop("checked")) {
+						if($(this).parent().attr("data-seepower")) {
+							sharePower.push(parseInt($(this).parent().attr("data-seepower")));
+							return true;
+						}
+						if($(this).parent().attr("data-amendpower")) {
+							sharePower.push(parseInt($(this).parent().attr("data-amendpower")));
+							return true;
+						}
+						if($(this).parent().attr("data-addpower")) {
+							sharePower.push(parseInt($(this).parent().attr("data-addpower")));
+							return true;
+						}
+					}
+				});
+				shareResources.resource_permission = sharePower;
+				shareResources.resource_id = resourcesId;
+				shareResources.resource_type = shareTier;
+				if(shareResources.resource_permission && shareResources.resource_permission.length > 0) shareContent.push(shareResources);
+			});
+			var shareObject = [];
+			$("#" + modalId + " .share-object-list>div").each(function(index) {
+				shareObject.push($(this).attr("id"));
+			});
+			var shareReason = $("#" + modalId + " .share-object-reason").val();
+			var shareId = "";
+			$("#" + modalId + " .share-list li").each(function(index) {
+				if($(this).hasClass("clickstyle")) {
+					shareId = $(this).attr("data-shareid");
+				}
+			});
+			return {
+				shareReason: shareReason,
+				shareContent: shareContent,
+				shareObject: shareObject
+			}
+		}
+		//添加或者修改共享发起请求
+		function editShareClientRequest(action, modalId, shareData, shareId) {
+			var actionText = action == "add" ? "添加" : "更新";
+			if(!shareData.shareReason) {
+				$.showErrorGritter("共享原因不能为空！");
+				return false;
+			}
+			if(shareData.shareContent.length < 1) {
+				$.showErrorGritter("共享资源不能为空！");
+				return false;
+			}
+			if(shareData.shareObject.length < 1) {
+				$.showErrorGritter("共享对象不能为空！");
+				return false;
+			}
+			$.showApprovalPostPop({
+				routine: action == "add" ? "clientShare" : "clientSharedUpdate",
+				routineName: "添加共享",
+				successCallback: function(apvData, apvModal) {
+					var tempShareUrl = action == "update" ? shareUpdateUrl + "/" + shareId : shareListInfoUrl;
+					apvData.share_reason = shareData.shareReason;
+					apvData.share_resources = shareData.shareContent;
+					apvData.share_targets = shareData.shareObject;
+					if(apvData.needApv) {
+						apvData.diy_step_data = apvData.steps;
+						apvData.plan_id = apvData.planId;
+					}
+					$.ajaxByAction(action, tempShareUrl, apvData, function(response) {
+						if(response.code == 0) {
+							//success
+							$.showSuccessGritter(actionText + "共享成功" + (apvData.needApv ? "，请等待审批" : ""));
+							//$(apvModal).modal('hide');
+							$("#" + modalId).modal('hide');
+							apvModal && apvModal.modal("hide");
+							loadGridOfClientContact("", "");
+						} else {
+							$.showErrorGritter(actionText + "共享失败：" + response.msg);
+						}
+					});
+				}
+			});
+		}
+		//加载数据
+		function loadClientShareTree(id) {
+			$.ajaxGet(shareTreeUrl, function(response) {
+				if(response.code != 0) {
+					$.showErrorGritter("获取客户资料失败：" + response.msg);
+					return false;
+				}
+				$("#" + shareClientModalId + " .client-tree").empty();
+				var deparmentTreeInfo = response.data;
+				if(deparmentTreeInfo.length < 1) return false;
+				var clientStr =
+					$("<li data-isopen=" + deparmentTreeInfo[0].can_share + ">" +
+						"	<div class='dashed-line-container'>" +
+						"		<label onclick='treeZoom(this)' area-hidden='false' data-tier='1' data-id=" + deparmentTreeInfo[0].client_id + ">" +
+						"			<img src='../resources/images/minus-o-icon.png' data-trans-src='../resources/images/plus-o-icon.png' />" +
+						"			<span class='tree-name'>" + deparmentTreeInfo[0].client_full_name + "</span>" +
+						"		</label>" +
+						"		<i class='dashed-line'></i>" +
+						"		<div class='tree-status'>" +
+						"			<label data-seepower='1'>" +
+						"				<input type='checkbox' onclick='jurisdiction(this)' " + (deparmentTreeInfo[0].can_share == "false" ? "disabled='disabled'" : "") + ">" +
+						"				<span>查看</span>" +
+						"			</label>" +
+						"			<label data-amendpower='2'>" +
+						"				<input type='checkbox' onclick='jurisdiction(this)' " + (deparmentTreeInfo[0].can_share == "false" ? "disabled='disabled'" : "") + ">" +
+						"				<span>编辑</span>" +
+						"			</label>" +
+						"			<label data-addpower='4'>" +
+						"				<input type='checkbox' onclick='jurisdiction(this)' " + (deparmentTreeInfo[0].can_share == "false" ? "disabled='disabled'" : "") + ">" +
+						"				<span>添加</span>" +
+						"			</label>" +
+						"		</div>" +
+						"	</div>" +
+						"	<ul>" +
+						"	</ul>" +
+						"</li>");
+				clientStr.data("permissions", deparmentTreeInfo[0].permissions);
+				$("#" + shareClientModalId + " .client-tree").append(clientStr);
+				//部门
+				for(var i in deparmentTreeInfo[0].departments) {
+					var deparData = deparmentTreeInfo[0].departments[i];
+					var deparStr =
+						$("<li class=deparment-tree" + i + " data-isopen=" + deparData.can_share + ">" +
+							"	<div class='dashed-line-container'>" +
+							"		<label onclick='treeZoom(this)' area-hidden='false' data-tier='2' data-id=" + deparData.depa_id + ">" +
+							"			<img src='../resources/images/minus-o-icon.png' data-trans-src='../resources/images/plus-o-icon.png' />" +
+							"			<span class='tree-name'>" + deparData.depa_name + "</span>" +
+							"		</label>" +
+							"		<i class='dashed-line'></i>" +
+							"		<div class='tree-status'>" +
+							"			<label data-seepower='1'>" +
+							"				<input type='checkbox' onclick='jurisdiction(this)' " + (deparData.can_share == "false" ? "disabled='disabled'" : "") + ">" +
+							"				<span>查看</span>" +
+							"			</label>" +
+							"			<label data-amendpower='2'>" +
+							"				<input type='checkbox' onclick='jurisdiction(this)' " + (deparData.can_share == "false" ? "disabled='disabled'" : "") + ">" +
+							"				<span>编辑</span>" +
+							"			</label>" +
+							"			<label data-addpower='4'>" +
+							"				<input type='checkbox' onclick='jurisdiction(this)' " + (deparData.can_share == "false" ? "disabled='disabled'" : "") + ">" +
+							"				<span>添加</span>" +
+							"			</label>" +
+							"		</div>" +
+							"	</div>" +
+							"	<ul>" +
+							"	</ul>" +
+							"</li>");
+					deparStr.data("permissions", deparData.permissions);
+					$("#" + shareClientModalId + " .client-tree>li>ul").append(deparStr);
+					//联系人
+					for(var j in deparData.contacts) {
+						var linkmanData = deparData.contacts[j];
+						var linkmanStr =
+							$("<li data-isopen=" + linkmanData.can_share + ">" +
+								"	<div class='dashed-line-container'>" +
+								"		<label onclick='treeZoom(this)' area-hidden='false' data-tier='3' data-id=" + linkmanData.contact_id + ">" +
+								"			<span class='tree-name'>" + linkmanData.contact_name + "</span>" +
+								"		</label>" +
+								"		<i class='dashed-line'></i>" +
+								"		<div class='tree-status'>" +
+								"			<label data-seepower='1'>" +
+								"				<input type='checkbox' onclick='jurisdiction(this)' " + (linkmanData.can_share == "false" ? "disabled='disabled'" : "") + "/>" +
+								"				<span>查看</span>" +
+								"			</label>" +
+								"			<label data-amendpower='2'>" +
+								"				<input type='checkbox' onclick='jurisdiction(this)' " + (linkmanData.can_share == "false" ? "disabled='disabled'" : "") + ">" +
+								"				<span>编辑</span>" +
+								"			</label>" +
+								"		</div>" +
+								"	</div>" +
+								"</li>");
+						linkmanStr.data("permissions", linkmanData.permissions);
+						$("#" + shareClientModalId + " .deparment-tree" + i + ">ul").append(linkmanStr);
+					}
+					$("#" + shareClientModalId + " label input").change(function(e) {
+						var permissions = $(this).parent().parent().parent().parent().data("permissions");
+						if(!permissions.can_share.result) {
+							$.showErrorGritter("当前客户不能共享:" + permissions.can_share.reason);
+							$(this).parent().parent().find("label input").removeProp("checked");
+						}
+						if(!$(this).is(":checked")) {
+							$(this).removeProp("checked");
+						} else {
+							$(this).prop("checked", "checked");
+							$(this).parent().parent().find("label:first-child input").prop("checked", "checked");
+						}
+						if(!$(this).parent().parent().find("label:first-child input").prop("checked")) {
+							$(this).parent().parent().find("label input").removeProp("checked");
+						}
+					});
+				}
+			});
+		}
+		//加载数据
+		function loadShareData(id, clientId) {
+			//加载客户部门树
+			var shareTreeUrl = BSAPIURL + "/crm/responsible_tree?check_permissions=share&clients=" + clientId + "&employee_ids=";
+			if($("#" + shareClientModalId + " .client-tree li").length <= 0) {
+				loadClientShareTree(shareTreeUrl, clientId);
+			}
+			$("#" + shareClientModalId + " .client-tree  input").removeProp("checked");
+			loadSharedList(shareListInfoUrl, id, clientId);
+		}
+		//加载数据之加载已有的共享列表
+		function loadSharedList(shareListInfoUrl, id, clientId) {
+			$.ajaxGet(shareListInfoUrl, function(response) {
+				shareInfo = response.data;
+				if($("#" + shareClientModalId + " .share-list ul li span").length == 0) {
+					if(shareInfo.length > 0) $("#" + shareClientModalId + " .share-list ul").html("");
+					for(var i in shareInfo) {
+						var str =
+							$("<li class='share-list-item at' onclick='clickChange(this)' id='" + shareInfo[i].share_creator.employee_id + "' data-shareid='" + shareInfo[i].share_id + "'>" +
+								"	<img class='lt' src='" + shareInfo[i].share_creator.employee_avatar + "'/>" +
+								"	<div class='lt'>" +
+								"		<div>" +
+								"			<span class='pull-left'>" + shareInfo[i].share_creator.employee_name + "</span>" +
+								"			<br><span class='note-font-type'>" + shareInfo[i].create_time + "</span>" +
+								"		</div>" +
+								"	</div>" +
+								"	<a class='btn-a-default rt' onclick=\"abolishShare(this,'" + shareClientModalId + "','" + clientId + "')\">取消共享</a>" +
+								"</li>");
+						$("#" + shareClientModalId + " .share-list ul").append(str);
+					}
+				}
+				//加载权限内容
+				$("#" + shareClientModalId + " .client-tree input").removeProp("checked");
+				for(var i in shareInfo) {
+					if(shareInfo[i].share_id == id) {
+						$("#" + shareClientModalId + " .client-tree").find("li").each(function(index) {
+							for(var j in shareInfo[i].share_data) {
+								if($(this).find(">.dashed-line-container label").attr("data-id") == shareInfo[i].share_data[j].data_id) {
+									for(var k in shareInfo[i].share_data[j].data_permission) {
+										switch(parseInt(shareInfo[i].share_data[j].data_permission[k])) {
+											case 1:
+												$(this).find(">.dashed-line-container .tree-status label[data-seepower='" + crm.share_permissons.VIEW + "'] input").prop("checked", "checked");
+												break;
+											case 2:
+												$(this).find(">.dashed-line-container .tree-status label[data-amendpower='" + crm.share_permissons.UPDATE + "'] input").prop("checked", "checked");
+												break;
+											default:
+												$(this).find(">.dashed-line-container .tree-status label[data-addpower='" + crm.share_permissons.ADD + "'] input").prop("checked", "checked");
+										}
+									}
+								}
+							}
+						});
+						$("#" + shareClientModalId + " .shake-client-left").siblings().find(".share-object-list .object-box").remove();
+						for(var j in shareInfo[i].target_data) {
+							var str = "<div class='object-box' id='" + shareInfo[i].target_data[j].employee_id + "'>" +
+								"	<p class='object-box-name css-overhidden close-icon-container'>" + shareInfo[i].target_data[j].employee_name +
+								"		<img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' class='close-icon' onclick='deletebox(this)'>" +
+								"	</p>" +
+								"</div>";
+							$("#" + shareClientModalId + " .shake-client-left").siblings().find(".share-object-list").append(str);
+						}
+						$("#" + shareClientModalId + " .share-object-list .close-icon-container").unbind("mouseover").mouseover(function() {
+							transImgSrc($(this).find("img"));
+						}).unbind("mouseout").mouseout(function() {
+							transImgSrc($(this).find("img"));
+						});
+						$("#" + shareClientModalId + " .shake-client-left").siblings().find("textarea").val(shareInfo[i].share_reason);
+
+					}
+				}
+			});
+		}
+		//取消共享
+		function abolishShare(obj, shareClientModalId, clientID) {
+			var shareData = $(obj).attr("data-share");
+			var id = $(obj).parent().attr("id");
+			var shareId = $(obj).parent().attr("data-shareid");
+			var modalId = $.modal().show("取消共享", ".abolish-share", function() {
+				var shareReason = $("#" + modalId + " .abolish-sharereason").val();
+				if(!shareReason) {
+					$.showErrorGritter("取消共享原因不能为空");
+					return false;
+				}
+				$.showApprovalPostPop({
+					routine: "clientSharedCancel",
+					routineName: "取消共享",
+					successCallback: function(apvData, apvModal) {
+						apvData.share_reason = shareReason;
+						if(apvData.needApv) {
+							apvData.diy_step_data = apvData.steps;
+							apvData.plan_id = apvData.planId;
+						}
+
+						$.ajaxDelete(shareUpdateUrl + "/" + shareId, apvData, function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter("取消共享操作成功" + (apvData.needApv ? "，请等待审批！" : ""));
+								///$(apvModal).modal('hide');
+								$("#" + modalId).modal('hide');
+								$("#" + shareClientModalId).modal('hide');
+								apvModal && apvModal.modal("hide");
+								loadGridOfClientContact("", "");
+							} else {
+								$.showErrorGritter("取消共享失败：" + response.msg);
+							}
+						});
+					}
+				});
+			});
+		}
+		//清空共享（新建共享）
+		function clearShareInfo() {
+			isShareAddAndUpdate = "add";
+			$(".tree-status i").removeClass("checkstyle");
+			$(".tree-status").removeAttr("data-seepower");
+			$(".tree-status").removeAttr("data-amendpower");
+			$(".tree-status").removeAttr("data-addpower");
+			$(".share-object-list").empty();
+			$(".share-object-reason").val("");
+			//$(obj).parent().siblings().css("background","red");
+		}
+		//选择共享对象
+		//分享对象
+		function selectObject() {
+			//选择人员
+			var tempHtml4EmployeeSelect =
+				"<div class='object-box' id='{ID}'>" +
+				"	<p class='object-box-name css-overhidden close-icon-container'>{N}" +
+				"		<img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' class='close-icon' onclick='deletebox(this)'>" +
+				"	</p>" +
+				"</div>";
+			var selectEmployeeDom = $("#" + shareClientModalId + " .share-object-list");
+			$.showShareEmployeeSelectPop({
+				title: "选择共享对象",
+				subTitle: "请选择共享对象：",
+				isShowMe: true,
+				selectedEmployeeIds: selectEmployeeDom.data("select"),
+				okCallback: function(employeesData) {
+					var ids = [];
+					for(var i in employeesData) {
+						var empData = employeesData[i];
+						ids.push(empData.employee_id);
+						if(selectEmployeeDom.find("span[data-employee-id='" + empData.employee_id + "']").length > 0) {
+							continue;
+						}
+						selectEmployeeDom.append(tempHtml4EmployeeSelect.replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id).replace("{src}", empData.employee_avatar)); //
+					}
+					selectEmployeeDom.data("select", ids);
+					selectEmployeeDom.find(".close-icon-container").unbind("mouseover").mouseover(function() {
+						transImgSrc($(this).find("img"));
+					}).unbind("mouseout").mouseout(function() {
+						transImgSrc($(this).find("img"));
+					});
+				}
+			});
+		}
+		//删除共享对象
+		function deletebox(obj) {
+			$(obj).parent().remove();
+		}
+		//新增修改部门/科室=================================================
+		function openDepartmentModelInfo(action, id) {
+			if(action == "update" && (!$(departmenGrid).isSelectedRowForjqGrid() && !id)) {
+				$.showErrorGritter("请先选择要编辑的科室/部门。");
+				return false;
+			}
+			var rowData = {};
+			if(action == "update") {
+				rowData = $(departmenGrid).getRowData4JqGrid("id", id);
+			}
+			if(action == "add" && !boolCanClickBtn([thisClientData], action, 1)) return false;
+			else if(action == "update") {
+				rowData = $(departmenGrid).getRowData4JqGrid("id", id);
+				if(!boolCanClickBtn([rowData], action, 2)) return false;
+			}
+
+			var actionText = (action == "add" ? "添加" : "编辑");
+			var modalId = $.modal().showOfLarge(actionText + "科室/部门", ".departmen-info",
+				function(modal) {
+					postData();
+				}
+			);
+
+			function postData() {
+				if(!inputValidateForGritter(formContainer)) {
+					return false;
+				}
+				var depa_images = [];
+				$("#" + modalId + " .clientimporlevel").trigger("change");
+				var infoData = infoController.getJSON();
+				infoData.client_id = clientID;
+				//获取附件路径数组
+				$(formContainer + " .filelist[path]").each(function() {
+					depa_images.push($(this).attr("path"));
+				});
+				infoData.depa_images = depa_images;
+				//获取其他信息
+				var otherInfo = [];
+				var otherInfoIsFull = true;
+				$(formContainer + " .other-info-list li").each(function() {
+					var title = $(this).children(".info-dome-name").val();
+					var val = $(this).children(".info-dome-text").val();
+					if((title == "" && val != "") || (title != "" && val == "")) {
+						otherInfoIsFull = false;
+					}
+					otherInfo.push({
+						label: title,
+						value: val
+					});
+				});
+				if(!otherInfoIsFull) {
+					$.showErrorGritter("其他信息填写不完整，请完善后提交");
+					return false;
+				}
+				infoData.extend_data = otherInfo;
+				var infoUrlForEditing = BSAPIURL + "/crm/offices";
+				if(action == "update")
+					infoUrlForEditing = infoUrlForEditing + "/" + rowData.depa_id;
+				$.ajaxByAction(action, infoUrlForEditing, infoData, function(response) {
+					if(response.code == 0) {
+						//success
+						$("#" + modalId).modal('hide');
+						$.showSuccessGritter(actionText + "科室/部门成功。");
+						//刷新表格
+						$(departmenGrid).reloadGrid();
+						//刷新部门树
+						loadDeparmentTree();
+					} else {
+						$.showErrorGritter("保存科室/部门失败：" + response.msg);
+					}
+				});
+			}
+			//model pop id
+			var formContainer = "#" + modalId + " .modal-body";
+			$(formContainer + " .clientimporlevel option:first-child").attr("selected", "true");
+			$("#" + modalId + " .clientimporlevel").append(loadCode("", codeData[4]));
+			var infoController = new Controller(formContainer);
+			//添加名字验证事件
+			$(formContainer + " input[bind=depa_name]").blur(function() {
+				verifyName(this, rowData);
+			});
+			infoController.set(rowData);
+			var uploadedAnxArr = [];
+			//上传
+			$(formContainer + " .btn-upload-anx").attr("id", "btnUploadAnx");
+			$("#btnUploadAnx").initUploader({
+				url: SAASAPIS.BS.upload.image,
+				up_container: formContainer + " .upload",
+				FilesAdded: function(up, files) {
+					return true;
+				},
+				FileUploaded: function(up, file, response) {
+					var resp = JSON.parse(response.response);
+					var imgList = $(formContainer + " .filelist").length;
+					if(imgList >= 3) {
+						$.showErrorGritter("上传失败:最多只能上传三张图片！");
+						return false;
+					}
+					if(resp.code == 0) {
+						var filesPath = resp.data.path;
+						var filesName = resp.data.name;
+						var str = "<span class='filelist' path=" + filesPath + ">";
+						str += "<img src='" + filesPath + "' class='fileimg img-thumbnail' onclick='openImg(this)'>";
+						str += "<span class='deletefile' onclick='deleteFile(this)'>×</span>";
+						str += "</span>";
+						$(formContainer + " .btn-upload-anx").after(str);
+						if($(formContainer + " .filelist").length == 3) {
+							$(formContainer + " .btn-upload-anx").hide();
+							//return false;
+						}
+					} else {
+						$.showErrorGritter("上传失败：" + resp.msg);
+					}
+				}
+			});
+			//编辑
+			if(action == "update") {
+				//获取科室图片
+				var depaImages = rowData.depa_images;
+				for(var i in depaImages) {
+					var str = "<span class='filelist' path=" + depaImages[i] + ">";
+					str += "<img src='" + depaImages[i] + "' class='fileimg img-thumbnail' onclick='openImg(this)'>";
+					str += "<span class='deletefile' onclick='deleteFile(this)'>×</span>";
+					str += "</span>";
+					$(formContainer + " .btn-upload-anx").after(str);
+				}
+				if(depaImages.length == 3)
+					$(formContainer + " .btn-upload-anx").hide();
+				//获取其他信息
+				var otherInfo = rowData.extend_data;
+				if(otherInfo.length != 0) {
+					for(var i in otherInfo) {
+						var str = "<li class='other-info-dome close-icon-container'>";
+						str += "<input type='text' value='" + otherInfo[i].label + "' maxlength='10' class='info-dome-name' />:";
+						str += "<input type='text' value='" + otherInfo[i].value + "' maxlength='50' class='info-dome-text' />";
+						str += "<img class=\"close-icon\" src=\"../resources/images/filter-close.png\" onclick=\"deleteOtherInfo(this)\"/>";
+						str += "</li>";
+						$(formContainer + " .other-info-list").append(str);
+					}
+					//$(formContainer + " .other-info-dome").remove();
+				} else {
+					$(formContainer + " .other-info-list").append("<li>无</li>");
+				}
+			}
+		}
+
+		function verifyName(obj, rowData) { //验证名称
+			var newName = $(obj).val();
+			var place = obj;
+			$.ajaxGet(departmenTableUrl, function(response) {
+				var infoDataDeparment = response.data.rows;
+				if(action == "update") {
+					for(var i in infoDataDeparment) {
+						if(infoDataDeparment[i].depa_id != rowData.depa_id) {
+							if(newName == infoDataDeparment[i].depa_name) {
+								$.showErrorGritter("科室/部门名称已存在，如需帮助请联系负责人：——" + rowData.responsible_person_data[0].employee_name + "," + rowData.responsible_person_data[0].depa_name);
+								$(place).focus();
+							}
+						}
+					}
+				} else {
+					for(var i in infoDataDeparment) {
+						if(newName == infoDataDeparment[i].depa_name) {
+							$.showErrorGritter("科室/部门名称已存在");
+							$(place).focus();
+						}
+					}
+				}
+			});
+		}
+		//设置负责人
+		function setPrincipal(id) {
+			if(!$(departmenGrid).isSelectedRowForjqGrid()) {
+				$.showErrorGritter("请先选择要设置负责人的部门。");
+				return false;
+			}
+			var rowData = $(departmenGrid).getRowData4JqGrid("id", id);
+			////console.log($(departmenGrid).getSelectRowIdsForjqGrid("id"));
+			//			if(rowData.is_abnormal) {
+			//				$.showErrorGritter("该部门状态非正常，不能操作。");
+			//				return false;
+			//			}
+			if(!boolCanClickBtn([rowData], "set_leader", 2)) return false;
+			var departmenName = rowData.depa_name;
+			$.showLinkmanEmployeeSelectPop({
+				title: "设置部门/科室负责人",
+				subTitle: "部门/科室名称：" + departmenName,
+				clientId: clientID,
+				depaId: rowData.depa_id,
+				r_title: "负责人",
+				okCallback: function(employeesData) {
+					//selectEmployeeDom.empty();
+					$(departmenGrid).reloadGrid();
+				}
+			});
+
+		}
+		//更改部门状态
+		function changeDepaStatus() {
+			if(!$(departmenGrid).isSelectedRowForjqGrid()) {
+				$.showErrorGritter("请先选择要删除的部门。");
+				return false;
+			}
+			//var rowDataIds = $(departmenGrid).getSelectRowIdsForjqGrid("id");
+			var rowDatas = getSelectedDatas(departmenGrid); //$(departmenGrid).jqGrid('getRowData', departmenGrid.jqGrid('getGridParam', 'selrow'));
+			console.log(rowDatas);
+			if(rowDatas.length != 1) {
+				$.showErrorGritter("能且只能选择一个科室！");
+				return false;
+			}
+			if(!boolCanClickBtn(rowDatas, "change_status", 2)) return false;
+			var modalId = $.modal().show("更改部门状态", ".update-depa-status", function(modal) {
+				var depa_status_after = $("#" + modalId + " .update-depa-status-container input[type='radio']:checked").val();
+				var depa_status_change_reason = $("#" + modalId + " .update-depa-status-container textarea").val();
+				if(rowDatas[0].depa_status == depa_status_after) {
+					$.showErrorGritter("更改前后状态一致，请确认");
+					return false;
+				}
+				if(!depa_status_change_reason) {
+					$.showErrorGritter("更改原因不能为空，请输入");
+					$("#" + modalId + " .update-depa-status-container textarea").focus();
+					return false;
+				}
+				$.showApprovalPostPop({
+					routine: "changeDepaStatus",
+					routineName: "修改客户部门/科室状态",
+					successCallback: function(apvData, apvModal) {
+						if(apvData.needApv) {
+							apvData.diy_step_data = apvData.steps;
+							apvData.plan_id = apvData.planId;
+						}
+						apvData.reason = depa_status_change_reason;
+						apvData.status = depa_status_after;
+						apvData.depa_id = rowDatas[0].depa_id;
+						$.ajaxPut(changeDepaStatusUrl, apvData, function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter("修改客户部门/科室状态成功" + (apvData.needApv ? "，请等待审批！" : ""));
+								//apvModal.modal('hide');
+								$("#" + modalId).modal('hide');
+								apvModal && apvModal.modal("hide");
+								$(departmenGrid).reloadGrid();
+							} else {
+								$.showErrorGritter("修改客户部门/科室状态失败：" + response.msg);
+							}
+						});
+					}
+				});
+			});
+			var depa_status_controller = new Controller("#" + modalId + ".update-depa-status-container");
+			$("#" + modalId + " .update-depa-status-container input[value='" + rowDatas[0].depa_status + "']").prop("checked", "checked");
+			depa_status_controller.set(rowDatas[0]);
+		}
+		//删除部门
+		function deteleDepartmen(id) {
+			if(!$(departmenGrid).isSelectedRowForjqGrid()) {
+				$.showErrorGritter("请先选择要删除的部门。");
+				return false;
+			}
+			//			if(thisClientData.data_approving) {
+			//				$.showErrorGritter("审批中，无法进行该操作 ！");
+			//				return false;
+			//			}
+			var rowDataIds = $(departmenGrid).getSelectRowIdsForjqGrid("id");
+			var rowDatas = $(departmenGrid).jqGrid('getRowData', departmenGrid.jqGrid('getGridParam', 'selrow'));
+
+			//判断是否存在联系人
+			var rowData = $(departmenGrid).getRowData4JqGrid("id", id);
+			if(rowData.contact_count > 0) {
+				$.modal().show("删除部门/科室", ".detele-departmen", function() {
+
+				});
+			} else {
+				$.showApprovalPostPop({
+					routine: "clientDepaDelete",
+					routineName: "删除部门",
+					successCallback: function(apvData, apvModal) {
+						if(apvData.needApv) {
+							apvData.diy_step_data = apvData.steps;
+							apvData.plan_id = apvData.planId;
+						}
+						apvData.depa_id = rowDataIds;
+
+						$.ajaxDelete(deteleDepartUrl, apvData, function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter("提交删除成功");
+								//apvModal.modal('hide');
+								apvModal && apvModal.modal("hide");
+								$(departmenGrid).reloadGrid();
+							} else {
+								$.showErrorGritter("删除失败：" + response.msg);
+							}
+						});
+					}
+				});
+			}
+
+		}
+		//添加、编辑联系人
+		function openLinkmanModelInfo(action, id) {
+			if(action == "update" && (!$(linkmanGrid).isSelectedRowForjqGrid() && !id)) {
+				$.showErrorGritter("请先选择要编辑的联系人。");
+				return false;
+			}
+			var rowData = {};
+			if(action == "update") {
+				rowData = $(linkmanGrid).getRowData4JqGrid("id", id);
+				if(!boolCanClickBtn([rowData], action, 3)) return false;
+				//				if(rowData.is_abnormal) {
+				//					$.showErrorGritter("联系人状态不正常，不能进行此操作");
+				//					return false;
+				//				}
+			} else {
+				if(!boolCanClickBtn([currDepaData], action, 2)) return false;
+			}
+
+			var actionText = (action == "add" ? "添加" : "编辑");
+			var modalId = $.modal().showOfLarge(actionText + "联系人", ".linkman-info",
+				function(modal) {
+					if(!inputValidateForGritter(formContainer)) {
+						return false;
+					}
+					$(formContainer + " .linkmanimporlevel").trigger("change");
+					$(formContainer + " .linkman-position-titles").trigger("change");
+					$(formContainer + " .linkman-position").trigger("change");
+					$(formContainer + " .info-text-sex").trigger("change");
+					var infoData = infoController.getJSON();
+					infoData.contact_sex = $(formContainer + " .info-text-sex:checked").val();
+					var workTime = [];
+					//获取出诊时间表
+					$(formContainer + " .work-tab td[time-info]").each(function() {
+						workTime.push($(this).attr("time-info"));
+					});
+					//console.log(workTime)
+					infoData.contact_work_time = workTime;
+					infoData.depa_id = depaID;
+					//获取家庭成员信息
+					var familyInfo = [];
+					var canSubmit = true;
+					$(formContainer + " .family-tab tr:gt(0)").each(function() {
+						var familyInfoTmpObj = {};
+						var hasBeenFill = false; ////是否填写过
+						var allMustFillPass = 0; //如果填写过 ，是否必填项都填了，填写 一个加25
+						//姓名
+						if($(this).find(".family-tab-name").val()) {
+							familyInfoTmpObj.family_name = $(this).find(".family-tab-name").val();
+							hasBeenFill = true;
+							allMustFillPass += 25;
+						}
+						//性别
+						if($(this).find(".family-tab-sex option:selected").attr("value") != "0") {
+							familyInfoTmpObj.family_sex = $(this).find(".family-tab-sex option:selected").attr("value");
+							hasBeenFill = true;
+							allMustFillPass += 25;
+						}
+						//关系
+						if($(this).find(".family-tab-relation option:selected").attr("value") != "0") {
+							familyInfoTmpObj.family_relationship = $(this).find(".family-tab-relation option:selected").attr("value");
+							hasBeenFill = true;
+							allMustFillPass += 25;
+						}
+						//出生日期
+						if($(this).find(".family-tab-date").val()) {
+							familyInfoTmpObj.family_birthday = $(this).find(".family-tab-date").val();
+							hasBeenFill = true;
+							allMustFillPass += 25;
+						}
+						//兴趣爱好
+						familyInfoTmpObj.family_interest = $(this).find(".family-tab-interest").val();
+						//其他
+						familyInfoTmpObj.family_other_desc = $(this).find(".family-tab-other").val();
+						if(hasBeenFill) {
+							if(allMustFillPass == 100) {
+								familyInfo.push(familyInfoTmpObj);
+							} else {
+								$.showErrorGritter("您填过的家庭成员信息中有必填项未填，请先填写后再提交！");
+								canSubmit = false;
+								return canSubmit;
+							}
+						}
+					});
+					infoData.family_data = familyInfo;
+					//获取其他信息
+					var otherInfo = [];
+					var isNull = false;
+					$(formContainer + " .other-info-list li").each(function() {
+						if($(this).children(".info-dome-name").val() == "" && $(this).children(".info-dome-text").val() == "") {
+							return true;
+						}
+						//alert($(this).children("input").val());
+						$(this).children("input").each(function() {
+							if($(this).val() == "") {
+								isNull = true;
+							}
+						});
+						otherInfo.push({
+							label: $(this).children(".info-dome-name").val(),
+							value: $(this).children(".info-dome-text").val()
+						});
+					});
+					if(isNull) {
+						$.showErrorGritter("其他信息不完整，请完善后确认");
+						return false;
+					}
+					infoData.extend_data = otherInfo;
+					if(!canSubmit) {
+						return false;
+					}
+					console.log(infoData);
+					var infoUrlForEditing = BSAPIURL + "/crm/contacts";
+					if(action == "update")
+						infoUrlForEditing = infoUrlForEditing + "/" + rowData.contact_id;
+					$.ajaxByAction(action, infoUrlForEditing, infoData, function(response) {
+						if(response.code == 0) {
+							//success
+							$("#" + modalId).modal('hide');
+							$.showSuccessGritter(actionText + "联系人成功。");
+							//刷新表格
+							$(linkmanGrid).reloadGrid();
+							//刷新部门树
+							loadDeparmentTree();
+						} else {
+							$.showErrorGritter("保存联系人失败：" + response.msg);
+						}
+					});
+
+				}
+			);
+
+			var formContainer = "#" + modalId + " .modal-body";
+			$(formContainer + " .linkmanimporlevel").append(loadCode("", codeData[0]));
+			$(formContainer + " .linkman-position").append(loadCode("", codeData[1]));
+			$(formContainer + " .linkman-position-titles").append(loadCode("", codeData[2]));
+			$(formContainer + " .family-tab-relation").append(loadCode("", codeData[3]));
+			//添加身份证失去焦点获取出生日期
+			$("#" + modalId + " .info-text-IDcard").blur(function() {
+				var idCard = $(this).val();
+				if(idCard == "")
+					return false;
+				var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+
+				if(reg.test(idCard) === false) {
+					$.showErrorGritter("身份证输入不合法");
+					return false;
+				}
+				var birthYear = idCard.substring(6, 10);
+				var birthMonth = idCard.substring(10, 12);
+				var birthDay = idCard.substring(12, 14);
+				//				if(birthYear > $.da)
+				var birthDate = idCard.substring(6, 10) + "-" + idCard.substring(10, 12) +
+					"-" + idCard.substring(12, 14);
+				$(this).parent().next().children("input").val(birthDate);
+				$(this).parent().next().children("input").trigger("change");
+			});
+			//日期选择
+			$("#" + modalId + " .date-picker").datepicker({
+				autoclose: true,
+				format: "yyyy-mm-dd"
+			});
+
+			$("#" + modalId + " .info-text-date").datepicker({
+				autoclose: true,
+				format: "yyyy-mm-dd"
+			});
+			//出诊时间勾选
+			$("#" + modalId + " .work-tab tr").children(".time-name").siblings().click(function() {
+				var str = "<i class='fa fa-check' aria-hidden='true'></i>";
+				if($(this).children().is("i")) {
+					$(this).empty();
+					$(this).removeAttr("time-info")
+				} else {
+					$(this).append(str);
+					$(this).attr("time-info", String($(this).index()) + String($(this).parent().index()));
+				}
+			});
+			//家庭成员添加
+			$("#" + modalId + " .add-family").click(function() {
+				var familyInfoName = $(this).next().find(".family-tab-name").val();
+				var familyInfoSex = $(this).next().find(".family-tab-sex option:selected").text();
+				var familyInfoRelation = $(this).next().find(".family-tab-relation option:selected").text();
+				var familyInfoRelationCode = $(this).next().find(".family-tab-relation option:selected").val();
+				var familyInfoDate = $(this).next().find(".family-tab-date").val();
+				var familyInfoInterest = $(this).next().find(".family-tab-interest").val();
+				var familyInfoOther = $(this).next().find(".family-tab-other").val();
+				var str = $("#" + modalId + " .family-tab").find("tr:eq(1)").clone();
+				$("#" + modalId + " .family-tab tbody").append(str);
+				///清空信息
+				$("#" + modalId + " .family-tab tbody tr:last-child td").each(function() {
+					if($(this).find("input").length > 0) {
+						$(this).children("input").val("");
+					} else {
+						$(this).find("selected option:selected").removeAttr("selected");
+						$(this).find("selected option:first-child").attr("selected", "selected");
+					}
+				});
+
+				//日期选择
+				//dateTimePicker.picker.destroy();
+				$("#" + modalId + " .family-tab tbody tr:last-child .date-picker").datepicker({
+					autoclose: true,
+					format: "yyyy-mm-dd"
+				});
+				//$(this).next().find("input").val("");
+			});
+
+			//model pop id
+			//			var rowData = {
+			//				"contact_sex": 1
+			//			};
+			var infoController = new Controller(formContainer);
+
+			//添加名字验证事件
+			$(formContainer + " .info-text-name").blur(function() {
+				var newName = $(this).val();
+				var place = this;
+				$.ajaxGet(linkmanTableUrl + "?client_id=" + clientID + "&depa_id=" + depaID, function(response) {
+					var infoDataDeparment = response.data.rows;
+					if(action == "update") {
+						for(var i in infoDataDeparment) {
+							if(infoDataDeparment[i].contact_id != rowData.contact_id) {
+								if(newName == infoDataDeparment[i].contact_name) {
+									$(place).focus();
+									$.showErrorGritter("联系人名称已存在，如需帮助请联系负责人：——" + rowData.responsible_person_data[0].employee_name + "," + rowData.responsible_person_data[0].depa_name);
+								}
+							}
+						}
+					} else {
+						for(var i in infoDataDeparment) {
+							if(newName == infoDataDeparment[i].contact_name) {
+								$(place).focus();
+								$.showErrorGritter("联系人名称已存在");
+							}
+						}
+					}
+				});
+			});
+			//获取家庭信息
+			for(var i in rowData.family_data) {
+				var str = "<tr class='new-family-info'>";
+				str += "<td><input class='family-tab-name'  maxlength=\"20\" value='" + rowData.family_data[i].family_name + "'></td>";
+				str += "<td><select class='form-control form-control-height-30 family-tab-sex'>" +
+					"<option value='0'>请选择</option><option value='1'>男</option><option value='2'>女</option>" +
+					"<lect></td>";
+				str += "<td><select class='form-control form-control-height-30 family-tab-relation'><option value='0'>请选择</option>" + loadCode("", codeData[3]) + "<select></td>";
+				str += "<td><input class='family-tab-date date-picker' value='" + rowData.family_data[i].family_birthday + "'></td>";
+				str += "<td><input class='family-tab-interest' value='" + rowData.family_data[i].family_interest + "'></td>";
+				str += "<td><input class='family-tab-other' value='" + rowData.family_data[i].family_other_desc + "'></td>";
+				str += "<td><img src='../resources/images/filter-close.png' onclick='deleteFamilyInfo(this)' /></td>";
+				str += "</tr>";
+				$("#" + modalId + " .family-tab tbody").append(str);
+				//设置性别、关系选择选中项
+				$("#" + modalId + " .family-tab tr:last-child .family-tab-sex option[value='" + rowData.family_data[i].family_sex + "']").attr("selected", "selected");
+				$("#" + modalId + " .family-tab tr:last-child .family-tab-relation option[value='" + rowData.family_data[i].family_relationship + "']").attr("selected", "selected");
+
+			}
+
+			//获取其他信息
+			for(var i in rowData.extend_data) {
+				var str = "<li class='other-info-dome close-icon-container'>";
+				str += "<input type='text' value='" + rowData.extend_data[i].label + "' maxlength='10' class='info-dome-name' />:";
+				str += "<input type='text' value='" + rowData.extend_data[i].value + "' maxlength='50' class='info-dome-text' />";
+				str += "<img class=\"close-icon\" src=\"../resources/images/filter-close.png\" onclick=\"deleteOtherInfo(this)\"/>";
+				str += "</li>";
+				$("#" + modalId + " .other-info-list").append(str);
+			}
+			//获取出诊时间表
+			for(var i in rowData.contact_work_time) {
+				var weeknum = parseInt(rowData.contact_work_time[i].weekday);
+				var apmnum = parseInt(rowData.contact_work_time[i].am_or_pm);
+				var str = "<i class='fa fa-check' aria-hidden='true'></i>";
+				if(apmnum == 1) {
+					$("#" + modalId + " .am").children().eq(weeknum).append(str);
+					$("#" + modalId + " .am").children().eq(weeknum).attr("time-info", weeknum * 10 + apmnum);
+				} else {
+					$("#" + modalId + " .pm").children().eq(weeknum).append(str);
+					$("#" + modalId + " .pm").children().eq(weeknum).attr("time-info", weeknum * 10 + apmnum);
+				}
+
+			}
+			infoController.set(rowData);
+			//alert(JSON.stringify(rowData))
+			$("#" + modalId + " .linkmanimporlevel option").trigger("change");
+			$("#" + modalId + " .linkman-position-titles").trigger("change");
+			$("#" + modalId + " .linkman-position").trigger("change");
+			//---编辑
+			if(action == "update") {
+
+			} else {
+				//添加
+
+			}
+			//
+		}
+		//下载客户联系人导入模板
+		function downloadImportModel() {
+			var url = "../resources/annx/tpl_contact.xlsx";
+			$.downloadFile(url);
+		}
+		//导入客户联系人
+		function openContactImportPop() {
+
+			if(!boolCanClickBtn([currDepaData], "export", 2)) return false;
+			var actionText = "导入客户联系人";
+			var depa_id = depaID;
+			var rowData = getSelectedDatas();
+			if(!depa_id) colObj.depa_id = depa_id;
+			var modalId = $.modal({
+				shownCallback: function(modalId) {},
+				okButtonText: "开始导入"
+			}).showOfLarge(actionText, ".pnl-employee-import",
+				function(modal) {
+					if(!excelIsUploaded) {
+						$.showErrorGritter("请先点击“上传模板”按钮上传导入的客户联系人数据。");
+						return false;
+					}
+					var colObj = {};
+					var cancelFlag = false,
+						isSetColum = false;
+					$(formContainer + " .table-employee-import thead tr[sel] th").each(function() {
+						var colVal = $(this).children("select").val();
+						if(colObj[colVal] >= 0) {
+							$.showErrorGritter("对应列名有重复，请检查修改。");
+							cancelFlag = true;
+							return false;
+						}
+						if(colVal) {
+							colObj[colVal] = $(this).index();
+							isSetColum = true;
+						}
+					});
+					if(cancelFlag) {
+						return false;
+					}
+					if(depa_id) {
+						colObj.depa_id = depa_id;
+					} else {
+						$.showErrorGritter("请先选择需要导入的部门！");
+						return false;
+					}
+					$.ajaxPost(BSAPIURL + "/crm/contacts/import", colObj,
+						function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter(actionText + "成功。");
+								modal.modal('hide');
+								loadDeparmentTree();
+								//window.location=window.location.href;
+								$(linkmanGrid).reloadGrid();
+								//reloadEmployees();
+							} else {
+								$.showErrorGritter(actionText + "失败：" + response.msg);
+							}
+						});
+				}
+			);
+			$("#" + modalId + " .modal-dialog.modal-large").css("width", "80%");
+			//model pop id
+			var formContainer = "#" + modalId + " .model-employee-import";
+			//var employeeController = new Controller(formContainer);
+			var excelIsUploaded = false;
+			$(formContainer + " #btnUploadExcel").attr("id", "btnUploadExcelHAHA");
+			$("#btnUploadExcelHAHA").initUploader({
+				fileName: "file",
+				url: BSAPIURL + "/crm/contacts/import/view",
+				up_container: formContainer + " .upload",
+				fileType: "xls",
+				FilesAdded: function(up, files) {
+					return true;
+				},
+				FileUploaded: function(up, file, response) {
+					try {
+						var resp = JSON.parse(response.response);
+						if(resp.code == 0) {
+							excelIsUploaded = true;
+							//success
+							var employeeList = resp.data.rows;
+							$(formContainer + " .table-employee-import caption").text("共 " + (employeeList.length - 1) + " 条记录");
+							$(formContainer + " .table-employee-import caption").removeClass("hide");
+							$(formContainer + " .table-employee-import thead").empty();
+							$(formContainer + " .table-employee-import tbody").empty();
+							for(var i in employeeList) {
+								var employeeData = employeeList[i];
+								var tdName = (i == 0 ? "th" : "td");
+								var trDom = $("<tr></tr>");
+								for(var j in employeeData) {
+									trDom.append("<TD>V</TD>".replace(/TD/g, tdName).replace(/V/g, employeeData[j]));
+								}
+								if(i == 0) {
+									var selTrDom = $("<tr  sel></tr>");
+									for(var j in employeeData) {
+										//selTrDom.append("<th>" + selectDom + "</th>");
+									}
+									$(formContainer + " .table-employee-import thead").append(selTrDom);
+								}
+								$(formContainer + " .table-employee-import " + (i == 0 ? "thead" : "tbody")).append(trDom);
+							}
+						} else {
+							$.showErrorGritter("上传Excel失败：" + resp.msg);
+						}
+					} catch(e) {}
+				}
+			});
+		}
+		//导出客户联系人
+		function openContactDownloadPop(id) {
+			tempLoadLinkmanUrl
+			var rowData = $(linkmanGrid).getRowData4JqGrid("id", id);
+			console.log(rowData);
+			$.downloadFile(BSAPIURL + "/crm/contacts/excel?client_id=" + clientID + "&depa_id=" + depaID + "&important_level=" + (linkmanSearchData.important_level || "") + "&key=" + (linkmanSearchData.key || "") + "&status=" + (linkmanSearchData.status || "") + "&sort=asc");
+		}
+		//更改联系人状态
+		function amendLinkmanState(id) {
+			var rowData = $(linkmanGrid).getRowData4JqGrid("id", id);
+			if(!boolCanClickBtn([rowData], "change_status", 3)) return false;
+
+			var modalId = $.modal().show("更改联系人状态", ".amend-linkmanstate", function() {
+				var status = "";
+				$("#" + modalId + " .linkmanstate").each(function(index) {
+					if($(this).children("input:radio:checked").val()) {
+						status = $(this).children("input:radio:checked").val();
+					}
+				});
+				var seasonText = $("#" + modalId + " .amend-reason").val();
+				if(seasonText == "") {
+					$.showErrorGritter("更改原因不能为空");
+					return false;
+				}
+				var selectRowIds = $(linkmanGrid).getSelectRowIdsForjqGrid("id");
+				$.showApprovalPostPop({
+					routine: "clientContactStatusChange",
+					routineName: "更改客户状态",
+					successCallback: function(apvData, apvModal) {
+						console.log(apvModal)
+						if(apvData.needApv) {
+							apvData.diy_step_data = apvData.steps;
+							apvData.plan_id = apvData.planId;
+						}
+						apvData.status = status;
+						apvData.reason = seasonText;
+						apvData.contact_id = $(linkmanGrid).getSelectRowIdsForjqGrid("id");
+						$.ajaxPut(linkManStateUrl, apvData, function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter(apvData.needApv ? "提交更改状态审批成功" : "更改状态成功！");
+								//apvModal.modal('hide');
+								$("#" + modalId).modal('hide');
+								apvModal && apvModal.modal("hide");
+								$(linkmanGrid).reloadGrid();
+							} else {
+								//$(apvModal).modal('hide');
+								$.showErrorGritter("更改失败：" + response.msg);
+							}
+						});
+					}
+				});
+			});
+			var contactStatus = rowData.contact_status_cn;
+			$("#" + modalId + " .linkmanstate").each(function(index) {
+				if($(this).text() == contactStatus) {
+
+					$(this).children("input[type=radio]").attr('checked', "checked");
+				}
+			});
+		}
+		//删除联系人
+		function deteleLinkman(id) {
+			//			if(thisClientData.data_approving) {
+			//				$.showErrorGritter("审批中，无法进行该操作 ！");
+			//				return false;
+			//			}
+			if(!$(linkmanGrid).isSelectedRowForjqGrid()) {
+				$.showErrorGritter("请先选择要更改状态的联系人。");
+				return false;
+			}
+			//			if(deparIsNormal) {
+			//				$.showErrorGritter("该联系人所在部门状态非正常，不能进行此操作。");
+			//				return false;
+			//			}
+			var rowDatas = $(linkmanGrid).jqGrid('getRowData', linkmanGrid.jqGrid('getGridParam', 'selrow'));
+			//			if(rowDatas.delete_approval_session_status == 1) {
+			//				//共享中
+			//				$.showErrorGritter("此联系人删除正在审批中，请等待审批结果。");
+			//				return false;
+			//			}
+			var rowDataIds = $(linkmanGrid).getSelectRowIdsForjqGrid("id");
+
+			var selectRowIds = $(linkmanGrid).getSelectRowIdsForjqGrid("id");
+			$.showApprovalPostPop({
+				routine: "clientContactDelete",
+				routineName: "删除联系人",
+				successCallback: function(apvData, apvModal) {
+					if(apvData.needApv) {
+						apvData.diy_step_data = apvData.steps;
+						apvData.plan_id = apvData.planId;
+					}
+					apvData.contact_id = rowDataIds;
+					$.ajaxDelete(deteleLinkmanUrl, apvData, function(response) {
+						if(response.code == 0) {
+							//success
+							$.showSuccessGritter(apvData.needApv ? "提交删除审批成功" : "删除成功！");
+							//apvModal.modal('hide');
+							$(linkmanGrid).reloadGrid();
+							apvModal && apvModal.modal("hide");
+						} else {
+							$.showErrorGritter("删除失败：" + response.msg);
+						}
+					});
+				}
+			});
+
+		}
+		//删除文件
+		function deleteFile(obj) {
+			$(obj).parent().siblings(".btn-upload-anx").show();
+			$(obj).parent().remove();
+		}
+		//添加其他信息
+		function addOtherInfo(obj) {
+			var otherInfoName = $(obj).parent().next().find(".other-info-dome .info-dome-name").val();
+			var otherInfoText = $(obj).parent().next().find(".other-info-dome .info-dome-text").val();
+			//			if(otherInfoName == "" || otherInfoText == "") {
+			//				$.showErrorGritter("输入其他信息无效或不能为空。");
+			//				return false;
+			//			}
+
+			var str = "<li class=\"other-info-dome close-icon-container\">" +
+				"<input type=\"text\" id=\"\" value=\"\" class=\"info-dome-name\" maxLength='10' placeholder=\"其他信息名称\" />:" +
+				"<input type=\"text\" id=\"\" value=\"\" class=\"info-dome-text\" maxLength='50' placeholder=\"其他信息内容\" />" +
+				"<img class=\"close-icon\" src=\"../resources/images/filter-close.png\" onclick=\"deleteOtherInfo(this)\"/>" +
+				"</li>";
+			$(obj).parent().next().append(str);
+			//$(obj).parent().next().find(".other-info-dome .info-dome-name").val("");
+			//$(obj).parent().next().find(".other-info-dome .info-dome-text").val("");
+		}
+		//删除其他信息
+		function deleteOtherInfo(obj) {
+			//			if($(obj).parent().parent().find("li").length <= 1) {
+			//				$.showErrorGritter("模板行，不能删除！");
+			//				return false;
+			//			}
+			$(obj).parent().remove();
+		}
+		//删除家庭信息
+		function deleteFamilyInfo(obj) {
+			if($(obj).parent().parent().parent().find("tr").length <= 2) {
+				$.showErrorGritter("模板行，不能删除！");
+				return false;
+			}
+			$(obj).parent().parent().remove();
+		}
+
+		//更改拜访指标
+		function changeVisitIndicators(id) {
+			if(loadLevel == 1) {
+				if(!$(departmenGrid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要更改拜访指标的部门。");
+					return false;
+				}
+				var data = {};
+				var rowDataIds = $(departmenGrid).getSelectRowIdsForjqGrid("id");
+				var selRowsIndex = $(departmenGridPlace).jqGrid('getGridParam', 'selarrrow');
+				var rowData = [];
+				for(var i in rowDataIds) {
+					rowData.push($(departmenGrid).getRowData4JqGrid("id", rowDataIds[i]));
+				}
+				if(!boolCanClickBtn(rowData, "change_visit", 2)) return false;
+
+				var modalId = $.modal().show("更改拜访指标", '.change-visit-indicators', function() {
+					var indicatorsText = $("#" + modalId + " .indicators-text").val();
+					var indicatorsReason = $("#" + modalId + " .indicators-reason").val();
+					var place = "#" + modalId + " .modal-body";
+					if(!inputValidateForGritter(place)) {
+						return false;
+					}
+					data.change_reason = indicatorsReason;
+					data.visit_quota_new_value = indicatorsText;
+					data.change_object_data = [];
+					for(var i in rowDataIds) {
+						data.change_object_data.push({
+							"change_object_id": rowDataIds[i],
+							"change_object_type": 2
+						});
+					}
+					$.ajaxPost(changeVisitIndicatorsUrl, data, function(response) {
+						if(response.code == 0) {
+							//success
+							$.showSuccessGritter("您已成功提交拜访指标更改申请，请耐心等待审核!");
+							$("#" + modalId).modal("hide");
+							$(departmenGrid).reloadGrid();
+						} else {
+							$.showErrorGritter("提交失败：" + response.msg);
+						}
+					});
+				});
+				$("#" + modalId + " .applyfor-menu>span").html(selRowsIndex.length);
+
+			} else {
+				if(!$(linkmanGrid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要更改拜访指标的联系人。");
+					return false;
+				}
+
+				var data = {};
+				var rowDataIds = $(linkmanGrid).getSelectRowIdsForjqGrid("id");
+				var selRowsIndex = $(linkmanGridPlace).jqGrid('getGridParam', 'selarrrow');
+				var rowData = [];
+				for(var i in rowDataIds) {
+
+					rowData.push($(linkmanGrid).getRowData4JqGrid("id", rowDataIds[i]));
+				}
+				if(!boolCanClickBtn(rowData, "change_visit", 3)) return false;
+				var inDepaVistApprovel = [];
+
+				var modalId = $.modal().show("更改拜访指标", '.change-visit-indicators', function() {
+					var indicatorsText = $("#" + modalId + " .indicators-text").val();
+					var indicatorsReason = $("#" + modalId + " .indicators-reason").val();
+					var place = "#" + modalId + " .modal-body";
+					if(!inputValidateForGritter(place)) {
+						return false;
+					}
+					data.change_reason = indicatorsReason;
+					data.visit_quota_new_value = indicatorsText;
+					data.change_object_data = [];
+					for(var i in rowDataIds) {
+						data.change_object_data.push({
+							"change_object_id": rowDataIds[i],
+							"change_object_type": 3
+						});
+					}
+					$.ajaxPost(changeVisitIndicatorsUrl, data, function(response) {
+						if(response.code == 0) {
+							//success
+							$.showSuccessGritter("您已成功提交拜访指标更改申请，请耐心等待审核!");
+							$("#" + modalId).modal("hide");
+							$(linkmanGrid).reloadGrid();
+						} else {
+							$.showErrorGritter("提交失败：" + response.msg);
+						}
+					});
+				});
+				$("#" + modalId + " .applyfor-menu>span").html(selRowsIndex.length);
+			}
+
+		}
+		//取消拜访特批
+		function cancelVisit() {
+			if(loadLevel == 1) {
+				if(!$(departmenGrid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要更改拜访指标的部门。");
+					return false;
+				}
+				var rowDatas = getSelectedDatas(departmenGrid);
+				if(!boolCanClickBtn(rowDatas, "change_visit", 2)) return false;
+				submitData(departmenGrid, 2);
+			} else {
+				if(!$(linkmanGrid).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要更改拜访指标的联系人。");
+					return false;
+				}
+				var rowDatas = getSelectedDatas(linkmanGrid);
+				if(!boolCanClickBtn(rowDatas, "change_visit", 3)) return false;
+				submitData(linkmanGrid, 3);
+			}
+
+			function submitData(grid, index) { //提交数据
+				var selRowsIndex = $(grid).getSelectRowIdsForjqGrid("id");
+				var modalId = $.modal().confirm("已选中" + selRowsIndex.length + "个对象，确认取消特批？", function() {
+					var data = {};
+					data.change_object_data = [];
+					for(var i in selRowsIndex) {
+						data.change_object_data.push({
+							"change_object_id": selRowsIndex[i],
+							"change_object_type": index
+						});
+					}
+				});
+				$.ajaxPut(cancelVisitIndicatorsSpecialapprovalUrl, data, function(response) {
+					if(response.code == 0) {
+						//success
+						$(grid).reloadGrid();
+						$.showSuccessGritter("取消拜访特批成功!");
+						$("#" + modalId).modal("hide");
+					} else {
+						$.showErrorGritter("取消拜访特批失败：" + response.msg);
+					}
+				});
+			}
+		}
+		//添加业务群
+		function showAddGroup(obj) {
+			groupHandle($(obj));
+		}
+		//获取出生年月日
+		function getBirthDate(obj) {
+			var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+			var idCard = $(obj).val();
+			if(reg.test(idCard) === false) {
+				$.showErrorGritter("身份证输入不合法");
+				return false;
+			}
+			var birthDate = idCard.substring(6, 10) + "-" + idCard.substring(10, 12) +
+				"-" + idCard.substring(12, 14);
+			$(obj).parent().next().children("input").val(birthDate);
+		}
+		//客户状态返回
+		function clientState(index) {
+			switch(index) {
+				case 1:
+					return "<span class='state-show'>正常</span>";
+					break;
+				case 2:
+					return "<span class='state-bad'>已倒闭</span>";
+					break;
+				case 3:
+					return "<span class='state-bad'>已迁址</span>";
+					break;
+				case 4:
+					return "<span class='state-bad'>被收购</span>";
+					break;
+				default:
+					return "<span class='state-bad'>其他</span>";
+			}
+		}
+		//客户部门状态返回
+		function deparState(index) {
+			switch(index) {
+				case 1:
+					return "<span class='depa_status state-show'>正常</span>";
+					break;
+				default:
+					return "<span class='depa_status state-bad'>异常</span>";
+			}
+		}
+		//联系人状态返回
+		function linkmanState(index) {
+			switch(index) {
+				case 1:
+					return "<span class='state-show'>正常</span>";
+					break;
+				case 2:
+					return "<span class='state-bad'>离职</span>";
+					break;
+				case 3:
+					return "<span class='state-bad'>进修</span>";
+					break;
+				case 4:
+					return "<span class='state-bad'>离世</span>";
+					break;
+				case 5:
+					return "<span class='state-bad'>退休</span>";
+					break;
+				default:
+					return "<span class='state-bad'>其他</span>";
+			}
+		}
+
+		function loadCode(codeData, code, returntype) {
+			console.log(code)
+			if(codeData) {
+				$.ajaxGet(loadCodeUrl + "?class_codes=" + codeData.join(","), function(response) {
+					codeLisData = response.data.code_list;
+				});
+			}
+			var str = "";
+			var data = [];
+			if(code && codeLisData[code]) {
+				for(var i in codeLisData[code]) {
+					if(returntype) {
+						data.push({
+							"key": codeLisData[code][i].code_name,
+							"value": codeLisData[code][i].code_tree
+						});
+					} else {
+						str += "<option value=" + codeLisData[code][i].code_tree + ">" + codeLisData[code][i].code_name + "</option>";
+					}
+				}
+				return str == "" ? data : str;
+			}
+		}
+		//查看拜访指标
+		function viewVisitIndicators() {
+			if(visitIndexInfo.length == 0) {
+				$.showErrorGritter("没有拜访特批数据");
+				return false;
+			}
+			var modalId = $.modal({
+				showFooter: false
+			}).show("拜访指标特批", ".view-visit-indicators", function() {
+
+			});
+			for(var i in visitIndexInfo) {
+				var str = "<tr>";
+				str += "<td>" + visitIndexInfo[i].employee_name + "</td>";
+				str += "<td>" + visitIndexInfo[i].quota + "</td>";
+				str += "</tr>";
+				$("#" + modalId + " .view-visit-indicators-tab tr:first-child").after(str);
+			}
+		}
+		//查看拜访信息
+		function viewVisitInfo() {
+			var modalId = $.modal({
+				showFooter: false,
+				width: 800
+			}).showOfLarge("拜访信息", ".visit-info-page", function() {
+
+			});
+			console.log(visitInfoData)
+			if(visitInfoData.length == 0) {
+				$.showErrorGritter("没有相关拜访数据");
+				return false;
+			}
+			for(var i in visitInfoData) {
+				var str = "";
+				str = '<tr><td>' + visitInfoData[i].employee_name +
+					'</td><td>' +
+					(visitInfoData[i].has_quota_change ? "<i class=\"fa fa-street-view\" aria-hidden=\"true\" title=\"特批的拜访指标\"></i>" : "") +
+					visitInfoData[i].visit_quota +
+					'</td><td>' + visitInfoData[i].plan_visit_count +
+					'</td><td>' + visitInfoData[i].planned_visit_count +
+					'</td><td>' + visitInfoData[i].outofplan_visit_count +
+					'</td></tr>';
+				$("#" + modalId + " .visit-info-tab").append(str);
+			}
+
+		}
+		//判断点击的操作按钮是否有点击限制    level:1单位  2部门  3联系人
+		function boolCanClickBtn(data, type, level) {
+			if(type == "add") type = "create";
+			if(type == "export") type = "create";
+			if(type == "update") type = "modify";
+			var statusLevelName = level == 1 ? "client" : level == 2 ? "depa" : "contact";
+			var alertText = level == 1 ? "客户" : level == 2 ? "部门/科室" : "联系人";
+			var nameRemark = level == 1 ? "client_full_name" : level == 2 ? "depa_name" : "contact_name";
+			for(var i = 0; i < data.length; i++) {
+				if((type == "share" || type == "transfer")) {
+					if(!data[i][statusLevelName + "_permissions"]["can_" + type].result) {
+						if(!data[i].is_sub_resource_responsible_person && !data[i].is_responsible_person && !data[i].is_sub_employee_sub_resource_responsible_person && type != "transfer") {
+							$.showErrorGritter(data[i][statusLevelName + "_permissions"]["can_" + type].reason + "，且非子资源负责人，不能进行此操作！");
+							return false;
+						} else if((data[i].is_sub_resource_responsible_person || data[i].is_sub_employee_sub_resource_responsible_person) && type == "transfer") {
+							return true;
+						} else if((data[i].is_sub_resource_responsible_person) && type == "share") {
+							return true;
+						} else {
+							$.showErrorGritter(data[i][statusLevelName + "_permissions"]["can_" + type].reason + "，不能进行此操作！");
+							return false;
+						}
+					}
+					return true;
+				}
+				if(!data[i][statusLevelName + "_permissions"]["can_" + type].result) {
+					$.showErrorGritter(data[i][statusLevelName + "_permissions"]["can_" + type].reason + "，不能进行此操作！");
+					return false;
+				}
+			}
+			return true;
+		}
+	</script>
+
+</html>

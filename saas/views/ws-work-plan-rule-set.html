@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>工作计划规则设置</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-datetimepicker.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+
+		<style type="text/css">
+			.set-rule-name input {
+				margin-left: 10px;
+			}
+			
+			input[type="text"] {
+				height: 32px;
+				border-radius: 0;
+				-webkit-border-radius: 0;
+				-moz-border-radius: 0;
+			}
+			
+			.modal-body select {
+				border-radius: 0;
+				-webkit-border-radius: 0;
+				-moz-border-radius: 0;
+				margin-right: 15px;
+				width: 70px;
+			}
+			
+			.rule-name {
+				width: 75%;
+				border-color: #e3e3e3;
+			}
+			
+			.set-rule,
+			.set-rule-bottom {
+				margin-top: 10px;
+			}
+			
+			.set-rule label {
+				width: 161px;
+				text-align: left;
+			}
+			
+			.set-rule-menu {
+				margin-bottom: 10px;
+			}
+			
+			.set-rule-bottom {
+				border-top: 1px solid #3C3C3C;
+				text-align: center;
+				padding-top: 10px;
+			}
+			
+			.select-department {
+				border: 1px solid #ccc;
+				line-height: 30px;
+				padding: 10px 0 10px 10px;
+				min-height: 35px;
+			}
+			
+			.select-department input[type=button] {
+				border: 0;
+				background: #fff;
+			}
+			
+			.depart-list {
+				border: 1px solid #ccc;
+				margin-right: 5px;
+				display: inline-block;
+				padding: 0 5px;
+				text-align: center;
+				line-height: 24px;
+				border-radius: 3px;
+				-webkit-border-radius: 3px;
+				-moz-border-radius: 3px;
+			}
+			
+			.detele-depart {
+				margin-left: 5px;
+				color: red;
+			}
+			
+			input[type=time] {
+				width: 100px;
+				text-align: center;
+			}
+			
+			.time-picker {
+				width: 261px;
+			}
+			
+			.time-picker select {
+				width: auto;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container work-plan-rule-set">
+			<div class="content">
+				<div class="work-plan-set">
+					<table id="grid-table" class="grid-module">
+					</table>
+					<div id="grid-bottom">
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--规则新建修改弹窗-->
+		<div class="set-work-plan-rule hide">
+			<p class="set-rule-name">
+				<span class="important">*</span>规则名称：<input type="text" class="rule-name" placeholder="请输入规则名称" nulltip="规则名称" bind="rule_name">
+			</p>
+			<div class="set-rule weekplan-submittime">
+				<label class="set-rule-menu"><span class="important">*</span>员工计划提交截止时间：</label>
+				<select name="schedule-submit" bind="work_schedule_submit_week_day">
+					<option value="1">周一</option>
+					<option value="2">周二</option>
+					<option value="3">周三</option>
+					<option value="4">周四</option>
+					<option value="5">周五</option>
+					<option value="6">周六</option>
+					<option value="7">周日</option>
+				</select>
+				<span class="weekplan-submittime-text time-picker" bind="work_schedule_submit_time" placeholder="具体时间"></span>
+			</div>
+			<div class="set-rule weekplan-audittime">
+				<label class="set-rule-menu"><span class="important">*</span>上级审核计划截止时间：</label>
+				<select name="schedule-approval" bind="work_schedule_approval_week_day">
+					<option value="1">周一</option>
+					<option value="2">周二</option>
+					<option value="3">周三</option>
+					<option value="4">周四</option>
+					<option value="5">周五</option>
+					<option value="6">周六</option>
+					<option value="7">周日</option>
+				</select>
+				<span class="weekplan-audittime-text time-picker" bind="work_schedule_approval_time" placeholder="具体时间"></span>
+			</div>
+			<div class="set-rule weeksummarize-submittime">
+				<label class="set-rule-menu"><span class="important">*</span>员工总结提交截止时间：</label>
+				<select name="summary-submit" bind="work_summary_submit_week_day">
+					<option value="1">周一</option>
+					<option value="2">周二</option>
+					<option value="3">周三</option>
+					<option value="4">周四</option>
+					<option value="5">周五</option>
+					<option value="6">周六</option>
+					<option value="7">周日</option>
+				</select>
+				<span class="weeksummarize-submittime-text time-picker" bind="work_summary_submit_time" placeholder="具体时间"></span>
+			</div>
+			<div class="set-rule rule-select-department">
+				<p class="set-rule-menu"><span class="important">*</span>适用部门：
+					<a class="btn-a-default add-depart">选择部门</a>
+				</p>
+				<div class="select-department selected-container">
+
+				</div>
+			</div>
+			<!--<div class="set-rule-bottom">
+				<input type="button" value="保存" class="btn btn-default btn-info-save" />
+				<input type="button" value="取消" data-dismiss="modal" class="btn btn-default " />
+			</div>-->
+		</div>
+		<div class="pnl-leader-info pnl-dept-select-share hide">
+			<form class="form-horizontal model-leader-info model-dept-select-share">
+				<div class="wrap wrap-source">
+					<label>请以部门为单位选择公示范围：</label>
+					<div class="box">
+						<ul class="list-emp tree tree-dept">
+
+						</ul>
+					</div>
+				</div>
+				<div class="wrap seg">
+					<div class="box">
+						<p>
+							<a href="javascript:;" class="btn-add"><i class="fa fa-arrow-right"></i></a>
+						</p>
+						<br>
+						<p>
+							<a href="javascript:;" class="btn-remove"><i class="fa fa-arrow-left"></i></a>
+						</p>
+					</div>
+				</div>
+				<div class="wrap wrap-new">
+					<label>公示范围：</label>
+					<div class="box">
+						<ul class="list-emp list-dept-select-temp">
+
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info def-btn-info info-addiinfo" onclick="setWorkPlanRule('add');"> +新建规则</a>
+			<a class="btn btn-sm btn-info def-btn-info info-addiinfo" enable-on="singleselect" enable-tip="多选时不能进行编辑操作。" onclick="setWorkPlanRule('update');"> 修改</a>
+			<a class="btn btn-sm btn-info def-btn-info info-addiinfo" onclick="deteleWorkPlanRule();"> 删除</a>
+		</div>
+	</body>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="../resources/js/main.min.js"></script>
+	<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+	<script type="text/javascript">
+		var workPlanRuleSetTableUrl = BSAPIURL + "/work_schedule_rules";
+		var weekPlanRuleUrl = BSAPIURL + "/work_schedule_rules";
+		var weekPlanRuleEditingUrl = BSAPIURL + "/work_schedule_rules/";
+		var weekPlanRuleDeleteUrl = BSAPIURL + "/work_schedule_rules";
+		var workPlanRuleSetGrid = "";
+		var workPlanRuleSetPlace = "#grid-table";
+		var selectDepts = [];
+		var depa_apply_type = "";
+
+		$(function() {
+			$.token();
+			var gridHeight = $(window).height() - 135;
+			//alert($(".remark").height());
+			var colNames = ['', '规则名称', '周计划提交截止时间', '周计划上级审核截止时间', '周总结提交时间', '适用部门'];
+			var colModel = [{
+				name: 'id',
+				hidden: true,
+				formatter: function(cellvalue, options, rowObject) {
+					return rowObject.rule_id;
+				}
+			}, {
+				name: 'rule_name',
+				formatter: function(cellvalue, options, rowObject) {
+					return "<a href='javascript:;' onclick=\"setWorkPlanRule('update','" + rowObject.rule_id + "') \" role-auth1=\"os/roles/0|put\" role-auth1-tip=\"你无权限修改角色信息。\">" + rowObject.rule_name + "</a>";;
+				}
+			}, {
+				name: '__work_schedule_approval_week_day',
+				formatter: function(cellvalue, options, rowObject) {
+					return getWeek(rowObject.work_schedule_submit_week_day) + " " + rowObject.work_schedule_submit_time;
+				}
+			}, {
+				name: '__work_schedule_approval_week_day',
+				formatter: function(cellvalue, options, rowObject) {
+					return getWeek(rowObject.work_schedule_approval_week_day) + " " + rowObject.work_schedule_approval_time;
+				}
+			}, {
+				name: 'work_schedule_approval_week_day',
+				formatter: function(cellvalue, options, rowObject) {
+					return getWeek(rowObject.work_summary_submit_week_day) + " " + rowObject.work_summary_submit_time;
+				}
+			}, {
+				name: 'depa_outpatients_count',
+				formatter: function(cellvalue, options, rowObject) {
+					var str = "";
+					for(var i in rowObject.depa_arr) {
+						if(i != rowObject.depa_arr.length - 1) {
+							str += rowObject.depa_arr[i].depa_name + ",";
+						} else {
+							str += rowObject.depa_arr[i].depa_name;
+						}
+
+					}
+					return str + "  (" + rowObject.depa_apply_type_cn + ")";
+				}
+			}];
+			workPlanRuleSetGrid = $(workPlanRuleSetPlace).initJqGrid({
+				//保存本行所以数据
+				storeRowDataInCache: true,
+				grid_selector: workPlanRuleSetPlace,
+				url: workPlanRuleSetTableUrl,
+				pager: "#grid-bottom",
+				footerBtnContainer: "#grid-footer-container",
+				colNames: colNames,
+				colModel: colModel,
+				showPager: false,
+				height: gridHeight
+			});
+
+		});
+		//新建、修改规则
+		function setWorkPlanRule(action, id) {
+			if(action == "update" && (!$(workPlanRuleSetGrid).isSelectedRowForjqGrid() && !id)) {
+				$.showErrorGritter("请先选择要编辑的规则。");
+				return false;
+			}
+			var defaultCheckedIds = [];
+			var defaultCheckedArea = "";
+			var actionText = (action == "add" ? "新建" : "修改");
+			var modalId = $.modal({
+				okButtonText: "保存"
+			}).show(actionText + "周计划规则", ".set-work-plan-rule",
+				function(modal) {
+					doWeekPlanPost(0);
+				});
+			var formContainer = "#" + modalId + " .modal-body";
+			//时间插件
+			$.initTimePicker({
+				container: $(formContainer+" .time-picker"),
+				format: "hh:mm"
+			});
+			function getOrSetDataTime(type,data){
+				if(type=="set") {
+					try{
+						$(formContainer+" .weekplan-submittime-text.time-picker select:first-child option[value='"+data.work_schedule_submit_time.split(":")[0]+"']").attr("selected","selected");
+						$(formContainer+" .weekplan-submittime-text.time-picker select:last-child option[value='"+data.work_schedule_submit_time.split(":")[1]+"']").attr("selected","selected");
+						$(formContainer+" .weekplan-audittime-text.time-picker select:first-child option[value='"+data.work_schedule_approval_time.split(":")[0]+"']").attr("selected","selected");
+						$(formContainer+" .weekplan-audittime-text.time-picker select:last-child option[value='"+data.work_schedule_approval_time.split(":")[1]+"']").attr("selected","selected");
+						$(formContainer+" .weeksummarize-submittime-text.time-picker select:first-child option[value='"+data.work_summary_submit_time.split(":")[0]+"']").attr("selected","selected");
+						$(formContainer+" .weeksummarize-submittime-text.time-picker select:last-child option[value='"+data.work_summary_submit_time.split(":")[1]+"']").attr("selected","selected");
+					}catch(e){
+					}
+				}else{
+					return {
+						work_schedule_submit_time:$(formContainer+" .weekplan-submittime-text.time-picker select:first-child option:selected").val()+":"+
+													$(formContainer+" .weekplan-submittime-text.time-picker select:last-child option:selected").val(),
+						work_schedule_approval_time:$(formContainer+" .weekplan-audittime-text.time-picker select:first-child option:selected").val()+":"+
+													$(formContainer+" .weekplan-audittime-text.time-picker select:last-child option:selected").val(),
+						work_summary_submit_time:$(formContainer+" .weeksummarize-submittime-text.time-picker select:first-child option:selected").val()+":"+
+													$(formContainer+" .weeksummarize-submittime-text.time-picker select:last-child option:selected").val(),
+					}
+				}
+			}
+			var rowData = {};
+			var infoController = new Controller(formContainer);
+			if(action == "update") {
+				//取得选中行的数据
+				rowData = $(workPlanRuleSetPlace).getRowData4JqGrid("id", id);
+				//console.log(rowData)
+				for(var i in rowData.depa_arr) {
+					defaultCheckedIds.push(rowData.depa_arr[i].depa_id);
+				}
+				defaultCheckedArea = rowData.depa_apply_type;
+				if(rowData.work_schedule_approval_time.length > 6) {
+					//时间格式转换
+					rowData.work_schedule_approval_time = changTimeFormat(rowData.work_schedule_approval_time);
+					rowData.work_schedule_submit_time = changTimeFormat(rowData.work_schedule_submit_time);
+					rowData.work_summary_submit_time = changTimeFormat(rowData.work_summary_submit_time);
+				}
+			}
+			var selectDeptDom = $(formContainer + " .select-department");
+			var areaText = rowData.depa_apply_type == 0 ? "所选部门及所有下属部门" : rowData.depa_apply_type == 1 ? "所选部门所有人" : rowData.depa_apply_type == 2 ? "所选部门员工" : rowData.depa_apply_type == 3 ? "所选部门负责人" : "";
+//			selectDeptDom.append("<p style='color:#999;'>生效范围：" + areaText + "</p>");
+			depa_apply_type = rowData.depa_apply_type;
+			//吧数据填充入表单
+			console.log(rowData);
+			infoController.set(rowData);
+			getOrSetDataTime("set",rowData);
+//			//			//绑定时间插件
+//			$(formContainer + ' .datetimepicker').datetimepicker({
+//				autoclose: true,
+//				format: 'hh:ii',
+//				startView: 1,
+//				minuteStep: 1,
+//				maxView: 1,
+//				showMeridian: true
+//			});
+			var tempHtml = "<span class=\"item depart-list\" data-dept-id=\"{0}\">{1} <img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span> ";
+			//添加规则适用部门
+			$(formContainer + " .add-depart").click(function() {
+				//选择部门
+				selectDepts = [];
+				var options = {
+					url: SAASAPIS.BS.company.departments.replace("{id}", $.uuid()),
+					leftTitle: "请以部门为单位选择适用范围：",
+					rightTitle: "已选择的范围：",
+					//isNeedRightPanel: true, //是否需要右边的模块
+					defaultCheckedIds: getDefualtCheckedIdsArr(formContainer+" .select-department .item","data-dept-id"),
+					defaultCheckedArea: defaultCheckedArea,
+					height: 570,
+					areaItems: [{
+						name: "depa_apply_type",
+						value: 2,
+						text: "仅所选部门员工"
+					}, {
+						name: "depa_apply_type",
+						value: 3,
+						text: "仅所选部门负责人"
+					}, {
+						name: "depa_apply_type",
+						value: 1,
+						text: "所选部门所有人"
+					}, {
+						name: "depa_apply_type",
+						value: 0,
+						text: "所选部门及所有下属部门",
+						notAllowedRepeat: true
+					}],
+					linkageType: 0, //联动类型   0统计(不联动)   1（下联动） 2 （双联动）
+					//modalId: modalIdOfDeptId, //打开的modal的id
+					clickCallback: function(data) { //为关闭modal时需要的数据赋值
+						selectDepts = data.selectDepts;
+						depa_apply_type = data.area_value;
+						selectDeptDom.empty();
+						//						var areaText=data.value==
+						selectDeptDom.append("<p style='color: #999;'>生效范围：" + data.area_text + "</p>")
+						defaultCheckedIds = [];
+						defaultCheckedArea = data.area_value;
+						for(var i in selectDepts) {
+							var deptData = selectDepts[i];
+							defaultCheckedIds.push(deptData.dept_id);
+							if(selectDeptDom.find("span[data-dept-id='" + deptData.dept_id + "']").length > 0) {
+								continue;
+							}
+							selectDeptDom.append($.format(tempHtml, deptData.dept_id, deptData.dept_name));
+						}
+						selectDeptDom.find(".depart-list").unbind("mouseover").mouseover(function(){
+							transImgSrc($(this).find("img"));
+						}).unbind("mouseout").mouseout(function(){
+							transImgSrc($(this).find("img"));
+						});
+					}
+				}
+				initDeptTreeOfTwoStep(options);
+				/*var modalIdOfDeptId = $.modal({
+					width: 910
+				}).show("选择部门", ".pnl-dept-select-share",
+					function(modal) {
+						for(var i in selectDepts) {
+							var deptData = selectDepts[i];
+							if(selectDeptDom.find("span[data-dept-id='" + deptData.dept_id + "']").length > 0) {
+								continue;
+							}
+							selectDeptDom.append($.format(tempHtml, deptData.dept_id, deptData.dept_name));
+						}
+						modal.modal("hide");
+					}
+				);
+				var options = {
+					url: SAASAPIS.BS.company.departments.replace("{id}", $.uuid()),
+					leftTitle: "请以部门为单位选择适用范围：",
+					rightTitle: "已选择的范围：",
+					isNeedRightPanel: true, //是否需要右边的模块
+					linkageType: 1, //联动类型   0统计(不联动)   1（下联动） 2 （双联动）
+					modalId: modalIdOfDeptId, //打开的modal的id
+					clickCallback: function(data) { //为关闭modal时需要的数据赋值
+						selectDepts = data;
+					}
+				}
+				initDeptTree(options); //主函数
+				*/
+				//部门选择
+				/*$.showDeptSelectPop({
+					subTitle: "选择部门：",
+					selectedDeptIds: [],
+					multiple: true,
+					okCallback: function(selectDepts) {
+						for(var i in selectDepts) {
+							var deptData = selectDepts[i];
+							if(selectDeptDom.find("span[data-dept-id='" + deptData.dept_id + "']").length > 0) {
+								continue;
+							}
+							selectDeptDom.append($.format(tempHtml, deptData.dept_id, deptData.dept_name));
+						}
+					}
+				});*/
+			});
+			//			/部门数据读取
+			for(var i in rowData.depa_arr) {
+				var str = "<span class=\"item depart-list\" data-dept-id='" + rowData.depa_arr[i].depa_id + "'>" + rowData.depa_arr[i].depa_name + "<img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span>"
+				selectDeptDom.append(str);
+			}
+			selectDeptDom.find(".depart-list").unbind("mouseover").mouseover(function(){
+				transImgSrc($(this).find("img"));
+			}).unbind("mouseout").mouseout(function(){
+				transImgSrc($(this).find("img"));
+			});
+			//提交数据
+			function doWeekPlanPost() {
+				if(!inputValidateForGritter(formContainer)) {
+					return false;
+				}
+				//验证适用部门是否为空
+				if($(formContainer + " .depart-list").length <= 0) {
+					$.showErrorGritter("适用部门不能为空");
+					return false;
+				}
+				var infoData = infoController.getJSON();
+				//获取部门id
+				var deparId = [];
+				$(formContainer + " .depart-list").each(function(index) {
+					deparId.push($(this).attr("data-dept-id"));
+				});
+				infoData.depa_id_list = deparId;
+				infoData.depa_apply_type = depa_apply_type;
+				var selectedTimeData=getOrSetDataTime("get");
+				infoData.work_schedule_submit_time=selectedTimeData.work_schedule_submit_time;
+				infoData.work_schedule_approval_time=selectedTimeData.work_schedule_approval_time;
+				infoData.work_summary_submit_time=selectedTimeData.work_summary_submit_time;
+				var urlInfo = "";
+				if(action == "update") {
+					urlInfo = rowData.rule_id
+				}
+				$.ajaxByAction(action, weekPlanRuleEditingUrl + urlInfo, infoData, function(response) {
+					if(response.code == 0) {
+						//success
+						$("#" + modalId).modal('hide');
+						$.showSuccessGritter(actionText + "规则成功。");
+						//刷新表格
+						$(workPlanRuleSetPlace).reloadGrid();
+					} else {
+						$.showErrorGritter("保存规则失败：" + response.msg);
+					}
+				});
+			}
+		}
+		//删除规则
+		function deteleWorkPlanRule(id) {
+			if(!$(workPlanRuleSetGrid).isSelectedRowForjqGrid()) {
+				$.showErrorGritter("请先选择要删除的规则。");
+				return false;
+			}
+			$.modal().confirm("确认删除规则?", function() {
+				var selectRowIds = {
+					"rule_id_arr": $(workPlanRuleSetGrid).getSelectRowIdsForjqGrid("id")
+				}
+				$.ajaxDelete(weekPlanRuleDeleteUrl, selectRowIds, function(response) {
+					if(response.code == 0) {
+						//success									
+						$.showSuccessGritter("删除成功！");
+						$(workPlanRuleSetPlace).reloadGrid();
+					} else {
+						$.showErrorGritter("删除失败：" + response.msg);
+					}
+				});
+			});
+		}
+		//星期返回
+		function getWeek(index) {
+			switch(index) {
+				case "1":
+					return "周一";
+					break;
+				case "2":
+					return "周二";
+					break;
+				case "3":
+					return "周三";
+					break;
+				case "4":
+					return "周四";
+					break;
+				case "5":
+					return "周五";
+					break;
+				case "6":
+					return "周六";
+					break;
+				default:
+					return "周日";
+			}
+		}
+		//时间格式转换hh:mm:ss→hh:mm
+		function changTimeFormat(timText) {
+			return timText.substring(0, timText.length - 3);
+		}
+	</script>
+
+</html>

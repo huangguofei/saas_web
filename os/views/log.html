@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>系统日志管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-datetimepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+	</head>
+
+	<body>
+		<div class="page-container">
+			<div class="remark">
+				<i class="fa fa-list-ol fa-2x"></i><span>*系统运行日志记录</span>
+			</div>
+			<div class="content">
+				<div class="search search-log">
+					<div class="form-inline">
+						<label>类型:</label>
+						<select id="selStatus" class="form-control" bind="type">
+							<option value="" selected="selected">请选择日志类型</option>
+							<optgroup label="业务">
+								<option value="0">业务调试日志</option>
+								<option value="1">业务信息</option>
+								<option value="2">业务警告</option>
+								<option value="3">业务错误</option>
+							</optgroup>
+							<optgroup label="系统">
+								<option value="10">系统调试日志</option>
+								<option value="11">系统信息</option>
+								<option value="12">系统警告</option>
+								<option value="13">系统错误</option>
+							</optgroup>
+						</select>
+						<label>记录日期:</label>
+						<span class="relative"><input type="text" class="form-control datetime-picker form-control-time-start" bind="time_start"/></span>
+						<span>至</span>
+						<span class="relative"><input type="text" class="form-control datetime-picker form-control-time-end" bind="time_end" /></span>
+						<input id="txtKey" class="form-control form-control-search-key" type="text" placeholder="请输入模块名称或关键字查找" bind="key" />
+						<button type="button" class="btn btn-default" onclick="reloadGrid();" role-auth="os/logs|get">查 询</button>
+					</div>
+				</div>
+				<div class="role-list">
+					<table id="grid-table" class="grid-module">
+					</table>
+					<div id="grid-pager">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="grid-footer-container" class="hide">
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/moment-with-locales.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datetimepicker.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			var grid_selector = "#grid-table";
+			var pager_selector = "#grid-pager";
+			var searchController = new Controller(".search-log");
+			$(document).ready(function() {
+				searchController.set({
+					type: "",
+					time_start: "",
+					time_end: "",
+					key: ""
+				});
+				//token
+				$.token();
+				//grid
+				//133 = remark 21(padding+border) + search margin-bottom 10 + pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".remark").height() - $(".search").height() - 153;
+				//alert($(".remark").height());
+				var colNames = ['', '模块', '类型', '内容', '时间'];
+				var colModel = [{
+					name: 'id',
+					index: 'id',
+					hidden: true
+				}, {
+					name: 'module_name',
+					index: 'module_name',
+					sortable: true
+				}, {
+					name: 'type',
+					index: 'type',
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var className = "default";
+							if(cellvalue == 0 || cellvalue == 10) {
+								className = "default";
+							}
+							if(cellvalue == 1 || cellvalue == 11) {
+								className = "info";
+							}
+							if(cellvalue == 2 || cellvalue == 12) {
+								className = "warning";
+							}
+							if(cellvalue == 3 || cellvalue == 13) {
+								className = "danger";
+							}
+							return "<span class=\"label label-" + className + "\">" + LOGTYPEDATA[cellvalue] + "</span>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'content',
+					index: 'content',
+					sortable: true,
+					width: 500
+				}, {
+					name: 'log_time',
+					index: 'log_time',
+					sortable: false,
+					width: 100,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return $.convertToDate(cellvalue).Format("yyyy-MM-dd hh:mm:ss");
+						} catch(e) {
+							return '';
+						}
+					}
+				}];
+				grid = $(grid_selector).initJqGrid({
+					grid_selector: grid_selector,
+					pager: pager_selector,
+					url: SAASAPIS.OS.logs,
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight,
+					multiselect: false
+				});
+				$('.datetime-picker').datetimepicker({
+					format: "YYYY-MM-DD HH:mm:ss"
+				});
+			});
+
+			function reloadGrid() {
+				var searchModel = searchController.getJSON();
+				searchModel.time_start = $(".form-control-time-start").val();
+				if(searchModel.time_start) {
+					searchModel.time_start = $.convertToDate(searchModel.time_start).getTimestamp();
+				}
+				searchModel.time_end = $(".form-control-time-end").val();
+				if(searchModel.time_end) {
+					searchModel.time_end = $.convertToDate(searchModel.time_end).getTimestamp();
+				}
+				var url = SAASAPIS.OS.logs + $.toQueryString(searchModel, true);
+				$("#grid-table").jqGrid('setGridParam', {
+					page: 1,
+					url: url
+				}).trigger("reloadGrid", {});
+			}
+			var LOGTYPEDATA = {
+				0: "业务调试日志",
+				1: "业务信息",
+				2: "业务警告",
+				3: "业务错误",
+				10: "系统调试日志",
+				11: "系统信息",
+				12: "系统警告",
+				13: "系统错误"
+			};
+		</script>
+	</body>
+
+</html>

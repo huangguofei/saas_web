@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>客户拜访定位</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-datetimepicker.min.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style type="text/css">
+			.tree {
+				/*margin-left: 10px;*/
+				/*margin-top: 10px;*/
+				padding-left: 0;
+				min-width: 209px;
+			}
+			
+			.tree>li {
+				padding-left: 11px;
+			}
+			
+			.page-container,
+			.page-container .content {
+				padding: 0;
+				margin: 0;
+			}
+			
+			.tree li {
+				cursor: pointer;
+				/*line-height: 25px;*/
+			}
+			
+			.tree li li {
+				margin-left: 30px;
+			}
+			
+			.visit-location-main {
+				/*min-width: 1200px;*/
+				position: relative;
+				padding-left: 200px;
+			}
+			
+			.visit-location-main-departree {
+				width: 210px;
+				border-right: 1px solid #ccc;
+				position: absolute;
+				top: 0;
+				left: 0;
+				background-color: #f8f8f8;
+			}
+			
+			.visit-location-main-content {
+				width: 100%;
+				/*border: 1px solid #ccc;*/
+				border-top: 0;
+				border-left: 0;
+				padding: 14px 0 0 26px;
+			}
+			
+			.main-content-search {
+				/*border: 1px solid #ccc;*/
+				/*border-radius: 5px;*/
+				/*-webkit-border-radius: 5px;*/
+				/*-moz-border-radius: 5px;*/
+				margin: 0 0 14px 0;
+				line-height: 30px;
+				font-size: 12px;
+				/*padding: 5px 10px;*/
+			}
+			
+			.main-content-search p,
+			.main-content-search input {
+				color: #666;
+			}
+			
+			.main-content-search input[type="text"] {
+				width: 90px;
+				height: 26px;
+			}
+			
+			.main-content-search input[type="text"] {
+				margin: 0 10px;
+			}
+			
+			.main-content-search input[type="checkbox"] {
+				margin: 5px 3px 0 10px;
+				vertical-align: sub;
+			}
+			
+			.visit-type label {
+				margin-right: 20px;
+			}
+			
+			.main-content-tab {
+				width: 100%;
+			}
+			
+			.tree li {
+				cursor: pointer;
+				/*line-height: 25px;*/
+			}
+			
+			.tree li li {
+				margin-left: 12px;
+				z-index: 99;
+			}
+			
+			ul.tree li:before {
+				z-index: -1111;
+			}
+			
+			.tree .top-line:before {
+				border-top-color: #e3e3e3!important;
+			}
+			
+			.left-line {
+				border-left-color: #e3e3e3!important;
+			}
+			
+			ul.tree li>li.bottom-line:last-child:before {
+				background-color: #f8f8f8;
+				left: -22px;
+			}
+			
+			.nav-visit>div {
+				height: 45px;
+				width: 100%;
+				padding: 8px 0;
+				border-bottom: 1px solid #e3e3e3;
+				background-color: #fff;
+			}
+			
+			.nav-visit>div>a {
+				display: inline-block;
+				line-height: 29px;
+				width: 100%;
+				padding-left: 20px;
+				color: #666;
+				font-size: 14px;
+				text-decoration: none;
+				position: relative;
+			}
+			
+			.nav-visit>div>a img {
+				position: absolute;
+				top: 10px;
+				right: 15px;
+			}
+			
+			.nav-visit>div>a.active {
+				border-left: 2px solid #ca192b;
+				color: #ca192b;
+			}
+			
+			.tree>li {
+				display: none;
+			}
+			
+			.tree>li ul>li:last-child:before {
+				background-color: #f8f8f8!important;
+				border-left-color: #f8f8f8!important;
+			}
+			
+			.tree li label.hover {
+				background-color: #e0e0e0;
+			}
+			
+			.visit-time input {
+				font-size: 12px;
+				color: #666;
+			}
+			
+			.tree-view {
+				overflow: auto;
+			}
+			
+			.tree.dashed-dept-tree>li ul>li:last-child>p:before,
+			.tree.dashed-dept-tree>li ul>li:last-child>label:before {
+				border-color: #f8f8f8;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container ws-client-visit-location">
+			<div class="content">
+				<div class="visit-location-main at">
+					<div class="visit-location-main-departree lt">
+						<div class='nav-visit'>
+							<div>
+								<a class='active self' href='javascript:search(this,1);'>我的拜访记录</a>
+							</div>
+							<!--<div>
+								<a class='active' href='javascript:search(this);'>我的拜访记录</a>
+							</div>-->
+							<div>
+								<a data-toggle='down' class="lower" href='javascript:search(this,1);'>
+									下属的拜访记录<img src="../resources/images/slidup-icon.png" data-trans-src="../resources/images/sliddown-icon.png" />
+								</a>
+							</div>
+						</div>
+						<div class="tree-view">
+							<ul class="tree">
+							</ul>
+						</div>
+					</div>
+					<div class="visit-location-main-content">
+						<div class="main-content-search">
+							<p class="visit-time">拜访日期：<input type="text" id="datetimeStart" onchange="search()">至<input type="text" id="datetimeEnd" onchange="search()" value=""></p>
+							<p class="visit-type">拜访情况：<label><input type="checkbox" value="3" onchange="search()">正常结束</label><label><input type="checkbox" onchange="search()" value="4">异常结束</label></p>
+						</div>
+						<div class="main-content-tab">
+							<table id="visit-tab">
+							</table>
+							<table id="visit-tab-pager">
+							</table>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+	<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/kindeditor-min.js"></script>
+	<script type="text/javascript" src="../resources/kindeditor/zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="../resources/js/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script type="text/javascript" src="../resources/js/main.min.js"></script>
+	<script type="text/javascript">
+		var visitInfoGrid;
+		var visitInfoGridPlace = "#visit-tab";
+		var visitInfoGridUrl = BSAPIURL + "/crm/visit_record";
+		var departmenTreeUrl = BSAPIURL + "/company/depas?mode=2";
+		$(function() {
+			//绑定日期插件
+			//日期时间选择器
+			$("#datetimeStart").datetimepicker({
+				language: 'zh-CN',
+				format: "yyyy-mm",
+				autoclose: true,
+				startView: '3',
+				minView: '3',
+				viewSelect: 'decade',
+				pickerPosition: "bottom-left"
+			}).on("click", function(ev) {
+				$("#datetimeStart").datetimepicker("setEndDate", $("#datetimeEnd").val());
+			});
+			$("#datetimeEnd").datetimepicker({
+				language: 'zh-CN',
+				format: "yyyy-mm",
+				autoclose: true,
+				startView: '3',
+				minView: '3',
+				viewSelect: 'decade',
+				pickerPosition: "bottom-left"
+			}).on("click", function(ev) {
+				$("#datetimeEnd").datetimepicker("setStartDate", $("#datetimeStart").val());
+			});
+			//默认显示本月
+			$("#datetimeStart").val($.timeNow().Format("yyyy-MM"));
+			$("#datetimeEnd").val($.timeNow().Format("yyyy-MM"));
+			//加载部门树
+			loadDeparmentTree();
+			$(".visit-location-main-departree").height($(window).height());
+			var gridHeight = $(window).height() - $(".main-content-search").outerHeight(true) - 140;
+			//alert($(".remark").height());
+			var colNames = ['', '姓名', '日期', /*'拜访类型',*/ '拜访对象', '开始拜访时间', '结束拜访时间', '拜访时长'];
+			var colModel = [{
+					name: 'id',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.depa_id;
+					}
+				}, { //姓名，部门，单位
+					name: '__depa_name',
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.employee_name + "," + rowObject.depa_name;
+					}
+				}, { //日期
+					name: 'visit_date',
+				}
+				/*, { //类型
+								name: '__visit_type',
+								formatter: function(cellvalue, options, rowObject) {
+									return rowObject.visit_type == 1 ? "计划内拜访" : "计划外拜访";
+								}
+							}*/
+				, { //拜访对象
+					name: 'visit_target_name',
+					formatter: function(cellvalue, options, rowObject) {
+						//					var str = "";
+						//					if(rowObject.visit_mode == 1) {
+						//						str = rowObject.visit_target_name;
+						//					} else {
+						//						str = rowObject.contact_client_name + ">" + rowObject.contact_depa_name + ">" + rowObject.contact_name;
+						//					}
+						return rowObject.visit_target_name.replace(/[,|，]/g, ">");
+					}
+				}, { //开始拜访时间
+					name: 'visit_begin_time_cn'
+				}, { //结束拜访时间
+					name: 'visit_end_time_cn',
+					formatter: function(cellvalue, options, rowObject) {
+						if(rowObject.visit_status == 4) {
+							return cellvalue + "<span class='has-warning'>异常结束</span>";
+						}
+						return cellvalue;
+					}
+				}, { //拜访时长
+					name: 'visit_long_cn'
+				}
+			];
+			visitInfoGrid = $(visitInfoGridPlace).initJqGrid({
+				//				showPager: false,
+				pager: "#visit-tab-pager",
+				multiselect: false,
+				storeRowDataInCache: true,
+				grid_selector: visitInfoGridPlace,
+				url: visitInfoGridUrl + $.toQueryString(createData(), true),
+				colNames: colNames,
+				colModel: colModel,
+				height: gridHeight
+			});
+		});
+		//加载客户部门树
+		function loadDeparmentTree() {
+			loadDashedDeptTree({
+				container: ".tree",
+				url: departmenTreeUrl,
+				showIcon: true,
+				onlyShowDept: true,
+				childDepaKey: "departments",
+				depaIdKey: "depa_id",
+				parentDepaIdKey: "depa_parent_id",
+				removeHeightForTree: 0,
+				loadComplete: function() {
+					//					if($(".tree>li:first-child").length>0){
+					//						$(".tree>li:first-child").before("<div><a class='active' href='javascript:search(this);'>我的拜访记录</a><div>");
+					//					}else {
+					//						$(".tree").append("<div><a class='active' href='javascript:search(this);'>我的拜访记录</a><div>");
+					//					}
+					//					$(".tree>div:first-child").after("<div><a data-toggle='down' href='javascript:search(this);'>下属的拜访记录<img src=\"../resources/images/slidup-icon.png\" data-trans-src=\"../resources/images/sliddown-icon.png\" alt=\"\"></a></div>");
+					$(".tree-view").css({
+						"height": $(".visit-location-main-departree").outerHeight(true) - $(".nav-visit").outerHeight(true) - 10 + "px"
+					});
+
+					$(".visit-location-main-departree .nav-visit a").click(function() {
+						$(this).parent().siblings().find(">a").removeClass("active");
+						$(this).addClass("active");
+						transImgSrc($(this).find("img"));
+						if($(this).attr("data-toggle") == "down") {
+							$(this).attr("data-toggle", "up");
+							$(".tree>li").slideDown();
+						} else if($(this).attr("data-toggle") == "up") {
+							$(this).attr("data-toggle", "down");
+							$(".tree>li").slideUp();
+						}
+					});
+					$(".tree li label").unbind("click").click(function() {
+						$(".tree li label").removeClass("hover");
+						$(this).addClass("hover");
+						search(this, 2);
+					});
+				}
+			});
+			//			$(".tree>div:last-child:atfer").empty();
+			//			$.ajaxGet(departmenTreeUrl, function(response) {
+			//				var departTreeInfo = response.data;
+			//				console.log(departTreeInfo)
+			//				$(".tree").append("<div><a class='active' href='javascript:search(this);'>我的拜访记录</a><div>");
+			//				$(".tree").append("<div><a data-toggle='down' href='javascript:search(this);'>下属的拜访记录<img src=\"../resources/images/slidup-icon.png\" data-trans-src=\"../resources/images/sliddown-icon.png\" alt=\"\"></a></div>");
+			//				//打印顶层
+			//				loadChildDepartTerr(departTreeInfo, $(".tree"),true);
+			//				$(".tree>li>li i").trigger("click");
+			//				$(".tree>div>a").click(function(){
+			//					$(this).parent().siblings().find(">a").removeClass("active");
+			//					$(this).addClass("active");
+			//					transImgSrc($(this).find("img"));
+			//					if($(this).attr("data-toggle")=="down"){
+			//						$(this).attr("data-toggle","up");
+			//						$(".tree>li").slideDown();
+			//					}else if($(this).attr("data-toggle")=="up") {
+			//						$(this).attr("data-toggle","down");
+			//						$(".tree>li").slideUp();
+			//					}
+			//				});
+			//			});
+		}
+		//子部门加载
+		function loadChildDepartTerr(treeData, content, istopst) {
+			for(var i in treeData) {
+				var className = "";
+				if(istopst) { //最外层
+					className = "left-line";
+					//if(deptData.depa_type == 0)liDom.addClass("left-line");//有子部门或职务
+					//else liDom.addClass("left-line").addClass("top-line");//没有子部门
+				} else {
+					if(treeData[i].departments && treeData[i].departments.length) className = "right-line top-line";
+					else className = "bottom-line";
+				}
+				var str = "<li id=" + treeData[i].depa_id + " class='" + className + "'>";
+				str += "<div class='menu-title' onclick='search(this,2)'>";
+				str += treeData[i].departments ? "<i class='fa fa-minus-square-o' aria-hidden='true' onclick='deparTree(this)'></i>" : "";
+				str += "<span class=''>" + treeData[i].depa_name + "</span>";
+				str += "</div>";
+				str += "</li>";
+				content.append(str);
+				if(treeData[i].departments) {
+					loadChildDepartTerr(treeData[i].departments, $("#" + treeData[i].depa_id), false);
+				}
+			}
+		}
+		//左侧销售部菜单
+		function deparTree(obj) {
+			if($(obj).hasClass("fa-minus-square-o")) {
+				$(obj).removeClass("fa-minus-square-o").addClass("fa-plus-square-o");
+				$(obj).parent().next().slideUp();
+			} else {
+				$(obj).removeClass("fa-plus-square-o").addClass("fa-minus-square-o");
+				$(obj).parent().next().slideDown();
+			}
+		}
+
+		function search(obj, index) {
+			//刷新表格
+			var gridUrl = visitInfoGridUrl + $.toQueryString(createData(index), true);
+			$(visitInfoGridPlace).jqGrid('setGridParam', {
+				page: 1,
+				url: gridUrl
+			}).trigger("reloadGrid", {});
+		}
+
+		function createData(index) {
+			var departId = '',
+				employeeId = '';
+			if($(".nav-visit .active").hasClass("self")) {
+				employeeId = 'my';
+			} else {
+				if($(".tree-view .hover").length == 0) {
+					departId = '';
+				} else {
+					if(index != 1){
+						departId = $(".tree-view .hover").attr("code");
+					}
+				}
+			}
+			var starTime = $("#datetimeStart").val();
+			var endTime = $("#datetimeEnd").val();
+			var searchStatus = [];
+			$(".visit-type input:checked").each(function() {
+				searchStatus.push($(this).val());
+			});
+			var urlParameter = {
+				depa_id: departId,
+				employee_id: employeeId,
+				visit_month_start: starTime,
+				visit_month_end: endTime,
+				visit_status: searchStatus
+			}
+			console.log(urlParameter)
+			return urlParameter;
+		}
+	</script>
+
+</html>

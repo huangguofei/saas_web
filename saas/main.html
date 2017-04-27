@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>销秘-让天下没有难管的销售团队</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="resources/css/main-index.css" />
+		<link rel="stylesheet" href="resources/css/main-page.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="resources/css/hgf.css" />
+		<link rel="stylesheet" href="resources/css/jquery.mCustomScrollbar.css" />
+		<link rel="stylesheet" href="resources/css/address-book.css" />
+	</head>
+	<style type="text/css">
+		body,
+		html,
+		.right-container {
+			height: 100%;
+			margin-left: 210px;
+		}
+		
+		.left-menu {
+			width: 210px;
+		}
+		
+		.left-menu .menu-body .menu-group {
+			width: 210px;
+		}
+		
+		.header-wrap {
+			/*height: 6.5%;*/
+		}
+		
+		.tabtable {
+			height: calc(100% - 120px);
+			/*hgf 2017年3月2日12:10:14*/
+		}
+		
+		#tab-menu-container {
+			/*height: 3.5%;*/
+			height: 40px;
+		}
+		
+		.tab-content {
+			height: 100%;
+			/*hgf 2017年3月2日12:10:14*/
+		}
+		
+		.inbox-unread-num {
+			border-radius: 20px;
+		}
+		
+		.email-open {
+			position: relative;
+		}
+		
+		.unread-icon {
+			position: absolute;
+			top: 41%;
+			left: 25%;
+		}
+		
+		#addressbook {
+			position: relative;
+		}
+		.right-menu{
+			background: #f3f3f3;
+		}
+		
+		/*客服弹出窗新样式*/
+		
+	</style>
+
+	<body>
+		<div class="left-menu nav-list">
+			<div class="header-wrap">
+				<img class="logo" src="resources/images/main-logo.png" />
+			</div>
+			<div class="menu-body">
+				<div class="menu-group nano">
+					<div class="panel-group nano-content" id="accordion" role="tablist" aria-multiselectable="true">
+						<div class="panel">
+							<div class="panel-heading">
+								<h4 class="panel-title">
+						        <a role="button">
+						          <i class="fa fa-angle-right" g="icon-collapse"></i> 正在加载功能菜单...
+						        </a>
+						      </h4>
+							</div>
+						</div>
+						<!--<div class="panel">
+						<div class="panel-heading" role="tab" id="headingOne">
+							<h4 class="panel-title">
+						        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						          <i class="fa fa-angle-down" g="icon-collapse"></i> Head
+						        </a>
+						      </h4>
+						</div>
+						<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+							<div class="panel-body">
+								<a href="javascript:;" url="module.html"><i class="fa fa-comment-o"></i> Link</a>
+							</div>
+						</div>
+					</div>-->
+					</div>
+				</div>
+				<div class="clear"></div>
+				<a class="link-collapse" href="javascript:;" onclick="fold();" title="隐藏/展开菜单栏"><img src="resources/images/collapse-false.png" /></a>
+			</div>
+		</div>
+		<div class="right-container">
+			<div class="header-wrap">
+				<h3>
+					<!--<img class="logo-company hide" src="resources/images/logo-footer.png" style="height: 35px;" />-->
+					<span class="label-company-name"></span>
+				</h3>
+				<div class="header-right">
+					<a class="email-open">
+						<img src="resources/images/main-top-email-icon.png" alt="图标" />
+						<img src="resources/images/red-point-icon.png" class="unread-icon hide" alt="未读" />
+						<span>邮箱</span>
+					</a>
+					<a>
+						<img src="resources/images/for-help-icon.png" alt="图标" />
+						<span>帮助中心</span>
+					</a>
+					<a class="personal-center">
+						<span id="lblRealName" class="css-overhidden">name</span>
+						<img src="resources/images/main-angle-down.png" data-trans-src="resources/images/personal-top.png" alt="" />
+						<div class="personal-center-down">
+							<div title="个人中心">
+								<img src="resources/images/personal-center-icon.png" alt="" />
+								<span id="lblRealDepaName" class="set-safety">个人中心</span>
+							</div>
+
+							<div title="退出" onclick="logout();">
+								<img class="exsit-icon" src="resources/images/exsit.png" />
+								<span>退出</span>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+			<div id="tab-menu-container">
+				<!--<div class="scroll-icon scroll-icon-left">
+					<i class="fa fa-x  fa-angle-left scroll-to-left"></i>
+				</div>-->
+				<!--<div class="tab-menu-container">-->
+				<ul class="nav nav-tabs" id="tab-menu">
+					<li class="hide">
+						<a class="pref"></a>
+					</li>
+					<li class="active" style="margin-top: 6px;" url="welcom.html">
+						<a data-toggle="tab" href="#welcome" aria-expanded="true" class="active">主页</a>
+					</li>
+					<li class="last-li" url="welcom11.html">
+						<!--<a data-toggle="tab" href="#welcome11">控制台 <i class="fa fa-caret-down"></i></a>-->
+						<ul class="sub-nav hide">
+							<li url="welcom11.html" class="hide">
+								<a data-toggle="tab" href="#welcome">主页</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<!--<ul class="sub-nav hide">
+				</ul>-->
+				<!--</div>-->
+				<div class="scroll-icon scroll-icon-right hide">
+					<!--<i class="fa fa-x  fa-angle-right scroll-to-right"></i>-->
+					<span>更多</span>
+					<img src="resources/images/more-down.png" data-trans-src="resources/images/more-top.png" class="scroll-toggle-up" alt="图标" />
+					<!--<i class="fa fa-sort-desc fa-x "></i>-->
+				</div>
+			</div>
+			<div class="tabtable">
+				<div class="tab-content" id="main-tab-content">
+					<div id="welcome" class="tab-pane in active">
+						<iframe width="100%" height="100%" frameborder="0" scrolling="auto"></iframe>
+					</div>
+				</div>
+				<!--<div class="nav-bar"><a href="javascript:;"><i class="fa fa-refresh"></i> 刷新页面</a></div>-->
+			</div>
+			<div class="right-menu">
+				<ul class="right-menu-list">
+					<li class="chat-open">
+						<!-- class="hover"-->
+						<a>聊天</a>
+						<img src="resources/images/right-chart-icon.gif" alt="聊天" />
+						<i class="border-bottom"></i>
+					</li>
+					<li>
+						<a class="">MTa</a>
+						<img src="resources/images/right-MT-icon.png" alt="MTa" />
+						<i class="border-bottom"></i>
+					</li>
+					<li id="addressbook">
+						<a class="">通讯录</a>
+						<img src="resources/images/right-contacts-icon.png" alt="通讯录" />
+						<i class="border-bottom"></i>
+					</li>
+					<li id="msg">
+						<a class="">通知</a>
+						<img src="resources/images/right-notify-icon.png" alt="通知" />
+						<i class="border-bottom"></i>
+					</li>
+					<li class="bottom-menu">
+						<a class="link-service">客服</a>
+						<img class="customer-icon" src="resources/images/right-customer-service-icon.png" alt="客服" />
+						<!--<i class="border-bottom"></i>-->
+						<!--<a href="#" class="link-service"><img src="resources/images/kefu.png"></a>-->
+						<div class="sub-menu sub-menu-service hide">
+							<div class="angle-right-container">
+								<img class="angle-right hide" src="resources/images/customer-angle-right.png" alt="" />
+							</div>
+						</div>
+					</li>
+				</ul>
+
+				<!--<div class="user btn-group hide">
+					<div data-toggle="dropdown" class="btn-user"><img src="resources/images/timo.jpg" onerror="nofind(this);" class="head img-head" /> </div>
+					<ul class="dropdown-menu">
+						<li>
+							<div class="dropdown-menu-li">
+								<div title="修改密码" onclick="openSetPwdPop();">
+									<img style="width:23px;height:23px;" src="/resources/images/password-icon.png">
+								</div>
+								<span id="lblRealName">name</span>
+							</div>
+	
+						</li>
+						<li>
+							<div class="dropdown-menu-li dropdown-menu-li-exsit">
+							</div>
+	
+						</li>
+					</ul>
+				</div>
+				<div class="menu-bar hide">
+					<ul>
+						<li class="chat-open">
+							<img class='loading-img' src='../resources/images/loading.gif'>
+							<a href="#"><img src="resources/images/chart.png" alt="" /></a>
+						</li>
+						<li class="email-open">
+							<a href="#">
+								<img src="resources/images/xinjian.png" alt="" />
+							</a>
+						</li>
+						<li id="msg">
+							<a href="#"><img src="resources/images/notes.png" alt="" /></a>
+						</li>
+						<li>
+							<a href="#"><img src="resources/images/day-plan.png" alt="" /></a>
+						</li>
+						<li>
+							<a href="#"><img src="resources/images/contacts-book.png" alt="" /></a>
+						</li>
+					</ul>
+					<div class="bottom-menu">
+						<li>
+							<a href="#" class="link-service"><img src="resources/images/kefu.png"></a>
+							<p class="sub-menu sub-menu-service hide">
+							</p>
+						</li>
+						<li>
+							<a href="#"><img src="resources/images/light.png"></a>
+						</li>
+					</div>
+				</div>-->
+			</div>
+		</div>
+
+		<div class="clearfix"></div>
+		<div class="loadingPop border-radius-5 hide">
+			<i class="fa fa-refresh fa-spin" style="font-size: 20px; vertical-align: middle; margin-right: 5px;"></i> 正在加载页面，请稍后...
+		</div>
+		<div class="pnl-resetpwd hide">
+			<form class="form-horizontal model-resetpwd">
+				<div class="form-group form-inline">
+					<label class="input-flag">原密码</label>
+					<input id="txtOldPwd" type="password" class="form-control" placeholder="原密码" nulltip="原密码" maxlength="20">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">新密码</label>
+					<input id="txtPwd" type="password" class="form-control" placeholder="新密码" nulltip="新密码" maxlength="20" valitype="password" valirange="6-20" valitip="密码长度为 6-20 位。">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">确认密码</label>
+					<input id="txtPwd1" type="password" class="form-control" placeholder="确认密码" nulltip="确认密码" maxlength="20">
+				</div>
+			</form>
+		</div>
+		<div class="pnl-relogin hide">
+			<form class="form-horizontal model-relogin">
+				<div class="form-group form-inline">
+					<label class="input-flag">帐号</label>
+					<input id="txtAccount" type="text" class="form-control" placeholder="请输入帐号" nulltip="帐号" maxlength="20" disabled="disabled">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">密码</label>
+					<input id="txtPwd" type="password" class="form-control" placeholder="请输入密码" nulltip="密码" maxlength="20" valitype="password" valirange="6-20" valitip="密码长度为 6-20 位。">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">验证码</label>
+					<input id="txtCode" type="text" class="form-control" placeholder="请输入验证码" nulltip="验证码" maxlength="6" style="width: 160px; display: inline-block;">
+					<img class="img-code1" src="resources/images/code.jpg" title="点击刷新验证码" onclick="initVerifyCode();" />
+				</div>
+			</form>
+		</div>
+		<div class="load-group-member-list hide">
+			<div class="modal-body-main">
+				<div class="modal-body-left pull-left">
+					<p class="body-left-menu">请选择联系人:</p>
+					<div class="body-left-content">
+						<div class="body-left-content-top">
+							<input type="text" class="body-left-content-top-search" value="" placeholder="搜索姓名" />
+
+						</div>
+						<div class="body-left-content-list">
+							<ul class="tree-list-a">
+
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="modal-body-right pull-right">
+					<p class="body-left-menu">群成员:<span class="pull-right">已选<span class="select-num">0</span>人</span>
+					</p>
+					<div class="body-left-content">
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="modal-body-buttom">
+				<input type="button" class="btn btn-default add-group-member-btn" value="确认" />
+				<input type="button" class="btn btn-default back-btn" value="上一步" />
+			</div>
+		</div>
+		<!--<script src="https://cdn.bootcss.com/mootools/1.6.0/mootools-core-compat.js" type="text/javascript"></script>-->
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.qqFace.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="resources/js/jquery.mCustomScrollbar.concat.min.js"></script>
+		<script type="text/javascript" src="resources/js/customize/jquery.caret.js" ></script>
+		<script type="text/javascript" src="resources/js/customize/websocket.js"></script>
+		<script type="text/javascript" src="resources/js/customize/pinyin.js"></script>
+		<script type="text/javascript" src="resources/js/customize/IM.js"></script>
+		<script type="text/javascript" src="resources/js/customize/address-book.js"></script>
+		<script type="text/javascript">
+			//消息中间件
+			var HHMQ = function(debug) {
+				//调试模式
+				var debug = debug == undefined ? false : debug;
+				//发布者
+				var publishers = [];
+				//订阅者
+				var subscribers = [];
+				//队列消息
+				var msgQueue = [];
+				//添加发布者
+				var addPublisher = function(page, flag) {
+					log("有新的发布者加入：" + JSON.stringify({
+						page: page,
+						flag: flag
+					}));
+					var publisherData = getPublisherData(page, flag);
+					if(!getPublisherData(page, flag)) {
+						var tmpUuid = $.uuid();
+						var hhUser = new HHUser({
+							id: tmpUuid,
+							type: 1,
+							page: page,
+							flag: flag
+						});
+						publisherData = hhUser;
+						publishers.push(hhUser);
+					}
+					return {
+						//销毁
+						dispose: function() {
+							log("发布者 [" + publisherData.page + "] 退出队列。");
+							for(var i in publishers) {
+								if(publishers[i].id == publisherData.id) {
+									publishers.splice(i, 1);
+								}
+							}
+						},
+						//发布消息
+						publisheMsg: function(data, msgFlag) {
+							publisheMsg(data, msgFlag || flag);
+						}
+					};
+				};
+				//添加订阅者
+				var addSubscriber = function(page, flag, receiveMessageCallback) {
+					log("有新的订阅者加入：" + JSON.stringify({
+						page: page,
+						flag: flag
+					}));
+					var subscriberData = getSubscriberData(page, flag, receiveMessageCallback);
+					if(!subscriberData) {
+						var tmpUuid = $.uuid();
+						var hhUser = new HHUser({
+							id: tmpUuid,
+							type: 2,
+							page: page,
+							flag: flag,
+							sendMessageToSubscriber: receiveMessageCallback,
+						});
+						subscriberData = hhUser;
+						subscribers.push(hhUser);
+					} else {
+
+						subscriberData.sendMessageToSubscriber = receiveMessageCallback;
+					}
+					return {
+						//销毁
+						dispose: function() {
+							log("订阅者 [" + subscriberData.page + "] 退出队列。");
+							for(var i in subscribers) {
+								if(subscribers[i].id == subscriberData.id) {
+									subscribers.splice(i, 1);
+								}
+							}
+						},
+						//发布消息
+						publisheMsg: function(data, msgFlag) {
+							publisheMsg(data, msgFlag || flag);
+						},
+						messageProcessComplete: function() {}
+					};
+				};
+				//获取发布者对象
+				var getPublisherData = function(page, flag, receiveMessageCallback) {
+					for(var i in publishers) {
+						var publisherData = publishers[i];
+						if(publisherData.page == page && publisherData.messageFlag == flag) {
+							return publisherData;
+						}
+					}
+					return undefined;
+				};
+				//获取订阅者对象
+				var getSubscriberData = function(page, flag, receiveMessageCallback) {
+					for(var i in subscribers) {
+						var subscriberData = subscribers[i];
+						if(subscriberData.page == page && subscriberData.messageFlag == flag) {
+							subscriberData.sendMessageToSubscriber = receiveMessageCallback;
+							return subscriberData;
+						}
+					}
+					return undefined;
+				};
+				//发布消息
+				var publisheMsg = function(data, flag) {
+					log("有新消息发布：" + JSON.stringify({
+						flag: flag,
+						data: data
+					}));
+					msgQueue.push(new HHMsg(flag, data));
+					//有新消息时开始轮询
+					messagePolling();
+				};
+				//每秒轮询
+				//轮询是否启动
+				var msgPollingIsRuning = false;
+				var messagePolling = function() {
+					//已启动
+					if(msgPollingIsRuning) {
+						log("轮询已启动，返回。");
+						return false;
+					}
+					msgPollingIsRuning = true;
+					//是否正在轮询
+					var isPolling = false;
+					var currInterval = setInterval(function() {
+						//正在轮询
+						if(isPolling) {
+							log("正在轮询，返回。");
+							return false;
+						}
+						isPolling = true;
+						try {
+							log("开始消息轮询：" + JSON.stringify({
+								publisherCount: publishers.length,
+								subscriberCount: subscribers.length,
+								msgCount: msgQueue.length
+							}));
+							if(msgQueue.length > 0) {
+								//处理已通知消息
+								for(var i = 0; i < msgQueue.length; i++) {
+									if(msgQueue[i].status == 2) {
+										log("清除已完成消息：" + JSON.stringify(msgQueue[i]));
+										msgQueue.splice(i, 1);
+										i--;
+									}
+								}
+								//通知
+								for(var i in msgQueue) {
+									var msgData = msgQueue[i];
+									//查找是否有该消息的订阅者
+									for(var j in subscribers) {
+										var subscriberData = subscribers[j];
+										if(msgData.status == 1 && subscriberData.messageFlag.split(',').indexOf(msgData.flag) >= 0) {
+											log("通知订阅者 [" + subscriberData.page + "] 处理消息：" + JSON.stringify(msgData.data));
+											//找到订阅者就通知
+											if(subscriberData.sendMessageToSubscriber) {
+												var timer = setTimeout(function(msgData, subscriberData) {
+													subscriberData.sendMessageToSubscriber(msgData.flag, msgData.data);
+													clearTimeout(timer);
+													timer = null;
+												}(msgData, subscriberData), 0);
+											}
+										}
+									}
+									//通知所有订阅者完成
+									msgData.status = 2;
+								}
+							} else {
+								//无消息时停止轮询
+								msgPollingIsRuning = false;
+								clearInterval(currInterval);
+								log("当前无消息，停止轮询。");
+							}
+
+						} catch(ex) {
+							log("轮询出错：" + ex.message);
+						} finally {
+							//轮询结束
+							isPolling = false;
+						}
+					}, 1000);
+				}
+
+				//队列用户
+				function HHUser(userData) {
+					//Id
+					this.id = userData.id;
+					//类型 1-发布者；2-订阅者
+					this.type = userData.type;
+					//所在页
+					this.page = userData.page;
+					//消息类型
+					this.messageFlag = userData.flag;
+					//其他数据
+					this.data = userData.data;
+					//订阅者接收消息
+					this.sendMessageToSubscriber = userData.sendMessageToSubscriber;
+					//订阅者消息处理完成
+					this.onMessageProcessComplete = userData.onMessageProcessComplete;
+				}
+				//消息
+				function HHMsg(flag, data) {
+					//发布者
+					this.publisher;
+					//消息类型
+					this.flag = flag;
+					//消息状态  1-未通知；2-已通知
+					this.status = 1;
+					//消息数据
+					this.data = data;
+				}
+				//打印日志
+				var log = function(msg) {
+					if(debug) {
+//						console.log("[" + $.timeNow().Format("yyyy-MM-dd hh:mm:ss") + "] " + msg);
+					}
+				};
+
+				log("消息队列初始完成。");
+				return {
+					//创建发布者
+					createPublisher: addPublisher,
+					//创建订阅者
+					createSubscriber: addSubscriber
+				};
+			}(true);
+
+			//消息分发者
+			var mainPublisher = HHMQ.createPublisher('主页', 'main');
+
+			//			setInterval(function() {
+			//				mainPublisher.publisheMsg({
+			//					msg: $.timeNow().Format("yyyy-MM-dd hh:mm:ss") + " - 定时消息。"
+			//				}, "welcome");
+			//			}, 10000);
+		</script>
+		<script type="text/javascript">
+			//判断sessionStorage中的session_id    如果session_id为空，需要重新登录
+			if(!sessionStorage.getItem("need_login")) {
+				logout("未登录，正在跳转登录页面...");
+			}
+			var tabPanelHeight = 0;
+			var uid = $.cookie("_u_id");
+			var uIsAdmin = $.cookie("_u_is_admin") == 1;
+			if(uIsAdmin) {
+				$(".set-safety").text("安全中心");
+				$(".set-safety").click(function() {
+					setTab('安全中心', 'views/user-center-admin.html');
+				});
+			} else {
+				$(".set-safety").text("个人中心");
+				$(".set-safety").click(function() {
+					setTab('个人中心', 'views/user-center.html');
+				});
+			}
+			var isVerified = null; //是否认证通过
+			//------------消息队列相关   订阅者-----------------------
+			var subscriber = HHMQ.createSubscriber('主页', 'company-auth,edition,email,welcome', function(flag, msgData) {
+				if(flag == "welcome") {
+					$.showSuccessGritter(JSON.stringify(msgData), {
+						clear: false
+					});
+				}
+				console.log()
+				//收到审批处理消息
+				if(msgData.action == "authPass") {
+					//认证通过
+					if(msgData.msg == 5 || msgData.msg == 6) isVerified = true;
+				}
+				if(msgData.action == "perfected") {
+					//认证通过
+					localStorage["_cmp_info_status"] = msgData.msg;
+				}
+				//收到邮件已读成功
+				if(msgData.action == "need-reqest-email") {
+					setInboxUnreadNum();
+				}
+				//收到版本购买成功
+				if(msgData.action == "buy-edition") {
+					hasEditionInfo = true;
+					cmpData.has_buy_edition = true;
+				}
+			});
+			//页面关闭事件
+			context.onPageClose = function() {
+				subscriber.dispose();
+			};
+			//------------消息队列相关   订阅者end -------------------
+			//			//------------消息队列相关   发布者-----------------------
+			//			var publisher = HHMQ.createPublisher('业务通知', 'business-notify');
+			//			//页面关闭事件
+			//			context.onPageClose = function() {
+			//				publisher.dispose();
+			//			};
+			//			//------------消息队列相关   发布者end -------------------
+			var cmpData = {};
+			var hasEditionInfo = false;
+			var canViewMid = {
+				notVerify: {
+					"3b279719-6031-4800-a149-7a4243b567c7": "3b279719-6031-4800-a149-7a4243b567c7",
+					"4E58E87F-567D-C79F-F6A6-DDA6550F8347": "4E58E87F-567D-C79F-F6A6-DDA6550F8347",
+					"d6e1f54b-fbd9-4b80-8da1-9e963fe8ce31": "d6e1f54b-fbd9-4b80-8da1-9e963fe8ce31"
+				},
+				notBuyEdition: {
+					"3b279719-6031-4800-a149-7a4243b567c7": "3b279719-6031-4800-a149-7a4243b567c7",
+					"4E58E87F-567D-C79F-F6A6-DDA6550F8347": "4E58E87F-567D-C79F-F6A6-DDA6550F8347",
+					"d6e1f54b-fbd9-4b80-8da1-9e963fe8ce31": "d6e1f54b-fbd9-4b80-8da1-9e963fe8ce31",
+					"b99195ab-1be7-4a63-a123-2a5261a23647": "b99195ab-1be7-4a63-a123-2a5261a23647"
+				}
+			}
+			$(document).ready(function() {
+				setTimeout(function() {
+					$("#msg .fa").addClass("icon-animated-vertical");
+
+				}, 10000);
+				//先清空缓存数据
+				localStorage["_BS_CITY"] = null;
+				localStorage["_CITY"] = null;
+				localStorage["_Hangye"] = null;
+				localStorage["_QYXZ"] = null;
+				localStorage["_IFRAMEHEIGHT"] = null;
+				//user
+				var uName = $.cookie("_u_name");
+				var uDepaName = $.cookie("_u_depa_name");
+				if(!uName || uName == "null") {
+					uName = "管理员";
+				}
+				if(!uDepaName || uDepaName == "null") {
+					uDepaName = "";
+				}
+				$("#lblRealName").text(uName);
+				//$("#lblRealDepaName").text(uDepaName);
+				var welcomUrl = "welcome.html";
+				if(uIsAdmin)
+					welcomUrl = "views/company-tip.html";
+				$(".tab-content #welcome>iframe").attr("src", welcomUrl);
+				$("img.img-head").attr("src", $.cookie("_u_avatar"));
+				//init module data
+				loadModuleData();
+				//load companyinfo
+				loadCompanyInfo();
+				//token and Store code classes
+				loadTokenAndCodeClasses();
+				//cookie 4 fold
+				var tmpShr = $.cookie('_shr');
+				if(tmpShr === "true") {
+					isShr = tmpShr;
+					$(".left-menu").addClass("left-menu-fold");
+					$(".right-container").addClass("right-container-exp");
+					$(".menu-group").hide();
+					$(".left-menu .logo").css("margin-left", "10px");
+					$(".link-collapse").css("left", "54px");
+					$(".link-collapse img").attr("src", "resources/images/collapse-true.png");
+				}
+				//head-60;tabtable-margin:4;tab-nav:33px;tab-pane-padding:10;
+				tabPanelHeight = $(window).height() - 109;
+				localStorage["_IFRAMEHEIGHT"] = tabPanelHeight;
+				$("#welcome").height(tabPanelHeight);
+				//left service menu
+				$(".link-service,bottom-menu,.sub-menu-service").mouseenter(function() {
+					$(".sub-menu-service").removeClass("hide");
+					//$(".angle-right").removeClass("hide");
+				});
+				$(".link-service,bottom-menu,.sub-menu-service").mouseleave(function() {
+					$(".sub-menu-service").addClass("hide");
+					//$(".angle-right").addClass("hide");
+				});
+				//menu scroll
+				$(".panel-group").height($(window).height() - $(".left-menu .header-wrap").outerHeight());
+				//tab event
+				initTabEvent();
+			});
+			/*$(".right-menu-list li").mouseover(function (e){
+				if(e.target.nodeName=="A") return false;
+				$(".right-menu-list li").removeClass("hover");
+				$(this).addClass("hover");
+				$(this).find("a").addClass("hover");
+				$(this).find("i,img").addClass("hide");
+			});
+			$(".right-menu-list li").mouseout(function (e){
+				if(e.target.nodeName=="A") return false;
+				$(this).removeClass("hover");
+				$(this).find("a").removeClass("hover");
+				$(this).find("i,img").removeClass("hide");
+			});*/
+			//加载模块数据
+			function loadModuleData() {
+				$.ajaxGet(BSAPIURL + "/api_permission", function(response) {
+					if(response.code == 0) {
+						console.log("加载权限完成");
+						if(response.data.method["mail/index"] && response.data.method["mail/index"].indexOf("get") >= 0) {
+							$(".email-open").click(function() {
+								var fullName = "我的邮箱";
+								//alert(myId + "," + myName + "," + myAvatar);
+								window.parent.openTab(fullName, "views/e-mail.html");
+							});
+							var getInboxCountInterval = setInterval(function() {
+								setInboxUnreadNum();
+							}, 300000);
+							setInboxUnreadNum();
+						} else {
+							$("li.email-open").remove();
+						}
+						localStorage["_CURRAUTHS"] = null;
+						localStorage["_CURRAUTHS"] = JSON.stringify(response.data.method);
+						if(response.data.modules.length == 0) {
+							//time out or not longin
+							$.removeCookie("_u_id");
+							$.removeCookie("_u_name");
+							localStorage.removeItem("_CURRAUTHS");
+							$.processFailResponse({
+								code: 100000003
+							});
+							return false;
+						}
+						if(!uIsAdmin)initLeftMenuOfCommon(response.data.modules);
+						else initLeftMenuOfAdmin(response.data.modules);
+					} else {
+						//错误
+						$.showErrorGritter(response.msg, {
+							time: 5000
+						});
+					}
+				});
+			}
+			//加载公司信息
+			function loadCompanyInfo() {
+				//setTimeout(function(){
+				$.ajaxGet(SAASAPIS.BS.companies, function(response) {
+					if(response.code != 0) {
+						$.showErrorGritter("加载企业信息失败：" + response.msg)
+						return false;
+					}
+					cmpData = response.data;
+					//企业信息是否曾经认证通过
+					isVerified = cmpData.is_verify == 0 ? false : true;
+					localStorage["_cmp_info_status"] = cmpData.verify_status.info.status;
+					localStorage["plan-srat-year"] = new Date(cmpData.register_time.replace(/-/g,"/")).getFullYear();
+					var logoPath = response.data.logo;
+					if(logoPath) {
+						$(".logo-company").attr("src", logoPath).removeClass("hide");
+					}
+					$(".label-company-name").text(response.data.short_name||response.data.name||"");
+				});
+				//},1000);
+			}
+			//加载token和企业代码类
+			function loadTokenAndCodeClasses() {
+				setTimeout(function() {
+					$.token();
+					//加载城市数据
+					$.loadCommonCityData();
+					$.loadCityData();
+					//存储企业代码setTimeout()
+					var classIds = {};
+					$.ajaxGet(BSAPIURL + "/company/codes/all", function(resp) {
+						if(resp.code != 0) return false;
+						for(var i in resp.data.code_list) {
+							if(resp.data.code_list[i].code_parent_tree == 0) {
+								delete resp.data.code_list[i].code_tree;
+								continue;
+							}
+							if(isTopestClass(resp.data.code_list[i].code_parent_tree, resp.data.code_list)) {
+								classIds[resp.data.code_list[i].code_tree] = {
+									code_name: resp.data.code_list[i].code_name,
+									code_tree: resp.data.code_list[i].code_tree
+								}
+								appendChildClassId(resp.data.code_list[i].code_tree, resp.data.code_list);
+							}
+						}
+						localStorage["_CLASSIDS"] = null;
+						localStorage["_CLASSIDS"] = JSON.stringify(classIds);
+					});
+					//$("#tab-menu-container .scroll-icon").addClass("hide");
+					//判断是不是最顶层的类
+					function isTopestClass(parentClassId, sourceData) {
+						var isTopest = false;
+						for(var i in sourceData) {
+							if(sourceData[i].code_tree == parentClassId) {
+								return false;
+							}
+						}
+						return true;
+					}
+					//添加企业代码子代码类
+					function appendChildClassId(parentClassId, sourceData) {
+						for(var i in sourceData) {
+							if(sourceData[i].code_parent_tree == parentClassId) {
+								classIds[parentClassId][sourceData[i].code_tree] = {
+									code_name: sourceData[i].code_name,
+									code_tree: sourceData[i].code_tree
+								}
+								appendChildClassId(sourceData[i].code_tree, sourceData)
+							}
+						}
+					}
+				}, 3000);
+			}
+			//设置邮件图标上面的未读数量
+			function setInboxUnreadNum() {
+				$.ajaxGet(BASEAPIURL + "/mail/index", function(resp) {
+					indexData = resp.data;
+					var count_inbox_unread = resp.data.count_inbox_unread;
+					if(count_inbox_unread < 1 || !count_inbox_unread) {
+						$(".email-open .unread-icon").addClass("hide");
+					} else {
+						$(".email-open .unread-icon").removeClass("hide");
+						//$(".email-open .inbox-unread-num").text(count_inbox_unread == 0 ? "" : count_inbox_unread > 99 ? "99+" : count_inbox_unread);
+					}
+				});
+			}
+			$(".personal-center").mouseover(function() {
+				$(this).toggleClass("active");
+				transImgSrc($(this).find("img[data-trans-src]"));
+			});
+			$(".personal-center").mouseout(function() {
+				$(this).toggleClass("active");
+				transImgSrc($(this).find("img[data-trans-src]"));
+			});
+			//初始Tab标签事件
+			function initTabEvent() {
+				$("#tab-menu li a i.icon-refresh").unbind("click").click(function() {
+					showLoading();
+					var url = $(this).parent().parent().attr("url");
+					var iframe = $("#main-tab-content .tab-pane iframe[url=' " + url + " ']");
+					iframe.attr("src", url);
+					iframe.load(function() {
+						hideLoading();
+					});
+					return false;
+				});
+				$("#tab-menu li a .icon-remove").unbind("click").click(function() {
+					var liObj = $(this).parent().parent();
+					var url = liObj.attr("url");
+					var iframe = $("#main-tab-content .tab-pane iframe[url=' " + url + " ']");
+					iframe.parent().remove();
+					liObj.prev().find("a").click();
+					if(liObj.parent().hasClass("nav") && $(".sub-nav li").length > 1) {
+						$(".sub-nav li:nth-child(2)").addClass("stastic");
+						$(".sub-nav li:nth-child(2)").find("a").addClass("stastic");
+						$("#tab-menu li.last-li").before($(".sub-nav li:nth-child(2)").clone());
+						$(".sub-nav li:nth-child(2)").remove();
+						initTabEvent();
+					}
+					liObj.remove();
+					if($(".sub-nav li").length < 2) {
+						$(".scroll-icon-right").addClass("hide");
+					}
+					return false;
+				});
+				$("#tab-menu>li>a").unbind("mouseover").mouseover(function() {
+					$(this).removeClass("stastic").removeClass("active").addClass("hover");
+					return false;
+				});
+				$("#tab-menu>li>a").unbind("mouseout").mouseout(function() {
+					$(this).removeClass("hover");
+					if($(this).attr("aria-expanded") == "true") {
+						$(this).addClass("active");
+					} else {
+						$(this).addClass("stastic");
+					}
+					return false;
+				});
+				$("#tab-menu>li>a").unbind("click").click(function() {
+					toggleClassStastic($(this));
+				});
+				$("#tab-menu>li>a").unbind("mouseover").mouseover(function() {
+					if($(this).hasClass("active")) return;
+					$(this).find("img").removeClass("hide").attr("src", "resources/images/close-hover-icon.png");
+				});
+				$("#tab-menu>li>a").unbind("mouseout").mouseout(function() {
+					if($(this).hasClass("active")) return;
+					$(this).removeClass("hover").addClass("stastic");
+					$(this).find("img").addClass("hide").attr("src", "resources/images/close-hover-icon.png");
+				});
+				//标签页显示
+				$('#tab-menu li a[data-toggle="tab"]').unbind("shown.bs.tab").on('shown.bs.tab', function(e) {});
+				addClassToIframe();
+			}
+			//
+			function addClassToIframe() {
+				for(var i = 0; i < document.getElementsByTagName("iframe").length; i++) {
+					$(document.getElementsByTagName("iframe")[i].contentWindow.document.getElementsByClassName("page-container")[0]).addClass("iframe-child-body");
+					$(document.getElementsByTagName("iframe")[i].contentWindow.document.getElementsByClassName("page-container")[0]).unbind("click").click(function(event) {
+						if($(event.target).parents(".iframe-child-body").length > 0) {
+							$(parent.document.getElementsByTagName("body")[0]).find("#tab-menu-container .sub-nav").addClass("hide");
+						}
+					});
+				}
+
+			}
+			addClassToIframe();
+			//关闭当前页
+			function closeCurrActiveTab() {
+				$("#tab-menu li.active a .icon-remove").click();
+			}
+			//初始功能菜单
+			function initLeftMenuOfCommon(menuJson) {
+				appendLeftMenuHtmlOfCommon(menuJson);
+				//collapse click
+				$("a[data-toggle='collapse']").click(function() {
+					transImgSrc("img[g=icon-collapse]", true);
+					var colPanel = $(this).parents(".panel").find(".panel-collapse");
+					if(!colPanel.hasClass("in")) {
+						transImgSrc(colPanel.prev().prev().find("img[g=icon-collapse]"));
+					}
+				});
+				//menu click
+				$(".menu-group a[url]").click(function() {
+					onLeftMenuTitleClick(this);
+					return false;
+				});
+				//滚动条
+				setTimeout(function() {
+					$(".panel-group").mCustomScrollbar({
+						theme: "light-3",
+						scrollButtons: {
+							enable: true
+						}
+					});
+				}, 0);
+
+				//标签默认显示状态
+				$(".menu-group .panel:first-child div.panel-collapse").removeClass("in").attr("aria-expanded", "false");
+				//				/transImgSrc($(".menu-group .panel:first-child img"));
+				//标签互斥
+				$(".panel-heading").unbind("click").click(function() {
+					if($(this).next().next().hasClass("in")) {
+						//关闭操作
+						$(this).parent().addClass("active");
+						$(this).removeClass("active");
+					} else {
+						$(".panel .panel-collapse").each(function() {
+							$(this).removeClass("in").addClass("out");
+							$(this).attr("aria-expanded", "false");
+							$(this).prev().prev().removeClass("active");
+							$(this).parent().removeClass("active");
+						});
+						$(this).parent().removeClass("active");
+						$(this).addClass("active");
+					}
+				});
+			}
+			//左侧菜单 append HTML
+			function appendLeftMenuHtmlOfCommon(menuJson) {
+				var menuDescs = {};
+				var menuDom = $("#accordion");
+				menuDom.html("");
+				var index = 0;
+				for(var i in menuJson) {
+					var cMenu = menuJson[i];
+					cMenu.pid = cMenu.pid || 0;
+					if(cMenu.pid != 0) {
+						continue;
+					}
+					var pnlDom = $("<div class=\"panel\"></div>");
+					var titleDom = $(
+						"<div class=\"panel-heading\" role=\"tab\" id=\"heading" + cMenu.id + "\">" +
+						"	<h4 class=\"panel-title\">" +
+						"<img class='panel-title-icon' src='" + cMenu.icon + "' alt='图标'>" +
+						"		<a role=\"button\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse" + cMenu.id + "\" aria-expanded=\"" + (index == 0 ? "true" : "false") + "\" aria-controls=\"collapse" + cMenu.id + "\">" +
+						cMenu.name +
+						"			<img src='resources/images/main-angle-right.png' data-src-default='resources/images/main-angle-right.png' class='fa' data-trans-src='resources/images/main-angle-down.png' g=\"icon-collapse\">" +
+						"		</a>" +
+						"	</h4>" +
+						"</div><hr/>");
+					pnlDom.append(titleDom);
+					var childMenus = getChildMenus(menuJson, cMenu.id);
+					if(childMenus.length > 0) {
+						var bodyDom = $("<div id=\"collapse" + cMenu.id + "\" class=\"panel-collapse collapse " + (index == 0 ? "in" : "") + " nano\" role=\"tabpanel\" aria-labelledby=\"heading" + cMenu.id + "\"><div class=\"panel-body nano-content\"></div></div>");
+						if(index > 0)
+							bodyDom.height(0);
+						for(var j in childMenus) {
+							var subMenu = childMenus[j];
+							var currUrl = subMenu.url;
+							if(currUrl != "#") {
+								if(currUrl.indexOf("?") > 0)
+									currUrl += "&";
+								else
+									currUrl += "?";
+
+								currUrl += "mid=" + subMenu.id;
+								//页面简介存本地
+								menuDescs[subMenu.id] = {
+									icon: subMenu.icon,
+									desc: subMenu.desc
+								};
+							}
+							bodyDom.find(".panel-body").append("<a href=\"javascript:;\" url=\"" + currUrl + "\" data-mid='" + subMenu.id + "'>" /*"<i class=\"fa " + subMenu.icon + "\"></i> " */ + subMenu.name + "</a>");
+						}
+						pnlDom.append(bodyDom);
+					}
+					menuDom.append(pnlDom);
+					index++;
+				}
+				//页面简介存本地
+				localStorage["_PAGEDESC"] = null;
+				localStorage["_PAGEDESC"] = JSON.stringify(menuDescs);
+			}
+			//获取子菜单
+			function getChildMenus(menuJson, pid) {
+				var resMenus = [];
+				for(var i in menuJson) {
+					var cMenu = menuJson[i];
+					if(cMenu.pid == pid) {
+						resMenus.push(cMenu);
+					}
+				}
+				return resMenus;
+			}
+			/*************************管理员相关开始***********************************/
+			function initLeftMenuOfAdmin(menuJson){
+				appendLeftMenuHtmlOfAdmin(menuJson);
+				//collapse click
+				$("a[data-toggle='collapse']").click(function() {
+					transImgSrc("img[g=icon-collapse]", true);
+					var colPanel = $(this).parents(".panel").find(".panel-collapse");
+					if(!colPanel.hasClass("in")) {
+						transImgSrc(colPanel.prev().prev().find("img[g=icon-collapse]"));
+					}
+				});
+				//menu click
+				$(".menu-group a[url]").click(function() {
+					onLeftMenuTitleClick(this);
+					return false;
+				});
+				//滚动条
+				setTimeout(function() {
+					$(".panel-group").mCustomScrollbar({
+						theme: "light-3",
+						scrollButtons: {
+							enable: true
+						}
+					});
+				}, 0);
+
+				//标签默认显示状态
+				$(".menu-group .panel:first-child div.panel-collapse").removeClass("in").attr("aria-expanded", "false");
+				//标签互斥
+				$(".panel-heading").unbind("click").click(function() {
+					if($(this).next().next().hasClass("in")) {
+						//关闭操作
+						$(this).parent().addClass("active");
+						$(this).removeClass("active");
+					} else {
+						$(".panel .panel-collapse").each(function() {
+							$(this).removeClass("in").addClass("out");
+							$(this).attr("aria-expanded", "false");
+							$(this).prev().prev().removeClass("active");
+							$(this).parent().removeClass("active");
+						});
+						$(this).parent().removeClass("active");
+						$(this).addClass("active");
+					}
+				});
+			}
+			//左侧菜单 append HTML
+			function appendLeftMenuHtmlOfAdmin(menuJson) {
+				$(".menu-body").addClass("admin-menu-body");
+				var menuDescs = {};
+				var menuDom = $("#accordion");
+				menuDom.html("");
+				var index = 0;
+				menuJson.push({
+					create_time:"0",
+					desc:"*企业信息填写、认证资料提交",
+					icon:"fa-desktop",
+					id:"admin",
+					name:"管理员",
+					pid:"admin-pid=0",
+					url:"#"
+				});
+				for(var i in menuJson) {
+					var cMenu = menuJson[i];
+					cMenu.pid = cMenu.pid || "admin";
+					if(cMenu.pid !== "admin-pid=0") {
+						continue;
+					}
+					var pnlDom = $("<div class=\"panel\"></div>");
+					var titleDom = $(
+						"<div class=\"panel-heading\" role=\"tab\" id=\"heading" + cMenu.id + "\">" +
+						"	<h4 class=\"panel-title\">" +
+						"<img class='panel-title-icon' src='" + cMenu.icon + "' alt='图标'>" +
+						"		<a role=\"button\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse" + cMenu.id + "\" aria-expanded=\"" + (index == 0 ? "true" : "false") + "\" aria-controls=\"collapse" + cMenu.id + "\">" +
+						cMenu.name +
+						"			<img src='resources/images/main-angle-right.png' data-src-default='resources/images/main-angle-right.png' class='fa' data-trans-src='resources/images/main-angle-down.png' g=\"icon-collapse\">" +
+						"		</a>" +
+						"	</h4>" +
+						"</div><hr/>"
+						);
+					pnlDom.append(titleDom);
+					var childMenus = getChildMenusOfAdmin(menuJson, cMenu.id);
+					if(childMenus.length > 0) {
+						var bodyDom = $("<div id=\"collapse" + cMenu.id + "\" class=\"panel-collapse collapse " + (index == 0 ? "in" : "") + " nano\" role=\"tabpanel\" aria-labelledby=\"heading" + cMenu.id + "\"><div class=\"panel-body nano-content\"></div></div>");
+						if(index > 0)
+							bodyDom.height(0);
+						for(var j in childMenus) {
+							var subMenu = childMenus[j];
+							var currUrl = subMenu.url;
+							if(currUrl != "#") {
+								if(currUrl.indexOf("?") > 0)
+									currUrl += "&";
+								else
+									currUrl += "?";
+
+								currUrl += "mid=" + subMenu.id;
+								//页面简介存本地
+								menuDescs[subMenu.id] = {
+									icon: subMenu.icon,
+									desc: subMenu.desc
+								};
+							}
+							bodyDom.find(".panel-body").append("<a href=\"javascript:;\" url=\"" + currUrl + "\" data-mid='" + subMenu.id + "'>" /*"<i class=\"fa " + subMenu.icon + "\"></i> " */ + subMenu.name + "</a>");
+						}
+						pnlDom.append(bodyDom);
+					}
+					menuDom.append(pnlDom);
+					index++;
+				}
+				//页面简介存本地
+				localStorage["_PAGEDESC"] = null;
+				localStorage["_PAGEDESC"] = JSON.stringify(menuDescs);
+			}
+			//获取子菜单
+			function getChildMenusOfAdmin(menuJson, pid) {
+				var resMenus = [];
+				for(var i in menuJson) {
+					var cMenu = menuJson[i];
+					if(cMenu.pid==pid) {
+						resMenus.push(cMenu);
+					}
+				}
+				return resMenus;
+			}
+			/*************************管理员相关结束***********************************/
+			//左侧菜单点击事件处理函数
+			function onLeftMenuTitleClick(obj) {
+				if(isVerified == null) {
+					if(timer) {
+						return false;
+					} else {
+						var timer = setTimeout(function() {
+							$(obj).click();
+							clearTimeout(timer);
+							timer = null;
+						}, 100);
+					}
+
+					return false;
+				}
+				var mid = $(obj).attr("data-mid");
+				//企业信息当前是否有版本（过期的，在用的都算）
+				hasEditionInfo = cmpData.has_buy_edition;
+				if($.cookie("_u_is_admin") == 1 && !(localStorage["_cmp_info_status"] == 5 || localStorage["_cmp_info_status"] == 6 || localStorage["_cmp_info_status"] == 4)) {
+					if(!canViewMid.notVerify[mid]) {
+						if(localStorage["_cmp_info_status"] == 1) {
+							$.showSuccessGritter("请先进入“企业信息管理”页面完善企业资料");
+						} else {
+							$.showSuccessGritter("您的企业信息正在审核中，请耐心等待!");
+						}
+						return false;
+					}
+				}
+				if(!isVerified) {
+					if(!canViewMid.notVerify[mid]) {
+						$.showErrorGritter("请先完善企业信息！");
+						return false;
+					}
+				} else if(!hasEditionInfo) {
+					if(!canViewMid.notBuyEdition[mid]) {
+						$.showErrorGritter("请先购买版本！");
+						return false;
+					}
+				}
+				if($(obj).attr("href") == "#") {
+					return true;
+				}
+				var url = $(obj).attr("url");
+				var title = $(obj).attr("title") || $(obj).text();
+				if(url != undefined && url != "" && url != "#") {
+					//clear active
+					$(".menu-group a").removeClass("active");
+					//add active
+					$(obj).addClass("active");
+					setTab(title, url);
+				}
+				//新加的显示
+				for(var i = 0; i < $("#tab-menu li").length; i++) {
+					$(".scroll-to-left").click();
+				}
+			}
+			//初始功能菜单
+			function genSubMenuDoc(doc, jsonM) {
+				for(var j in jsonM.items) {
+					var subMenu = jsonM.items[j];
+					var notHasSubMenu = subMenu.items == undefined || subMenu.items == null || subMenu.items.length == 0;
+					var sbLi = $("<li><a href=\"" + subMenu.url + "\" " + (notHasSubMenu ? "" : "class='dropdown-toggle '") + "><i class=\"" + subMenu.icon + "\"></i> " + subMenu.title + "</a></li>");
+					$(sbLi).find("a").attr("tit", subMenu.title).attr("url", subMenu.url);
+					//submenu
+					if(!notHasSubMenu) {
+						$(sbLi).find("a").append("<b class=\"arrow icon-angle-down\"></b>");
+						var sbUL = $("<ul class=\"submenu\"></ul>");
+						sbUL = genSubMenuDoc(sbUL, subMenu);
+						$(sbLi).append(sbUL);
+						$(doc).append(sbLi);
+					} else {
+						$(doc).append(sbLi);
+					}
+				}
+				return $(doc);
+			}
+			var tabIndex = new Date().getTime();
+			//添加标签页
+			function setTab(title, url,notNeedCheckMid) {
+				if(notNeedCheckMid) {
+					url=url.split("?")[0];
+				}
+				var mTab = $("#tab-menu>li[url*='" + url + "']");
+				var mSubTab = $(".sub-nav>li[url*='" + url + "']");
+				if(mTab.length < 1&&mTab.length < 1) {
+					tabIndex = new Date().getTime();
+					var liDom = "<li url=\"" + url + "\"><i class='border-left'></i><a data-toggle=\"tab\" title=\"" + title + "\" href=\"#tab-m-" + tabIndex + "\">" + "<span class='css-overhidden' style='max-width:150px;text-align:center;'>" + title + "</span>" +
+						" <img class=\"icon-remove\" src='resources/images/close-hover-icon.png' data-trans-src='resources/images/close-active-icon.png' data-src-default='resources/images/sub-close-hover-icon.png' title=\"关闭本页\">"
+						//						+"<img class=\"icon-remove\" src='resources/images/close-active-icon.png' title=\"关闭本页\">"
+						+
+						"</a></li>";
+					//<i class=\"icon-refresh\" title=\"刷新本页\"></i>
+					//控制标签页（超出时）
+					var wrapWidth = $(".tabtable").outerWidth(true) - 200;
+					var tabsWidth = 0;
+					$("#tab-menu li[url]").each(function() {
+						tabsWidth += $(this).outerWidth(true);
+					});
+					//添加页的宽度
+					tabsWidth += 64 + 14 * title.length;
+					var isOutOfRange = tabsWidth > wrapWidth; //false; 
+					//$("#tab-menu li:last-child").after(liDom);
+					if(isOutOfRange) {
+						//超出范围  将主菜单里面的弹出一个到字菜单里面去  将新加的append到主菜单里面去
+						var beenAppendToSubNavLiDom = $("#tab-menu li.last-li").prev().clone();
+						$("#tab-menu li.last-li").prev().remove();
+						$("#tab-menu-container .sub-nav").append(beenAppendToSubNavLiDom);
+						$("#tab-menu li.last-li").before(liDom);
+						$("#tab-menu-container .scroll-icon").removeClass("hide");
+						//$("#tab-menu>li").addClass("overflow");
+						//initTabEvents("bind");
+					} else {
+						//$("#tab-menu-container .scroll-icon").addClass("hide");
+						//$("#tab-menu-container li").removeClass("overflow");
+						$("#tab-menu li.active").after(liDom);
+						$("#tab-menu-container .scroll-icon").addClass("hide");
+					}
+					//标签页移动事件初始化
+					/*function initTabEvents(action) {
+						if(action == "bind") {
+							$("#tab-menu-container .scroll-to-left").unbind("click").click(function() {
+								var tabsWidthAfterFixed = 0;
+								var tabsContainerWidth=$("#tab-menu-container").width()-$(".scroll-icon-left").width()-$(".scroll-icon-right").width();
+								tabsWidthAfterFixed=120*($("#tab-menu li").length);
+//								.each(function() {
+//									tabsWidthAfterFixed += $(this).width();
+//								});
+								//添加页的宽度
+								//tabsWidthAfterFixed += 64 + 16 * title.length;
+								var isOutOfRangeAfterFixed = tabsWidthAfterFixed > tabsContainerWidth; //false; 
+								if(isOutOfRangeAfterFixed) {
+									//超出范围
+									if(canMoveLeft(tabsWidthAfterFixed,tabsContainerWidth)) moveTabLeft(-1);
+								} else {
+									
+								}
+							});
+							$("#tab-menu-container .scroll-to-left").click();
+							$("#tab-menu-container .scroll-to-right").unbind("click").click(function() {
+								if(canMoveRight()) moveTabRight(1);
+							});
+							$("#tab-menu-container .scroll-toggle-down").unbind("click").click(function() {
+								alert("向下展开")
+							});
+						} else {
+							$("#tab-menu-container .scroll-icon i").unbind("click");
+						}
+						//是否可以左移
+						function canMoveLeft(tabsWidthAfterFixed,tabsContainerWidth){
+							//先算出可以左移的最大距离
+							var canMoveLeftMax=tabsWidthAfterFixed-tabsContainerWidth;
+							if((Math.abs(parseInt($("#tab-menu").css("margin-left")))-20)>canMoveLeftMax){
+								return false;
+							}
+							return true;
+						}
+						//是否可以左移
+						function canMoveRight(){
+							if(parseInt($("#tab-menu").css("margin-left"))-20<0){
+								return true;
+							}
+							return false;
+						}
+					}
+					//标签页移动一步    direction=1  向左    -1向右
+					function moveOneStep(direction) {
+						//var tabMenu=document.getElementById("tab-menu");
+						var marginLeft = parseInt($("#tab-menu").css("margin-left"));
+						marginLeft += direction * 1;
+						$("#tab-menu").css("margin-left", marginLeft + "px");
+					}
+					//标签页左移动一个标签的长度
+					function moveTabLeft(direction) {
+						var timer = setInterval(function() {
+							for(var i = 0; i < 120; i++) {
+								var tabsWidthAfterFixed = 0;
+								var tabsContainerWidth=$("#tab-menu-container").width()-$(".scroll-icon-left").width()-$(".scroll-icon-right").width();
+								$("#tab-menu li").each(function(){
+									tabsWidthAfterFixed+=$(this).width();
+								});
+								var canMoveOneStep=(Math.abs(parseInt($("#tab-menu").css("margin-left")))>=(tabsWidthAfterFixed-tabsContainerWidth))?false:true;
+								if(canMoveOneStep) moveOneStep(direction);
+							}
+							clearInterval(timer);
+							timer = null;
+						}, 100);
+					}
+					//标签页右移动一个标签的长度
+					function moveTabRight(direction) {
+						var timer = setInterval(function() {
+							for(var i = 0; i < 120; i++) {
+//								var tabsWidthAfterFixed = 0;
+//								var tabsContainerWidth=$("#tab-menu-container").width()-$(".scroll-icon-left").width()-$(".scroll-icon-right").width();
+//								$("#tab-menu li").each(function(){
+//									tabsWidthAfterFixed+=$(this).width();
+//								});
+								var canMoveOneStep=parseInt($("#tab-menu").css("margin-left"))>=20?false:true;
+								if(canMoveOneStep) moveOneStep(direction);
+							}
+							clearInterval(timer);
+							timer = null;
+						}, 100);
+					}*/
+					showLoading();
+					var iframe = document.createElement("iframe");
+					iframe.src = url;
+					iframe.setAttribute("name", encodeURI(url));
+					iframe.setAttribute("url", url);
+					iframe.setAttribute("width", "100%");
+					iframe.setAttribute("height", "100%");
+					iframe.setAttribute("frameborder", 0);
+					iframe.setAttribute("scrolling", "auto");
+					iframe.setAttribute("scrolling", "auto");
+					if(iframe.attachEvent) {
+						iframe.attachEvent("onload", function() {
+							hideLoading();
+							addClassToIframe();
+						});
+					} else {
+						iframe.onload = function() {
+							hideLoading();
+							addClassToIframe();
+							//var height = iframe.ownerDocument.body.scrollHeight;
+							//iframe.setAttribute("height", height);
+						};
+					}
+					var divTab = $("<div id=\"tab-m-" + tabIndex + "\" class=\"tab-pane\" style=\"height:100%;\"></div>").append(iframe);
+					$("#main-tab-content").append(divTab);
+					//$(onTab).next().find("a").click();
+					$("#tab-menu li a[href='#tab-m-" + tabIndex + "']").tab('show');
+					toggleClassStastic("#tab-menu li a[href='#tab-m-" + tabIndex + "']");
+				}
+				if($(mTab).length == 1 && $(mSubTab).length < 1) {
+					$(mTab).find("a").click();
+				}
+				if($(mTab).length < 1 && $(mSubTab).length == 1) {
+					$(mSubTab).find("a").click();
+				}
+				initSubMenuEvet();
+				initTabEvent();
+			}
+			//超出后子菜单事件
+			function initSubMenuEvet() {
+				$("#tab-menu-container .sub-nav li a>img,#tab-menu-container .sub-nav li>i").addClass("hide");
+				$(".scroll-icon-right").unbind("click").click(function() {
+					transImgSrc($(this).find(">img"));
+					if($("#tab-menu-container .sub-nav").hasClass("hide")) {
+						$("#tab-menu-container .sub-nav").removeClass("hide");
+					} else {
+						$("#tab-menu-container .sub-nav").addClass("hide");
+					}
+				});
+				$("body").unbind("click").click(function(event) {
+					if($(event.target).parents(".sub-nav").length < 1 && $(event.target).parents(".scroll-icon-right").length < 1) {
+						$("#tab-menu-container .sub-nav").addClass("hide");
+					}
+				});
+				$("#tab-menu-container .sub-nav li a").unbind("mouseover").mouseover(function(e) {
+					//if($(this).find("i").length < 1) return false;
+
+					transImgSrc($(this).find(">img"), true);
+					$(this).find(">img").removeClass("hide");
+				}).mouseout(function(e) {
+					//if($(this).find("i").length < 1) return false;
+
+					transImgSrc($(this).find(">img"), true);
+					$(this).find(">img").addClass("hide");
+				});
+				$("#tab-menu-container .sub-nav li a").unbind("click").click(function(e) {
+					//if($(this).find("i").length < 1) return false;
+					var title = $(this).attr("title");
+					var url = $(this).parent().attr("url");
+					var tabId = $(this).attr("href");
+					$(this).find(">img").attr("src", "resources/images/close-active-icon.png");
+					$(this).parent().find(">i").removeClass("hide");
+					$("#tab-menu li,#tab-menu li a").removeClass("hover").removeClass("active").addClass("stastic");
+					$(this).addClass("active");
+					$(this).parent().addClass("active");
+					var tabMenuDom = $("#tab-menu li.last-li").prev().clone();
+					var subMenuDom = $(this).parent().clone();
+					$(this).parent().remove();
+					$("#tab-menu li.last-li").prev().remove();
+					$("#tab-menu li.last-li").before(subMenuDom);
+					$(".sub-nav li:first-child").after(tabMenuDom);
+					initSubMenuEvet();
+					initTabEvent();
+					$("#main-tab-content .tab-pane").removeClass("active");
+					$(tabId).addClass("active");
+				});
+			}
+			//标签页状态切换   样式切换
+			function toggleClassStastic(thisSelector) {
+				$(thisSelector).parent().siblings("li:gt(0)").find("a").removeClass("active").removeClass("hover").addClass("stastic");
+				$(thisSelector).parent().siblings("li:gt(0)").find("a img").attr("src", "resources/images/close-hover-icon.png");
+				$(thisSelector).parent().siblings("li:gt(0)").find("a.stastic img").addClass("hide");
+				if($(thisSelector).hasClass("hover")) return;
+				$(thisSelector).removeClass("stastic").addClass("active");
+				if($(thisSelector).hasClass("active")) {
+					$(thisSelector).find("img").removeClass("hide").attr("src", "resources/images/close-active-icon.png");
+				} else if($(thisSelector).hasClass("stastic")) {
+					$(thisSelector).find("img").addClass("hide").attr("src", "resources/images/close-hover-icon.png");
+				} else {
+					$(thisSelector).find("img").removeClass("hide").attr("src", "resources/images/close-hover-icon.png");
+				}
+			}
+			//添加新标签，供内页使用
+			function openTab(title, url,needCheckMid) {
+				setTab(title, url,needCheckMid);
+			}
+			//打开加载提示
+			function showLoading() {
+				$(".loadingPop").removeClass("hide");
+			}
+			//关闭加载提示
+			function hideLoading() {
+				$(".loadingPop").addClass("hide");
+			}
+
+			function newMsg() {
+				$(".left-menu li:first a").append("<i class=\"fa fa-bell icon-animated-bell\"></i><span class=\"badge badge-danger\">8</span>");
+			}
+			//折叠菜单栏
+			var isShr = false;
+
+			function fold() {
+				if(isShr) {
+					$(".left-menu").removeClass("left-menu-fold");
+					//$(".right-container").removeClass("right-container-exp");
+					$(".right-container").animate({
+						marginLeft: "280px"
+					}, 300);
+					$(".menu-group").show();
+				} else {
+					$(".left-menu").addClass("left-menu-fold");
+					//$(".right-container").addClass("right-container-exp");
+					$(".right-container").animate({
+						marginLeft: "60px"
+					}, 0);
+					$(".menu-group").hide();
+				}
+				isShr = !isShr;
+				$(".link-collapse").css("left", isShr ? "54px" : "274px");
+				$(".left-menu .logo").css("margin-left", isShr ? "10px" : "auto");
+				$(".link-collapse img").attr("src", "resources/images/collapse-" + isShr.toString() + ".png");
+				$.cookie('_shr', isShr);
+			}
+			//退出
+			function logout(alertStr, notShowGritter) {
+				$.ajaxDelete(BSAPIURL + "/passport", null,
+					function(response) {
+						if(response.code == 0) {
+							//success
+							if(!alertStr) {
+								$.showSuccessGritter("注销成功，正在跳转...");
+							} else {
+								$.showErrorGritter(alertStr);
+							}
+							setTimeout(function() {
+								window.location = "login.html";
+							}, 1000);
+							localStorage.removeItem("_CURRAUTHS");
+							sessionStorage.setItem("need_login", true);
+						} else {
+							$.showErrorGritter("注销失败：" + response.msg);
+						}
+					});
+			}
+			//更改密码
+			function openSetPwdPop() {
+				var modalId = $.modal().show("修改密码", ".pnl-resetpwd",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var oldPwd = $(formContainer + " #txtOldPwd").val();
+						var pwd = $(formContainer + " #txtPwd").val();
+						var pwd1 = $(formContainer + " #txtPwd1").val();
+						if(pwd != pwd1) {
+							$.showErrorGritter("两次密码输入不一致，请重新输入。");
+							$(formContainer + " #txtPwd1").focus();
+							return false;
+						}
+						var pwdData = {
+							old_password: oldPwd,
+							new_password: pwd
+						};
+						$.ajaxPut(SAASAPIS.BS.account.password, pwdData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("修改密码成功，返回重新登录。");
+									modal.modal('hide');
+									setTimeout(function() {
+										//注销
+										logout();
+									}, 2000);
+								} else {
+									$.showErrorGritter("修改密码失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-resetpwd";
+				//密码格式为：密码须为6-20位，英文字母和数字、符号组合（字母区分大小写）
+				var reg = /^(?![^A-Za-z]+$)(?![^0-9]+$)[\S]{6,20}$/g;
+				$(formContainer + " #txtPwd").blur(function() {
+					var testResult = reg.test($(this).val());
+					if(!testResult) {
+						$(formContainer + " #txtPwd").parent().find("span").length < 1 && $(formContainer + " #txtPwd").parent().append("<br><span style='color:red;display: inline-block;margin-left: 85px;'>*密码须为6-20位，英文字母和数字、符号组合（字母区分大小写，不能包含空字符）*</span>");
+						return false;
+					} else {
+						$(formContainer + " #txtPwd").parent().find("span").remove();
+						$(formContainer + " #txtPwd").parent().find("br").remove();
+					}
+				});
+				$(formContainer + " #txtPwd1").blur(function() {
+					var testResult = reg.test($(this).val());
+					if(!testResult) {
+						$(formContainer + " #txtPwd1").parent().find("span").length < 1 && $(formContainer + " #txtPwd1").parent().append("<br><span style='color:red;display: inline-block;margin-left: 85px;'>*密码须为6-20位，英文字母和数字、符号组合（字母区分大小写，不能包含空字符）*</span>");
+						return false;
+					} else {
+						$(formContainer + " #txtPwd1").parent().find("span").remove();
+						$(formContainer + " #txtPwd1").parent().find("br").remove();
+					}
+				})
+			}
+			//重新登录
+			var reloginFlag = false;
+
+			function openReloginPop() {
+				if(reloginFlag) {
+					return false;
+				}
+				reloginFlag = true;
+				var modalId = $.modal({
+					okButtonText: "登 录",
+					cancelButtonText: "退 出",
+					closeCallback: function() {
+						reloginFlag = false;
+					}
+				}).showOfMini("重新登录", ".pnl-relogin",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var loginData = {
+							"account": $(formContainer + " #txtAccount").val(),
+							"password": $(formContainer + " #txtPwd").val(),
+							"captcha_code": $(formContainer + " #txtCode").val()
+						};
+						$.ajaxPost(SAASAPIS.BS.passport, loginData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("登录成功。");
+									//save local
+									$.cookie("session_id", response.session_id);
+									modal.modal("hide");
+								} else {
+									$.showErrorGritter("登录失败：" + response.msg);
+									//code
+									initVerifyCode();
+								}
+							});
+					},
+					function() {
+						//退出
+						//window.location = "login.html";
+						logout();
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-relogin";
+				$(formContainer + " #txtAccount").val($.cookie("_u_account"));
+				$(formContainer + " .img-code1").addClass("img-code");
+				//加载验证码
+				initVerifyCode();
+			}
+			//刷新验证码
+			function initVerifyCode() {
+				$(".img-code").attr("src", SAASAPIS.BASE.captcha + "?height=32&width=110&t=" + new Date().getTime());
+				$("#txtCode").val("");
+			}
+			//页面关闭前处理   关闭则退出登录，通过session实现
+			window.onbeforeunload = function(event) {
+				localStorage.removeItem("_CURRAUTHS");
+			}
+		</script>
+		<script type="text/javascript">
+			//hgf
+			$(function() {
+				$("#addressbook").addressBook();
+				if($.cookie("_u_is_admin") == 1) {
+					$(".chat-open,#msg,.bottom-menu").hide();
+					return false;
+				}
+			});
+			setTimeout(function() {
+				$(document).ready(function() {
+					$(".chat-open").chat();
+					//IM其他地方点击最小化弹窗
+					//			$("#main-tab-content").unbind("click").click(function() {
+					//				$(".chat-page").hide();
+					//			});
+				});
+
+			}, 3000);
+
+			function nofind(obj) {
+				var img = $(obj)[0];
+				img.src = "../resources/images/personal-icon.png";
+				img.onerror = null;
+				//控制不要一直跳动
+
+			}
+		</script>
+	</body>
+
+</html>

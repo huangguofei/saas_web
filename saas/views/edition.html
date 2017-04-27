@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>版本中心</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/city-picker.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.curr-edition-has-time {
+				color: #999;
+			}
+			
+			.name-and-status {
+				position: absolute;
+				text-align: center;
+			}
+			
+			.name-and-status h4 {
+				width: 110px;
+				word-wrap: break-word;
+				word-break: break-all;
+			}
+			
+			.page-edition{
+				
+			}
+			
+			.page-edition .tabbable .nav-tabs li a{
+				font-size: 15px;
+				color: #333;
+			}
+			
+			.page-edition .tabbable .nav-tabs li.active{
+				border-bottom: 2px solid #66b5ed;
+			}
+			
+			.page-edition .tabbable .nav-tabs li.active a{
+				font-weight: bold;
+				color: #66b5ed;
+			}
+			
+			.page-edition .list-edition li{
+				margin-left: 0;
+				border-radius: 0;
+			}
+			
+			.page-edition .list-edition li .tag{
+				width: 107px;
+				height: 106px;
+				margin-left: 298px;
+				margin-top: -6px;
+				border: none;
+			}
+			
+			.page-edition .list-edition li .tag-hot{
+				background-image: url(../resources/images/flag-edt-hot.png);
+			}
+			
+			.page-edition .list-edition li .tag-new{
+				background-image: url(../resources/images/flag-edt-new.png);
+			}
+			
+			.page-edition .list-edition li .tag-recommend{
+				background-image: url(../resources/images/flag-edt-recommend.png);
+			}
+			
+			.page-edition .list-edition li .title,
+			.page-edition .list-edition li .brief,
+			.page-edition .list-edition li .btns{
+				margin: 0;
+				padding: 10px 20px;
+				text-align: left;
+			}
+			
+			.page-edition .list-edition li .title{
+				padding-top: 20px;
+			}
+			
+			.page-edition .list-edition li .brief{
+				height: 90px;
+				overflow: hidden;
+				font-size: 14px;
+				color: #666;
+			}
+			
+			.page-edition .list-edition li .btns{
+				width: 100%;
+				padding-bottom: 20px;
+			}
+			
+			.page-edition .list-edition li .title .price{
+				float: right;
+				font-size: 12px;
+				color: #999;
+			}
+			
+			.page-edition .list-edition li .title .price b{
+				font-size: 18px;
+				color: #CA192B;
+			}
+			
+			.page-edition .table-edition-contrast{
+				width: 1260px;
+				margin-top: 20px;
+				border-top: 2px solid #66b5ed;
+			}
+			
+			.page-edition .table-edition-contrast thead tr th{
+				border-bottom-width: 1px;
+				background-color: #f8f8f8;
+				color: #333;
+			}
+			
+			.page-edition .table-edition-contrast thead tr th{
+				color: #666;
+			}
+			
+			.title b {
+				font-size: 18px;
+				color: #333;
+				font-weight: normal;
+			}
+			
+			.model-account-buy .form-inline label,
+			.model-edition-renew .form-inline label,
+			.model-edition-upgrade .form-inline label {
+				width: 102px;
+			}
+			
+			.model-edition-buy.form-label-right .form-inline label {
+				width: 105px;
+			}
+			
+			.model-edition-buy.form-label-right .form-inline .form-control-noborder {
+				padding-left: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-company page-edition">
+			<div class="remark">
+				<i class="fa fa-list-ol fa-2x"></i><span>*企业版本购买及购买记录</span>
+			</div>
+			<div class="content">
+				<div class="tabbable tabs-left">
+					<ul class="nav nav-tabs" role="tablist">
+						<li>
+							<a class="pref"></a>
+						</li>
+						<li role="presentation" class="active">
+							<a href="#tab-editions" aria-controls="tab-editions" role="tab" data-toggle="tab">版本选购</a>
+						</li>
+						<li role="presentation">
+							<a href="#tab-edition-my" aria-controls="tab-edition-my" role="tab" data-toggle="tab">我的版本</a>
+						</li>
+					</ul>
+					<!-- Tab panes -->
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane active" id="tab-editions">
+							<ul class="list-edition">
+								<li>
+									<p class="tag tag-hot"><label></label></p><img class="thumb" src="http://xiaomi-saas-test.oss-cn-qingdao.aliyuncs.com/c8ce875b-e0dc-4bc5-92d5-1ba2c62a23e6/dd9a4cf8-0188-4910-85ed-9c5a61193b7b/d48990d14be6b6a47879f8bc2a821bf7_800x500.jpg">
+									<h4 class="title">
+										<b>简版</b>
+										<p class="price"><b>&yen; 1.00</b> /用户/月</p>
+									</h4>
+									<p class="brief"> 只能看公告、审批</p>
+									<p class="btns"><button type="button" class="btn btn-block btn-buy btn-danger def-btn-danger" data-using="false"><i class="fa fa-shopping-cart"></i>&nbsp;&nbsp; 购&nbsp;买</button></p>
+								</li>
+							</ul>
+							<div class="clear"></div>
+							<table class="table table-bordered table-edition-contrast">
+								<!--<caption>
+									<h4>版本对比</h4></caption>-->
+								<thead>
+									<tr>
+										<th>功能模块</th>
+									</tr>
+								</thead>
+								<tbody>
+
+								</tbody>
+							</table>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="tab-edition-my">
+							<ul class="list-edition-my">
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-edition-buy hide">
+			<form class="form-horizontal form-label-right model-edition-buy">
+				<div class="form-group form-inline">
+					<label>版本名称：</label>
+					<span class="form-control form-control-noborder" bind="edition_name"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label>价格：</label>
+					<span class="form-control form-control-noborder"><span class="form-control-unit-price" bind="edition_price"></span> 元/用户/月</span>
+				</div>
+				<div class="form-group form-inline form-group-account-count">
+					<label class="input-flag">购买账户数：</label>
+					<input type="text" class="form-control form-control-account-count" placeholder="输入购买账户数量" nulltip="购买账户数" data-type="int" maxlength="4" bind="account_count">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">购买时长：</label>
+					<select class="form-control form-control-month" bind="month">
+						<option value="6">6个月</option>
+						<option value="12">12个月</option>
+						<option value="24">24个月</option>
+						<option value="36">36个月</option>
+					</select>
+				</div>
+				<div class="form-group form-inline">
+					<label>合计(元)：</label>
+					<span class="form-control form-control-total-amount form-control-noborder" bind="total_amount"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label>应支付(元)：</label>
+					<span class="form-control form-control-payable-amount form-control-noborder" bind="payable_amount"></span>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-edition-renew hide">
+			<form class="form-horizontal form-label-right model-edition-renew">
+				<div class="form-group form-inline">
+					<label>版本名称：</label>
+					<span class="form-control form-control-noborder" bind="edition_name"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label>价格：</label>
+					<span class="form-control form-control-noborder"><span class="form-control-unit-price" bind="edition_price"></span> 元/用户/月</span>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">购买账户数：</label>
+					<span class="form-control form-control-account-count form-control-noborder" bind="me_accounts_count"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">购买时长：</label>
+					<select class="form-control form-control-month" bind="month">
+						<option value="6" selected="selected">6个月</option>
+						<option value="12">12个月</option>
+						<option value="24">24个月</option>
+						<option value="36">36个月</option>
+					</select>
+				</div>
+				<div class="form-group form-inline">
+					<label>合计(元)：</label>
+					<span class="form-control form-control-total-amount form-control-noborder" bind="total_amount"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label>应支付(元)：</label>
+					<span class="form-control form-control-payable-amount form-control-noborder" bind="payable_amount"></span>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-account-buy hide">
+			<form class="form-horizontal form-label-right model-account-buy">
+				<div class="form-group form-inline">
+					<label>版本名称：</label>
+					<span class="form-control form-control-noborder" bind="edition_name"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label>价格：</label>
+					<span class="form-control form-control-noborder"><span bind="edition_price_cn"></span> 元/用户/月</span>
+					<span bind="edition_price" class="form-control-unit-price hide"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">购买账户数：</label>
+					<input type="text" class="form-control form-control-account-count" placeholder="输入购买账户数量" nulltip="购买账户数" data-type="int" maxlength="4" bind="account_count">
+					<!---->
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">购买时长：</label>
+					<span class="form-control form-control-noborder">当前版本剩余<span bind="mday"></span> 天<br><span class='curr-edition-has-time'>*默认为当前版本剩余时长</span></span>
+					<span class="form-control form-control-month form-control-noborder hide" bind="month"></span>
+					<span class="form-control form-control-noborder hide" bind="month_cn"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label>合计(元)：</label>
+					<span class="form-control form-control-total-amount form-control-noborder" bind="total_amount"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label>应支付(元)：</label>
+					<span class="form-control form-control-payable-amount form-control-noborder" bind="payable_amount"></span>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-pay-type hide">
+			<form class="form-horizontal model-pay-type">
+				<div class="form-group form-inline">
+					<label>实付金额：</label>
+					<span class="form-control form-control-noborder form-control-amount" bind="amount">0.00</span>
+				</div>
+				<div class="form-group form-inline">
+					选择支付方式：
+					<br />
+					<label>
+						<input type="radio" class="form-control-radio" name="rdPayType" value="0"  checked="checked"/> 在线支付 
+						<img src="../resources/images/logo_alipay.gif" />
+						<span>（线上支付功能稍后开通。）</span>
+					</label>
+					<br />
+					<label><input type="radio" class="form-control-radio" name="rdPayType" value="1"/> 线下支付</label>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-edition-upgrade-select hide">
+			<form class="form-horizontal model-edition-upgrade-select">
+				<div class="form-group form-inline">
+					选择升级的版本：
+					<ul class="list-edition-upgrade">
+						<li>
+							<label>
+								<input type="radio" class="form-control-radio" name="rdEditionUp" value="0" />
+								<span class="title">全能版</span><span class="price">40元/用户/月</span> 
+								<p class="brief">
+									（功能简介），全能版本功能，广泛适用于有外勤人员管理需求的各类企业
+								</p>
+							</label>
+						</li>
+						<li>
+							<label>
+								<input type="radio" class="form-control-radio" name="rdEditionUp" value="1"/>
+								<span class="title">全能版</span><span class="price">40元/用户/月</span> 
+								<p class="brief">
+									（功能简介），全能版本功能，广泛适用于有外勤人员管理需求的各类企业
+								</p>
+							</label>
+						</li>
+					</ul>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-edition-upgrade hide">
+			<form class="form-horizontal form-label-right model-edition-upgrade">
+				<div class="form-group form-inline">
+					<label>当前版本：</label>
+					<span class="form-control form-control-noborder" bind="edition_name"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label>升级为：</label>
+					<span class="form-control form-control-noborder" bind="edition_name_up"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label>价格：</label>
+					<span class="form-control form-control-noborder"><span class="form-control-unit-price" bind="edition_price_up"></span> 元/用户/月</span>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">购买账户数：</label>
+					<input type="text" class="form-control form-control-account-count" placeholder="输入购买账户数量" nulltip="购买账户数" data-type="int" maxlength="4" bind="account_count">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">购买时长：</label>
+					<select class="form-control form-control-month" bind="month" nulltip="购买时长">
+						<option value="6">6个月</option>
+						<option value="12">12个月</option>
+						<option value="24">24个月</option>
+						<option value="36">36个月</option>
+					</select>
+				</div>
+				<div class="form-group form-inline">
+					<label>合计(元)：</label>
+					<span class="form-control form-control-total-amount form-control-noborder" bind="total_amount"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label>扣除(元)：</label>
+					<span class="form-control form-control-debit-amount form-control-noborder hide" bind="debit_amount"></span>
+					<span class="form-control form-control-noborder" bind="debit_amount_cn"></span>
+				</div>
+				<div class="form-group form-inline">
+					<label>应支付(元)：</label>
+					<span class="form-control form-control-payable-amount form-control-noborder" bind="payable_amount"></span>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-pay-offline hide">
+			<form class="form-horizontal model-pay-offline">
+				<div class="form-group form-inline">
+					<label>帐号信息：</label>
+					<span class="form-control" style="height: auto;">
+						开户名称：重庆普佰电子商务有限公司
+						<br>
+						开户银行：中国工商银行重庆两路口支行
+						<br>
+						账    号：3100021309200038207
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label>&nbsp;</label>
+					<span class="form-control form-control-noborder">
+						如果您已经付款，请上传支付凭证，<br>待客服审核后为您开通。
+						</span>
+				</div>
+				<div class="form-group form-inline">
+					<label>&nbsp;</label>
+					<span class="form-control form-control-noborder">
+						<button type="button" class="btn btn-default btn-sm btn-upload-proof"><i class="fa fa-cloud-upload"></i> 上传支付凭证</button>
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label>&nbsp;</label>
+					<span class="form-control form-control-noborder" style="height: auto;">
+						<p class="upload" style="margin: 0 0 5px 0; "></p>
+						<a href="javascript:return false;" target="_blank"><img class="img-proof" />
+						</a>
+					</span>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-order-info hide">
+			<form class="form-horizontal model-order-info">
+				<div class="form-group form-inline">
+					<label>订单编号：</label>
+					<span class="form-control form-control-noborder" bind="order_str">
+						
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label>订单状态：</label>
+					<span class="form-control form-control-noborder">
+						<span bind="order_status_cn"></span>&nbsp;
+					<button type="button" class="btn btn-default btn-xs btn-order-pay btn-pay-order hide"><i class="fa fa-dollar"></i> 立即支付</button>
+					<button type="button" class="btn btn-warning btn-xs btn-order-pay btn-cancel-order hide"><i class="fa fa-times"></i> 取消订单</button>
+					<button type="button" class="btn btn-warning btn-xs btn-order-delete btn-delete-order hide"><i class="fa fa-trash"></i> 删除订单</button>
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label>支付方式：</label>
+					<span class="form-control form-control-noborder">
+						<span bind="order_payment_way_cn"></span> <span bind="order_payment_type_cn"></span>
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label>支付时间：</label>
+					<span class="form-control form-control-noborder" bind="order_time_payment">
+						
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label>合计金额：</label>
+					<span class="form-control form-control-noborder">
+						<span bind="order_total_price"></span> (元)
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label>扣除金额：</label>
+					<span class="form-control form-control-noborder">
+						<span bind="order_discount"></span> (元)
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label>实付金额：</label>
+					<span class="form-control form-control-noborder">
+					<span class="order-real-price" bind="order_real_price"></span> (元)
+					</span>
+				</div>
+				<div class="form-group form-group-voucher form-inline hide">
+					<label>支付凭证：</label>
+					<span class="form-control form-control-noborder" style="height: auto;">
+						<a href="javascript:;" target="_blank"><img class="img-voucher" src="../resources/images/box-7-bg.png" width="200" height="150" /></a>
+						<button class="btn btn-default btn-sm btn-upload-proof hide" type="button"><i class="fa fa-cloud-upload"></i> 更换凭证</button>
+					</span>
+				</div>
+			</form>
+		</div>
+		<div class="buy-account-less-than-used hide">
+			因选择的账户数低于使用中的账户数，购买成功后我们将停用所有账户，请再自行选择账户启用！
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.data.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			//------------消息队列相关-----------------------
+			var publisher = parent.HHMQ.createPublisher('版本', 'edition');
+			//页面关闭事件
+			context.onPageClose = function() {
+				publisher.dispose();
+			};
+			//------------消息队列相关 end -------------------
+			var formSelector = ".form-user-info";
+			var userController = new Controller(formSelector);
+			var myMobile, hasEditionUseing = false,
+				useingEditionType;
+			//上传的Proof
+			var imgPathOfProff = "";
+			$(document).ready(function() {
+				var tabIndex = $.getQueryObject().tab;
+				if(tabIndex == 1) {
+					showMyEditonTab();
+				}
+				//loading
+				$.showLoadingPop("正在加载版本信息，请稍后...");
+				//token
+				$.token();
+				//editions
+				loadSaleEditions();
+				//my edition
+				loadMyEditions();
+			});
+			var loadedAPICount = 0;
+			var hideLoadingPop = function() {
+				loadedAPICount++;
+				if(loadedAPICount == 2) {
+					$.hideLoadingPop();
+				}
+			};
+			//切换到我的版本
+			var showMyEditonTab = function() {
+				$('.nav-tabs li:last a').tab('show');
+			};
+			//我的版本
+			var loadMyEditions = function() {
+				$.ajaxGet(SAASAPIS.BS.company.edition.my_editions + "?version=2", function(response) {
+					if(response.code == 0) {
+						//success
+						if(response.data.rows.length > 0) {
+							$(".list-edition-my").empty();
+							for(var i in response.data.rows) {
+								var editionData = response.data.rows[i];
+								if(response.data.rows[i].me_edition_status == 3) {
+									hasEditionUseing = true;
+									useingEditionType = response.data.rows[i].edition_type;
+								}
+								var liDom = $("<li class='my-edition'></li>");
+								liDom.append("<div class='name-and-status'>" +
+									"<h4 class=\"\">" + editionData.edition_name + "</h4>" +
+									"<p class=\"\">" + editionData.me_edition_status_cn + "</p></div>");
+								//liDom.append();
+								liDom.append("<p class=\"expire\">到期日期:<br><span>" + (editionData.me_end_using_date_cn ? editionData.me_end_using_date_cn.substring(0,10) : "-") + "</span></p>");
+								//orders
+								var orderDom = $("<div class=\"orders\"></div>");
+								var headerDom = $("<div class=\"header\"></div>");
+								headerDom.data("edition", editionData);
+								headerDom.append("<label>账户总数：<span>" + editionData.me_accounts_count + "</span></label>");
+								headerDom.append("<label>已开通账户：<span>" + editionData.me_used_accounts_count + "</span></label>");
+								headerDom.append("<label>未开通账户：<span>" + (editionData.me_accounts_count - editionData.me_used_accounts_count) + "</span></label>");
+								headerDom.append("<label>总额（元）：<span>" + (editionData.me_total_money).toFixed("2") + "</span></label>");
+								//使用中
+								if(editionData.me_edition_status == 3) {
+									//btn
+									headerDom.append("<span>");
+									if(editionData.edition_type != 0) {
+										headerDom.append("<button type=\"button\" class=\"btn btn-default btn-sm\" onclick=\"openAccountBuyPop(this);\">增加账户</button> ");
+										headerDom.append("<button type=\"button\" class=\"btn btn-default btn-sm\" onclick=\"openEditionRenewPop(this);\">续费</button> ");
+										headerDom.append("<button type=\"button\" class=\"btn btn-default btn-sm\" onclick=\"openEditionUpgradeSelectPop(this);\">版本升级</button> ");
+									}
+									headerDom.append("</span>");
+								}
+								orderDom.append(headerDom);
+								//order table
+								var orderTableDom = $("<table class=\"table table-bordered table-edition-order\"></table>");
+								orderTableDom.append("<thead><tr><th>创建日期</th><th>订单类型</th><th>账户数</th><th>价格（元/用户/月）</th><th>购买时长（月）</th><th>总额（元）</th><th>折扣（元）</th><th>实付（元）</th><th>订单状态</th></tr></thead>");
+								var orderTableBodyDom = $("<tbody></tbody>");
+								if(editionData.order_lists && editionData.order_lists.length > 0) {
+									for(var j in editionData.order_lists) {
+										var orderData = editionData.order_lists[j];
+										if(orderData.order_type == 300) {
+											orderData.order_using_time_limit = "<span style='color:#999;'>*购买时版本到期时长</span>";
+										}
+										orderTableBodyDom.append("<tr oid='" + orderData.order_id + "'><td>" + orderData.order_time_create_cn +
+											"</td><td><a href=\"javascript:;\" onclick=\"openOrderInfoPop('" + orderData.order_id + "',this);\">" + orderData.order_type_cn + "</a></td><td>" +
+											orderData.order_accounts_count + "</td><td>" +
+											orderData.order_price_one + "</td><td>" +
+											orderData.order_using_time_limit + "</td><td>" +
+											(orderData.order_amount).toFixed("2") + "</td><td>" +
+											(orderData.order_discount).toFixed("2") + "</td><td>" +
+											(orderData.order_amount_paid).toFixed("2") + "</td><td>" +
+											orderData.order_status_cn + "</td></tr>");
+										var btnsHtml = null;
+										if(orderData.order_status == 3) {
+											//待支付
+											btnsHtml = "&nbsp; <a " + (orderData.order_payment_voucher_file ? "disabled='disabled'" : "") + " class=\"btn btn-default btn-xs\" onclick=\"openPayTypePop('" + orderData.order_id + "', '" + orderData.order_total_price + "','','" + orderData.order_payment_voucher_file + "');\"><i class=\"fa fa-dollar\"></i> 立即支付</a>" +
+												" <a " + (orderData.order_payment_voucher_file ? "disabled='disabled'" : "") + " class=\"btn btn-warning btn-xs\" onclick=\"openCancelOrderPop('" + orderData.order_id + "','','" + orderData.order_payment_voucher_file + "');\"><i class=\"fa fa-times\"></i> 取消订单</a>";
+										} else if(orderData.order_status == 1) {
+											//已取消
+											btnsHtml = "&nbsp; <button type=\"button\" class=\"btn btn-warning btn-xs\" onclick=\"openDeleteOrderPop('" + orderData.order_id + "');\"><i class=\"fa fa-trash\"></i> 删除订单</button>";
+										}
+										if(btnsHtml) {
+											orderTableBodyDom.find("tr[oid='" + orderData.order_id + "'] td:last").append(btnsHtml);
+										}
+										orderTableBodyDom.find("tr[oid='" + orderData.order_id + "'] td a").data("order", orderData);
+
+									}
+								}
+								orderTableDom.append(orderTableBodyDom);
+								orderDom.append(orderTableDom);
+								liDom.append(orderDom);
+								$(".list-edition-my").append(liDom);
+							}
+							if(hasEditionUseing) {
+								//消息推送
+								publisher.publisheMsg({
+									action: "buy-edition",
+									msg: "已购买版本。"
+								});
+							}
+						} else {
+							$(".list-edition-my").html("<li>您还未购买版本。</li>");
+						}
+					} else {
+						$.showErrorGritter("加载我的版本失败：" + response.msg);
+						$(".list-edition-my").html("<li>您还未购买版本。</li>");
+					}
+					hideLoadingPop();
+				});
+			};
+			//在售版本
+			var loadSaleEditions = function() {
+				$(".list-edition").empty();
+				$(".list-edition-upgrade").empty();
+				$.ajaxGet(SAASAPIS.BS.edition.sale, function(response) {
+					if(response.code == 0) {
+						//success
+						var editionCount = response.data.rows.length;
+						//版本对比
+						$(".table-edition-contrast tbody").empty();
+						$(".table-edition-contrast thead tr").empty();
+						$(".table-edition-contrast thead tr").append("<th>功能模块</th>");
+						var tdHtml;
+						for(var i = 0; i < editionCount; i++) {
+							tdHtml += "<td> </td>";
+						}
+						for(var i in response.data.modules) {
+							var moduleData = response.data.modules[i];
+							if(moduleData.module_url == "#") {
+								continue;
+							}
+							//console.log(moduleData.module_name)
+							$(".table-edition-contrast tbody").append("<tr mid='" + moduleData.module_id + "'><td>" + moduleData.module_name + "</td>" + tdHtml + "</tr>");
+						}
+						//版本列表
+						for(var i in response.data.rows) {
+							var editionData = response.data.rows[i];
+							//版本
+							var liDom = $("<li></li>");
+							liDom.append("<p class=\"tag\"><label></label></p>");
+							var tagClassName = null;
+							if(editionData.edition_is_hot == 1) {
+								tagClassName = "tag-hot";
+							} else if(editionData.edition_is_new == 1) {
+								tagClassName = "tag-new";
+							} else if(editionData.edition_is_recommend == 1) {
+								tagClassName = "tag-recommend";
+							}
+							liDom.find(".tag").addClass(tagClassName);
+							//../resources/images/box-4-bg.png
+							liDom.append("<img class=\"thumb\" src=\"" + editionData.edition_cover + "\">");
+							liDom.append("<h4 class=\"title\"><b>" + editionData.edition_name + "</b> <p class=\"price\"><b>&yen; " + editionData.edition_price + "</b> /用户/月</p></h4>");
+							liDom.append("<p class=\"brief\"> " + editionData.edition_desc + "</p>");
+							var buyTxt = editionData.is_using ? "已购买" : "购&nbsp;买";
+							liDom.append("<p class=\"btns\"><button type=\"button\" class=\"btn btn-block btn-buy btn-danger def-btn-danger\" data-using='" + editionData.is_using + "'>" + buyTxt + "</button></p>");
+							liDom.find(".btns .btn-buy").data("edition", editionData);
+							$(".list-edition").append(liDom);
+							//升级场景
+							var liDom4UP = $("<li></li>");
+							liDom4UP.attr("edition", JSON.stringify(editionData));
+							liDom4UP.append("<label></label>");
+							liDom4UP.find("label").append(" <input type=\"radio\" class=\"form-control-radio\" name=\"rdEditionUp\" value=\"" + editionData.edition_id + "\">");
+							liDom4UP.find("label").append(" <span class=\"title\">" + editionData.edition_name + "</span>");
+							liDom4UP.find("label").append(" <span class=\"price\">" + editionData.edition_price + " 元/用户/月</span>");
+							liDom4UP.find("label").append(" <p class=\"brief\"> " + editionData.edition_desc + "</p>");
+							$(".list-edition-upgrade").append(liDom4UP);
+							//版本对比
+							$(".table-edition-contrast thead tr").append("<th>" + editionData.edition_name + "</th>");
+							for(var j in editionData.modules) {
+								var tmpModuleData = editionData.modules[j];
+								if(tmpModuleData.module_url == "#") {
+									continue;
+								}
+								$(".table-edition-contrast tbody tr[mid='" + tmpModuleData.module_id + "'] td:eq(" + (parseInt(i) + 1) + ")").html("<img src='../resources/images/gou-icon.png' alt='含有' />");
+							}
+						}
+						//buy
+						$(".btn-buy").click(function() {
+							//if($(this).data("using")) {
+							if(hasEditionUseing && useingEditionType != 0) {
+								$.modal().confirm("您有版本正在使用中，若需增加账户、续费或版本升级请到我的版本进行操作，\r\n点击“确认”按钮进行跳转,跳转到“我的版本”页面。", function() {
+									showMyEditonTab();
+								});
+								$(".modal-dialog.modal-sm").css("margin-top", "300px");
+								return false;
+							}
+							openEditionBuyPop($(this).data("edition"));
+						});
+					} else {
+						$.showErrorGritter("加载版本列表失败：" + response.msg);
+					}
+					hideLoadingPop();
+				});
+			};
+			//订单详情
+			function openOrderInfoPop(orderId, obj) {
+				var orderData = $(obj).data("order");
+				orderData.order_time_payment = orderData.order_time_payment || "-";
+				var modalId = $.modal().show("订单详情", ".pnl-order-info",
+					function(modal) {
+						if(!isUpVoucher) {
+							modal.modal('hide');
+							return false;
+						}
+						if(isUpVoucher && !upLoadProofImgUrl) {
+							$.showErrorGritter("请先上传支付凭证。");
+							return false;
+						}
+						$.ajaxPut(SAASAPIS.BS.company.edition.order.payment_voucher.replace("{id}", orderId), {
+								order_payment_voucher_file: upLoadProofImgUrl
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("您已上传该订单支付凭证，客服人员正在为您审核，请耐心等待", {
+										clear: true,
+										time: 5000
+									});
+									modal.modal('hide');
+									loadMyEditions();
+								} else {
+									$.showErrorGritter("修改密码失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var modalSelector = "#" + modalId;
+				var formContainer = "#" + modalId + " .model-order-info";
+				var orderController = new Controller(formContainer);
+				var orderRealPrice = (orderData.order_amount_paid).toFixed("2");
+				orderData.order_total_price = (parseFloat(orderData.order_amount)).toFixed("2");
+				orderData.order_discount = parseFloat((orderData.order_discount)).toFixed("2");
+				orderData.order_time_payment = orderData.order_time_payment_cn;
+				orderController.set(orderData);
+				var isOfflinePay = orderData.order_payment_voucher_file.length > 0;
+				if(orderData.order_payment_voucher_file) $(formContainer + " .btn-cancel-order").attr("disabled", "disabled");
+				$(formContainer + " .order-real-price").text(orderRealPrice);
+				if(orderData.order_status == 1) {
+					//已取消
+					$(formContainer + " .btn-order-delete").removeClass("hide");
+					$(formContainer + " .btn-delete-order").click(function() {
+						openDeleteOrderPop(orderData.order_id, modalSelector);
+					});
+				} else if(orderData.order_status == 3) {
+					//待支付
+					$(formContainer + " .btn-order-pay").removeClass("hide");
+					if(isOfflinePay) {
+						$(formContainer + " .btn-pay-order").remove();
+					}
+					$(formContainer + " .btn-pay-order").click(function() {
+						openPayTypePop(orderData.order_id, orderData.order_total_price, modalSelector);
+					});
+					$(formContainer + " .btn-cancel-order").click(function() {
+						openCancelOrderPop(orderData.order_id, modalSelector);
+					});
+				} else if(orderData.order_status == 7) {
+					//已支付
+				}
+				var isUpVoucher = false;
+				if(orderData.order_payment_voucher_file) {
+					$(formContainer + " .form-group-voucher").removeClass("hide");
+					$(formContainer + " .img-voucher").attr("src", orderData.order_payment_voucher_file);
+					if(orderData.order_status == 3) {
+						$(formContainer + " .btn-upload-proof").removeClass("hide");
+						$(formContainer + " .btn-upload-proof").attr("id", "btnUploadProof");
+						var upLoadProofImgUrl = orderData.order_payment_voucher_file;
+						$("#btnUploadProof").initUploader({
+							url: SAASAPIS.BS.upload.image,
+							up_container: formContainer + " .upload",
+							FilesAdded: function(up, files) {
+								return true;
+							},
+							FileUploaded: function(up, file, response) {
+								var resp = JSON.parse(response.response);
+								upLoadProofImgUrl = resp.data.path;
+								$(formContainer + " .img-voucher").attr("src", resp.data.path).parent().attr("href", resp.data.path);
+								isUpVoucher = true;
+							}
+						});
+					}
+				}
+			}
+			//版本选购
+			function openEditionBuyPop(editionData) {
+				var isTrial = editionData.edition_type == 0;
+				var modalId = $.modal().showOfMini("版本选购", ".pnl-edition-buy",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var buyModel = editionBuyController.getJSON();
+						if(parseInt(buyModel.account_count) < 1) {
+							$.showErrorGritter("购买的账户数不能小于0！");
+							return false;
+						}
+						if(parseInt(buyModel.account_count) > 10 && isTrial) {
+							$.showErrorGritter("试用版购买的账户数不能大于10！");
+							return false;
+						}
+						$.ajaxGet(BSAPIURL + "/companies/01E3D2AF-CA22-3320-73F7-9FBAEC75F018/static_count", function(resp) {
+							if(resp.code != 0) {
+								$.showErrorGritter("获取已用账户数失败：" + resp.msg);
+								return false;
+							}
+							console.log(resp)
+							if(resp.data.used_account_count > buyModel.account_count) {
+								var modalId = $.modal().show("系统提示", ".buy-account-less-than-used", function(modal) {
+									buyModelFun(buyModel);
+									$("#" + modalId).modal('hide');
+								});
+							} else {
+								buyModelFun(buyModel);
+							}
+
+							function buyModelFun(buyData) {
+								$.ajaxPost(SAASAPIS.BS.company.edition.new_edition, buyData,
+									function(response) {
+										if(response.code == 0) {
+											//success
+											$.showSuccessGritter(isTrial ? "您已成功开通试用版。" : "已生成购买订单，请支付。", {
+												clear: true
+											});
+											if(isTrial) {
+												//消息推送
+												publisher.publisheMsg({
+													action: "buy-edition",
+													msg: "已购买版本。"
+												});
+											}
+											//重新加载我的版本
+											loadSaleEditions();
+											loadMyEditions();
+											showMyEditonTab();
+											modal.modal('hide');
+											if(!isTrial) {
+												//pay
+												var total = $(formContainer + " .form-control-total-amount").text();
+												openPayTypePop(response.data.order_id, total);
+											}
+										} else {
+											$.showErrorGritter("购买版本失败：" + response.msg);
+										}
+									});
+							}
+						});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-edition-buy";
+				var editionBuyController = new Controller(formContainer);
+				editionBuyController.set(editionData);
+				if(isTrial) {
+					$(formContainer + " .form-control-month").html("<option value=\"1\" selected='selected'>1个月</option>").attr("disabled", "disabled");
+					$(formContainer + " .form-control-account-count").val(10);
+					$(formContainer + " .form-control-account-count").attr("disabled", "disabled").attr("readonly", "readonly");
+					$(formContainer + " .form-group-account-count").hide();
+				}
+				$(formContainer + " .form-control-month").change(function() {
+					calculateAmount(formContainer);
+				});
+				$(formContainer + " .form-control-account-count").keyup(function() {
+					calculateAmount(formContainer);
+				});
+				//首次
+				setTimeout(function() {
+					calculateAmount(formContainer, true);
+				}, 500);
+			}
+			//计算金额
+			var calculateAmount = function(formContainer, isFirst) {
+				var unitPrice = parseFloat($(formContainer + " .form-control-unit-price").text());
+				var accountCount = parseFloat($(formContainer + " .form-control-account-count").val() || $(formContainer + " .form-control-account-count").text());
+				var month = parseFloat($(formContainer + " .form-control-month").val() || $(formContainer + " .form-control-month").text());
+				var totalAmount = unitPrice * accountCount * month;
+				totalAmount = isNaN(totalAmount) ? 0 : totalAmount;
+				var payableAmount = totalAmount;
+				var debitAmount = parseFloat($(formContainer + " .form-control-debit-amount").text());
+				if(debitAmount && !isNaN(debitAmount)) {
+					payableAmount = payableAmount - debitAmount;
+				}
+				totalAmount = totalAmount.toFixed(2);
+				payableAmount = payableAmount.toFixed(2);
+				if(payableAmount < 0 && !isFirst) $.showErrorGritter("合计金额必需大于扣除金额才能提交订单");
+				$(formContainer + " .form-control-total-amount").text(totalAmount);
+				$(formContainer + " .form-control-payable-amount").text(payableAmount);
+			};
+			//版本续费
+			function openEditionRenewPop(obj) {
+				if($(obj).parent().parent().parent().find("h4.title").text() == "试用版") {
+					$.showErrorGritter("试用版本不能续费！");
+					return false;
+				}
+				var editionData = $(obj).parents(".header:first").data("edition");
+				var modalId = $.modal().showOfMini("版本续费", ".pnl-edition-renew",
+					function(modal) {
+						var buyModel = editionBuyController.getJSON();
+						$.ajaxPut(SAASAPIS.BS.company.edition.renewals.replace("{id}", buyModel.edition_id), buyModel,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("已生成续费订单，请支付。", {
+										clear: true
+									});
+									//重新加载我的版本
+									loadMyEditions();
+									showMyEditonTab();
+									modal.modal('hide');
+									//pay
+									var total = $(formContainer + " .form-control-total-amount").text();
+									openPayTypePop(response.data.order_id, total);
+								} else {
+									$.showErrorGritter("续费版本失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-edition-renew";
+				var editionBuyController = new Controller(formContainer);
+				editionBuyController.set(editionData);
+				$(formContainer + " .form-control-month").change(function() {
+					calculateAmount(formContainer);
+				});
+				//首次
+				setTimeout(function() {
+					calculateAmount(formContainer, true);
+				}, 500);
+			}
+			//购买账户
+			function openAccountBuyPop(obj) {
+				if($(obj).parent().parent().parent().find("h4.title").text() == "试用版") {
+					$.showErrorGritter("试用版本不能增加账户！");
+					return false;
+				}
+				var sourceEditionData = $(obj).parents(".header:first").data("edition");
+				console.log(sourceEditionData)
+				var editionData = $.cloneObject(sourceEditionData);
+				//计算剩余月数
+				try {
+					//原始单价
+					//					var unit_price = 0.00;
+					//					unit_price = editionData.me_total_money / editionData.me_accounts_count / (($.convertToDate(editionData.me_end_using_date).getTime() - $.convertToDate(editionData.me_start_using_date).getTime()) /
+					//						(24 * 3600 * 1000));
+					//					var tmpTime = $.convertToDate(editionData.me_end_using_date).getTime() - $.timeNow().getTime();
+					//					var days = Math.floor(tmpTime / (24 * 3600 * 1000));
+					//					var month = days / 30;
+					//					var tmpM = parseInt(days / 30);
+					//					var tmpD = days % 30;
+					//					editionData.month = days;
+					//					editionData.month_cn = (month < 1 ? (days + "天") : (tmpM + "月" + (tmpD == 0 ? "" : (tmpD + "天"))));
+					//					editionData.edition_price_cn = editionData.edition_price;
+					//					editionData.edition_price = unit_price;
+					//					editionData.mday = days;
+					editionData.account_count = editionData.me_accounts_count;
+					editionData.month = editionData.me_remain_days;
+					editionData.month_cn = editionData.me_remain_days + "天";
+					editionData.edition_price_cn = editionData.edition_price;
+					//editionData.edition_price = (editionData.edition_price / 30);
+					editionData.edition_price = editionData.me_day_price; //parseFloat(editionData.edition_price) * parseFloat(editionData.me_using_time_limit) /
+					//(parseFloat(editionData.me_remain_day) + parseFloat(editionData.me_used_day));
+					editionData.mday = editionData.me_remain_days;
+				} catch(e) {
+					$.showErrorGritter("当前版本状态不能增加账户。");
+					return false;
+				}
+				var modalId = $.modal().showOfMini("增加账户", ".pnl-account-buy",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var buyModel = editionBuyController.getJSON();
+						if(parseInt(buyModel.account_count) < 1) {
+							$.showErrorGritter("购买的账户数不能小于1！");
+							return false;
+						}
+						$.ajaxPut(SAASAPIS.BS.company.edition.add_accounts.replace("{id}", buyModel.edition_id), {
+								accounts_count: buyModel.account_count
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("已生成增加账户订单，请支付。", {
+										clear: true
+									});
+									//重新加载我的版本
+									loadMyEditions();
+									showMyEditonTab();
+									modal.modal('hide');
+									//pay
+									var total = $(formContainer + " .form-control-total-amount").text();
+									openPayTypePop(response.data.order_id, total);
+								} else {
+									$.showErrorGritter("增加账户失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-account-buy";
+				var editionBuyController = new Controller(formContainer);
+				console.log(editionData);
+				editionBuyController.set(editionData);
+				$(formContainer + " .form-control-account-count").val("")
+				$(formContainer + " .form-control-account-count").keyup(function() {
+					calculateAmount(formContainer);
+				});
+				//首次
+				setTimeout(function() {
+					calculateAmount(formContainer, true);
+				}, 500);
+			}
+			//版本升级
+			function openEditionUpgradeSelectPop(obj) {
+				if($(obj).parent().parent().parent().find("h4.title").text() == "试用版") {
+					$.showErrorGritter("试用版本不能升级！");
+					return false;
+				}
+				var editionData = $(obj).parents(".header:first").data("edition");
+				var modalId = $.modal().show("版本升级", ".pnl-edition-upgrade-select",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var selectEditionDom = $(formContainer + " .list-edition-upgrade li input[type=radio]:checked");
+						var selectEdition = selectEditionDom.val();
+						if(!selectEdition) {
+							$.showErrorGritter("请先选择要升级的版本。", {
+								clear: true
+							});
+							return false;
+						}
+						var newEditionData = JSON.parse(selectEditionDom.parents("li:first").attr("edition"));
+						editionData.edition_id_up = newEditionData.edition_id;
+						editionData.edition_name_up = newEditionData.edition_name;
+						editionData.edition_price_up = newEditionData.edition_price;
+						modal.modal('hide');
+						openEditionUpgradePop(editionData);
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-edition-upgrade-select";
+				$(formContainer + " .list-edition-upgrade li").each(function() {
+					var eData = JSON.parse($(this).attr("edition"));
+					//alert(parseFloat(editionData.edition_price) >= parseFloat(eData.edition_price));
+					if(parseFloat(editionData.edition_price) >= parseFloat(eData.edition_price)) {
+						$(this).remove();
+					}
+				});
+			}
+			//版本升级
+			function openEditionUpgradePop(editionData) {
+				editionData.account_count = editionData.me_accounts_count;
+				//计算差价
+				try {
+					//原始单价
+					//					var unit_price = 0.00;
+					//					unit_price = editionData.me_total_money / editionData.me_accounts_count / (($.convertToDate(editionData.me_end_using_date).getTime() - $.convertToDate(editionData.me_start_using_date).getTime()) /
+					//						(24 * 3600 * 1000));
+					//					var tmpTime = $.convertToDate(editionData.me_end_using_date).getTime() - $.timeNow().getTime();
+					//					var days = Math.floor(tmpTime / (24 * 3600 * 1000));
+					//					var month = days / 30;
+					//					var tmpM = parseInt(days / 30);
+					//					var tmpD = days % 30;
+					//					editionData.debit_amount = (days * editionData.account_count * unit_price).toFixed(2);
+					//					editionData.debit_amount_cn = editionData.debit_amount + "（" + (month < 1 ? (days + "天") : (tmpM + "月" + (tmpD == 0 ? "" : (tmpD + "天")))) + "）";
+					editionData.debit_amount = editionData.me_remain_amount;
+					editionData.debit_amount_cn = editionData.debit_amount + "（" + editionData.me_remain_days + "天）";
+				} catch(e) {
+					$.showErrorGritter("当前版本状态不能增加账户。");
+					return false;
+				}
+				var modalId = $.modal().show("版本升级", ".pnl-edition-upgrade",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						if(editionData.account_count < editionData.me_accounts_count) {
+							//$.showErrorGritter("升级账户数不能少于当前版本的账户数量。");
+							//return false;
+						}
+						var buyModel = editionBuyController.getJSON();
+						buyModel.upgrade_edition_id = buyModel.edition_id_up;
+						buyModel.upgrade_edition_month = buyModel.month;
+						buyModel.upgrade_edition_user_num = buyModel.account_count;
+						$.ajaxPut(SAASAPIS.BS.company.edition.upgrade.replace("{id}", buyModel.edition_id), buyModel,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("已生成升级订单，请支付。", {
+										clear: true
+									});
+									//重新加载我的版本
+									loadMyEditions();
+									showMyEditonTab();
+									modal.modal('hide');
+									//pay
+									var total = $(formContainer + " .form-control-payable-amount").text();
+									openPayTypePop(response.data.order_id, total);
+								} else {
+									$.showErrorGritter("升级版本失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-edition-upgrade";
+				var editionBuyController = new Controller(formContainer);
+				editionBuyController.set(editionData);
+				$(formContainer + " .form-control-month").change(function() {
+					calculateAmount(formContainer);
+				});
+				$(formContainer + " .form-control-account-count").keyup(function() {
+					calculateAmount(formContainer);
+				});
+				//首次
+				setTimeout(function() {
+					calculateAmount(formContainer, true);
+				}, 500);
+			}
+			//支付方式
+			function openPayTypePop(orderId, amount, parentModalId, imgSrc) {
+				if(imgSrc) {
+					$.showErrorGritter("您已上传该订单支付凭证，客服人员正在为您审核，请耐心等待");
+					return false;
+				}
+				var modalId = $.modal().showOfMini("选择支付方式", ".pnl-pay-type",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var selPayType = $(formContainer + " .form-control-radio:checked").val();
+						//						if (selPayType != 1) {
+						//							$.showSuccessGritter("目前只支持线下支付。", {
+						//								clear: true
+						//							});
+						//							return false;
+						//						}
+						modal.modal('hide');
+						//pay
+						if(selPayType == 1)
+							openPayOfOfflinePop(orderId, amount, parentModalId);
+						if(selPayType == 0)
+							openPayOfOnlinePop(orderId, amount, parentModalId);
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-pay-type";
+				$(formContainer + " .form-control-amount").text(amount);
+			}
+			//线上支付
+			function openPayOfOnlinePop(orderId, amount, parentModalId) {
+				$.ajaxPost(SAASAPIS.BS.company.edition.order.payment.replace("{id}", orderId), {
+						order_id: orderId,
+						order_pay_type: 100
+					},
+					function(response) {
+						if(response.code == 0) {
+							//success
+							$.showSuccessGritter("支付成功，系统已自动为您开通版本，请查看。", {
+								clear: true,
+								time: 5000
+							});
+							loadMyEditions();
+							if(parentModalId)
+								$(parentModalId).modal('hide');
+						} else {
+							$.showErrorGritter("支付失败：" + response.msg);
+						}
+					});
+			}
+			//线下支付
+			function openPayOfOfflinePop(orderId, amount, parentModalId) {
+				var modalId = $.modal().show("线下支付", ".pnl-pay-offline",
+					function(modal) {
+						if(!upLoadProofImgUrl) {
+							$.showErrorGritter("请先上传支付凭证。");
+							return false;
+						}
+						$.ajaxPut(SAASAPIS.BS.company.edition.order.payment_voucher.replace("{id}", orderId), {
+								order_payment_voucher_file: upLoadProofImgUrl
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("支付凭证上传成功，请等待客服审核，<br>客服审核通过后，将为您开通版本。", {
+										clear: true,
+										time: 5000
+									});
+									modal.modal('hide');
+									loadMyEditions();
+									if(parentModalId)
+										$(parentModalId).modal('hide');
+								} else {
+									$.showErrorGritter("支付失败：" + response.msg);
+								}
+							});
+					}
+				);
+				//model pop id
+				var formContainer = "#" + modalId + " .model-pay-offline";
+				$(formContainer + " .btn-upload-proof").attr("id", "btnUploadProof");
+				var upLoadProofImgUrl;
+				$("#btnUploadProof").initUploader({
+					url: SAASAPIS.BS.upload.image,
+					up_container: formContainer + " .upload",
+					FilesAdded: function(up, files) {
+						return true;
+					},
+					FileUploaded: function(up, file, response) {
+						var resp = JSON.parse(response.response);
+						upLoadProofImgUrl = resp.data.path;
+						$(formContainer + " .img-proof").attr("src", resp.data.path).css({ "width": 378, "height": 250 }).parent().attr("href", resp.data.path);
+					}
+				});
+			}
+			//取消订单
+			function openCancelOrderPop(orderId, parentModalId, imgSrc) {
+				if(imgSrc) {
+					$.showErrorGritter("您已上传该订单支付凭证，客服人员正在为您审核。");
+					return false;
+				}
+				$.modal().confirm("你将取消选择的订单，确认取消吗？", function() {
+					$.ajaxPatch(SAASAPIS.BS.company.edition.order.status.replace("{id}", orderId), {},
+						function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter("取消订单成功。");
+								//重新加载
+								loadMyEditions();
+								if(parentModalId)
+									$(parentModalId).modal('hide');
+							} else {
+								$.showErrorGritter("取消订单失败：" + response.msg);
+							}
+						});
+				});
+			}
+			//删除订单
+			function openDeleteOrderPop(orderId, parentModalId) {
+				$.modal().confirm("你将删除选择的订单，确认删除吗？", function() {
+					$.ajaxDelete(SAASAPIS.BS.company.edition.orders + "/" + orderId, {},
+						function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter("删除订单成功。");
+								//重新加载
+								loadMyEditions();
+								if(parentModalId)
+									$(parentModalId).modal('hide');
+							} else {
+								$.showErrorGritter("删除订单失败：" + response.msg);
+							}
+						});
+				});
+			}
+		</script>
+	</body>
+
+</html>

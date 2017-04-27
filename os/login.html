@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>登录</title>
+		<link rel="stylesheet" href="resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="resources/css/index.css" />
+		<link rel="stylesheet" href="resources/css/login.css" />
+	</head>
+
+	<body class="login">
+		<div class="login-container">
+			<div class="header">
+				<img src="resources/images/logo-black.png" />
+				<p>一体化办公解决方案提供商</p>
+			</div>
+			<div class="content">
+				<div class="box-login">
+					<h3>登 录</h3>
+					<p class="input-bg account">
+						<i></i><input type="text" id="txtAccount" placeholder="请输入手机号码" maxlength="11" nulltip="手机号码" valitype="mobile" tabindex="1" autocomplete="off" />
+					</p>
+					<p class="input-bg pwd">
+						<i></i><input type="password" id="txtPwd" placeholder="请输入密码" nulltip="密码" maxlength="20" tabindex="2" autocomplete="off" />
+						<a class="link-forget hide" href="javascript:;">忘记密码？</a>
+					</p>
+					<p class="input-bg code">
+						<i></i><input type="text" id="txtCode" placeholder="验证码" maxlength="6" nulltip="验证码" tabindex="3" /><img class="img-code" src="resources/images/code.jpg" title="点击刷新验证码" />
+					</p>
+					<p class="rem hide">
+						<input type="checkbox" id="ckRem" /><label for="ckRem">记住我</label>
+					</p>
+					<p class="btns">
+						<input id="btnLogin" type="button" value="登 录" tabindex="4" />
+					</p>
+				</div>
+			</div>
+			<div class="footer">
+				<div class="copyright">
+					<span>Copyright  2001-2016 Weaver Network All Rights Reserved. 渝ICP备XXXXXXX号</span>
+					<span class="footer-link hide"><a href="javascript:;">返回首页</a> &nbsp;|&nbsp; <a href="javascript:;">注册帐号</a> </span>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<!--[if IE]>
+			<script type="text/javascript" src="resources/js/placeholder.js"></script>
+			<script type="text/javascript">
+				$("input[placeholder]").each(function() {
+					$(this).placeholder({
+						word: $(this).attr("placeholder")
+					});
+				});
+			</script>
+		<![endif]-->
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$("#txtAccount").val($.cookie("_account"));
+				if($.cookie("_rem"))
+					$("#ckRem").attr("checked", "checked");
+				//token
+				$.token();
+				//code
+				setTimeout(function() {
+					initVerifyCode();
+				}, 500);
+				$("#btnLogin").click(function() {
+					if(!inputValidateForGritter(".box-login", "login-center")) {
+						return false;
+					}
+					var btnObj = $(this);
+					btnObj.val("登录中...");
+					$.clearGritter();
+					//login
+					var loginData = {
+						"username": $("#txtAccount").val(),
+						"password": $("#txtPwd").val(),
+						"verify_code": $("#txtCode").val()
+					};
+					$.ajaxPost(OSAPIURL + "/passport", loginData,
+						function(response) {
+							loginCallback(response.code, response);
+						},
+						function() {
+							loginCallback(500);
+						});
+				});
+				$(".box-login .input-bg input").focus(function() {
+					$(".box-login .input-bg").removeClass("focus");
+					$(this).parent().addClass("focus");
+				}).blur(function() {
+					$(".box-login .input-bg").removeClass("focus");
+				});
+				$("#txtAccount").keypress(function(k) {
+					if(k.keyCode == 13) {
+						$("#txtPwd").focus();
+					}
+				});
+				$("#txtPwd").keypress(function(k) {
+					if(k.keyCode == 13) {
+						$("#txtCode").focus();
+					}
+				});
+				$("#txtCode").keypress(function(k) {
+					if(k.keyCode == 13) {
+						$("#btnLogin").click();
+					}
+				});
+				$(".img-code").click(function() {
+					initVerifyCode();
+				});
+				$(".box-login .input-bg").click(function() {
+					$(this).find("input").focus();
+				});
+			});
+
+			function loginCallback(code, response) {
+				if(code == 0) {
+					//success
+					$.showSuccessGritter("登录成功，跳转到主页...", {
+						time: 3000,
+						position: "login-center"
+					});
+					//save local
+					$.cookie("_u_id", response.data.id);
+					$.cookie("_u_name", response.data.real_name);
+					$.cookie("session_id", response.session_id);
+					setTimeout(function() {
+						window.location = "main.html";
+					}, 1000);
+					if($("#ckRem").is(":checked")) {
+						$.cookie("_account", response.data.account_name, {
+							expires: 7
+						});
+						$.cookie("_rem", true, {
+							expires: 7
+						});
+					} else {
+						$.removeCookie("_account");
+						$.removeCookie("_rem");
+					}
+				} else {
+					$.showErrorGritter(response == undefined ? "连接服务器失败。" : ("登录失败：" + response.msg), {
+						position: "login-center"
+					});
+					//code
+					initVerifyCode();
+				}
+				$("#btnLogin").val("登 录");
+			}
+
+			function initVerifyCode() {
+				$(".img-code").attr("src", OSAPIBASEURL + "/captcha?height=32&width=110&t=" + new Date().getTime());
+				$("#txtCode").val("");
+			}
+		</script>
+	</body>
+
+</html>

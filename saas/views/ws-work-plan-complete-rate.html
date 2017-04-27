@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>工作计划执行率</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			body {
+				overflow: hidden;
+			}
+			
+			.page-container,
+			.page-container .content {
+				padding-left: 0;
+			}
+			
+			.page-container .content .left-menu {
+				position: relative;
+				/*float: right;*/
+				width: 220px;
+				min-height: 260px;
+				border: 1px solid #ddd;
+				border-width: 1px 1px 1px 0;
+				bottom: 0;
+			}
+			
+			.page-container .content .main-wrap {
+				margin-left: 230px;
+			}
+			
+			.text-top {
+				line-height: 35px;
+			    padding-left: 10px;
+			    background-color: #f3f3f3;
+			    font-size: 14px;
+			    color: #666;
+			    border-bottom: 1px solid #e3e3e3;
+			}
+			
+			.page-container .content .left-menu .group-item {
+				margin-bottom: 10px;
+				padding: 10px 0 10px 10px;
+				min-height: 112px;
+				border-bottom: 1px dashed #eee;
+			}
+			
+			.page-container .content .left-menu .group-item.last {
+				border: none;
+			}
+			
+			.page-container .content .left-menu .group-item label {
+				/*font-weight: bold;*/
+			}
+			
+			.page-container .content .left-menu .group-item .form-control-radio {
+				/*width: 16px;*/
+				/*height: 16px;*/
+			}
+			
+			.page-container .content .left-menu .group-item .btn-select {
+				/*float: right;*/
+				width: 196px;
+				margin-bottom: 10px;
+			}
+			
+			.page-container .content .left-menu .group-item .date-picker {
+				width: 84px;
+				height: 24px;
+				display: inline-block;
+				border-color: #e9e9e9;
+				border-radius: 0;
+				font-size: 12px;
+				color: #666;
+			}
+			
+			.page-container .content .left-menu .group-btns {
+				width: 100%;
+				position: absolute;
+				bottom: 10px;
+				/*padding: 10px 0 0 110px;*/
+				/*border-top: 1px solid #ccc;*/
+				text-align: center;
+			}
+			
+			.page-container .content .left-menu .group-btns .btn {
+				width: 90px;
+				height: 30px;
+				line-height: 15px;
+			}
+			
+			.page-container .content .left-menu .group-btns {
+				/*margin-top: 10px;*/
+				/*text-align: center;*/
+			}
+			
+			.page-container .content .left-menu .group-btns .btn {
+				/*padding-left: 22px;*/
+				/*padding-right: 22px;*/
+			}
+			
+			.page-container .content .group-dept-select,
+			.page-container .content .group-employee-select {
+				color: #aaa;
+				font-size: 12px;
+			}
+			
+			.page-container .content .group-dept-select span,
+			.page-container .content .group-employee-select span {
+				line-height: 20px;
+			}
+			
+			.page-container .content .group-dept-select .item,
+			.page-container .content .group-employee-select .item {
+				display: inline-block;
+				/*padding: 3px 8px;*/
+				/*margin-left: 5px;*/
+				/*margin-bottom: 5px;*/
+				/*border: 1px solid #ddd;*/
+			}
+			
+			button:focus {
+				outline: none;
+			}
+			
+			.leave-or-overtime-reason {
+				display: inline-block;
+				width: 80px;
+				word-break: break-all;
+				word-wrap: break-word;
+			}
+			
+			
+			
+			.visit-detail {
+				border: 1px solid #e3e3e3;
+				border-collapse: collapse;
+				width: 100%;
+			}
+			
+			.visit-detail thead td {
+				background-color: #f8f8f8;
+			}
+			
+			.visit-detail td {
+				border: 1px solid #e3e3e3;
+				text-align: center;
+				padding: 10px 0;
+			}
+			
+			.visit-detail td:nth-child(1) {
+				width: 13%;
+			}
+			
+			.visit-detail td:nth-child(2) {
+				width: 10%;
+			}
+			
+			.visit-detail td:nth-child(3) {
+				width: 27%;
+			}
+			
+			.visit-detail td:nth-child(4) {
+				width: 10%;
+			}
+			
+			.visit-detail td:nth-child(5) {
+				width: 30%;
+			}
+			
+			.visit-detail td:nth-child(6) {
+				width: 10%;
+			}
+			
+			.click-to-detail {
+				cursor: pointer;
+			}
+			
+			.sel-work-type label {
+				display: block;
+				margin-left: 10px;
+			}
+			
+			.sel-work-type label input {
+				margin-right: 5px;
+				vertical-align: text-top;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container">
+			<div class="content">
+				<div class="left-menu">
+					<p class="text-top">选择统计部门</p>
+					<div class="group-item group-item-depa">
+						<!--<label><input type="radio" class="form-control-radio" name="rdType" value="1" checked="checked" /> 按部门统计 </label>-->
+						<a class="btn btn-info def-btn-info btn-select btn-dept-select">
+							<img src="../resources/images/plus-icon.png" alt="" />选择部门
+						</a>
+						<div class="group-dept-select">
+						</div>
+					</div>
+					<div class="group-item group-item-work-type">
+						<label>请选择计划类型：</label>
+						<div class="sel-work-type">
+							
+						</div>
+					</div>
+					<div class="group-item group-item-time last">
+						<label>请选择统计日期：</label>
+						<div>
+							<input type="text" class="form-control date-picker form-control-date-start" data-date-format="yyyy-mm" placeholder="开始日期" />
+							<span>至</span>
+							<input type="text" class="form-control date-picker form-control-date-end" data-date-format="yyyy-mm" placeholder="结束日期" />
+						</div>
+					</div>
+					<div class="group-btns">
+						<a class="btn btn-info def-btn-info btn-search">统 计</a>
+						<a class="btn btn-info def-btn-info btn-reset">重 置</a>
+						<!--<button type="button" class="btn btn-default btn-export">导 出</button>-->
+					</div>
+
+				</div>
+				<div class="main-wrap">
+					<div class="grid-wrap-dept">
+						<table id="grid-table-dept-company"></table>
+						<div id="grid-pager-dept-company"></div>
+					</div>
+					<div class="grid-wrap-emp hide">
+						<table id="grid-table-emp-company"></table>
+						<div id="grid-pager-emp-company"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-leader-info pnl-dept-select-share hide">
+			<form class="form-horizontal model-leader-info model-dept-select-share">
+				<div class="wrap wrap-source">
+					<label>选择部门：</label>
+					<div class="box">
+						<ul class="list-emp tree tree-dept">
+
+						</ul>
+					</div>
+				</div>
+				<div class="wrap seg">
+					<div class="box">
+						<p>
+							<a href="javascript:;" class="btn-add"><i class="fa fa-arrow-right"></i></a>
+						</p>
+						<br>
+						<p>
+							<a href="javascript:;" class="btn-remove"><i class="fa fa-arrow-left"></i></a>
+						</p>
+					</div>
+				</div>
+				<div class="wrap wrap-new">
+					<label>已选择：</label>
+					<div class="box">
+						<ul class="list-emp list-dept-select-temp">
+
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-leader-info pnl-employee-select-share hide">
+			<form class="form-horizontal model-leader-info model-employee-select-share">
+				<div class="wrap wrap-source">
+					<label>请选择查询部门：</label>
+					<div class="box">
+						<div class="py">
+							<input type="search" placeholder="可输入“ZS”或“张三”查找" style="width: 100%;" />
+							<p>
+								<a class="active">A</a>
+							</p>
+						</div>
+						<ul class="list-emp">
+						</ul>
+					</div>
+				</div>
+				<div class="wrap seg">
+					<div class="box">
+						<p>
+							<a href="javascript:;" class="btn-add"><i class="fa fa-arrow-right"></i></a>
+						</p>
+						<br>
+						<p>
+							<a href="javascript:;" class="btn-remove"><i class="fa fa-arrow-left"></i></a>
+						</p>
+					</div>
+				</div>
+				<div class="wrap wrap-new">
+					<label>已选择的部门：</label>
+					<div class="box">
+						<ul class="list-emp">
+
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="visit-detail-container hide">
+			<table class="visit-detail">
+				<thead>
+					<tr>
+						<td>姓名</td>
+						<td>事项类型</td>
+						<td>客户</td>
+						<td>产品</td>
+						<td>工作目的</td>
+						<td>协助人</td>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-danger def-btn-danger btn-print" onclick="printDom()"><img src="../resources/images/print.png" alt="" />打印</a>
+			<a class="btn btn-danger def-btn-danger btn-export" onclick="onStatisticsBtnClick(true);"><img class="btn-export-img" src="../resources/images/export-icon.png" alt="" />导出</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			var selectDepts = [],
+				selectDeptIds = [],
+				defaultCheckedArea,
+				selectEmps = [],
+				clientCompanyVistAggregateByDepa,
+				clientCompanyVistAggregateByEmp,
+				with_lowers = "",
+				loadGridUrl = BSAPIURL + "/report/plan/exacutive_rate",
+				loadDetailUrl = BSAPIURL + "/report/plans",
+				tempHtml4EmployeeSelect = "<span class=\"item\" data-employee-id=\"{ID}\">{N} <i class=\"fa fa-times icon-close\" onclick=\"$(this).parent().remove();\"></i></span> ",
+				prevMonth = getPreMonth($.timeNow().Format("yyyy-MM"));
+			var ws_tj = {
+				query_type: { //统计类型
+					BY_DEPA: 1, //部门
+					BY_EMP: 2 //员工
+				},
+				depa_area: { //适用范围
+					OWN: 2, //本部门
+					OWN_AND_LOWER: 1 //本部门及其所有下属部门
+				},
+				client_query_type: { //统计条件
+					CLIENT: 1, //单位
+					DEPA: 2, //部门
+					CONTACT: 3 //联系人
+				},
+			}
+			$(".left-menu").css("height", $(window).height() - 28 + "px").css("max-height", $(window).height() - 28 + "px");
+			$(document).ready(function() {
+				//选择部门、员工单选按钮点击事件
+				//部门选择
+				$(".btn-dept-select").click(function() {
+					onSelectDeptBtnClick();
+				});
+				//企业代码   获取工作类型
+				$.loadBasicDatasByClassId(102140, function(resp) {
+					$(".sel-work-type").append("<label class='select-all'><input type='checkbox' data-code-name='全部' value='0' /><span>全部</span><label>")
+					for(var i in resp) {
+						$(".sel-work-type").append("<label class='type-detail'><input type='checkbox' data-code-name='"+resp[i].code_name+"' value='"+resp[i].code_tree+"' /><span>"+resp[i].code_name+"</span><label>");
+					}
+					$(".sel-work-type .select-all input").change(function(){
+						if(!$(this).is(":checked")){
+							$(this).parent().parent().find("input").removeProp("checked");
+						}else {
+							$(this).parent().parent().find("input").prop("checked","checked");
+						}
+					});
+					$(".sel-work-type .type-detail input").change(function(){
+						if(!$(this).is(":checked")){
+							$(this).parent().parent().find("label:first-child input").removeProp("checked");
+						}else {
+							if($(".sel-work-type .type-detail input").length==$(".sel-work-type .type-detail input:checked").length)
+							$(".sel-work-type .select-all input").prop("checked","checked");
+						}
+					});
+				});
+				//日期选择
+				var nowDate = (new Date().getMonth() == 0 ? (new Date().getFullYear() - 1) : new Date().getFullYear()) + "-" + (new Date().getMonth() == 0 ? 12 : new Date().getMonth());
+				$(".date-picker").datepicker({
+					format: 'yyyy-mm',
+					autoclose: true,
+					startView: 1,
+					endDate: "2017-4",
+					maxViewMode: 1,
+					minViewMode: 1
+				});
+				$(".date-picker").val(prevMonth);
+			});
+			//选择部门按钮点击事件处理函数
+			function onSelectDeptBtnClick(){
+				$(".seld-emp-span").html("");
+				selectEmps = [];
+				var options = {
+					url: SAASAPIS.BS.company.departments.replace("{id}", $.uuid()),
+					leftTitle: "请以部门为单位选择适用范围：",
+					rightTitle: "已选择的范围：",
+					//isNeedRightPanel: true, //是否需要右边的模块
+					areaItems: [{
+						name: "with_lowers",
+						value: 2,
+						text: "仅本部门"
+					}, {
+						name: "with_lowers",
+						value: 1,
+						text: "本部门及下属部门"
+					}],
+					linkageType: 0, //联动类型   0统计(不联动)   1（下联动） 2 （双联动）
+					//modalId: modalIdOfDeptId, //打开的modal的id
+					defaultCheckedIds: selectDeptIds,
+					defaultCheckedArea: defaultCheckedArea,
+					clickCallback: function(data) { //为关闭modal时需要的数据赋值
+						console.log(data)
+						selectDepts = data.selectDepts;
+						with_lowers = data.area_value;
+						var areaText = "统计范围：" + (data.area_value == 2 ? "所选部门" : "所选部门及其下属部门");
+						defaultCheckedArea = data.area_value;
+						selectDeptIds = [];
+						//var tempHtml = "<span class=\"item\" data-dept-id=\"{ID}\">{N} <img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span> ";
+						var tempHtml = "<span class=\"item\" data-dept-id=\"{ID}\">{N}</span> ";
+						var selectDeptDom = $(".group-dept-select");
+						selectDeptDom.empty();
+						var selectedDomArr=[];
+						for(var i in selectDepts) {
+							var deptData = selectDepts[i];
+							selectDeptIds.push(deptData.dept_id);
+							if(selectDeptDom.find("span[data-dept-id='" + deptData.dept_id + "']").length > 0) {
+								continue;
+							}
+							selectedDomArr.push(tempHtml.replace("{N}", deptData.dept_name).replace("{ID}", deptData.dept_id));
+						}
+						selectDeptDom.append("<span>已选择" + selectDeptIds.length + "个部门</span><br><span>"+ areaText + "</span>");
+					}
+				}
+				initDeptTreeOfTwoStep(options);
+			}
+			var isFirstInitGrid = true;
+			////按部门统计的表格
+			function initRightDeptGrid(theadUrl, tbodyUrl) {
+				var colNames = ['','员工', '部门/职务', '计划数', '计划完成数', '计划外完成数', '完成总数', '计划执行率'];//, 'B级拜访数', 'C级拜访数', '拜访总时长', '计划执行率', '日均拜访数'];
+				var colModel = [{
+					name: "employee_id",
+					hidden: true
+				},{
+					name: "employee_name",
+					formatter: function(cellvalue, options, rowObject){
+						return cellvalue;
+					}
+				}, {
+					name: "depa_name,post_name",
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject){
+						return rowObject.depa_name+rowObject.post_name;
+					}
+				}, {
+					name: "plan_in_count",
+					formatter: function(cellvalue, options, rowObject){
+						if(!cellvalue) return cellvalue;
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('计划明细','1','"+rowObject.employee_id+"')\">"+cellvalue+"</a>";
+					}
+				}, {
+					name: "plan_in_complete_count",
+					formatter: function(cellvalue, options, rowObject){
+						if(!cellvalue) return cellvalue;
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('计划完成明细','2','"+rowObject.employee_id+"')\">"+cellvalue+"</a>";
+					}
+				}, {
+					name: "plan_out_complete_count",
+					formatter: function(cellvalue, options, rowObject){
+						if(!cellvalue) return cellvalue;
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('计划外完成明细','3','"+rowObject.employee_id+"')\">"+cellvalue+"</a>";
+					}
+				}, {
+					name: "plan_complete_count",
+					formatter: function(cellvalue, options, rowObject){
+						if(!cellvalue) return cellvalue;
+						return "<a class='click-to-detail' onclick=\"openVisitDetailPop('完成总明细','4','"+rowObject.employee_id+"')\">"+cellvalue+"</a>";
+					}
+				}, {
+					name: "rate"
+				}];
+				clientCompanyVistAggregateByDepa = $("#grid-table-dept-company").initJqGrid({
+					datatype: "local",
+					pager: "#grid-pager-dept-company",
+					colNames: colNames,
+					footerBtnContainer: "#grid-footer-container",
+					rowNum: 100000,
+					height: $(window).height() - 135,
+					colModel: colModel
+				});
+			}
+			//获取当前条件
+			function getSearchCondition(){
+				var beginDate = $(".form-control-date-start").val();
+				var endDate = $(".form-control-date-end").val();
+				var data = {};
+				data.date_start = beginDate;
+				data.date_end = endDate;
+				if(!beginDate||!endDate) {
+					$.showErrorGritter("查询日期错误，请重新选择。");
+					return false;
+				}
+				var ids = [];
+				if(selectDepts.length<1) {
+					$.showErrorGritter("请先选择部门");
+					return false;
+				}
+				for(var i in selectDepts) {
+					ids.push(selectDepts[i].dept_id);
+				}
+				data.depa_ids = ids.join(",");
+				data.with_lowers = with_lowers;
+				var workTypesArr=[];
+				$(".sel-work-type input:checked").each(function(){
+					workTypesArr.push($(this).val());
+				});
+				if(workTypesArr.length<1) {
+					$.showErrorGritter("请先选择计划类型");
+					return false;
+				}
+				data.work_types=workTypesArr.join(",");
+				return data;
+			}
+			//统计按钮点击事件处理函数
+			function onStatisticsBtnClick(isExport) {
+				var data=getSearchCondition();
+				if(!data) return false;
+				var url = loadGridUrl + $.toQueryString(data, true);
+				if(isExport) {
+					$.downloadFile(url + "&export=1");
+					return;
+				}
+				$(clientCompanyVistAggregateByDepa).jqGrid('setGridParam', {
+					page: 1,
+					datatype: "json",
+					url: url
+				}).trigger("reloadGrid", {});
+			}
+			//重置查询条件
+			function resetSearchConditions() {
+				$(".group-dept-select").html("");
+				with_lowers = "";
+				$(clientCompanyVistAggregateByDepa).jqGrid('clearGridData');
+				selectDepts = [];
+				selectEmps = [];
+				selectDeptIds=[];
+				$(".sel-work-type input").removeProp("checked");
+				$(".date-picker").val(prevMonth);
+			}
+			$(".date-picker").change(function() {
+				//onDatePickerChange(this);
+			});
+			//选择部门
+			$(".visit-aggregate-main .sel-depa").click(function() {
+				onSelDepaBtnClick(this);
+			});
+			//默认加载按部门统计的表格
+			initRightDeptGrid("");
+			////统计按钮
+			$(".btn-search").click(function() {
+				onStatisticsBtnClick();
+			});
+			//重置按钮
+			$(".btn-reset").click(function() {
+				resetSearchConditions();
+			});
+			/////导出按钮
+			$(".btn-exported").click(function() {
+				onStatisticsBtnClick(1);
+			});
+			//打印
+			function printDom() {
+				var index = $(".visit-aggregate-main .type-nav a.active").attr("index");
+				if(index == "depa") {
+					print($("#grid-table-dept-company"));
+				} else {
+					print($("#grid-table-dept-company"));
+				}
+			}
+			//查看明细
+			function openVisitDetailPop(queryTypeCn,queryTypeCode,employeeId){
+				var conditions=getSearchCondition();
+					conditions.employee_id=employeeId;
+					conditions.query_type=queryTypeCode;
+				var modalId= $.modal({
+					height: $(window).height()-200,
+					width: 900,
+					showOKButton: false,
+					cancelButtonText: "关闭",
+					shownCallback: function(){
+						$.ajaxGet(loadDetailUrl+$.toQueryString(conditions,true),function(resp){
+							if(resp.code!=0) {
+								$.showErrorGritter("查询拜访明细失败："+resp.msg);
+								return false;
+							}
+							var allTrDom="";
+							for(var i in resp.data.rows){
+								var oneRecord=resp.data.rows[i];
+								var trDom=
+									"<tr>"
+									+"	<td>"+(oneRecord.work_schedule_item_date+" "+oneRecord.work_schedule_item_am_or_pm_cn)+"</td>"
+									+"	<td>"+(oneRecord.work_schedule_item_work_type_cn)+"</td>"
+									+"	<td>"+getClientHtml(oneRecord.relations.crm_contact)+"</td>"
+									+"	<td>"+getProducts(oneRecord.relations.product)+"</td>"
+									+"	<td>"+oneRecord.work_schedule_item_content+"</td>"
+									+"	<td>"+(oneRecord.relations.by_helper?"（协助）"+getByHelperHtml(oneRecord.relations.by_helper):"（协助人）"+getHelperHtml(oneRecord.relations.helper))+"</td>"
+									+"</tr>";
+								allTrDom+=trDom;
+							}
+							$("#"+modalId+" .visit-detail tbody").html(allTrDom);
+						});
+					}
+				}).show(queryTypeCn,".visit-detail-container",function(modal){
+					
+				});
+			}
+			
+			//处理客户成对应的HTML
+			function getClientHtml(data) {
+				var clientSpanDom = "";
+				var contactGroup = {};
+				for(var i in data) {
+					if(contactGroup[data[i].client_id]) {
+						if(contactGroup[data[i].client_id][data[i].depa_id]) {
+							contactGroup[data[i].client_id][data[i].depa_id].client_id = data[i].client_id;
+							contactGroup[data[i].client_id][data[i].depa_id].client_full_name = data[i].client_full_name;
+							contactGroup[data[i].client_id][data[i].depa_id].depa_id = data[i].depa_id;
+							contactGroup[data[i].client_id][data[i].depa_id].depa_name = data[i].depa_name;
+							contactGroup[data[i].client_id][data[i].depa_id].contacts.push({
+								contact_id: data[i].contact_id,
+								contact_name: data[i].contact_name
+							});
+						} else {
+							contactGroup[data[i].client_id][data[i].depa_id] = {};
+							contactGroup[data[i].client_id][data[i].depa_id].contacts = [];
+							contactGroup[data[i].client_id][data[i].depa_id].client_id = data[i].client_id;
+							contactGroup[data[i].client_id][data[i].depa_id].client_full_name = data[i].client_full_name;
+							contactGroup[data[i].client_id][data[i].depa_id].depa_id = data[i].depa_id;
+							contactGroup[data[i].client_id][data[i].depa_id].depa_name = data[i].depa_name;
+							contactGroup[data[i].client_id][data[i].depa_id].contacts.push({
+								contact_id: data[i].contact_id,
+								contact_name: data[i].contact_name
+							});
+						}
+					} else {
+						contactGroup[data[i].client_id] = {};
+						contactGroup[data[i].client_id][data[i].depa_id] = {};
+						contactGroup[data[i].client_id][data[i].depa_id].contacts = [];
+						contactGroup[data[i].client_id][data[i].depa_id].client_id = data[i].client_id;
+						contactGroup[data[i].client_id][data[i].depa_id].client_full_name = data[i].client_full_name;
+						contactGroup[data[i].client_id][data[i].depa_id].depa_id = data[i].depa_id;
+						contactGroup[data[i].client_id][data[i].depa_id].depa_name = data[i].depa_name;
+						contactGroup[data[i].client_id][data[i].depa_id].contacts.push({
+							contact_id: data[i].contact_id,
+							contact_name: data[i].contact_name
+						});
+					}
+				}
+				for(var z in contactGroup) {
+					for(var x in contactGroup[z]) {
+						var aCompanyAdepaContactIds = [];
+						var aCompanyAdepaContactNames = [];
+						for(var y in contactGroup[z][x]) {
+							if(y != "contacts") continue;
+							for(var p in contactGroup[z][x].contacts) {
+								aCompanyAdepaContactIds.push(contactGroup[z][x].contacts[p].contact_id);
+								aCompanyAdepaContactNames.push(contactGroup[z][x].contacts[p].contact_name);
+							}
+							clientSpanDom += "<span class='seled-client' data-contact-id='" + aCompanyAdepaContactIds.join(",") + "'>" + contactGroup[z][x].client_full_name + ">" + contactGroup[z][x].depa_name + ">" + aCompanyAdepaContactNames.join("、") + "</span><br/>";
+						}
+					}
+				}
+				return (clientSpanDom||"--");
+			}
+			//处理产品成对应的HTML
+			function getProducts(data){
+				return "A产品";
+			}
+			////处理协助人成对应HTML
+			function getHelperHtml(data) {
+				var helperDomArr = [];
+				for(var i in data) {
+					helperDomArr.push("<span class='seled-assist-people' data-employee-id='" + data[i].employee_id + "'>" + data[i].employee_name + "</span>");
+				}
+				return helperDomArr.join("、");
+			}
+			//处理被协助人成对应HTML   别人的计划需要自己协助的才有
+			function getByHelperHtml(data) {
+				var byHelperDomArr = [];
+				for(var i in data) {
+					if(data[i].employee_name) byHelperDomArr.push("<span class='seled-assist-people' data-employee-id='" + data[i].employee_id + "'>" + data[i].employee_name + "</span>");
+				}
+				return byHelperDomArr.join("、");
+			}
+			//处理知会对象成对应HTML
+			function getNotifierHtml(data, index) {
+				var notifierDomArr = [];
+				if(data.length > 0 && data[index].relations.notifier && data[index].relations.notifier.length > 0) {
+					for(var q in data[index].relations.notifier) {
+						notifierDomArr.push("<span class='seled-assist-people' data-employee-id='" + data[index].relations.notifier[q].employee_id + "'>" + data[index].relations.notifier[q].employee_name + "</span>");
+					}
+				}
+				return notifierDomArr.join("、");
+			}
+		</script>
+	</body>
+
+</html>

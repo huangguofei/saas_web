@@ -1,0 +1,3743 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>客户管理</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<link rel="stylesheet" href="../resources/css/city-picker.css" />
+		<style>
+			.page-container,
+			.page-container .content {
+				padding: 0;
+				margin: 0;
+			}
+			
+			.tree .left-line {
+				margin-top: 0;
+			}
+			
+			.tree .top-line:before {
+				margin-top: 10px!important;
+			}
+			
+			#tab-hand-over-content tr td ul {
+				height: 100%;
+				width: 100%;
+			}
+			
+			#tab-hand-over-content tr td ul li {
+				width: 100%;
+			}
+			
+			#tab-hand-over-content tbody tr td ul li {
+				width: 100%;
+				border-bottom: 1px dashed #eee;
+				height: 35px;
+				padding: 10px 14px;
+				padding-left: 0;
+			}
+			
+			#tab-hand-over-content tbody tr td ul li:last-child {
+				border-bottom: none;
+			}
+			
+			#tab-hand-over-content tr td ul li div div:first-child {
+				width: 80%;
+			}
+			
+			#tab-hand-over-content tr td ul li div div:last-child {
+				width: 20%;
+			}
+			
+			#tab-hand-over-content tr td:first-child {
+				padding-left: 14px;
+			}
+			
+			#tab-hand-over-content tr td ul li div div {
+				padding-left: 14px;
+				text-align: left;
+			}
+			
+			.crm-client-management .content .left-menu {
+				border: 1px solid #ddd;
+				border-width: 1px 1px 0 0;
+				top: 59px;
+				bottom: 0;
+				width: 220px;
+				overflow: hidden;
+			}
+			
+			.tree-dept-menu-container {
+				overflow: auto;
+				overflow-y: auto!important;
+			}
+			
+			.tree-dept-menu {
+				float: left;
+			}
+			
+			.page-container .content .main-wrap {
+				margin-left: 230px;
+			}
+			
+			.crm-client-management .content {
+				margin-top: 0;
+			}
+			
+			.left-menu-nav-tabs,
+			.left-menu-nav-tabs:hover,
+			.left-menu-nav-tabs:focus {
+				display: inline-block;
+				width: 107px;
+				line-height: 36px;
+				text-align: center;
+				color: #666;
+				text-decoration: none;
+				background-color: #f3f3f3;
+				border: 1px solid #e3e3e3;
+				box-sizing: border-box;
+				color: #999;
+			}
+			
+			.left-menu-nav-tabs {
+				border-right-color: #f3f3f3;
+				border-top-color: #f3f3f3;
+			}
+			
+			.left-menu-nav-tabs:first-child {
+				border-left-color: #f3f3f3;
+				border-top-color: #f3f3f3;
+				border-right-color: #e3e3e3;
+			}
+			
+			.left-menu-nav-tabs.active {
+				border: 1px solid #fff;
+				border-color: #fff;
+				line-height: 36px;
+				width: 107.5px;
+				background-color: #fff;
+				color: #666;
+			}
+			
+			.treeview-government-area {
+				overflow: auto;
+				overflow-y: auto!important;
+			}
+			
+			.tree-dept-menu-government-area {
+				float: left;
+				margin-top: 14px;
+				color: #666;
+				font-size: 12px;
+			}
+			
+			.tree-dept-menu-government-area img {
+				vertical-align: baseline;
+				margin-right: 5px;
+			}
+			
+			.left-menu-nav {
+				background-color: #fff;
+				padding: 0;
+				box-sizing: border-box;
+				height: 36px;
+			}
+			
+			.left-menu-content-active {
+				display: block;
+			}
+			
+			.left-menu-content-panel:first-child>div {
+				width: 100%!important;
+				height: 45px;
+			}
+			
+			.left-menu-content-hide {
+				display: none;
+			}
+			
+			.treeview .tree-dept-menu li {
+				margin-left: 15px;
+			}
+			
+			.tree-dept-menu label {}
+			
+			.tree-dept-menu ul {
+				border-left-color: #ddd!important;
+			}
+			
+			.tree-dept-menu li.top-line:before {
+				background-color: #f8f8f8!important;
+				border-top-color: #ddd!important;
+			}
+			
+			.main-wrap {
+				padding: 14px 0 0 0;
+			}
+			
+			.form-content-title {
+				background-color: #f3f3f3;
+				padding: 5px;
+				border-bottom: 1px solid #ddd;
+				padding-left: 15px;
+			}
+			
+			.form-content-title span {
+				color: #666;
+			}
+			
+			.form-group-bordered {
+				border: 1px solid #ddd;
+			}
+			
+			.form-content-body {
+				padding: 5px;
+			}
+			
+			.input-label-group {
+				display: block;
+				margin: 5px 0;
+			}
+			
+			.input-label-group label {
+				margin-right: 15px;
+				width: 110px;
+				text-align: right;
+			}
+			
+			.form-content-body-left,
+			.form-content-body-right {
+				float: left;
+				margin-right: 80px;
+			}
+			
+			.form-content-body-right {
+				width: 380px;
+			}
+			
+			.form-content-body:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.add-picture,
+			.add-picture:hover,
+			.add-picture:focus {
+				display: inline-block;
+				width: 120px;
+				height: 100px;
+				color: #666;
+				cursor: pointer;
+				top: 0;
+				left: 0;
+			}
+			
+			.add-picture i {
+				float: left;
+				margin-left: 30%;
+				margin-top: 30%;
+			}
+			
+			.picture-container {
+				display: inline-block;
+				border: 1px solid #ccc;
+				position: relative;
+				margin-left: 20px;
+			}
+			
+			.picture-container i {
+				color: red;
+				position: absolute;
+				right: -5px;
+				top: -10px;
+				z-index: 100;
+			}
+			
+			.picture-container img {
+				width: 120px;
+				height: 90px;
+				vertical-align: middle;
+			}
+			
+			.btn-add-other-info,
+			.btn-add-other-info:hover,
+			.btn-add-other-info:focus {
+				display: inline-block;
+				color: #009ed8;
+				text-decoration: underline;
+				text-align: center;
+				padding-top: 5px;
+				cursor: pointer;
+				margin-right: 20px;
+				margin-left: 15px;
+			}
+			
+			.tab-add-other-info {
+				margin-left: 15px;
+			}
+			
+			.close-icon-container {
+				width: 20px;
+			}
+			
+			.close-icon-container .close-icon {
+				top: 15px;
+			}
+			
+			.tab-add-other-info input {
+				border-color: 1px solid #ddd;
+				margin: 5px 0 10px 0;
+			}
+			
+			.tab-add-other-info i {
+				cursor: pointer;
+			}
+			
+			.form-inline .uploaded {
+				padding: 0;
+				margin: 0;
+			}
+			
+			.form-inline .uploaded:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.form-content-body-introduction label {
+				vertical-align: top;
+			}
+			
+			.modal-add-client-company input:focus,
+			.modal-add-client-company textarea:focus {
+				border-color: #A6C8FF;
+			}
+			
+			.content-left {
+				/*border-right: 1px solid #ccc;*/
+			}
+			
+			.content-left:after,
+			.content-left-body-main:after,
+			.hand-over-client-panel:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.content-left-body-title {
+				background-color: #f2f2f2;
+			}
+			
+			.content-left-body-title div {
+				display: inline-block;
+				vertical-align: top;
+				text-align: center;
+				width: 217px;
+			}
+			
+			.sel-area-title {
+				color: #333;
+			}
+			
+			.sel-area-explain-title {
+				color: #999;
+			}
+			
+			.sel-area-main {
+				height: 320px;
+				overflow-y: auto;
+				border-left: 1px solid #ccc;
+				border-bottom: 1px solid #ccc;
+			}
+			
+			#tab-hand-over-content {
+				width: 100%;
+				border: 1px solid #f2f2f2;
+				border-collapse: collapse;
+			}
+			
+			#tab-hand-over-content td,
+			#tab-hand-over-content th {
+				text-align: left;
+				padding: 5px 0;
+				border: 1px solid #f2f2f2;
+			}
+			
+			#tab-hand-over-content thead th {
+				color: #333;
+				background-color: #f2f2f2;
+				font-weight: normal;
+			}
+			
+			#tab-hand-over-content tbody ul li {
+				border-bottom: 1px solid #ccc;
+			}
+			
+			#tab-hand-over-content tbody ul li:last-child {
+				border: none;
+			}
+			
+			#tab-hand-over-content tbody tr td a,
+			#tab-hand-over-content tbody tr td a:hover,
+			#tab-hand-over-content tbody tr td a:focus {
+				color: red;
+				text-decoration: none;
+				cursor: pointer;
+			}
+			
+			.view-accept-object {
+				height: 230px;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+			}
+			
+			.content-right-title a {
+				float: right;
+			}
+			
+			.hand-over-reason {
+				margin-top: 10px;
+			}
+			
+			.view-accept-object span {
+				display: inline-block;
+				margin-left: 15px;
+				padding: 10px;
+			}
+			
+			.fa-unchecked {
+				color: #999;
+				display: inline-block;
+				margin: 0 5px;
+			}
+			
+			.fa-checked {
+				color: #169BD5!important;
+				display: inline-block;
+				margin: 0 5px;
+			}
+			
+			.hand-over-active {
+				display: block;
+			}
+			
+			.hand-over-hide {
+				display: none;
+			}
+			
+			.selected-active {
+				background-color: #EFF4FF;
+			}
+			
+			.content-left-body-main ul li {
+				margin: 0;
+			}
+			
+			.all-dept-ul,
+			.second-dept-ul,
+			.third-dept-ul,
+			.all-area-ul,
+			.second-government-area,
+			.third-government-area {
+				margin-left: 15px;
+			}
+			
+			.sel-nationwide {
+				cursor: default;
+			}
+			
+			.sel-hand-over-emp {
+				color: #999;
+				font-weight: bold;
+			}
+			
+			.sel-hand-over-emp-active,
+			.sel-hand-over-emp:hover,
+			.sel-hand-over-emp:focus {
+				color: #12BDF7;
+				text-decoration: none;
+			}
+			
+			#allmap {
+				height: 500px;
+				width: 100%;
+			}
+			
+			#r-result {
+				width: 100%;
+				font-size: 14px;
+			}
+			
+			.share-status,
+			.share-status:hover,
+			.share-status:focus {
+				/*display: inline-block;
+				width: 55px;
+				height: 25px;
+				border: 1px solid #ddd;
+				border-radius: 8px;
+				text-align: center;
+				line-height: 25px;
+				cursor: pointer;
+				color: #fff;
+				text-decoration: none;*/
+			}
+			
+			.fa-check-circle {
+				color: #B5B5B5;
+			}
+			
+			i.checkstyle {
+				color: #169BD5;
+			}
+			
+			.client-tree li {
+				line-height: 25px;
+				cursor: pointer;
+			}
+			
+			.shake-client-left {
+				height: 600px;
+			}
+			
+			.shake-client-left>input {
+				border: 1px solid #ccc;
+				background: #fff;
+				border-radius: 3px;
+				-webkit-border-radius: 3px;
+				-moz-border-radius: 3px;
+				margin-bottom: 40px;
+				width: 170px;
+				height: 40px;
+				line-height: 40px;
+				text-align: center;
+			}
+			
+			.share-info {
+				height: 100%;
+			}
+			
+			.share-info>ul {
+				width: 100%;
+				height: 90%;
+				margin-top: 10px;
+				border: 1px solid #ccc;
+				border-radius: 0;
+				-webkit-border-radius: 0;
+				-moz-border-radius: 0;
+				padding: 10px;
+				overflow: auto;
+				margin-bottom: 10px;
+			}
+			
+			.tree-status {
+				float: right;
+				margin-right: 20px;
+				font-size: 20px;
+			}
+			
+			.tree-status label {
+				color: #999;
+				font-size: 12px;
+				display: inline-block;
+				width: auto;
+			}
+			
+			.tree-status label span {
+				color: #999;
+				font-size: 12px;
+				display: inline-block;
+				width: auto;
+			}
+			
+			.share-object>p {
+				line-height: 30px;
+				margin-bottom: 10px;
+			}
+			
+			.share-object p a {
+				float: right;
+			}
+			
+			.share-object .share-object-list {
+				border: 1px solid #e3e3e3;
+				zoom: 1;
+				padding: 10px;
+				margin-bottom: 10px;
+				overflow: auto;
+			}
+			
+			.share-object-list:after {
+				content: "";
+				height: 0;
+				display: block;
+				clear: both;
+				visibility: hidden;
+			}
+			
+			.object-box {
+				margin-left: 25px;
+				margin-bottom: 10px;
+				float: left;
+				position: relative;
+			}
+			
+			.object-box:nth-child(5n+1) {
+				/*margin-left: 0;*/
+			}
+			
+			.object-box-off {
+				cursor: pointer;
+				position: absolute;
+				top: 5px;
+				left: 40px;
+				width: 16px;
+				height: 16px;
+				background: red;
+				color: #fff;
+				border: 1px solid #ccc;
+				border-radius: 8px;
+				-webkit-border-radius: 8px;
+				-moz-border-radius: 8px;
+				text-align: center;
+				line-height: 12px;
+			}
+			
+			.object-box-name {
+				line-height: 20px;
+				font-size: 14px;
+				text-align: center;
+				width: 100%;
+			}
+			
+			.share-object-reason {
+				width: 100%;
+				resize: none;
+				height: 100px;
+			}
+			
+			.tree-dept-menu-government-area li {
+				margin-left: 15px;
+			}
+			
+			.treeview-government-area .tree-dept-menu-government-area li a.hover,
+			.treeview-government-area .tree-dept-menu-government-area li a.active {
+				background-color: #E0E0E0;
+			}
+			
+			.treeview-government-area .tree-dept-menu-government-area li a,
+			.treeview-government-area .tree-dept-menu-government-area li a:hover,
+			.treeview-government-area .tree-dept-menu-government-area li a:focus,
+			.treeview-government-area .tree-dept-menu-government-area li a:active {
+				padding: 3px;
+				color: #666;
+				text-decoration: none;
+			}
+			
+			.input-label-group .city-picker-span {
+				width: 171px;
+			}
+			
+			.dept-tree {
+				color: #333;
+			}
+			
+			.sel-area-client-contact-ul span {
+				color: #333;
+			}
+			
+			.applyfor-reason label {
+				display: inline-block;
+				width: 100%;
+			}
+			
+			.applyfor-indicators {
+				margin: 10px 0;
+			}
+			
+			.indicators-text {
+				margin: 0 10px;
+			}
+			
+			.applyfor-reason textarea {
+				resize: none;
+				margin-top: 10px;
+				margin-left: 5px;
+			}
+			
+			.all-deptwide {
+				display: block;
+			}
+			
+			.left-menu-content-panel:first-child>div {
+				line-height: 45px;
+				border-bottom: 1px solid #eee;
+			}
+			
+			.left-menu-content-panel>div>span {
+				cursor: pointer;
+				/*margin-left: 15px;*/
+				display: inline-block;
+				text-align: left;
+				padding-left: 23px;
+				height: 30px;
+				line-height: 30px;
+				width: 100%;
+				color: #666;
+			}
+			
+			.left-menu-content-panel>div.active span {
+				border-left: 2px solid #ca192b;
+				color: #ca192b;
+			}
+			
+			.tree-dept-menu {
+				/*margin-left: 10px;*/
+			}
+			
+			.content-left-body-company,
+			.content-left-body-contacts {
+				float: left;
+				width: 50%;
+			}
+			
+			.content-left-body:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+			
+			.hand-over-foot-btn {
+				padding-left: 60%;
+				padding-top: 10px;
+				margin-top: 20px;
+				border-top: 1px solid #ccc;
+			}
+			
+			.my-subordinates-client span img {
+				margin-left: 20px;
+			}
+			
+			.tree {
+				background-color: #f8f8f8;
+				display: none;
+				min-width: 100%;
+			}
+			
+			.tree>li>li>li {
+				display: none;
+			}
+			
+			.tree.dashed-dept-tree li.top-line:before {
+				margin-top: 23px!important;
+			}
+			
+			.tree.dashed-dept-tree>li>ul>li:last-child:before {
+				margin-top: 23px!important;
+			}
+			
+			.tree.dashed-dept-tree>li ul>li:last-child>p:before {
+				border: 1px solid #f8f8f8;
+			}
+			
+			.tree.dashed-dept-tree>li ul>li:last-child>label:before {
+				border: 1px solid #f8f8f8;
+			}
+			
+			.sel-area-client-company-ul>li li {
+				margin-left: 15px;
+			}
+			
+			.sel-area-title {
+				display: inline-block;
+				height: 30px;
+				width: 100%;
+				background-color: #f2f2f2;
+				text-align: center;
+				margin-bottom: 5px;
+			}
+			
+			.steps-panel {
+				height: 360px;
+			}
+			
+			.steps-panel-share {
+				height: 400px;
+			}
+			
+			.td-left-align {
+				text-align: left!important;
+				word-wrap: break-word;
+				word-break: break-all;
+			}
+			
+			.city-picker-span {
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+			
+			.BMapLabel {
+				width: 100px!important;
+				max-width: 100px!important;
+			}
+			
+			.response-people-head {
+				width: 30px;
+				height: 30px;
+				float: left;
+			}
+			
+			.response-people-container {
+				position: relative;
+				height: 42px;
+				padding: 6px 0 6px 14px;
+				border: 1px solid #eee;
+				margin-bottom: 10px;
+				cursor: pointer;
+			}
+			
+			.response-people-container.active {
+				background-color: #fae8e9;
+			}
+			
+			.response-people-name {
+				float: left;
+				margin-left: 10px;
+				height: 30px;
+				line-height: 30px;
+			}
+			
+			.response-people-checked {
+				position: absolute;
+				top: 10px;
+				right: 10px;
+			}
+			
+			li span {
+				display: inline-block;
+			}
+			
+			.model-employee-import-1 h4 {
+				font-weight: bold;
+			}
+			
+			.model-employee-import-1>div {
+				font-size: 14px;
+				margin: 10px;
+			}
+			
+			.table-employee-import td {
+				border: 1px solid #fff;
+			}
+			
+			.table-employee-import thead tr {
+				background-color: #919fac;
+			}
+			
+			.table-employee-import tbody tr:nth-child(odd) {
+				background-color: #fafafa;
+			}
+			
+			.table-employee-import tbody tr:nth-child(even) {
+				background-color: #eef3f9;
+			}
+			
+			.employee-name-container {
+				width: auto!important;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				vertical-align: middle;
+				margin-right: 10px;
+			}
+			
+			.treeview-government-area,
+			.treeview-government-area {
+				line-height: initial;
+			}
+			
+			.treeview-government-area li {
+				line-height: initial;
+				line-height: 20px;
+			}
+			
+			.left-menu-content-government-area {
+				background-color: #fff;
+			}
+			
+			.real-picture {
+				height: 100px;
+			}
+			
+			.process-percent {
+				display: inline-block;
+				width: 200px;
+			}
+			
+			.content-left-companys-container {
+				border: 1px solid #ddd;
+				margin-bottom: 20px;
+			}
+			
+			.content-left-companys-container>label {
+				background-color: #f8f8f8;
+				color: #666;
+				font-size: 14px;
+				font-weight: bold;
+				padding: 10px 14px;
+				display: block;
+				border-bottom: 1px solid #ddd;
+			}
+			
+			.content-left-companys {
+				padding: 14px;
+			}
+			
+			.content-left-companys .client-name {
+				display: inline-block;
+				font-size: 14px;
+				color: #666;
+				padding: 6px 6px 6px 6px;
+				border-bottom: 1px dashed #eee;
+				cursor: pointer;
+				margin-right: 5px;
+				text-align: center;
+			}
+			
+			.content-left-companys .client-name.active {
+				font-size: 14px;
+				color: #fff!important;
+				background-color: #009ED8;
+				text-decoration: none!important;
+				border-bottom: none;
+			}
+			
+			.content-left-companys .client-name.select,
+			.content-left-companys .client-name.active.select {
+				font-size: 14px;
+				color: #009ED8;
+				text-decoration: underline;
+			}
+			
+			.content-left-body {
+				border: 1px solid #ddd;
+				overflow: auto;
+			}
+			
+			.content-left-body>label {
+				background-color: #fffbec;
+				font-size: 12px;
+				color: #88744f;
+				padding: 8px 0 6px 14px;
+				display: block;
+			}
+			
+			.content-left-body .one-client-detail li {
+				margin-left: 17px;
+				padding-top: 14px;
+			}
+			
+			.content-left-body .one-client-detail li label {
+				margin: 0;
+			}
+			
+			.content-left-body .one-client-detail li input {
+				margin-right: 5px;
+				width: 13px;
+				height: 13px;
+				border: 1px solid #8e8f8f;
+				vertical-align: top;
+			}
+			
+			.hand-over-object-reason .form-inline,
+			.hand-over-object-reason .form-control {
+				display: inline-block;
+				width: 100%;
+			}
+			
+			.receive-obj-container {
+				display: inline-block;
+				width: 75%;
+			}
+			
+			.hand-over-object-reason .form-control {
+				border: 1px solid #eee;
+				border-radius: 0;
+				width: 75%;
+				height: 140px;
+			}
+			
+			.hand-over-object-reason label {
+				vertical-align: top;
+			}
+			
+			.btn-sel-accept-object {
+				margin-left: 5px;
+			}
+			/*共享*/
+			
+			.share-list-item {
+				height: 55px;
+				border: 1px solid #eee;
+				padding: 8px 10px;
+				margin: 5px;
+				margin-left: 0;
+				margin-bottom: 15px;
+			}
+			
+			.share-list li.clickstyle {
+				/*box-shadow:-5px 0 5px rgba(0,0,0,.05),
+				5px 0 5px rgba(0,0,0,.05),
+				0 -5px 5px rgba(0,0,0,.05),
+				0 5px 5px rgba(0,0,0,.05);*/
+				border: 1px solid #CA192B;
+			}
+			
+			.share-list-item img {
+				width: 40px;
+				height: 40px;
+				margin-right: 10px;
+				border: 1px solid #eee;
+			}
+			
+			.share-list-item div {
+				height: 40px;
+			}
+			
+			.share-list-item>div span:first-child {
+				display: inline-block;
+				margin: 2px 0;
+			}
+			
+			.share-list-item>div .note-font-type {
+				display: inline-block;
+			}
+			
+			.share-list-item div {
+				color: #666;
+				font-size: 14px;
+			}
+			
+			.share-list-item .btn-a-default {
+				display: inline-block;
+				height: 40px;
+				line-height: 40px;
+				font-size: 12px;
+				text-decoration: none;
+			}
+			
+			.new-share,
+			.new-share:hover,
+			.new-share:focus,
+			.new-share:active {
+				display: block;
+				border: 1px dashed #eee;
+				background-color: #f8f8f8;
+				color: #bbb;
+				height: 55px;
+				line-height: 55px;
+				text-align: center;
+				margin: 5px;
+				margin-left: 0;
+				text-decoration: none;
+				cursor: pointer;
+			}
+			
+			.new-share.active {
+				border: 1px solid #CA192B;
+			}
+			
+			.new-share img {
+				margin: -2px 5px 0 0;
+			}
+			
+			.share-info>ul>li li {
+				margin-left: 20px;
+			}
+			
+			.share-info ul li {}
+			
+			.dashed-line-container {
+				position: relative;
+				height: 30px;
+			}
+			
+			.dashed-line-container>div,
+			.dashed-line-container>label {
+				position: absolute;
+				z-index: 2;
+			}
+			
+			.dashed-line-container>label {
+				cursor: pointer;
+			}
+			
+			.dashed-line-container>label img {
+				vertical-align: baseline;
+				margin-right: 3px;
+			}
+			
+			.dashed-line-container>label {
+				left: 0;
+				top: 0;
+				padding-right: 10px;
+				background-color: #fff;
+			}
+			
+			.tree-status {
+				font-size: 12px;
+				text-align: left;
+				width: 170px;
+				right: -10px;
+				top: 0;
+				margin-right: 0;
+				background-color: #fff;
+			}
+			
+			.tree-status label {
+				display: inline-block;
+				margin-right: 10px;
+				cursor: pointer;
+			}
+			
+			.tree-status label input {
+				vertical-align: sub;
+			}
+			
+			.dashed-line {
+				border-bottom: 1px dashed #e3e3e3;
+				display: inline-block;
+				position: absolute;
+				left: 20px;
+				right: 180px;
+				top: 13px;
+				z-index: 1;
+			}
+			
+			.shake-client-right label {
+				width: 108px;
+				text-align: right;
+				vertical-align: top;
+			}
+			
+			.shake-client-right .form-control {
+				width: 430px;
+				min-height: 140px;
+				margin-bottom: 20px;
+			}
+			
+			.object-box p {
+				padding: 3px 15px;
+				border: 1px solid #eee;
+				color: #666;
+				cursor: pointer;
+			}
+			
+			.object-box .close-icon-container .close-icon {
+				top: 3px;
+				right: 3px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container crm-client-management">
+			<div class="content">
+				<div class="left-menu">
+					<div class="left-menu-nav">
+						<a href="javascript:;" class="left-menu-nav-tabs left-menu-nav-tabs-company-dept active" index="company-dept">按归属查看</a>
+						<a href="javascript:;" class="left-menu-nav-tabs left-menu-nav-tabs-government-area" index="government-area">按区域查看</a>
+					</div>
+					<div class="left-menu-content">
+						<div class="left-menu-content-panel left-menu-content-company-dept left-menu-content-active">
+							<div class="all-client active">
+								<span>所有客户</span>
+							</div>
+							<div class="my-client">
+								<span>我的客户</span>
+							</div>
+							<div class="share-to-me-client">
+								<span>共享给我的客户</span>
+							</div>
+							<div class="my-subordinates-client hide" data-is-down="false" style="width:auto">
+								<span class="">
+									我下属的客户
+									<img src="../resources/images/slidup-icon.png" data-trans-src="../resources/images/sliddown-icon.png" alt="">
+								</span>
+							</div>
+							<div class="tree-dept-menu-container">
+								<ul class="tree tree-dept-menu"></ul>
+							</div>
+
+						</div>
+						<div class="left-menu-content-panel left-menu-content-government-area left-menu-content-hide">
+							<!--<span class="sel-nationwide">全部</span>-->
+							<div class="treeview-government-area" style="width:auto">
+								<ul class="tree-government-area tree-dept-menu-government-area"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="main-wrap">
+					<div class="search">
+
+					</div>
+					<table id="grid-table-client-contact"></table>
+					<div id="grid-pager-client-contact"></div>
+				</div>
+			</div>
+		</div>
+		<!--底部按钮-->
+		<div id="grid-footer-container" class="hide">
+			<div class="grid-footer-btn" style="display: inline-block;">
+				<a class="btn btn-info def-btn-info" role-auth1="saas/crm/customers|post" onclick="addClientCompany('add')">新增客户单位</a>
+				<a class="btn btn-info def-btn-info" role-auth1="saas/crm/customers/import|post" onclick="openClientImportPop()">导入客户单位</a>
+				<a class="btn btn-info def-btn-info" role-auth1="" onclick="openClientDownloadPop()">导出客户单位</a>
+				<a class="btn btn-info def-btn-info btn-edit-client" role-auth1="saas/crm/customers/0|put" onclick="addClientCompany('edit')" enable-on="singleselect" enable-tip="多选时不能进行编辑操作。">修改客户单位</a>
+				<a class="btn btn-info def-btn-info" role-auth1="saas/crm/customer/transfer|post" onclick="handOverClient()">移交客户</a>
+				<a class="btn btn-info def-btn-info btn-edit-client-status" role-auth1="saas/crm/customer_status|put" enable-on="singleselect" enable-tip="多选时不能进行此操作。" onclick="editClientStatus()">更改客户状态</a>
+				<a class="btn def-btn-info btn-info info-addiinfo" role-auth1="saas/crm/visit_quotas|post" onclick="changeVisitIndicators();">更改拜访指标</a>
+				<a class="btn def-btn-info btn-info info-addiinfo" role-auth1="saas/crm/visit_quotas|post" onclick="cancelVisit();"> 取消拜访特批</a>
+			</div>
+		</div>
+		<!--新增客户单位-->
+		<div class="add-client-company hide">
+			<!--整个页面表单分为4块  基本信息  联系方式   客户简介  其他信息-->
+			<form class="form-horizontal modal-add-client-company">
+				<!--基本信息-->
+				<div class="form-group form-inline form-group-bordered">
+					<!--标题-->
+					<div class="form-content-title">
+						<span>基本信息</span>
+					</div>
+					<!--主体-->
+					<div class="form-content-body">
+						<!--左边-->
+						<div class="form-content-body-left">
+							<!--输入框组-->
+							<div class="input-label-group">
+								<label class="input-flag">客户单位名称：</label>
+								<input type="text" nulltip="客户单位名称" bind="client_full_name" maxlength="20" />
+							</div>
+							<div class="input-label-group">
+								<label class="input-flag">客户单位类型：</label>
+								<select style="min-width: 171px;" bind="client_type" class="client-types">
+								</select>
+							</div>
+							<div class="input-label-group">
+								<label class="input-flag">&nbsp;&nbsp;资质等级：</label>
+								<select style="min-width: 171px;" bind="client_level" class="client-levels">
+								</select>
+							</div>
+							<div class="input-label-group">
+								<label>负责人：</label>
+								<input type="text" bind="client_primary_person" maxlength="10" />
+							</div>
+							<div class="input-label-group">
+								<label>床位数：</label>
+								<input type="number" bind="client_sickbeds_count" maxlength="10" />
+							</div>
+						</div>
+						<!--右边-->
+						<div class="form-content-body-right">
+							<div class="input-label-group">
+								<label>简称：</label>
+								<input type="text" placeholder="多个名称请用逗号隔开" bind="client_short_names" maxlength="10" />
+							</div>
+							<div class="input-label-group">
+								<label class="input-flag">客户重要等级：</label>
+								<select style="min-width: 171px;" bind="client_important_level" class="client-important-levels">
+								</select>
+							</div>
+							<div class="input-label-group" style="position: relative;">
+								<label class="input-flag">行政区域：</label>
+								<p style=" position: relative; display: inline-block;width: 250px">
+									<input type="text" class="form-control form-control-city hide" placeholder="选择所在城市" bind="area_id" nulltip="企业所在城市" readonly="readonly" data-toggle="city-picker">
+								</p>
+
+							</div>
+							<div class="input-label-group">
+								<label>次要负责人：</label>
+								<input type="text" placeholder="多个负责人间请用逗号隔开" bind="client_secondary_person" maxlength="10" />
+							</div>
+							<div class="input-label-group">
+								<label>门诊量：</label>
+								<input type="text" bind="client_outpatients_count" maxlength="10" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--联系方式-->
+				<div class="form-group form-inline form-group-bordered">
+					<div class="form-content-title">
+						<span>联系方式：</span>
+					</div>
+					<div class="form-content-body">
+						<div class="input-label-group">
+							<label class="input-flag"> 定位：</label>
+							<input type="text" nulltip="定位" class="location-city" style="width: 80%;" bind="client_addr_map_address" />
+						</div>
+						<div class="input-label-group">
+							<label class="input-flag">通讯地址：</label>
+							<input type="text" nulltip="通讯地址" style="width: 80%;" bind="client_addr" maxlength="50" />
+						</div>
+						<div class="input-label-group">
+							<label>联系电话：</label>
+							<input type="text" style="width: 32.5%;" minlength="8" maxlength="12" bind="client_tel" />
+							<label>网址：</label>
+							<input type="text" style="width: 32.5%;" bind="client_website" />
+						</div>
+						<div class="input-label-group">
+							<label>微信公众号：</label>
+							<input type="text" style="width: 32.5%;" bind="client_weixin_public_number" maxlength="20" />
+						</div>
+					</div>
+				</div>
+				<!--客户简介-->
+				<div class="form-group form-inline form-group-bordered">
+					<div class="form-content-title">
+						<span>客户简介</span>
+					</div>
+					<div class="form-content-body form-content-body-introduction">
+						<div class="input-label-group real-picture">
+							<label>实景图：</label>
+							<a class="add-picture btn-upload-anx" id="addPicture"><img src="../resources/images/add-img-icon.png" alt="" /></a>
+							<div class="uploaded" style="display: inline-block;">
+							</div>
+							<div class="process-percent"></div>
+						</div>
+						<div class="input-label-group">
+							<label class="input-flag">客户单位简介：</label>
+							<textarea cols="90" rows="3" nulltip="客户单位简介" bind="client_desc" maxlength="500"></textarea>
+						</div>
+					</div>
+				</div>
+				<!--其他信息-->
+				<div class="form-group form-inline form-group-bordered">
+					<div class="form-content-title">
+						<span>其他信息</span>
+					</div>
+					<div class="form-content-body">
+						<div class="input-label-group">
+							<a class="btn-add-other-info">添加信息</a>
+							<span class="note-font-type">例：门诊电话&nbsp;&nbsp;&nbsp;023-88888888</span>
+							<table class="tab-add-other-info">
+								<tbody>
+									<tr>
+										<td style="width: 30%;"><input type="text" value="" style="width: 100%;" maxlength="10" /></td>
+										<td>：</td>
+										<td style="width: 65%;"><input type="text" value="" style="width: 100%;" maxlength="50" /></td>
+										<td class="close-icon-container"><img class="close-icon" src="../resources/images/filter-close.png" onclick="$(this).parent().parent().remove()" /></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!--导入客户-->
+		<div class="pnl-employee-import hide">
+			<form class="form-horizontal model-employee-import hdie">
+				<div class="form-group form-group-line form-inline">
+					<div class="model-employee-import-1">
+						<h4>操作说明</h4>
+						<div>
+							<span>1、下载《客户单位批量导入模板》 </span>
+							<a href="javascript:;" onclick='downloadImportModel();'>立即下载《客户单位批量导入模板》</a>
+						</div>
+						<div>
+							<span>2、在模板填写对应信息，为保障信息能有效导入，请使用纯文本或数字，请勿增加、删除或修改表头。</span>
+						</div>
+						<div>
+							<span>3、上传填写完毕后的模板</span>
+							<a id="btnUploadExcel" href="javascript:;">上传模板</a>
+							<div class="upload"></div>
+						</div>
+					</div>
+				</div>
+				<table class="table table-employee-import">
+					<caption class="hide">请设置数据对应关系</caption>
+					<thead>
+
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+			</form>
+		</div>
+		<!--点击图片查看大图-->
+		<div class="click-to-large-picture hide">
+			<img src="" style="max-width:1000px;max-height: 800px;" alt="大图" />
+		</div>
+		<!--点击定位-->
+		<div class="location-client-addr hide">
+			<div id="r-result">
+				城市名: <input id="cityName" type="text" style="width:250px; margin-right:10px;" />
+				<input type="button" class="btn btn-info def-btn-info btn-sm" value="查询" />
+			</div>
+			<div id="allmap"></div>
+		</div>
+		<!--移交客户-->
+		<div class="hand-over-client-panel hide">
+			<div class="content-left steps-panel step-1">
+				<div class='steps-panel-head'>
+					<span>您选择的客户同时由以下员工负责，请选择负责人</span>
+				</div>
+				<div class="response-people-list">
+					<img src="" alt="" />
+				</div>
+			</div>
+			<!--第一步选择移交内容-->
+			<div class="content-left steps-panel step-2 hide">
+				<!--移交内容title-->
+				<div class="content-left-companys-container">
+					<label>请选择需要移交的单位</label>
+					<div class="content-left-companys">
+
+					</div>
+				</div>
+				<!--移交的具体内容-->
+				<div class="content-left-body">
+					<!--移交的内容title   客户单位  科室/部门 -->
+					<label>选择单位即包含其科室/部门及联系人，选择科室/部门即包含其联系人</label>
+					<div class="one-client-detail"></div>
+				</div>
+			</div>
+			<!--第二部：已选择移交的内容-->
+			<div class="content-right steps-panel step-3 hide">
+				<!--<span class="content-right-title">已选择移交的内容：</span>-->
+				<!--移交内容表格-->
+				<div>
+					<table id="tab-hand-over-content">
+						<thead>
+							<tr>
+								<td style="width:25%;">移交范围</td>
+								<td>
+									<ul class="">
+										<li class="at">
+											<div class='item'>
+												<div class="lt">移交内容</div>
+												<div class="lt">操作</div>
+											</div>
+
+										</li>
+									</ul>
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!--第三步：选择接收对象、填写移交原因-->
+			<div class="hand-over-object-reason steps-panel step-4 hide">
+				<!--选择接收对象-->
+				<div class="sel-accept-object form-inline">
+					<label class="input-flag">接收对象：</label>
+					<div class="receive-obj-container">
+						<span class="note-font-type form-control no-tip">请选择接受客户的对象</span>
+						<span class="selected-container form-control hide"></span>
+						<a href="javascript:;" class="btn-sel-accept-object btn-a-default">选择接收对象</a>
+					</div>
+				</div>
+				<!--移交原因-->
+				<div class="hand-over-reason form-inline">
+					<label class="input-flag">移交原因：</label>
+					<textarea cols="70" class="form-control" rows="4" nulltip="移交原因"></textarea>
+				</div>
+			</div>
+			<!--底部按钮-->
+			<div class="hand-over-foot-btn">
+				<a class="btn btn-info def-btn-info prev-step" data-curr-step="1">上一步</a>
+				<a class="btn btn-danger def-btn-danger next-step" data-curr-step="1">下一步</a>
+				<a class="btn btn-primary def-btn-primary cancel-hand-over" data-curr-step="1">取消</a>
+			</div>
+		</div>
+		<!--删除客户-->
+		<div class="delete-client-panel hide">
+			<div class="delete-client-data" style="text-align: center;"></div>
+		</div>
+		<!--客户状态-->
+		<div class="edit-client-status hide">
+			<form class="form-horizontal modal-edit-client-status" style="margin-left: 15px;">
+				<div class="edit-client-status-title" style="margin-left: -15px;">
+					<label class="input-flag"></label>
+					<span>请选择客户状态：</span>
+				</div>
+				<div class="form-group form-inline">
+					<label><input type="radio" name="status" value="1" checked/>正常 </label><br/>
+					<label><input type="radio" name="status" value="2"/>已倒闭  </label><br/>
+					<label><input type="radio" name="status" value="3"/>已迁址 </label><br/>
+					<label><input type="radio" name="status" value="4"/>被收购 </label><br/>
+					<label><input type="radio" name="status" value="99"/>其他</label>
+				</div>
+				<div class="edit-status-reason" style="margin-left: -15px;">
+					<label class="input-flag"></label><span>更改原因：</span>
+				</div>
+				<div class="form-group form-inline">
+					<textarea cols="70" rows="5" nulltip="更改原因"></textarea>
+				</div>
+			</form>
+		</div>
+		<!--共享客户弹窗-->
+		<div class="shake-client hide">
+			<!--第一步-->
+			<div class="shake-client-left steps-panel-share step-1">
+				<p>共享记录：</p>
+				<div class="share-list">
+					<ul>
+						<!--<li>暂无共享记录！</li>-->
+					</ul>
+				</div>
+				<a class="new-share" onclick="openAddShare(this)"><img src="../resources/images/add-share-icon.png" alt="" />新增共享</a>
+			</div>
+			<!--第二步-->
+			<div class="steps-panel-share step-2 hide">
+				<div class="share-info">
+					<p><span style="color:red;">*</span>共享内容及权限：</p>
+					<ul class="client-tree">
+
+					</ul>
+				</div>
+			</div>
+			<!--第三步-->
+			<div class="shake-client-right steps-panel-share step-3 hide">
+				<div class="share-object">
+					<div class="form-inline">
+						<label class="input-flag">选择共享对象：</label>
+						<div class="share-object-list form-control">
+
+						</div>
+						<a class="btn-a-default" onclick="selectObject()">选择共享对象</a>
+					</div>
+					<div class="form-inline">
+						<label class="input-flag">共享原因：</label>
+						<textarea class="share-object-reason form-control"></textarea>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<!--底部按钮-->
+			<div class="hand-over-foot-btn">
+				<a class="btn btn-info def-btn-info prev-step" data-curr-step="1">上一步</a>
+				<a class="btn btn-danger def-btn-danger next-step" data-curr-step="1">下一步</a>
+				<a class="btn btn-primary def-btn-primary cancel-hand-over" data-curr-step="1">取消</a>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<!--取消共享弹窗-->
+		<div class="abolish-share hide">
+			<p><span style="color: red;">*</span>请输入取消原因：</p>
+			<textarea style="width:100%;height:100px;" class="abolish-sharereason" placeholder=""></textarea>
+		</div>
+		<!--更改拜访指标弹窗-->
+		<div class="change-visit-indicators hide">
+			<p class="applyfor-menu">你已经选择<span></span>个申请对象</p>
+			<div class="applyfor-indicators">
+				<label><span class="important">*</span>申请指标：<input type="text" class="indicators-text" nulltip="申请指标" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">次/月</label>
+			</div>
+			<div class="applyfor-reason">
+				<label><span class="important">*</span>申请原因：<textarea cols="70" rows="5" maxlength="100" class="indicators-reason" placeholder="请输入申请原因" nulltip="更改指标申请原因"></textarea></label>
+			</div>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.data.js"></script>
+		<script type="text/javascript" src="../resources/js/city-picker.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hgf.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			//------------消息队列相关   订阅者-----------------------
+			var subscriber = parent.HHMQ.createSubscriber('客户管理', 'main', function(flag, msgData) {
+				if(flag == "welcome") {
+					$.showSuccessGritter(JSON.stringify(msgData), {
+						clear: false
+					});
+				}
+				//收到审批处理消息
+				if(msgData.action == "refresh") {
+					//认证通过
+					if(APV_ROUTINE_IDS.crm[msgData.routin_id]) {
+						loadGridOfClientContact();
+					}
+				}
+			});
+			//页面关闭事件
+			context.onPageClose = function() {
+				subscriber.dispose();
+			};
+			//------------消息队列相关   订阅者end -------------------
+			var changeVisitIndicatorsUrl = BSAPIURL + "/crm/visit_quota_apply/special",
+				cancelVisitIndicatorsSpecialapprovalUrl = BSAPIURL + "/crm/visit_quota_apply/special_cancel",
+				shareUpdateUrl = BSAPIURL + "/crm/customer/shared/customer_id/{client_id}",
+				shareListInfoUrl, tempLoadClientUrl = "";
+			var gridTableSelectorOfClientContact = "#grid-table-client-contact",
+				gridPagerSelectorOfClientContact = "#grid-pager-client-contact",
+				gridOfClientContact, isFirstloadGridOfClientContact = true;
+			var shareClientModalId,
+				locationPoint = {},
+				locationPointTmp = {}, //////保存定位后的经纬度
+				city, ////保存输入的城市名
+				clientType = "all",
+				clientImages;
+			var tempHandoverClients;
+			var selectorOfTopstDepaUl = $(".tree-dept-menu"),
+				selectorOfAreaTopstDepaUl = $(".treeview-government-area .tree-dept-menu-government-area");
+			//客户单位状态	
+			var crm = {
+				client_status: { //客户单位状态
+					NORMAL: 1, //正常
+					CLOSED: 2, //已关闭
+					MOVED: 3, //已迁址
+					BEEN_BUY: 4, //以收购
+					OTHER: 99, //其他
+				},
+				data_scope: { //数据范围
+					SHARE: 1, //共享
+					RESPONSE: 2 //负责
+				},
+				emp_scope: { //员工范围
+					OWN: 1, //本人
+					LOWER: 2 //下属
+				},
+				share_status: { //共享状态
+					UN_SHARED: 1, //未共享
+					SHARED: 2 //已共享
+				},
+				share_permissons: { //共享权限
+					VIEW: 1, //查看
+					UPDATE: 2, //修改
+					ADD: 4 //新增
+				},
+				share_type: { //共享资源类型
+					COMPANY: 1, //单位
+					DEPA: 2, //科室
+					CONTACT: 3 //联系人
+				},
+				classes: { //企业代码
+					CLIENT_ADMINISTRATIVE_DIVISION: 102, //客户区域
+					CLIENT_IMPORTANT_LEVEL: 102109, //客户重要等级代码
+					CLIENT_LEVEL: 102111, //客户等级代码
+					CLIENT_TYPE: 102110 //客户类型代码
+				}
+			}
+			//URLS
+			var crm_url = {
+				CLIENTS_BASE: BSAPIURL + "/crm/customers",
+			}
+			//异步加载百度地图API，防止阻塞
+			window.onload = function() {
+				var script = document.createElement("script");
+				script.src = "http://api.map.baidu.com/api?v=2.0&ak=tBjsnSuzhKrdsAL1oqEQ1hIG&callback=doApi";
+				$("body").append(script);
+			};
+			$(".page-container .content .left-menu").css("height", $(window).height()).css("max-height", $(window).height());
+			$(".left-menu-content-company-dept").css("height", $(window).height() - $(".left-menu-nav").outerHeight(true) - 10 + "px");
+			$(".tree-dept-menu-container").css("height", $(window).height() - $(".left-menu-nav").outerHeight(true) - 190 + "px");
+			$(".left-menu-content-government-area").css("height", $(window).height() - $(".left-menu-nav").outerHeight(true) - 10 + "px").css("overflow-y", "auto");
+			$(".treeview-government-area").css("height", $(window).height() - $(".left-menu-nav").outerHeight(true) - 10 + "px").css("overflow-y", "auto");
+			$(document).ready(function() {
+				////企业部门   行政区域导航切换
+				$(".left-menu-nav-tabs").click(function() {
+					$(".left-menu-nav-tabs").removeClass("active");
+					$(this).addClass("active");
+					var index = $(this).attr("index");
+					$(".left-menu-content-panel").removeClass("left-menu-content-active").addClass("left-menu-content-hide");
+					$(".left-menu-content-" + index).removeClass("left-menu-content-hide").addClass("left-menu-content-active");
+					switch(index) {
+						case "company-dept":
+							loadLeftDeptTree();
+							break;
+						case "government-area":
+							loadLeftGovernmentArea();
+							break;
+						default:
+							loadLeftDeptTree();
+					}
+				});
+				$.token();
+				////默认加载左侧企业部门树
+				loadLeftDeptTree();
+				loadGridOfClientContact("", "all");
+				//部门里面选择所有客户
+				$(".left-menu-content-company-dept .all-client").click(function() {
+					$(this).addClass("active").siblings("div").removeClass("active");
+					loadGridOfClientContact(crm_url.CLIENTS_BASE, "all");
+					clientType = "all";
+				});
+				//部门里面选择我的客户
+				$(".left-menu-content-company-dept .my-client").click(function() {
+					$(this).addClass("active").siblings("div").removeClass("active");
+					loadGridOfClientContact(crm_url.CLIENTS_BASE + "?type=my", "my");
+					clientType = "my";
+				});
+				//我下属的客户
+				$(".left-menu-content-company-dept .my-subordinates-client").unbind("click").click(function() {
+					transImgSrc($(this).find("img"));
+					$(this).addClass("active").siblings("div").removeClass("active");
+					if($(this).attr("data-is-down") == "false") {
+						$(this).attr("data-is-down", "true");
+						$(".left-menu-content-company-dept .tree-dept-menu").slideDown();
+					} else {
+						$(this).attr("data-is-down", "false");
+						$(".left-menu-content-company-dept .tree-dept-menu").slideUp();
+					}
+					loadGridOfClientContact(crm_url.CLIENTS_BASE + "?type=lower", "lower");
+					clientType = "lower";
+				});
+				//共享给我的客户
+				$(".left-menu-content-company-dept .share-to-me-client").click(function() {
+					$(this).addClass("active").siblings("div").removeClass("active");
+					loadGridOfClientContact(crm_url.CLIENTS_BASE + "?type=share", "share");
+					clientType = "share";
+				});
+				////行政区域选择所有
+				$(".left-menu-content-government-area .sel-nationwide").click(function() {
+					loadGridOfClientContact("", "all");
+					clientType = "all";
+				});
+			});
+			//选中切换背景色
+			function toggleBackgroundColor(obj) {
+				$(".left-menu-content-company-dept .my-client,.left-menu-content-company-dept .my-subordinates-client,.left-menu-content-company-dept .share-to-me-client").css("background-color", "#fff").css("display", "inline-block");
+				$(obj).css("background-color", "#ccc");
+			}
+			////左侧企业部门树
+			var isFirstInitDept = false;
+			//加载左侧企业部门树数据
+			function loadLeftDeptTree() {
+				loadDashedDeptTree({
+					container: selectorOfTopstDepaUl,
+					url: BSAPIURL + "/company/depas?leader_type=&mode=2&with_employees=1&employee_order_field=employee_status&employee_order_type=asc",
+					showIcon: true,
+					onlyShowDept: true,
+					childDepaKey: "departments",
+					depaIdKey: "depa_id",
+					showEmps: true,
+					isSignResign: true,
+					parentDepaIdKey: "depa_parent_id",
+					removeHeightForTree: $(".left-menu-nav").outerHeight(true) + $(".my-client").outerHeight(true) + $(".share-to-me-client").outerHeight(true) + $(".my-subordinates-client active").outerHeight(true) + 55,
+					loadComplete: function(data) {
+						//企业部门树事件绑定
+						bindLeftDeptTreeEvents();
+						if(!isEmptyObject(data)) {
+							$(".my-subordinates-client").removeClass("hide");
+						}
+					}
+				});
+				return;
+			}
+			//企业部门树事件绑定
+			function bindLeftDeptTreeEvents() {
+				$(".tree-dept-menu>li>ul>li img").trigger("click");
+				$(".tree-dept-menu label").click(function() {
+					clientType = "lower";
+					if($(this).hasClass("employee-label")) {
+						loadGridOfClientContact(crm_url.CLIENTS_BASE + "?type=lower&employee_id=" + $(this).attr("code"), "lower");
+					} else {
+						loadGridOfClientContact(crm_url.CLIENTS_BASE + "?type=lower&depa_id=" + $(this).attr("code"), "lower");
+					}
+				});
+			}
+			////左侧行政区域树
+			var isFirstInitArea = false;
+
+			function loadLeftGovernmentArea() {
+				if(isFirstInitArea) {
+					return true;
+				}
+				$.ajaxGet(BSAPIURL + "/crm/areas", function(resp) {
+					if(resp.code != 0) {
+						$.showErrorGritter("行政区域加载失败：" + resp.msg);
+						return false;
+					}
+					onLeftGovernmentAreaGeted(resp.data);
+					bindLeftGovernmentAreaEvents();
+				});
+				isFirstInitArea = true;
+			}
+			//左侧行政区域数据加载完成  
+			function onLeftGovernmentAreaGeted(data) {
+				var companyDeptDatas = [];
+				var depaList;
+				var topstLi = "";
+				var selectorOfAreaTopstDepaUl = $(".treeview-government-area .tree-dept-menu-government-area");
+				for(var i in data) {
+					if(isTheTopst(data, data[i].code_parent_tree)) { ///如果是最顶层部门
+						companyDeptDatas.push({
+							name: data[i].code_name,
+							code_tree: data[i].code_tree
+						});
+						topstLi = "<li data-code-parent-tree='' data-code-tree='" + data[i].code_tree + "'>" +
+							"<img area-hidden='false' src='../resources/images/minus-o-icon.png' data-trans-src='../resources/images/plus-o-icon.png' /><a href='javascript:;' class='dept-tree' data-code-tree=\"" + data[i].code_tree + "\">" + data[i].code_name + "</a></li>";
+						selectorOfAreaTopstDepaUl.append(topstLi);
+						governmentAreaHasChildDepa(data, data[i].code_tree);
+					}
+				}
+			}
+			//////判断部门是否是最顶层
+			function isTheTopst(data, codeTree) {
+				for(var i in data) {
+					if(data[i].code_tree == codeTree) {
+						return false;
+					}
+				}
+				return true;
+			}
+			////判断某个部门是否有子部门，有则添加到该部门
+			function governmentAreaHasChildDepa(codeList, codeParentTree) {
+				var childDepaUl = "";
+				var childDepaLi = "";
+				var empLi = "";
+				for(var n in codeList) {
+					if((codeList[n].code_parent_tree == codeParentTree) && (codeList[n].code_tree != codeParentTree)) { ////如果有子部门则添加
+						childDepaLi = "<li data-code-parent-tree='" + codeParentTree + "' data-code-tree='" + codeList[n].code_tree + "'><img src='../resources/images/minus-o-icon.png' area-hidden='false' data-trans-src='../resources/images/plus-o-icon.png' /><a href='javascript:;' class='dept-tree' data-code-tree=\"" + codeList[n].code_tree + "\">" + codeList[n].code_name + "</a></li>";
+						$(".treeview-government-area .tree-dept-menu-government-area li[data-code-tree='" + codeList[n].code_parent_tree + "']").append(childDepaLi);
+						governmentAreaHasChildDepa(codeList, codeList[n].code_tree);
+					}
+				}
+			}
+			//行政区域树事件绑定
+			function bindLeftGovernmentAreaEvents() {
+				$(".treeview-government-area>ul img").each(function() {
+					if(!$(this).parent().find(">li").html()) $(this).remove();
+				});
+				$(".treeview-government-area ul img").click(function() {
+					treeAnimate(this);
+				});
+				$(".treeview-government-area>ul>li>li>img").trigger("click");
+				$(".tree-dept-menu-government-area a").click(function() {
+					$(".tree-dept-menu-government-area a").removeClass("active");
+					$(this).addClass("active");
+					loadGridOfClientContact(crm_url.CLIENTS_BASE + "?type=all&area_id=" + $(this).attr("data-code-tree"), "all");
+				});
+				$(".treeview-government-area .tree-dept-menu-government-area li a").mouseover(function() {
+					$(this).addClass("hover");
+				}).mouseout(function() {
+					$(this).removeClass("hover");
+				});
+			}
+			//左侧部门树  行政区域树动效控制
+			function treeAnimate(obj) {
+				if($(obj).attr("area-hidden") == "true") { ////+号 即关闭状态
+					$(obj).attr("area-hidden", false);
+					$(obj).parent().find(">li").slideDown();
+				} else { ////-号 即打开状态
+					$(obj).attr("area-hidden", true);
+					$(obj).parent().find(">li").slideUp();
+				}
+				transImgSrc($(obj));
+			}
+			//获取右侧企业代码  客户单位类型  客户重要等级  资质等级
+			////search
+			var clientTypes = [];
+			var clientImportantLevels = [];
+			var clientLevels = [];
+			var classIds = [{
+				class_id: crm.classes.CLIENT_TYPE,
+				callback: function(data) {
+					var options = "";
+					for(var i in data) {
+						clientTypes.push({
+							key: data[i].code_name,
+							value: data[i].code_tree
+						});
+						options += "<option value='" + data[i].code_tree + "'>" + data[i].code_name + "</option>";
+					}
+					$(".modal-add-client-company" + " .client-types").html(options);
+					$(".modal-add-client-company" + " .client-types option:first-child").attr("selected", "selected");
+				}
+			}, {
+				class_id: crm.classes.CLIENT_IMPORTANT_LEVEL,
+				callback: function(data) {
+					var options = "";
+					for(var i in data) {
+						clientImportantLevels.push({
+							key: data[i].code_name,
+							value: data[i].code_tree
+						});
+						options += "<option value='" + data[i].code_tree + "'>" + data[i].code_name + "</option>";
+					}
+					$(".modal-add-client-company" + " .client-important-levels").html(options);
+					$(".modal-add-client-company" + " .client-important-levels option:first-child").attr("selected", "selected");
+				}
+			}, {
+				class_id: crm.classes.CLIENT_LEVEL,
+				callback: function(data) {
+					var options = "";
+					for(var i in data) {
+						clientLevels.push({
+							key: data[i].code_name,
+							value: data[i].code_tree
+						});
+						options += "<option value='" + data[i].code_tree + "'>" + data[i].code_name + "</option>";
+					}
+					$(".modal-add-client-company" + " .client-levels").html(options);
+					$(".modal-add-client-company" + " .client-levels option:first-child").attr("selected", "selected");
+				}
+			}];
+			getClassByClassIds(classIds);
+			////右侧主体内容  search+表格
+			function loadGridOfClientContact(url, type) {
+				///type:my-我负责的客户(默认), lower-下属(不包括自己)负责的客户, share-共享给我的客户
+				if(!url) {
+					url = crm_url.CLIENTS_BASE + "?type=" + type;
+				}
+				tempLoadClientUrl = url;
+				if(!isFirstloadGridOfClientContact) {
+					$(gridOfClientContact).jqGrid('setGridParam', {
+						page: 1,
+						url: url,
+						sortname: "client_update_time",
+						sortorder: "desc"
+					}).trigger("reloadGrid", {});
+					return true;
+				}
+				////企业代码管理
+				initSearch(clientTypes, clientImportantLevels, clientLevels);
+				var gridHeight = $(window).height() - $(".search").outerHeight(true) - 150;
+				////表格
+				var colNames = ['', '客户单位名称', '重要等级', '资质等级', '部门/科室、联系人数量', '本月拜访/指标' /*, '本月协访/指标'*/ , '销量（元）：本月/上月', '共享', '地址', '负责人', '更新时间'];
+				var colModel = [{
+					name: "id",
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.client_id;
+					}
+				}, {
+					name: "client_full_name",
+					index: "client_full_name",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						var iDom = "";
+						if(rowObject.client_status != crm.client_status.NORMAL) {
+							iDom = "<i style='color:#f00;display:inline-block;margin-right:10px;' class='fa fa-exclamation fa-x'></i>";
+						}
+						return iDom+"<a style='cursor: pointer;' onclick=\"clickToClientDetailPage('" + rowObject.client_full_name + "','" + rowObject.client_id + "')\">" + cellvalue + "</a>";
+						//iDom + "<a class='click-name-to-detail' style='cursor: pointer;' onclick=\"addClientCompany('click','" + rowObject.client_id + "','" + rowObject.delete_approval_session_status + "','" + rowObject.client_full_name + "')\">" + cellvalue + "</a>";
+					}
+				}, {
+					name: "client_important_level_cn",
+					index: "client_important_level_cn",
+					sortable: true,
+					width: 60,
+					formatter: function(cellvalue, options, rowObject) {
+						return "<a style='cursor: pointer;' onclick=\"clickToClientDetailPage('" + rowObject.client_full_name + "','" + rowObject.client_id + "')\">" + cellvalue + "</a>";
+					}
+				}, {
+					name: "client_level_cn",
+					index: "client_level_cn",
+					width: 80,
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return "<a style='cursor: pointer;' onclick=\"clickToClientDetailPage('" + rowObject.client_full_name + "','" + rowObject.client_id + "')\">" + cellvalue + "</a>";
+					}
+				}, {
+					name: "client_department_contact_count",
+					index: "department_count,contact_count",
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return "<a style='cursor: pointer;' onclick=\"clickToClientDetailPage('" + rowObject.client_full_name + "','" + rowObject.client_id + "')\">" + rowObject.department_count + "，" + rowObject.contact_count + "</a>";
+					},
+					width: 150
+				}, {
+					name: "visit_count_real_target",
+					index: "visit_count_real_target",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=openVistPop('1','" + rowObject.client_id + "')>" + rowObject.visit_count_real + "/" + rowObject.visit_count_target + "</a>";
+						} catch(e) {
+							return '';
+						}
+					},
+					width: 100
+				}, {
+					name: "sale_count_month_pre_month",
+					index: "sale_count_month_pre_month",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						return "<a style='cursor: pointer;' onclick=\"clickToClientDetailPage('" + rowObject.client_full_name + "','" + rowObject.client_id + "')\">" + rowObject.sale_count_month + "/" + rowObject.sale_count_pre_month + "</a>";
+					},
+					width: 160
+				}, {
+					name: "client_share_status_cn",
+					index: "client_share_status_cn",
+					sortable: false,
+					width: 60,
+					formatter: function(cellvalue, options, rowObject) {
+						var imgSrc = rowObject.client_share_status == crm.share_status.UN_SHARED ? "../resources/images/client-unshare-icon.png" : "../resources/images/client-share-icon.png";
+						var isForbiddenStyleStr = rowObject.client_permissions.can_share ? "cursor: pointer;" : " cursor:not-allowed;";
+						var returnDom = "<img onclick=\"shareClient('" + rowObject.client_id + "')\" src='" + imgSrc + "'  class='share-status ' style='" + isForbiddenStyleStr + "' />";
+						return returnDom;
+					}
+				}, {
+					name: "client_addr",
+					index: "client_addr",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						return "<a style='cursor: pointer;' onclick=\"clickToClientDetailPage('" + rowObject.client_full_name + "','" + rowObject.client_id + "')\">" + cellvalue + "</a>";
+					}
+				}, {
+					name: "client_primary_person",
+					index: "client_primary_person",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						employeeNameArr = [];
+						for(var i in rowObject.responsible_person_data) {
+							employeeNameArr.push(rowObject.responsible_person_data[i].employee_name)
+						}
+						return employeeNameArr.join("，");
+					}
+				}, {
+					name: "client_update_time",
+					index: "client_update_time",
+					sortable: true,
+					formatter: function(cellvalue, options, rowObject) {
+						return "<a style='cursor: pointer;' onclick=\"clickToClientDetailPage('" + rowObject.client_full_name + "','" + rowObject.client_id + "')\">" + cellvalue + "</a>";
+					},
+					width: 130
+				}];
+				gridOfClientContact = $(gridTableSelectorOfClientContact).initJqGrid({
+					pager: gridPagerSelectorOfClientContact,
+					footerBtnContainer: "#grid-footer-container",
+					storeRowDataInCache: true,
+					url: url,
+					rowNum: 10,
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight,
+					sortname: "client_update_time",
+					sortorder: "desc"
+				});
+				isFirstloadGridOfClientContact = false;
+			}
+			//加载右侧筛选模块
+			function initSearch(clientTypes, clientImportantLevels, clientLevels) {
+				$.initSearchControls4TagMode({
+					auto: false,
+					url: crm_url.CLIENTS_BASE,
+					grid: gridTableSelectorOfClientContact,
+					container: ".search",
+					key_name: "key",
+					key_placeholder: "请输入单位名称、负责人进行查找",
+					onChange: function(selectTags) {
+						$(gridOfClientContact).jqGrid('setGridParam', {
+							page: 1,
+							url: crm_url.CLIENTS_BASE + $.toQueryString(selectTags, true) + "&type=" + clientType
+						}).trigger("reloadGrid", {});
+					},
+					groups: [{
+						name: "client_type",
+						text: "客户单位类型",
+						items: clientTypes
+					}, {
+						name: "client_important_level",
+						text: "客户重要等级",
+						items: clientImportantLevels
+					}, {
+						name: "client_level",
+						text: "资质等级",
+						items: clientLevels
+					}, {
+						name: "client_status",
+						text: "客户单位状态",
+						items: [{
+							key: "正常",
+							value: crm.client_status.NORMAL
+						}, {
+							key: "已倒闭",
+							value: crm.client_status.CLOSED
+						}, {
+							key: "已迁址",
+							value: crm.client_status.MOVED
+						}, {
+							key: "被收购",
+							value: crm.client_status.BEEN_BUY
+						}, {
+							key: "其他",
+							value: crm.client_status.OTHER
+						}]
+					}]
+				});
+			}
+			////点击到客户详细信息页面的调用方法
+			function clickToClientDetailPage(name, id) {
+				parent.openTab(name, "views/crm-client-information.html?type=" + 'all' + "&client_id=" + id);
+			}
+			var isShareAddAndUpdate = "add";
+			//查看个人共享内容
+			function clickChange(obj, clientId) {
+				clearShareInfo();
+				isShareAddAndUpdate = "update";
+				$(obj).parent().find("li").removeClass("clickstyle");
+				$(obj).addClass("clickstyle");
+				$("#" + shareClientModalId + " .new-share").removeClass("active");
+				var shareData = $(obj).attr("data-share");
+				var id = $(obj).attr("data-shareid");
+				loadShareData(id, clientId);
+
+			}
+
+			function openAddShare(obj) {
+				clearShareInfo();
+				$(obj).parents(".modal-body").find(".next-step").trigger("click");
+			}
+			//树下拉上收
+			function treeZoom(obj) {
+				transImgSrc($(obj).find("img"))
+				if($(obj).attr("area-hidden") == "false") {
+					$(obj).attr("area-hidden", true);
+					$(obj).parent().next().slideUp();
+				} else {
+					$(obj).attr("area-hidden", false);
+					$(obj).parent().next().slideDown();
+				}
+			}
+			//共享
+			function shareClient(clientID) {
+				isShareAddAndUpdate = "add";
+				var selectListData = $(gridOfClientContact).getRowData4JqGrid("id", clientID);
+				if(!boolCanClickBtn([selectListData], "share")) return false;
+				shareListInfoUrl = BSAPIURL + "/crm/customer/shared/" + clientID;
+				shareUpdateUrl = shareUpdateUrl.replace("{client_id}", clientID);
+				departmenTreeUrl = BSAPIURL + "/crm/customers/" + clientID + "/sub_data?type=" + clientType;
+				shareClientModalId = $.modal({
+					showFooter: false,
+					height: $(window).height() - 200,
+					width: 650,
+					shownCallback: function() {
+						$("#" + shareClientModalId + " .steps-panel-share").css("height", $("#" + shareClientModalId + " .modal-body").outerHeight(true) - 100 + "px");
+					}
+				}).show("共享客户", ".shake-client", function() {});
+				//				$("#" + shareClientModalId + " .new-share").click(function() {
+				//					$("#" + shareClientModalId + " .next-step").click();
+				//				});
+				//上一步
+				$("#" + shareClientModalId + " .prev-step").click(function() {
+					onShareModalPrevStepBtnClick(this, shareClientModalId);
+
+					function onShareModalPrevStepBtnClick(obj, modalId) {
+						var stepNum = $(obj).attr("data-curr-step");
+						var prevStepNum = parseInt(stepNum) - 1;
+						if(prevStepNum == 0) {
+							$.showErrorGritter("当前已经是第一页！");
+							return false;
+						}
+						$("#" + modalId + " .steps-panel-share").addClass("hide");
+						$("#" + modalId + " .step-" + prevStepNum).removeClass("hide");
+						transCurrStepNum(prevStepNum, modalId);
+					}
+
+				});
+				//下一步
+				$("#" + shareClientModalId + " .next-step").click(function() {
+					var stepNum = $(this).attr("data-curr-step");
+					if(stepNum == 2 && $("#" + shareClientModalId + " .client-tree input:checked").length < 1) {
+						$.showErrorGritter("请先选择共享权限！");
+						return false;
+					}
+					if(stepNum == 3) {
+						var shareId = $("#" + shareClientModalId + " .clickstyle").attr("data-shareid");
+						//获取数据
+						var shareDatas = getShareDatas(this, shareClientModalId);
+						//添加共享or更新共享
+						editShareClientRequest(isShareAddAndUpdate, shareClientModalId, shareDatas, shareId);
+						return false;
+					}
+					if(stepNum == 1) {
+						loadShareData($("#" + shareClientModalId + " .share-list-item.clickstyle").attr("data-shareid"), clientID);
+					}
+					var nextStepNum = parseInt(stepNum) + 1;
+					$("#" + shareClientModalId + " .steps-panel-share").addClass("hide");
+					$("#" + shareClientModalId + " .step-" + nextStepNum).removeClass("hide");
+					transCurrStepNum(nextStepNum, shareClientModalId);
+				});
+				//取消
+				$("#" + shareClientModalId + " .cancel-hand-over").click(function() {
+					$("#" + shareClientModalId).modal('hide');
+				});
+				loadShareData('', clientID);
+
+			}
+			//负责改变当前步数属性值和按钮文本
+			function transCurrStepNum(num, modalId) {
+				$("#" + modalId + " .hand-over-foot-btn a").each(function() {
+					$(this).attr("data-curr-step", num);
+					if(num == 3) {
+						$("#" + modalId + " .next-step").text("完成");
+					} else {
+						$("#" + modalId + " .next-step").text("下一步");
+					}
+				});
+			}
+			//获取分享内容
+			function getShareDatas(obj, modalId) {
+				var shareContent = [];
+				$("#" + modalId + " .client-tree li .tree-status").each(function(index) {
+					var shareResources = {};
+					var resourcesId = $(this).parent().find(">label").attr("data-id");
+					var shareTier = $(this).parent().find(">label").attr("data-tier");
+					var sharePower = [];
+					$(this).find("input").each(function() {
+						if($(this).prop("checked")) {
+							if($(this).parent().attr("data-seepower")) {
+								sharePower.push(parseInt($(this).parent().attr("data-seepower")));
+								return true;
+							}
+							if($(this).parent().attr("data-amendpower")) {
+								sharePower.push(parseInt($(this).parent().attr("data-amendpower")));
+								return true;
+							}
+							if($(this).parent().attr("data-addpower")) {
+								sharePower.push(parseInt($(this).parent().attr("data-addpower")));
+								return true;
+							}
+						}
+					});
+					shareResources.resource_permission = sharePower;
+					shareResources.resource_id = resourcesId;
+					shareResources.resource_type = shareTier;
+					if(shareResources.resource_permission && shareResources.resource_permission.length > 0) shareContent.push(shareResources);
+				});
+				var shareObject = [];
+				$("#" + modalId + " .share-object-list>div").each(function(index) {
+					shareObject.push($(this).attr("id"));
+				});
+				var shareReason = $("#" + modalId + " .share-object-reason").val();
+				var shareId = "";
+				$("#" + modalId + " .share-list li").each(function(index) {
+					if($(this).hasClass("clickstyle")) {
+						shareId = $(this).attr("data-shareid");
+					}
+				});
+				return {
+					shareReason: shareReason,
+					shareContent: shareContent,
+					shareObject: shareObject
+				}
+			}
+			//添加或者修改共享发起请求
+			function editShareClientRequest(action, modalId, shareData, shareId) {
+				var actionText = action == "add" ? "添加" : "更新";
+				if(!shareData.shareReason) {
+					$.showErrorGritter("共享原因不能为空！");
+					return false;
+				}
+				if(shareData.shareContent.length < 1) {
+					$.showErrorGritter("共享资源不能为空！");
+					return false;
+				}
+				if(shareData.shareObject.length < 1) {
+					$.showErrorGritter("共享对象不能为空！");
+					return false;
+				}
+				$.showApprovalPostPop({
+					routine: action == "add" ? "clientShare" : "clientSharedUpdate",
+					routineName: "添加共享",
+					successCallback: function(apvData, apvModal) {
+						var tempShareUrl = action == "update" ? shareUpdateUrl + "/" + shareId : shareListInfoUrl;
+						apvData.share_reason = shareData.shareReason;
+						apvData.share_resources = shareData.shareContent;
+						apvData.share_targets = shareData.shareObject;
+						if(apvData.needApv) {
+							apvData.diy_step_data = apvData.steps;
+							apvData.plan_id = apvData.planId;
+						}
+						$.ajaxByAction(action, tempShareUrl, apvData, function(response) {
+							if(response.code == 0) {
+								//success
+								$.showSuccessGritter(actionText + "共享成功" + (apvData.needApv ? "，请等待审批" : ""));
+								//$(apvModal).modal('hide');
+								$("#" + modalId).modal('hide');
+								apvModal && apvModal.modal("hide");
+								loadGridOfClientContact("", "");
+							} else {
+								$.showErrorGritter(actionText + "共享失败：" + response.msg);
+							}
+						});
+					}
+				});
+			}
+			//加载数据
+			function loadShareData(id, clientId) {
+				//加载客户部门树
+				var shareTreeUrl = BSAPIURL + "/crm/responsible_tree?check_permissions=share&clients=" + clientId + "&employee_ids=";
+				if($("#" + shareClientModalId + " .client-tree li").length <= 0) {
+					loadClientShareTree(shareTreeUrl, clientId);
+				}
+				//if(!id){
+				$("#" + shareClientModalId + " .client-tree  input").removeProp("checked");
+				//}
+				loadSharedList(shareListInfoUrl, id, clientId);
+			}
+			//加载数据之加载空权限客户树
+			function loadClientShareTree(shareTreeUrl, clientId) {
+				$.ajaxGet(shareTreeUrl, function(response) {
+					if(response.code != 0) {
+						$.showErrorGritter("获取客户资料失败：" + response.msg);
+						return false;
+					}
+					$("#" + shareClientModalId + " .client-tree").empty();
+					var deparmentTreeInfo = response.data;
+					if(deparmentTreeInfo.length < 1) return false;
+					var clientStr =
+						$("<li data-isopen=" + deparmentTreeInfo[0].can_share + ">" +
+							"	<div class='dashed-line-container'>" +
+							"		<label onclick='treeZoom(this)' area-hidden='false' data-tier='1' data-id=" + deparmentTreeInfo[0].client_id + ">" +
+							"			<img src='../resources/images/minus-o-icon.png' data-trans-src='../resources/images/plus-o-icon.png' />" +
+							"			<span class='tree-name'>" + deparmentTreeInfo[0].client_full_name + "</span>" +
+							"		</label>" +
+							"		<i class='dashed-line'></i>" +
+							"		<div class='tree-status'>" +
+							"			<label data-seepower='1'>" +
+							"				<input type='checkbox' " + (deparmentTreeInfo[0].can_share ? "" : "style='cursor:not-allowed'") + ">" +
+							"				<span>查看</span>" +
+							"			</label>" +
+							"			<label data-amendpower='2'>" +
+							"				<input type='checkbox' " + (deparmentTreeInfo[0].can_share ? "" : "style='cursor:not-allowed'") + ">" +
+							"				<span>编辑</span>" +
+							"			</label>" +
+							"			<label data-addpower='4'>" +
+							"				<input type='checkbox'  " + (deparmentTreeInfo[0].can_share ? "" : "style='cursor:not-allowed'") + ">" +
+							"				<span>添加</span>" +
+							"			</label>" +
+							"		</div>" +
+							"	</div>" +
+							"	<ul>" +
+							"	</ul>" +
+							"</li>");
+					clientStr.data("permissions", deparmentTreeInfo[0].permissions);
+					$("#" + shareClientModalId + " .client-tree").append(clientStr);
+					//部门
+					for(var i in deparmentTreeInfo[0].departments) {
+						var deparData = deparmentTreeInfo[0].departments[i];
+						var deparStr =
+							$("<li class=deparment-tree" + i + " data-isopen=" + deparData.can_share + ">" +
+								"	<div class='dashed-line-container'>" +
+								"		<label onclick='treeZoom(this)' area-hidden='false' data-tier='2' data-id=" + deparData.depa_id + ">" +
+								"			<img src='../resources/images/minus-o-icon.png' data-trans-src='../resources/images/plus-o-icon.png' />" +
+								"			<span class='tree-name'>" + deparData.depa_name + "</span>" +
+								"		</label>" +
+								"		<i class='dashed-line'></i>" +
+								"		<div class='tree-status'>" +
+								"			<label data-seepower='1'>" +
+								"				<input type='checkbox' " + (deparData.can_share ? "" : "style='cursor:not-allowed'") + ">" +
+								"				<span>查看</span>" +
+								"			</label>" +
+								"			<label data-amendpower='2'>" +
+								"				<input type='checkbox'" + (deparData.can_share ? "" : "style='cursor:not-allowed'") + ">" +
+								"				<span>编辑</span>" +
+								"			</label>" +
+								"			<label data-addpower='4'>" +
+								"				<input type='checkbox'" + (deparData.can_share ? "" : "style='cursor:not-allowed'") + ">" +
+								"				<span>添加</span>" +
+								"			</label>" +
+								"		</div>" +
+								"	</div>" +
+								"	<ul>" +
+								"	</ul>" +
+								"</li>");
+						deparStr.data("permissions", deparData.permissions);
+						$("#" + shareClientModalId + " .client-tree>li>ul").append(deparStr);
+						//联系人
+						for(var j in deparData.contacts) {
+							var linkmanData = deparData.contacts[j];
+							var linkmanStr =
+								$("<li data-isopen=" + linkmanData.can_share + ">" +
+									"	<div class='dashed-line-container'>" +
+									"		<label onclick='treeZoom(this)' area-hidden='false' data-tier='3' data-id=" + linkmanData.contact_id + ">" +
+									"			<span class='tree-name'>" + linkmanData.contact_name + "</span>" +
+									"		</label>" +
+									"		<i class='dashed-line'></i>" +
+									"		<div class='tree-status'>" +
+									"			<label data-seepower='1'>" +
+									"				<input type='checkbox' " + (linkmanData.can_share ? "" : "style='cursor:not-allowed'") + "/>" +
+									"				<span>查看</span>" +
+									"			</label>" +
+									"			<label data-amendpower='2'>" +
+									"				<input type='checkbox' " + (linkmanData.can_share ? "" : "style='cursor:not-allowed'") + ">" +
+									"				<span>编辑</span>" +
+									"			</label>" +
+									"		</div>" +
+									"	</div>" +
+									"</li>");
+							linkmanStr.data("permissions", linkmanData.permissions);
+							$("#" + shareClientModalId + " .deparment-tree" + i + ">ul").append(linkmanStr);
+						}
+					}
+
+					$("#" + shareClientModalId + " label input").change(function(e) {
+						var permissions = $(this).parent().parent().parent().parent().data("permissions");
+						if(!permissions.can_share.result) {
+							$.showErrorGritter("当前客户不能共享:" + permissions.can_share.reason);
+							$(this).parent().parent().find("label input").removeProp("checked");
+							return false;
+						}
+						if(!$(this).is(":checked")) {
+							$(this).removeProp("checked");
+						} else {
+							$(this).prop("checked", "checked");
+							if(!$(this).parent().parent().find("label:first-child input").prop("checked")){
+								console.log("去联动勾选");
+								$(this).parent().parent().find("label:first-child input").trigger("click");//.prop("checked", "checked");
+							}
+						}
+						if(!$(this).parent().parent().find("label:first-child input").prop("checked")) {
+							console.log("去取消联动勾选");
+							$(this).parent().parent().find("label input").removeProp("checked");
+						}
+					});
+				});
+			}
+			//加载数据之加载已有的共享列表
+			function loadSharedList(shareListInfoUrl, id, clientId) {
+				$.ajaxGet(shareListInfoUrl, function(response) {
+					shareInfo = response.data;
+					if($("#" + shareClientModalId + " .share-list ul li span").length == 0) {
+						if(shareInfo.length > 0) $("#" + shareClientModalId + " .share-list ul").html("");
+						for(var i in shareInfo) {
+							var str =
+								$("<li class='share-list-item at' onclick='clickChange(this)' id='" + shareInfo[i].share_creator.employee_id + "' data-shareid='" + shareInfo[i].share_id + "'>" +
+									"	<img class='lt' src='" + shareInfo[i].share_creator.employee_avatar + "'/>" +
+									"	<div class='lt'>" +
+									"		<div>" +
+									"			<span class='pull-left'>" + shareInfo[i].share_creator.employee_name + "</span>" +
+									"			<br><span class='note-font-type'>" + shareInfo[i].create_time + "</span>" +
+									"		</div>" +
+									"	</div>" +
+									"	<a class='btn-a-default rt' onclick=\"abolishShare(this,'" + shareClientModalId + "','" + clientId + "')\">取消共享</a>" +
+									"</li>");
+							$("#" + shareClientModalId + " .share-list ul").append(str);
+						}
+					}
+					//加载权限内容
+					for(var i in shareInfo) {
+						if(shareInfo[i].share_id == id) {
+							$("#" + shareClientModalId + " .client-tree").find("li").each(function(index) {
+								for(var j in shareInfo[i].share_data) {
+									if($(this).find(">.dashed-line-container label").attr("data-id") == shareInfo[i].share_data[j].data_id) {
+										for(var k in shareInfo[i].share_data[j].data_permission) {
+											switch(parseInt(shareInfo[i].share_data[j].data_permission[k])) {
+												case 1:
+													$(this).find(">.dashed-line-container .tree-status label[data-seepower='" + crm.share_permissons.VIEW + "'] input").prop("checked", "checked");
+													break;
+												case 2:
+													$(this).find(">.dashed-line-container .tree-status label[data-amendpower='" + crm.share_permissons.UPDATE + "'] input").prop("checked", "checked");
+													break;
+												default:
+													$(this).find(">.dashed-line-container .tree-status label[data-addpower='" + crm.share_permissons.ADD + "'] input").prop("checked", "checked");
+											}
+										}
+									}
+								}
+							});
+							$("#" + shareClientModalId + " .shake-client-left").siblings().find(".share-object-list .object-box").remove();
+							for(var j in shareInfo[i].target_data) {
+								var str = "<div class='object-box' id='" + shareInfo[i].target_data[j].employee_id + "'>" +
+									"	<p class='object-box-name css-overhidden close-icon-container'>" + shareInfo[i].target_data[j].employee_name +
+									"		<img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' class='close-icon' onclick='deletebox(this)'>" +
+									"	</p>" +
+									"</div>";
+								$("#" + shareClientModalId + " .shake-client-left").siblings().find(".share-object-list").append(str);
+							}
+							$("#" + shareClientModalId + " .share-object-list .close-icon-container").unbind("mouseover").mouseover(function() {
+								transImgSrc($(this).find("img"));
+							}).unbind("mouseout").mouseout(function() {
+								transImgSrc($(this).find("img"));
+							});
+							$("#" + shareClientModalId + " .shake-client-left").siblings().find("textarea").val(shareInfo[i].share_reason);
+
+						}
+					}
+				});
+			}
+			//取消共享
+			function abolishShare(obj, shareClientModalId, clientID) {
+				var shareData = $(obj).attr("data-share");
+				var id = $(obj).parent().attr("id");
+				var shareId = $(obj).parent().attr("data-shareid");
+				var modalId = $.modal().show("取消共享", ".abolish-share", function() {
+					var shareReason = $("#" + modalId + " .abolish-sharereason").val();
+					if(!shareReason) {
+						$.showErrorGritter("取消共享原因不能为空");
+						return false;
+					}
+					$.showApprovalPostPop({
+						routine: "clientSharedCancel",
+						routineName: "取消共享",
+						successCallback: function(apvData, apvModal) {
+							apvData.share_reason = shareReason;
+							if(apvData.needApv) {
+								apvData.diy_step_data = apvData.steps;
+								apvData.plan_id = apvData.planId;
+							}
+
+							$.ajaxDelete(shareUpdateUrl + "/" + shareId, apvData, function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("取消共享操作成功" + (apvData.needApv ? "，请等待审批！" : ""));
+									///$(apvModal).modal('hide');
+									$("#" + modalId).modal('hide');
+									$("#" + shareClientModalId).modal('hide');
+									apvModal && apvModal.modal("hide");
+									loadGridOfClientContact("", "");
+								} else {
+									$.showErrorGritter("取消共享失败：" + response.msg);
+								}
+							});
+						}
+					});
+
+				});
+
+			}
+			//清空共享（新建共享）
+			function clearShareInfo(obj) {
+				isShareAddAndUpdate = "add";
+				$(obj).addClass("active");
+				$("#" + shareClientModalId + " .share-list li").removeClass("clickstyle");
+				$(".tree-status i").removeClass("checkstyle");
+				$(".tree-status").removeAttr("data-seepower");
+				$(".tree-status").removeAttr("data-amendpower");
+				$(".tree-status").removeAttr("data-addpower");
+				$(".share-object-list").empty();
+				$(".share-object-reason").val("");
+			}
+			//选择共享对象
+			//分享对象
+			function selectObject() {
+				//选择人员
+				var tempHtml4EmployeeSelect =
+					"<div class='object-box' id='{ID}'>" +
+					"	<p class='object-box-name css-overhidden close-icon-container'>{N}" +
+					"		<img src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' class='close-icon' onclick='deletebox(this)'>" +
+					"	</p>" +
+					"</div>";
+				var selectEmployeeDom = $("#" + shareClientModalId + " .share-object-list");
+				selectEmployeeDom.empty();
+				$.showShareEmployeeSelectPop({
+					title: "选择共享对象",
+					subTitle: "请选择共享对象：",
+					isShowMe: true,
+					selectedEmployeeIds: selectEmployeeDom.data("select"),
+					okCallback: function(employeesData) {
+						var ids = [];
+						for(var i in employeesData) {
+							var empData = employeesData[i];
+							ids.push(empData.employee_id);
+							if(selectEmployeeDom.find("span[data-employee-id='" + empData.employee_id + "']").length > 0) {
+								continue;
+							}
+							selectEmployeeDom.append(tempHtml4EmployeeSelect.replace("{N}", empData.employee_name).replace("{ID}", empData.employee_id).replace("{src}", empData.employee_avatar)); //
+						}
+						selectEmployeeDom.data("select", ids);
+						selectEmployeeDom.find(".close-icon-container").unbind("mouseover").mouseover(function() {
+							transImgSrc($(this).find("img"));
+						}).unbind("mouseout").mouseout(function() {
+							transImgSrc($(this).find("img"));
+						});
+					}
+				});
+			}
+			//删除共享对象
+			function deletebox(obj) {
+				$(obj).parent().remove();
+			}
+			////新增客户单位或者修改客户单位
+			function addClientCompany(action, clickClientNameID, deleteApprovalSessionStatus, clientFullName) {
+				locationPoint = {};
+				var clientId = "";
+				var clientImages = [],
+					actionText = action == "add" ? "新增" : "修改";
+				var selectedRowDatas = [];
+				if(action != "add") {
+					selectedRowDatas = getSelectedDatas(gridOfClientContact);
+					var len = selectedRowDatas.length;
+					if(action == "click") len = 1;
+					if(len < 1) {
+						$.showErrorGritter("请先选择一个客户单位！");
+						return false;
+					} else if(len > 1) {
+						$.showErrorGritter("最多只能选择一个客户单位！");
+						return false;
+					}
+					if(action == "click") {
+						var rowData = {};
+						rowData.client_id = clickClientNameID;
+						rowData = $(gridOfClientContact).getRowData4JqGrid("id", clickClientNameID);
+					} else {
+						////获取行数据以获得客户id进行单个客户的查询
+						var rowData = selectedRowDatas[0];
+					}
+					if(!boolCanClickBtn([rowData], "update")) return false;
+				}
+				var modalId = $.modal({
+					okButtonText: "保存"
+				}).showOfLarge(actionText + "客户单位", ".add-client-company", function(modal) {
+					action = action == "add" ? action : "update";
+					addOrUpdateClientCompanyRequest(action, clientId, modalId, controller);
+				});
+				var controller = new Controller("#" + modalId + " .modal-add-client-company");
+				//失焦客户单位名称查重
+				$("#" + modalId + " .modal-add-client-company input[bind='client_full_name']").blur(function() {
+					var me = this; ///留住this
+					var client_id = rowData && rowData.client_id ? rowData.client_id : "";
+					clientNameCheckRepeat($(this).val(), client_id, function(resp) {
+						if(resp.data.exist && rowData.client_id != resp.data.client_id) {
+							var forHelpPeople = [];
+							for(var i in resp.data.responsible_person) {
+								forHelpPeople.push(resp.data.responsible_person[i].employee_name + "，" + resp.data.responsible_person[i].depa_name);
+							}
+							$.showErrorGritter("客户已存在，无法重复新增，如需帮助请联系负责人—" + forHelpPeople.join("或者"));
+							//$(me).focus();
+						}
+					});
+				});
+				$("#" + modalId + " .location-city").click(function() {
+					locationClientAddr(modalId, $(this).val());
+				});
+				initAddPicturesUpload(modalId, clientImages);
+				//添加其他信息
+				$("#" + modalId + " .btn-add-other-info").click(function() {
+					btnAddOtherInfo(modalId);
+				});
+				if(action == "add") { ////添加客户
+					controller.set();
+					$("#" + modalId + " .client-important-levels option").trigger("change");
+					$.loadCommonCityData(function(cityData) {
+						$("#" + modalId + ' input[data-toggle="city-picker"]').citypicker({
+							dataSource: cityData,
+							province: "sasa",
+							city: ""
+						});
+					});
+				} else { ////修改客户
+					clientId = rowData.client_id;
+					$.ajaxGet(BSAPIURL + "/crm/customers/:customer_id".replace(":customer_id", rowData.client_id), function(resp) {
+						controller.set(resp.data);
+						var clientName = resp.data.client_full_name;
+						////处理数据   显示图片
+						var fragment = "";
+						for(var s in resp.data.client_images) {
+							var img = "<img src=\"" + resp.data.client_images[s] + "\" onclick='clickToLargePicture(\"" + resp.data.client_images[s] + "\")' alt='大图'/>";
+							fragment += "<a href='javascript:;' class='picture-container'>" + img + "<i class='fa fa-times-circle fa-x' onclick='deteleUploadImg(this);'></i></a>";
+						}
+						$("#" + modalId + " .uploaded").html(fragment);
+						/*hgf--2017年4月12日12:30:43--bug-3406*/
+						if(resp.data.client_images.length == 3)
+							$("#" + modalId + " .btn-upload-anx").hide();
+						////处理数据  显示其他信息
+						var extendDataTr = "";
+						for(var o in resp.data.client_extend_data) {
+							extendDataTr += "<tr><td style='width: 30%;'><input type='text' value='" + resp.data.client_extend_data[o].label +
+								"' style='width: 100%;' maxlength=\"10\"/></td><td>：</td><td style='width: 65%;'><input type='text' value='" +
+								resp.data.client_extend_data[o].value + "' style='width: 100%;'/ maxlength=\"50\"></td><td class='close-icon-container'>" +
+								"<img class='close-icon' src='../resources/images/filter-close.png' onclick='$(this).parent().parent().remove()'/></td></tr>";
+						}
+						$("#" + modalId + " .tab-add-other-info tbody").html(extendDataTr);
+						////处理城市数据
+						$("#" + modalId + " span.placeholder").attr("data-code", resp.data.client_administrative_division);
+						var cityArr = resp.data.client_administrative_division_cn.split(",");
+						$.loadCommonCityData(function(cityData) {
+							var cityDataDetail = cityData.DataSource;
+							$("#" + modalId + ' input[data-toggle="city-picker"]').citypicker({
+								dataSource: cityData,
+								province: cityArr[0] ? cityArr[0].trim() : "",
+								city: cityArr[1] ? cityArr[1].trim() : "",
+								district: cityArr[2] ? cityArr[2].trim() : ""
+							});
+						});
+					});
+				}
+			}
+
+			function deteleUploadImg(obj) {
+				var uploadBtn = $(obj).parents(".real-picture");
+				uploadBtn.find("#btnUploadAnx").show();
+				$(obj).parent().remove();
+			}
+			//新增或者修改客户单位发起请求
+			function addOrUpdateClientCompanyRequest(action, clientId, modalId, controller) {
+				var actionText = action == "add" ? "添加" : "修改";
+				if(inputValidateForGritter("#" + modalId + " .modal-add-client-company")) {
+					var data = controller.getJSON();
+					data.client_images = clientImages;
+					data.client_addr_map_location_lat = locationPoint.lat ? locationPoint.lat : data.client_addr_map_location_lat;
+					data.client_addr_map_location_lon = locationPoint.lon ? locationPoint.lon : data.client_addr_map_location_lon;
+					data.client_extend_data = [];
+					data.client_administrative_division = $("#" + modalId + " .city-picker-span .title span:last-child").attr("data-code");
+					data.client_addr_map_address = $("#" + modalId + " .location-city").val();
+					var hasFilledNotFull = false;
+					$("#" + modalId + " .tab-add-other-info tbody tr").each(function() {
+						var labelDom = $(this).find("td:first-child input").val();
+						var valueDom = $(this).find("td:eq(2) input").val();
+						if((!labelDom && valueDom) || (!valueDom && labelDom)) {
+							$.showErrorGritter("其他信息中您有填过的项未填写完整！");
+							hasFilledNotFull = true;
+							return true;
+						}
+						data.client_extend_data.push({
+							label: labelDom,
+							value: valueDom
+						});
+					});
+					if(hasFilledNotFull) return false;
+					clientImages = [];
+					$("#" + modalId + " .uploaded a").each(function() {
+						clientImages.push($(this).find("img").attr("src"));
+					});
+					data.client_images = clientImages;
+					var url = BSAPIURL + "/crm/customers" + (action == "update" ? "/" + clientId : "");
+					$.ajaxByAction(action, url, data, function(resp) {
+						if(resp.code == 0) {
+							$.showSuccessGritter(actionText + "客户单位成功！");
+							$("#" + modalId).modal('hide');
+							loadGridOfClientContact("");
+						} else {
+							$.showErrorGritter(actionText + "客户单位失败：" + resp.msg);
+						}
+					});
+
+				}
+			}
+			////输入客户名字后查重
+			/////新增客户单位或者新增客户单位modal里面点击单位input 弹出定位页面
+			function locationClientAddr(modalIdOfAddClient, cityName) {
+				var modalWidth = $("body").outerWidth(true) - 100;
+				var modalHeight = $("body").outerHeight(true) - 150;
+				var modalId = $.modal({
+					width: modalWidth,
+					height: modalHeight,
+					shownCallback: function(modalId) {
+						$("#" + modalIdOfAddClient + " .modal-dialog").css("height", modalHeight);
+						$("#" + modalIdOfAddClient + " .modal-body").css("height", modalHeight);
+						initMap("#" + modalId, cityName);
+					}
+				}).show("地图定位", ".location-client-addr", function(modal) {
+					$("#" + modalIdOfAddClient + " .location-city").val(city);
+					locationPoint = locationPointTmp;
+					$("#" + modalId).modal('hide');
+				});
+				$("#" + modalId + " #r-result input[type='button']").click(function() {
+					viewPointByKeyword(("#" + modalId + " #r-result input[type='text']"), $(this).prev().val());
+				});
+			}
+			var myLocationPoint = {};
+			var initMap = function(formContainer, cityName) {
+				locationPointTmp = {};
+				if(cityName) {
+					$(formContainer + " #r-result input[type='text']").attr("value", cityName);
+				}
+				var tmpId = $.uuid();
+				$(formContainer + " #allmap").attr("id", tmpId);
+				$(formContainer + " #" + tmpId).css("height", $("body").outerHeight(true) - 230 + "px");
+				//map
+				map = new BMap.Map(tmpId);
+				//default 重庆
+				var point = new BMap.Point(106.55, 29.57);
+				map.centerAndZoom(point, 12);
+				map.enableScrollWheelZoom();
+				var geolocation = new BMap.Geolocation();
+				geolocation.getCurrentPosition(function(r) {
+					if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+						if(cityName) { //myLocationPoint.employee_location_lat && myLocationPoint.employee_location_lon) {
+							viewPointByKeyword((formContainer + " #r-result input[type='text']"), cityName);
+						} else {
+							point = r.point;
+							myLocationPoint.employee_location_lat = point.lat;
+							myLocationPoint.employee_location_lon = point.lng;
+							locationPointTmp.lat = point.lat
+							locationPointTmp.lon = point.lng;
+							setMapMarker(point, formContainer);
+							console.log(r)
+							getAddressByPoint(point, (formContainer + " #r-result input[type='text']"), cityName);
+						}
+					} else {
+						//定位失败 定位到城市
+						viewPointByKeyword((formContainer + " #r-result input[type='text']"), "重庆市");
+					}
+				}, {
+					enableHighAccuracy: false
+				});
+			};
+			var getAddressByPoint = function(pt, showContainer, cityNameStr) {
+				var gc = new BMap.Geocoder();
+				gc.getLocation(pt, function(rs) {
+					var addComp = rs.addressComponents;
+					var address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber.replace("、", "");
+					if(cityNameStr) {} else {
+						address = "";
+					}
+
+					$(showContainer).text(address).val(address);
+					city = address;
+				});
+			};
+			var viewPointByKeyword = function(formContainer, keyword) {
+				var localSearch = new BMap.LocalSearch(map);
+				localSearch.enableAutoViewport();
+				localSearch.setSearchCompleteCallback(function(searchResult) {
+					map.clearOverlays();
+					var poi = searchResult.getPoi(0);
+					var pt = poi.point;
+					//poi.point
+					setMapMarker(pt, formContainer);
+					//保存位置信息
+					locationPointTmp.lat = pt.lat
+					locationPointTmp.lon = pt.lng;
+					getAddressByPoint(pt, formContainer, keyword);
+				});
+				localSearch.search(keyword);
+			};
+			var setMapMarker = function(point, formContainer) {
+				map.clearOverlays();
+				var marker = new BMap.Marker(point);
+				marker.enableDragging();
+				marker.addEventListener("dragend", function(e) {
+					var pt = e.point;
+					myLocationPoint.employee_location_lat = pt.lat
+					myLocationPoint.employee_location_lon = pt.lng;
+					locationPointTmp.lat = pt.lat
+					locationPointTmp.lon = pt.lng;
+					getAddressByPoint(pt, formContainer.indexOf(" #r-result input[type='text']") >= 0 ? formContainer : formContainer + " #r-result input[type='text']", "dragend");
+				})
+				var label = new BMap.Label("拖动图标可以定位", {
+					offset: new BMap.Size(20, -10)
+				});
+				marker.setLabel(label);
+				map.addOverlay(marker);
+				map.panTo(point);
+			};
+			////新增客户单位或者新增客户单位modal里面点击添加按钮添加其他信息
+			function btnAddOtherInfo(modalId) {
+				var otherInfoDom = "<tr><td style='width: 30%;'><input type='text' value='' style='width: 100%;' maxlength=\"10\"/></td><td>：</td><td style='width: 65%;'><input type='text' value='' style='width: 100%;' maxlength=\"50\"/></td><td class='close-icon-container'><img class='close-icon' src='../resources/images/filter-close.png' onclick='$(this).parent().parent().remove()'/></td></tr>";
+				$("#" + modalId + " .tab-add-other-info tbody").append(otherInfoDom);
+			}
+			////添加图片
+			function initAddPicturesUpload(modalId, clientImages) {
+				var formContainer = "#" + modalId + " .modal-add-client-company";
+				////添加实景图
+				var isUploadPicture = true;
+				$(formContainer + " .btn-upload-anx").attr("id", "btnUploadAnx");
+				$("#btnUploadAnx").initUploader({
+					url: SAASAPIS.BS.upload.image,
+					up_container: formContainer + " .process-percent",
+					FilesAdded: function(up, files) {
+						return true;
+					},
+					FileUploaded: function(up, file, response) {
+						var resp = JSON.parse(response.response);
+						var imgList = $(formContainer + " .picture-container img").length;
+						if(imgList >= 3) {
+							$.showErrorGritter("上传失败:最多只能上传三张图片！");
+							return false;
+						}
+						if(resp.code == 0) {
+							//success
+							var pictureContainerDom = "<a href='javascript:;' class='picture-container'><img src='" + resp.data.path + "' onclick='clickToLargePicture(" + JSON.stringify(resp.data.path) + ");' alt='图片1' name='" + resp.data.name + "'/><i class='fa fa-times-circle fa-x'></i></a>";
+							clientImages.push(resp.data.path);
+							$(formContainer + " .uploaded").append(pictureContainerDom);
+							if($(formContainer + " .picture-container img").length == 3) {
+								$(formContainer + " .btn-upload-anx").hide();
+								//return false;
+							}
+							$(formContainer + " .picture-container .fa-times-circle").unbind("click").click(function() {
+								$(this).parent().remove();
+								$(formContainer + " .btn-upload-anx").show();
+							});
+						} else {
+							$.showErrorGritter("上传失败：" + resp.msg);
+						}
+					}
+				});
+			}
+			////新增客户单位或者新增客户单位modal里面点击图片查看大图
+			function clickToLargePicture(url) {
+				$(".click-to-large-picture img").attr("src", url);
+				var modalId = $.modal().show("", ".click-to-large-picture", function(modal) {
+					$("#" + modalId).modal('hide');
+				});
+			}
+			//下载客户导入模板
+			function downloadImportModel() {
+				var url = "../resources/annx/tpl_customer.xlsx";
+				$.downloadFile(url);
+			}
+			//导入客户
+			function openClientImportPop() {
+				var actionText = "导入客户单位";
+				var depa_id = $("label.active").attr("code");
+				var modalId = $.modal({
+					shownCallback: function(modalId) {},
+					okButtonText: "开始导入"
+				}).showOfLarge(actionText, ".pnl-employee-import",
+					function(modal) {
+						if(!excelIsUploaded) {
+							$.showErrorGritter("请先点击“上传模板”按钮上传导入的客户单位数据。");
+							return false;
+						}
+						var colObj = {};
+						var cancelFlag = false,
+							isSetColum = false;
+						$(formContainer + " .table-employee-import thead tr[sel] th").each(function() {
+							var colVal = $(this).children("select").val();
+							if(colObj[colVal] >= 0) {
+								$.showErrorGritter("对应列名有重复，请检查修改。");
+								cancelFlag = true;
+								return false;
+							}
+							if(colVal) {
+								colObj[colVal] = $(this).index();
+								isSetColum = true;
+							}
+						});
+						if(cancelFlag) {
+							return false;
+						}
+						$.ajaxPost(BSAPIURL + "/crm/customers/import", colObj,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "成功。");
+									modal.modal('hide');
+									loadGridOfClientContact("", "");
+								} else {
+									$.showErrorGritter(actionText + "失败：" + response.msg);
+								}
+							});
+					}
+				);
+				$("#" + modalId + " .modal-dialog.modal-large").css("width", "80%");
+				//model pop id
+				var formContainer = "#" + modalId + " .model-employee-import";
+				var excelIsUploaded = false;
+				$(formContainer + " #btnUploadExcel").attr("id", "btnUploadExcelHAHA");
+				$("#btnUploadExcelHAHA").initUploader({
+					fileName: "file",
+					url: BSAPIURL + "/crm/customers/import/view",
+					fileType: "xls",
+					up_container: formContainer + " .upload",
+					FilesAdded: function(up, files) {
+						return true;
+					},
+					FileUploaded: function(up, file, response) {
+						try {
+							var resp = JSON.parse(response.response);
+							if(resp.code == 0) {
+								excelIsUploaded = true;
+								//success
+								var clientsList = resp.data.rows;
+								$(formContainer + " .table-employee-import caption").text("共 " + (clientsList.length - 1) + " 条记录");
+								$(formContainer + " .table-employee-import caption").removeClass("hide");
+								$(formContainer + " .table-employee-import thead").empty();
+								$(formContainer + " .table-employee-import tbody").empty();
+								for(var i in clientsList) {
+									var clientData = clientsList[i];
+									var tdName = (i == 0 ? "th" : "td");
+									var trDom = $("<tr></tr>");
+									for(var j in clientData) {
+										trDom.append("<TD>V</TD>".replace(/TD/g, tdName).replace(/V/g, clientData[j]));
+									}
+									if(i == 0) {
+										var selTrDom = $("<tr sel></tr>");
+										$(formContainer + " .table-employee-import thead").append(selTrDom);
+									}
+									$(formContainer + " .table-employee-import " + (i == 0 ? "thead" : "tbody")).append(trDom);
+								}
+							} else {
+								$.showErrorGritter("上传Excel失败：" + resp.msg);
+							}
+						} catch(e) {}
+					}
+				});
+			}
+			//导出客户
+			function openClientDownloadPop() {
+				$.downloadFile(tempLoadClientUrl.replace("/crm/customers", "/crm/customers/excel") + "&sort=asc");
+			}
+			////移交客户
+			var handOverClientModalId = "";
+			var postData = [];
+
+			function handOverClient() {
+				var selectedRowDatas = getSelectedDatas(gridOfClientContact);
+				if(selectedRowDatas.length < 1) {
+					$.showErrorGritter("请先选择客户单位！");
+					return false;
+				}
+				var clientIds = [];
+				for(var i in selectedRowDatas) {
+					clientIds.push(selectedRowDatas[i].client_id);
+				}
+				if(!boolCanClickBtn(selectedRowDatas, "transfer")) return false;
+				handOverClientModalId = $.modal({
+					showFooter: false,
+					height: $(window).height() - 200,
+					width: $(window).width() / 2,
+					shownCallback: function() {
+						$("#" + handOverClientModalId + " .steps-panel").css("height", $("#" + handOverClientModalId + " .modal-body").outerHeight(true) - 100 + "px")
+						$("#" + handOverClientModalId + " .content-left-body").css("height", $("#" + handOverClientModalId + " .steps-panel").outerHeight(true) - $("#" + handOverClientModalId + " .content-left-companys-container").outerHeight(true) - 115 + "px")
+					}
+				}).show("移交客户", ".hand-over-client-panel", function(modal) {});
+				loadResponsePeople(clientIds);
+				//上一步
+				$("#" + handOverClientModalId + " .prev-step").click(function() {
+					var stepNum = $(this).attr("data-curr-step");
+					var prevStepNum = parseInt(stepNum) - 1;
+					if(prevStepNum == 0) {
+						$.showErrorGritter("当前已经是第一页！");
+						return false;
+					}
+					$("#" + handOverClientModalId + " .steps-panel").addClass("hide");
+					$("#" + handOverClientModalId + " .step-" + prevStepNum).removeClass("hide");
+					transCurrStepNum(prevStepNum);
+				});
+				//下一步
+				var responsePeopleIds = [];
+				$("#" + handOverClientModalId + " .next-step").click(function() {
+					var stepNum = $(this).attr("data-curr-step");
+					if(stepNum == 1) {
+						responsePeopleIds = []; //hgf--2017年3月27日09:06:31
+						$(".response-people-container").each(function() {
+							if($(this).find(".response-people-checked").length > 0) {
+								responsePeopleIds.push($(this).find(".response-people-name").data("emp-id"));
+							}
+						});
+						if(responsePeopleIds.length < 1) {
+							$.showErrorGritter("请选客户的负责人！");
+							return false;
+						} else {
+							$.showLoadingPop("正在加载客户数据，请稍候...");
+							$.ajaxGet(BSAPIURL + "/crm/responsible_tree?check_permissions=transfer&clients=" + clientIds.join(",") + "&employee_ids=" + responsePeopleIds.join(","), function(resp) {
+								$.hideLoadingPop();
+								handOverClientTreeFill(resp.data);
+							});
+						}
+					}
+					if(stepNum == 2 && $("#" + handOverClientModalId + " .content-left-body").find("input:checked").length < 1) {
+						$.showErrorGritter("请选择移交内容！");
+						return false;
+					}
+					if(stepNum == 3 && $("#" + handOverClientModalId + " #tab-hand-over-content tbody tr").length < 1) {
+						$.showErrorGritter("请选择移交内容！");
+						return false;
+					}
+					if(stepNum == 2) {
+						writeTable();
+					}
+					if(stepNum == 4) {
+						handOverClientRequest(postData, responsePeopleIds);
+						return false;
+					} else if(stepNum == 1) {
+
+					}
+					var nextStepNum = parseInt(stepNum) + 1;
+					$("#" + handOverClientModalId + " .steps-panel").addClass("hide");
+					$("#" + handOverClientModalId + " .step-" + nextStepNum).removeClass("hide");
+					transCurrStepNum(nextStepNum);
+				});
+				//负责改变当前步数属性值和按钮文本
+				function transCurrStepNum(num) {
+					$("#" + handOverClientModalId + " .hand-over-foot-btn a").each(function() {
+						$(this).attr("data-curr-step", num);
+						if(num == 4) {
+							$("#" + handOverClientModalId + " .next-step").text("完成");
+						} else {
+							$("#" + handOverClientModalId + " .next-step").text("下一步");
+						}
+					});
+				}
+				//取消
+				$("#" + handOverClientModalId + " .cancel-hand-over").click(function() {
+					$("#" + handOverClientModalId).modal('hide');
+				});
+				////选择接收对象按钮
+				var selectedEmployeeIds = [];
+				var selectEmployeeDom = $("#" + handOverClientModalId + " .selected-container");
+				var tempHtml4EmployeeSelect = "<span class=\"item\" data-employee-id=\"{ID}\">{N} " + "</span> ";
+				$("#" + handOverClientModalId + " .btn-sel-accept-object").click(function() {
+					////已选的接收对象
+					$.showEmployeeSelectPop({
+						title: "移交联系人",
+						subTitle: "请选择接收对象：",
+						isShowMe: true,
+						isIncludeSelf: true,
+						selectedEmployeeIds: selectedEmployeeIds,
+						onlySingle: true,
+						okCallback: function(employeesData) {
+							if(employeesData.length > 0) {
+								$("#" + handOverClientModalId + " .no-tip").addClass("hide");
+								$("#" + handOverClientModalId + " .selected-container").removeClass("hide");
+							} else {
+								$("#" + handOverClientModalId + " .no-tip").removeClass("hide");
+								$("#" + handOverClientModalId + " .selected-container").addClass("hide");
+							}
+							for(var i in employeesData) {
+								var empData = employeesData[i];
+								if(selectEmployeeDom.find("span[data-employee-id='" + empData.employee_id + "']").length > 0) {
+									continue;
+								}
+								selectEmployeeDom.html("");
+								selectEmployeeDom.append(tempHtml4EmployeeSelect.replace("{N}", empData.employee_name).replace("{ID}",
+									empData.employee_id));
+							}
+						}
+					});
+				});
+
+			}
+			//加载该客户负责人
+			function loadResponsePeople(clientIds) {
+				var responsePeopleList = "";
+				$.ajaxGet(BSAPIURL + "/crm/clients/responsible/employees?client_id=" + clientIds.join(","), function(resp) {
+					if(resp.code == 0) {
+						for(var i in resp.data) {
+							var nameStr = ($.cookie("_u_name") == resp.data[i].employee_name) ? "我" : resp.data[i].employee_name;
+							responsePeopleList +=
+								"<div class='response-people-container'>" +
+								"	<img class='response-people-head' src='" + resp.data[i].employee_avatar + "' alt='头像'>" +
+								"	<p class='response-people-name' data-emp-id='" + resp.data[i].employee_id + "'>" + nameStr + "</p>" +
+								"</div>";
+						}
+						$("#" + handOverClientModalId + " .response-people-list").html(responsePeopleList);
+						$("#" + handOverClientModalId + " .response-people-container").click(function() {
+							if($(this).hasClass("active")) {
+								$(this).removeClass("active");
+								$(this).find(".response-people-checked").remove();
+								return false;
+							}
+							$("#" + handOverClientModalId + " .response-people-container").removeClass("active");
+							$(this).addClass("active");
+							$("#" + handOverClientModalId + " .response-people-list").find(".response-people-checked").remove();
+							$(this).append("<img class='response-people-checked' src='../resources/images/plan-uncomplete-icon.png'>");
+						});
+					} else {
+						$.showErrorGritter("加载客户负责人失败：" + resp.msg);
+					}
+				});
+			}
+			//发起移交客户的请求
+			function handOverClientRequest(data, responsePeopleIds) {
+				if(!inputValidateForGritter("#" + handOverClientModalId + " .hand-over-object-reason")) {
+					return false;
+				}
+				var handOverReason = $("#" + handOverClientModalId + " .hand-over-reason textarea").val();
+				var transferTargetID = $("#" + handOverClientModalId + " .selected-container .item").attr("data-employee-id");
+				if(!transferTargetID) {
+					$.showErrorGritter("接收对象不能为空！");
+					return false;
+				}
+				$.showApprovalPostPop({
+					routine: "clientTransfer",
+					routineName: "移交客户",
+					successCallback: function(apvData, apvModal) {
+						var postData = {
+							transfer_data: data,
+							transfer_target: transferTargetID,
+							transfer_reason: handOverReason,
+							transfer_employee: responsePeopleIds.join(",")
+						};
+						if(apvData.needApv) {
+							postData.diy_step_data = apvData.steps;
+							postData.plan_id = apvData.planId;
+						}
+						$.ajaxPost(BSAPIURL + "/crm/customer/transfer", postData,
+							function(resp) {
+								if(resp.code == 0) {
+									$.showSuccessGritter("移交客户提交成功" + (apvData.needApv ? "，请等待审批！" : ""));
+									$("#" + handOverClientModalId).modal('hide');
+									//$(apvModal).modal('hide');
+									$(gridOfClientContact).reloadGrid();
+									apvModal && apvModal.modal("hide");
+								} else {
+									$.showErrorGritter("提交失败：" + resp.msg);
+								}
+							})
+					}
+				});
+			}
+			//移交时客户单位层级树填充
+			function handOverClientTreeFill(clients) {
+				$("#" + handOverClientModalId + " .content-left-companys").empty();
+				$("#" + handOverClientModalId + " .one-client-detail").empty();
+				for(var i in clients) { //第一层遍历医院
+					var companySpanDom = $("<span data-client-id='{ID}' class='client-name'>{NAME}</span>");
+					companySpanDom.data("client-data", clients[i])
+						.attr("data-client-id", clients[i].client_id)
+						.attr("data-client-name", clients[i].client_full_name)
+						.text(clients[i].client_full_name);
+					if(i == 0) companySpanDom.addClass("active");
+					$("#" + handOverClientModalId + " .content-left-companys").append(companySpanDom);
+				}
+				$("#" + handOverClientModalId + " .content-left-companys .client-name").click(function() {
+					var clientData = $(this).data('client-data');
+					$(this).addClass("active").siblings().removeClass("active");
+					$("#" + handOverClientModalId + " .one-client-detail li[data-client-id]").addClass("hide");
+					if($("#" + handOverClientModalId + " .one-client-detail li[data-client-id='" + clientData.client_id + "']").length > 0) {
+						$("#" + handOverClientModalId + " .one-client-detail li[data-client-id='" + clientData.client_id + "']").removeClass("hide");
+					} else {
+						var clientLiDom = $("<li class='one-item'></li>");
+						clientLiDom.attr("data-client-id", clientData.client_id);
+						clientLiDom.append("<label><input type='checkbox' data-source-level='1' value='" + clientData.client_id + "'/><span class='css-overhidden' title='" + clientData.client_full_name + "'>" + clientData.client_full_name + "</span></label>")
+						clientLiDom.find("input").data("permissions", clientData.permissions);
+						$("#" + handOverClientModalId + " .one-client-detail").append(clientLiDom);
+						for(var i in clientData.departments) {
+							var depa = clientData.departments[i];
+							var depaLiDom = $("<li class='one-item'></li>");
+							depaLiDom.append("<label><input type='checkbox' data-source-level='2' value='" + depa.depa_id + "'/><span class='css-overhidden' title='" + depa.depa_name + "'>" + depa.depa_name + "</span></label>")
+							depaLiDom.find("input").data("permissions", depa.permissions);
+							$("#" + handOverClientModalId + " .one-client-detail>li>label input[value='" + clientData.client_id + "']").parent().parent().append(depaLiDom);
+							for(var n in depa.contacts) {
+								var contact = depa.contacts[n];
+								var contactLiDom = $("<li class='one-item contact-li'></li>");
+								contactLiDom.append("<label><input type='checkbox' data-source-level='3' value='" + contact.contact_id + "'/><span class='css-overhidden' title='" + contact.contact_name + "'>" + contact.contact_name + "</span></label>")
+								contactLiDom.find("input").data("permissions", contact.permissions);
+								$("#" + handOverClientModalId + " .one-client-detail li input[value='" + depa.depa_id + "']").parent().parent().append(contactLiDom);
+							}
+						}
+					}
+					$("#" + handOverClientModalId + " .one-client-detail li input").unbind("click").click(function(e) {
+						onCheckBtnClick(this);
+					});
+				});
+				$("#" + handOverClientModalId + " .content-left-companys .client-name:first-child").trigger("click");
+			}
+			//选中按钮点击事件处理函数
+			function onCheckBtnClick(obj, isCancelChild) {
+				var permissions = $(obj).data("permissions");
+				if(isCancelChild) {
+					$(obj).removeProp("checked");
+				}
+				//实现勾选逻辑
+				if(!$(obj).is(":checked")) {
+					//$(obj).removeProp("checked");
+					$(obj).parents("li").each(function() {
+						$(this).find(">label input").removeProp("checked");
+					});
+					if(isCancelChild) {
+						$(obj).parent().parent().find("input").each(function() {
+							$(this).removeProp("checked");
+						})
+					}
+				} else {
+					if(!permissions.can_transfer.result) {
+						$.showErrorGritter("当前资源处于" + permissions.can_transfer.reason + "中，不能移交！");
+						$(obj).removeProp("checked");
+						return false;
+					}
+					//$(obj).prop("checked","checked");
+					$(obj).parent().parent().find("li input").prop("checked", "checked");
+				}
+				var postData = [];
+				$("li[data-client-id='" + $("#" + handOverClientModalId + " .client-name.active").attr("data-client-id") + "'] input:checked").each(function() {
+					var transfer_data = {};
+					transfer_data.data_type = $(this).attr("data-source-level");
+					transfer_data.data_id = $(this).val();
+					if(transfer_data.data_type == 1) {
+						transfer_data.client_full_name = $(this).parent().find("span").text();
+					}
+					if(transfer_data.data_type == 2) {
+						transfer_data.client_full_name = $(this).parent().parent().parent().find(">label span").text();
+						transfer_data.depa_name = $(this).parent().find("span").text();
+					}
+					if(transfer_data.data_type == 3) {
+						transfer_data.client_full_name = $(this).parent().parent().parent().parent().find(">label span").text();
+						transfer_data.depa_name = $(this).parent().parent().parent().find(">label span").text();
+						transfer_data.contact_name = $(this).parent().find("span").text();
+					}
+					postData.push(transfer_data);
+				});
+				$("#" + handOverClientModalId + " .client-name.active").data("post-data", postData);
+				if(postData.length > 0) $("#" + handOverClientModalId + " .client-name.active").addClass("select");
+				else $("#" + handOverClientModalId + " .client-name.active").removeClass("select");
+				writeTable();
+			}
+			////整个移交客户移交内容数据
+			function getHandOverData() {
+				var tabViewAndPostData = {
+					client: [],
+					depa: [],
+					contact: []
+				};
+				$("#" + handOverClientModalId + " .client-name").each(function() {
+					var thisPostData = $(this).data("post-data");
+					if(!thisPostData) return true;
+					var thisPostDataLevel = 0;
+					for(var i in thisPostData) {
+						if(thisPostData[i].data_type == 1) {
+							//alert(1)
+							thisPostDataLevel = 1;
+							break;
+						}
+						if(thisPostData[i].data_type == 2 && thisPostDataLevel != 1) {
+							//alert(2)
+							thisPostDataLevel = 2;
+						}
+						if(thisPostData[i].data_type == 3 && thisPostDataLevel != 1 && thisPostDataLevel != 2) {
+							//alert(3)
+							thisPostDataLevel = 3;
+						}
+					}
+					if(thisPostDataLevel == 1) tabViewAndPostData.client = tabViewAndPostData.client.concat(thisPostData);
+					else if(thisPostDataLevel == 2) tabViewAndPostData.depa = tabViewAndPostData.depa.concat(thisPostData);
+					else if(thisPostDataLevel == 3) tabViewAndPostData.contact = tabViewAndPostData.contact.concat(thisPostData);
+				});
+				return tabViewAndPostData;
+			}
+
+			function writeTable() {
+				postData = [];
+				$("#" + handOverClientModalId + " #tab-hand-over-content tbody").html("");
+				////先读取数据
+				var tabViewAndPostData = getHandOverData();
+				appendHandOverDataTabHtml(tabViewAndPostData);
+				//组织好提交的数据
+				postData = postData.concat(tabViewAndPostData.client).concat(tabViewAndPostData.depa).concat(tabViewAndPostData.contact);
+				////点击右边表格删除按钮  表格   左边树状图状态改变
+				$(".del-tab-view").click(function() {
+					onHandOverClientTabDeleteBtnClick(this);
+				});
+			}
+			//获得显示到表格里面的HTML
+			function appendHandOverDataTabHtml(tabViewAndPostData) {
+				var data = $.cloneObject(tabViewAndPostData);
+				if(data.client.length > 0) {
+					var $companyDom =
+						$("<tr class='client-tr'>" +
+							"	<td>客户单位</td>" +
+							"	<td>" +
+							"		<ul></ul>" +
+							"	</td>" +
+							"</tr>");
+					for(var i in data.client) {
+						if(data.client[i].data_type != 1) continue;
+						var $AClientDom =
+							$("<li data-id='" + data.client[i].data_id + "'>" +
+								"	<div class='item at'>" +
+								"		<div class='lt'>" + data.client[i].client_full_name + "</div>" +
+								"		<div class='lt'><a class='btn-a-default' onclick='onHandOverClientTabDeleteBtnClick(this)'>删除</a></div>" +
+								"	</div>" +
+								"</li>");
+						$AClientDom.attr("data-id", data.client[i].client_id);
+						$companyDom.find("ul").append($AClientDom);
+					}
+					$("#" + handOverClientModalId + " table tbody").append($companyDom);
+				}
+				if(data.depa.length > 0) {
+					var hasAppendDepaId = {};
+					var $depaDom =
+						$("<tr class='client-tr'>" +
+							"	<td>科室/部门</td>" +
+							"	<td>" +
+							"		<ul></ul>" +
+							"	</td>" +
+							"</tr>");
+					for(var i in data.depa) {
+						if(data.depa[i].data_type == 2) {
+							var $ADepaDom =
+								$("<li data-id='" + data.depa[i].data_id + "'>" +
+									"	<div class='item at'>" +
+									"		<div class='lt'>" +
+									"			<span style='color:#999;'>" + data.depa[i].client_full_name + "-</span>" +
+									"			<span>" + data.depa[i].depa_name + "</span>" +
+									"		</div>" +
+									"		<div class='lt'><a class='btn-a-default' onclick='onHandOverClientTabDeleteBtnClick(this)'>删除</a></div>" +
+									"	</div>" +
+									"</li>");
+							$ADepaDom.attr("data-id", data.depa[i].depa_id);
+							hasAppendDepaId[data.depa[i].depa_name] = data.depa[i].depa_name;
+							$depaDom.find("ul").append($ADepaDom);
+						}
+					}
+					$("#" + handOverClientModalId + " table tbody").append($depaDom);
+					for(var i in data.depa) {
+						if(data.depa[i].data_type == 3 && !hasAppendDepaId[data.depa[i].depa_name]) {
+							data.contact.push(data.depa[i]);
+						}
+					}
+				}
+				if(data.contact.length > 0) {
+					var $contactDom =
+						$("<tr class='client-tr'>" +
+							"	<td>联系人</td>" +
+							"	<td>" +
+							"		<ul></ul>" +
+							"	</td>" +
+							"</tr>");
+					for(var i in data.contact) {
+						if(data.contact[i].data_type != 3) continue;
+						var $AContactDom =
+							$("<li data-id='" + data.contact[i].data_id + "'>" +
+								"	<div class='item at'>" +
+								"		<div class='lt'>" +
+								"			<span style='color:#999;'>" + data.contact[i].client_full_name + "></span>" +
+								"			<span style='color:#999;'>" + data.contact[i].depa_name + "></span>" +
+								"			<span>" + data.contact[i].contact_name + "</span>" +
+								"		</div>" +
+								"		<div class='lt'><a class='btn-a-default' onclick='onHandOverClientTabDeleteBtnClick(this)'>删除</a></div>" +
+								"	</div>" +
+								"</li>");
+						$AContactDom.attr("data-id", data.contact[i].contact_id);
+						$contactDom.find("ul").append($AContactDom);
+					}
+					$("#" + handOverClientModalId + " table tbody").append($contactDom);
+				}
+			}
+			////客户单位的删除按钮点击事件处理函数
+			function onHandOverClientTabDeleteBtnClick(obj) {
+				var type = $(obj).parents("tr").attr("class");
+				onCheckBtnClick($("#" + handOverClientModalId + " input[value='" + $(obj).parent().parent().parent().attr("data-id") + "']"), true);
+				$(obj).parent().parent().parent().remove();
+			}
+			////更改客户状态
+			function editClientStatus() {
+				var len = $("#grid-table-client-contact tbody input:checked").length;
+				if(len > 1) {
+					$.showErrorGritter("最多只能选择一个客户单位！");
+					return false;
+				} else if(len < 1) {
+					$.showErrorGritter("请选选择一个需要更改的客户单位！");
+					return false;
+				}
+				var rowData = getSelectedDatas(gridOfClientContact)[0];
+				if(!boolCanClickBtn([rowData], "change_status")) return false;
+				var modalId = $.modal().show("更改客户状态", ".edit-client-status", function(modal) {
+					if(statusValue == $("#" + modalId + " .form-inline input:checked").attr("value")) {
+						$.showErrorGritter("客户状态没有发生更改，请确认！");
+						return false;
+					} else {
+						if(!inputValidateForGritter("#" + modalId + " .modal-edit-client-status")) {
+							$.showErrorGritter("更改原因不能为空，请输入！");
+							return false;
+						} else {
+							var status = $("#" + modalId + " .modal-edit-client-status input:checked").val();
+							var reason = $("#" + modalId + " .modal-edit-client-status textarea").val();
+							$("#" + modalId).modal('hide');
+							////发起审批
+							$.showApprovalPostPop({
+								routine: "clientStatusChange",
+								routineName: "更改客户状态",
+								successCallback: function(apvData, apvModal) {
+									var clientID = $("#grid-table-client-contact tbody input:checked").parent().next().html();
+									apvData.client_id = clientID;
+									apvData.reason = reason;
+									apvData.status = status;
+									apvData.change_status_reason = $("#" + modalId + " .modal-edit-client-status input:checked").attr("value");
+									if(apvData.needApv) {
+										apvData.diy_step_data = apvData.steps;
+										apvData.plan_id = apvData.planId;
+									}
+									$.ajaxPut(BSAPIURL + "/crm/customer_status", apvData, function(resp) {
+										if(resp.code == 0) {
+											$.showSuccessGritter("审批已提交" + (apvData.needApv ? "，请等待审批！" : ""));
+											//$(apvModal).modal('hide');
+											loadGridOfClientContact("");
+											apvModal && apvModal.modal("hide");
+										} else {
+											$.showErrorGritter("更改客户状态失败：" + resp.msg);
+										}
+									});
+								}
+							});
+						}
+					}
+				});
+				var statusValue = rowData.client_status;
+				$("#" + modalId + " .modal-edit-client-status input:checked").removeAttr("checked");
+				$("#" + modalId + " .modal-edit-client-status input[value='" + rowData.client_status + "']").prop("checked", "checked");
+			}
+			//审批
+			function openApprovalPostPop(data) {
+				$.showApprovalPostPop({
+					routine: "deleteClient",
+					successCallback: function(apvData, apvModal) {
+						$.ajaxPost(ANNOUNCEMENTAPI.approval.replace("{id}", data[0].id), {
+								plan_id: data[0].id,
+								diy_step_data: data[0].name
+							},
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter("公告发布审批已提交，请等待审批结果。");
+									$(grid).reloadGrid();
+									apvModal && apvModal.modal("hide");
+									//apvModal.modal("hide");
+								} else {
+									$.showErrorGritter("公告发布失败：" + response.msg);
+								}
+							});
+					}
+				});
+			}
+			//选择员工公共方法
+			$.showEmployeesSelectPop = function(option) {
+				var isAppendEmployeeWrap = $(".pnl-employee-select-common").length > 0;
+				if(!isAppendEmployeeWrap) {
+					$("body").append("<div class=\"pnl-leader-info pnl-employee-select-common hide\">" +
+						"	<form class=\"form-horizontal model-leader-info model-employee-select-common\">" +
+						"		<div class=\"wrap wrap-source\">" +
+						"			<label class=\"label-sub-title input-flag\"></label>" +
+						"			<div class=\"box\">" +
+						"				<div class=\"py\">" +
+						"					<input type=\"search\" placeholder=\"可输入“ZS”或“张三”查找\" style=\"width: 100%;\" />" +
+						"					<p>" +
+						"						<a class=\"active\">A</a>" +
+						"					</p>" +
+						"				</div>" +
+						"				<ul class=\"list-emp\">" +
+						"				</ul>" +
+						"			</div>" +
+						"		</div>" +
+						"	</form>" +
+						"</div>");
+				}
+
+				option.title = option.title || "选择员工";
+				option.onlyOpenedAccount = option.onlyOpenedAccount == undefined ? true : option.onlyOpenedAccount;
+				option.onlySingle = option.onlySingle == undefined ? false : option.onlySingle;
+				//选择员工
+				var modalIdOfEmployee = $.modal().show(option.title, ".pnl-employee-select-common",
+					function(modal) {
+						var selectEmployees = [];
+						var inputChecked = $(formContainerOfEmployee + " .wrap-source .list-emp input:checked");
+						selectEmployees.push({
+							employee_id: inputChecked.val(),
+							employee_name: inputChecked.data("employee-name")
+						});
+						if(option.okCallback) {
+							option.okCallback(selectEmployees);
+						}
+						modal.modal("hide");
+					}
+				);
+				//model pop id
+				var formContainerOfEmployee = "#" + modalIdOfEmployee + " .model-employee-select-common";
+				$(formContainerOfEmployee + " .label-sub-title").text(option.subTitle);
+				//关键字搜索
+				$(formContainerOfEmployee + " .wrap-source .py input").keydown(function(event) {
+					if(event.keyCode == 13) {
+						return false;
+					}
+				});
+			};
+			//加载员工列表
+			function getEmployeeList(option) {
+				$.ajaxGet(SAASAPIS.BS.company.employees, function(response) {
+					if(response.code == 0) {
+						//success
+						var employeeList = response.data.rows;
+						var employeesGroupByPY = {};
+						var pyArr = [];
+						for(var i in employeeList) {
+							var employeeData = employeeList[i];
+							//拼音首字母
+							var firstPY = (employeeData.employee_name_first_en || "#").substring(0, 1).toUpperCase();
+							if(!employeesGroupByPY[firstPY]) {
+								employeesGroupByPY[firstPY] = [];
+							}
+							employeesGroupByPY[firstPY].push(employeeData);
+							if(pyArr.indexOf(firstPY) == -1)
+								pyArr.push(firstPY);
+						}
+						pyArr = pyArr.sort();
+						//load py
+						$(formContainerOfEmployee + " .wrap-source .py p").empty();
+						for(var p in pyArr) {
+							if(pyArr[p] == "#") {
+								continue;
+							}
+							$(formContainerOfEmployee + " .wrap-source .py p").append("<a>" + pyArr[p] + "</a>");
+						}
+						$(formContainerOfEmployee + " .wrap-source .py p").append("<a>#</a>");
+						//click event拼音点击
+						$(formContainerOfEmployee + " .wrap-source .py p a").click(function() {
+							$(formContainerOfEmployee + " .wrap-source .py p a").removeClass("active");
+							$(this).addClass("active");
+							initEmployees4SetDeptLeader(employeesGroupByPY[$(this).text()]);
+						});
+						////点击部门筛选
+						$(formContainerOfEmployee + " .wrap-source .py>a").click(function() {
+							$(formContainerOfEmployee + " .wrap-source .py>a").removeClass("sel-hand-over-emp-active");
+							$(this).addClass("sel-hand-over-emp-active");
+						});
+						//first load employee
+						initEmployees4SetDeptLeader(employeeList);
+						//已选人员
+						if(option.selectedEmployeeIds && option.selectedEmployeeIds.length > 0) {
+							for(var i in option.selectedEmployeeIds) {
+								var empId = option.selectedEmployeeIds[i];
+								for(var j in employeeList) {
+									var employeeData = employeeList[j];
+									if(employeeData.employee_id == empId) {
+										var liDom = $("<li></li>");
+										liDom.append("<label><input type=\"radio\" class='form-control-radio' name='ckEmployee4Select' data-employee-name=\"" + employeeData.employee_name + "\" value=\"" + employeeData.employee_id + "\"> <span>" +
+											employeeData.employee_name + "</span><span>" +
+											employeeData.depa_tree_code_cn + "</span><span>" + employeeData.employee_post_cn + "</span></label>");
+										$(formContainerOfEmployee + " .wrap-new .list-emp").append(liDom);
+									}
+								}
+							}
+						}
+					} else {
+						$.showErrorGritter("加载员工列表失败：" + response.msg);
+					}
+				});
+			}
+			//展示员工列表
+			var initEmployees4SetDeptLeader = function(employees) {
+				$(formContainerOfEmployee + " .wrap-source .list-emp").empty();
+				for(var i in employees) {
+					var employeeData = employees[i];
+					if(option.onlyOpenedAccount && employeeData.employee_has_account == 0) {
+						continue;
+					}
+					var liDom = $("<li></li>");
+					liDom.append("<label><input type=\"radio\" class='form-control-radio' name='ckEmployee4Select' data-employee-name=\"" + employeeData.employee_name + "\" value=\"" + employeeData.employee_id + "\"> <span>" +
+						employeeData.employee_name + "</span><span>" +
+						employeeData.depa_tree_code_cn + "</span><span>" + employeeData.employee_post_cn + "</span></label>");
+					$(formContainerOfEmployee + " .wrap-source .list-emp").append(liDom);
+				}
+				$(formContainerOfEmployee + " .list-emp li:first-child input").attr("checked", "checked");
+				if(option.onlySingle) {
+					$(formContainerOfEmployee + " .wrap-source .list-emp input[type='checkbox']").attr("type", "radio");
+				}
+			};
+			////新增或者修改客户客户单位是单位名称查重
+			function clientNameCheckRepeat(clientName, except_client_id, callback) {
+				var hasRepeat;
+				$.ajaxGet(BSAPIURL + "/crm/customers/name_exist?client_full_name=" + encodeURIComponent(clientName) + "&except_client_id=" + except_client_id, function(resp) {
+					callback(resp);
+				});
+			}
+			//更改拜访指标
+			function changeVisitIndicators(id) {
+				if(!$(gridOfClientContact).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要更改拜访指标的单位 。");
+					return false;
+				}
+				var selectedRowDatas = getSelectedDatas(gridOfClientContact);
+				if(selectedRowDatas.length < 1) {
+					$.showErrorGritter("请先选择客户单位！");
+					return false;
+				}
+				if(!boolCanClickBtn(selectedRowDatas, "change_visit")) return false;
+				var data = {};
+				var modalId = $.modal().show("更改拜访指标", '.change-visit-indicators', function() {
+					var indicatorsText = $("#" + modalId + " .indicators-text").val();
+					var indicatorsReason = $("#" + modalId + " .indicators-reason").val();
+					var place = "#" + modalId + " .modal-body";
+					if(!inputValidateForGritter(place)) {
+						return false;
+					}
+					data.change_reason = indicatorsReason;
+					data.visit_quota_new_value = indicatorsText;
+					data.change_object_data = [];
+					for(var i in selectedRowDatas) {
+						data.change_object_data.push({
+							"change_object_id": selectedRowDatas[i].client_id,
+							"change_object_type": 1
+						});
+					}
+					$.ajaxPost(changeVisitIndicatorsUrl, data, function(response) {
+						if(response.code == 0) {
+							//success
+							$.showSuccessGritter("您已成功提交拜访指标更改申请，请耐心等待审核!");
+							loadGridOfClientContact("", clientType)
+							$("#" + modalId).modal("hide");
+						} else {
+							$.showErrorGritter("提交失败：" + response.msg);
+						}
+					});
+				});
+				$("#" + modalId + " .applyfor-menu>span").html(selectedRowDatas.length);
+
+			}
+			//取消拜访特批
+			function cancelVisit() {
+				var selectedRowDatas = getSelectedDatas(gridOfClientContact);
+				if(selectedRowDatas.length < 1) {
+					$.showErrorGritter("请先选择要取消拜访特批的单位！");
+					return false;
+				}
+				if(!boolCanClickBtn(selectedRowDatas, "change_visit")) return false;
+				var selRowsIndex = $(gridOfClientContact).getSelectRowIdsForjqGrid("id");
+				var modalId = $.modal().confirm("已选中" + selRowsIndex.length + "个对象，确认取消特批？", function() {
+					var data = {};
+					data.change_object_data = [];
+					for(var i in selRowsIndex) {
+						data.change_object_data.push({
+							"change_object_id": selRowsIndex[i],
+							"change_object_type": 1
+						});
+					}
+					$.ajaxPut(cancelVisitIndicatorsSpecialapprovalUrl, data, function(response) {
+						if(response.code == 0) {
+							//success
+							$.showSuccessGritter("取消拜访特批成功!");
+							loadGridOfClientContact();
+							$("#" + modalId).modal("hide");
+						} else {
+							$.showErrorGritter("取消拜访特批失败：" + response.msg);
+						}
+					});
+
+				});
+
+			}
+			//判断点击的操作按钮是否有点击限制
+			function boolCanClickBtn(data, type) {
+				if(type == "update") type = "modify";
+				for(var i = 0; i < data.length; i++) {
+					if((type == "share" || type == "transfer")) {
+						if(!data[i].client_permissions["can_" + type].result) {
+							if(!data[i].is_sub_resource_responsible_person && !data[i].is_responsible_person && !data[i].is_sub_employee_sub_resource_responsible_person && type != "transfer") {
+								$.showErrorGritter( data[i].client_permissions["can_" + type].reason + "，且非子资源负责人，不能进行此操作！");
+								return false;
+							} else if((data[i].is_sub_resource_responsible_person || data[i].is_sub_employee_sub_resource_responsible_person) && type == "transfer") {
+								return true;
+							} else if((data[i].is_sub_resource_responsible_person ) && type == "share") {
+								return true;
+							} else {
+								$.showErrorGritter(data[i].client_permissions["can_" + type].reason + "，不能进行此操作！");
+								return false;
+							}
+
+						}
+						return true;
+					}
+					if(!data[i].client_permissions["can_" + type].result) {
+						$.showErrorGritter(data[i].client_permissions["can_" + type].reason + "，不能进行此操作！");
+						return false;
+					}
+				}
+				return true;
+			}
+		</script>
+	</body>
+
+</html>

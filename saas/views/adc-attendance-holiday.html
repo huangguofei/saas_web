@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>放假管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.model-holiday-info p.note {
+				padding-top: 10px;
+				padding-left: 115px;
+				color: #CA192B;
+				font-size: 12px;
+			}
+			
+			.modal-body input[type="text"],
+			select {
+				height: 32px;
+				border-radius: 0!important;
+				-webkit-border-radius: 0!important;
+				-moz-border-radius: 0!important;
+				border-color: #e3e3e3!important;
+			}
+			
+			.table-fill {
+				width: 100%;
+			}
+			
+			.fill-tr td {
+				width: 100%;
+				padding: 8px 8px 8px 0;
+				/*border-bottom: 1px solid #ccc;*/
+			}
+			
+			.fill-tr td .close-icon {
+				top: 19px;
+			}
+			
+			.fill-tr td i {
+				vertical-align: bottom;
+			}
+			
+			.fill-tr td select {
+				/*min-width: 150px;*/
+			}
+			
+			.fill-tr td input {
+				/*border: none;*/
+				min-width: 150px;
+			}
+			
+			.fa-times {
+				line-height: 30px;
+				cursor: pointer;
+				margin-left: 100px;
+			}
+			
+			.search label {
+				color: #666;
+				display: inline-block;
+				margin-left: 40px;
+			}
+			
+			.search span {
+				color: #CA192B;
+				display: inline-block;
+				font-size: 16px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container page-holiday">
+			<div class="content">
+				<div class="search">
+					年份：
+					<select class="form-control-year" style="width: 200px;"></select>
+					<!--<span class="label-holiday-year">0</span>-->
+					<label>总放假次数：</label>
+					<span class="label-holiday-count">0</span>
+					<label>总放假天数：</label>
+					<span class="label-holiday-days">0</span>
+				</div>
+				<!--<div class="total-holiday">
+					<table class="table table-bordered">
+						<tr>
+							<th>年份</th>
+							<th>总放假次数</th>
+							<th>总放假天数</th>
+						</tr>
+						<tr>
+							<td><span class="label-holiday-year">0</span></td>
+							<td><span class="label-holiday-count">0</span></td>
+							<td><span class="label-holiday-days">0</span></td>
+						</tr>
+					</table>
+				</div>-->
+				<div>
+					<table id="grid-table-holiday" class="grid-module">
+					</table>
+					<div id="grid-pager-holiday">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pnl-holiday-info hide">
+			<form class="form-horizontal form-horizontal-label-right model-holiday-info">
+				<div class="form-group form-inline">
+					<label class="input-flag">放假主题：</label>
+					<input type="text" class="form-control" maxlength="50" placeholder="请输入放假主题" bind="holiday_rule_title" nulltip="放假主题">
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">放假事由：</label>
+					<textarea type="text" class="form-control" maxlength="500" placeholder="请输入放假事由" bind="holiday_rule_desc" nulltip="放假事由"></textarea>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">适用部门：</label>
+					<div class="form-control form-control-noborder" style="height: auto; margin-left: 0; padding: 0;">
+						<div class="form-group form-inline">
+							<span class="form-control form-control-dept-select form-control-height-auto" style="width: 310px;"></span>
+							<a href="javascript:;" class="btn-employee-select btn-dept-select">　选择部门 </a>
+						</div>
+					</div>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">选择性别：</label>
+					<span class="form-control form-control-noborder form-control-height-auto" style="padding-left: 0;">
+						<label><input type="radio" value="1" class="form-control-radio" name="rdSex" checked="checked" bind="holiday_rule_sex" /> 不限 </label>
+						<label><input type="radio" value="3" class="form-control-radio" name="rdSex" bind="holiday_rule_sex"/> 女性 </label>
+						<label><input type="radio" value="2" class="form-control-radio" name="rdSex" bind="holiday_rule_sex"/> 男性 </label>
+					</span>
+				</div>
+				<div class="form-group form-inline">
+					<label class="input-flag">放假时间：</label>
+					<input type="text" class="form-control form-control-height-30 date-picker" placeholder="放假时间" bind="holiday_rule_begin_date" nulltip="放假时间" style="width: 160px;">
+					<select class="form-control form-control-height-30" style="width: 75px;margin: 0 8px 0 0px;" bind="holiday_rule_begin_type">
+						<option value="1">上午</option>
+						<option value="2">下午</option>
+					</select>
+					<span>至</span><br>
+					<input type="text" class="form-control form-control-height-30 date-picker" placeholder="放假时间" bind="holiday_rule_end_date" style="width: 160px; margin: 10px 0 0 115px;">
+					<select class="form-control form-control-height-30" style="width: 75px;margin: 10px 8px 0 0px;" bind="holiday_rule_end_type">
+						<option value="1">上午</option>
+						<option value="2">下午</option>
+					</select>
+					<p class="note">
+						例如：2月1日放假一天，则选择02-01上午至02-01下午
+					</p>
+				</div>
+				<div class="form-group form-inline">
+					<label style="vertical-align: top;">补班时间：</label>
+					<a class="btn-a-default btn-employee-select btn-add">添加时间</a>
+					<div class="form-control form-control-noborder form-control-height-auto" style="padding-left: 0;margin-left: 113px;">
+						<table class="table-fill">
+							<!--<tr>
+								<td>
+									<input type="text" class="form-control date-picker form-control-date form-control-height-30" style="width: 120px;" placeholder="选择日期" />
+								</td>
+								<td>
+									<select class="form-control form-control-type form-control-height-30" style="width: 65px;">
+										<option value="1">上午</option>
+										<option value="2">下午</option>
+									</select>
+								</td>
+								<td></td>
+							</tr>-->
+						</table>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="pnl-leader-info pnl-dept-select-share hide">
+			<form class="form-horizontal model-leader-info model-dept-select-share">
+				<div class="wrap wrap-source">
+					<label>请以部门为单位选择统计范围：</label>
+					<div class="box">
+						<ul class="list-emp tree tree-dept">
+
+						</ul>
+					</div>
+				</div>
+				<div class="wrap seg">
+					<div class="box">
+						<p>
+							<a href="javascript:;" class="btn-add"><i class="fa fa-arrow-right"></i></a>
+						</p>
+						<br>
+						<p>
+							<a href="javascript:;" class="btn-remove"><i class="fa fa-arrow-left"></i></a>
+						</p>
+					</div>
+				</div>
+				<div class="wrap wrap-new">
+					<label>已选择的范围：</label>
+					<div class="box">
+						<ul class="list-emp list-dept-select-temp">
+
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div id="grid-footer-container" class="hide">
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openStatutoryHolidayImportPop();" show-on1="singleselect" role-auth1="saas/companies/accounts/0/roles|post">导入法定节假日</a>
+			<a class="btn btn-sm btn-info def-btn-info" onclick="openHolidayInfoPop('add');" show-on1="singleselect" role-auth1="saas/companies/accounts/0/roles|post"><i class="fa fa-plus"></i> 添加其他放假</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" onclick="openHolidayInfoPop('update');" show-on1="singleselect" role-auth1="saas/companies/accounts/0/roles|post" enable-on="singleselect" enable-tip="多选时不能进行编辑操作。"><i class="fa fa-edit"></i> 编辑</a>
+			<a class="btn btn-sm btn-danger def-btn-danger" onclick="openHolidayDeletePop();" show-on1="singleselect" role-auth1="saas/companies/accounts/0/roles|post"><i class="fa fa-trash"></i> 删除</a>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript" src="../resources/js/customize/hxj.js"></script>
+		<script type="text/javascript">
+			//APIS
+			var ATTENDANCEAPIS = {
+				//放假列表
+				holidays: BSAPIURL + "/holidays",
+				//导入
+				holidaysImport: BSAPIURL + "/holiday_gov",
+				//放假天数
+				holidayDays: BSAPIURL + "/holidays/statics"
+			};
+			var selectDepts;
+			//考勤规则
+			var gridSelectorOfHoliday = "#grid-table-holiday";
+			var pagerSelectorOfHoliday = "#grid-pager-holiday";
+			var gridOfHoliday;
+			var dayTypes = {
+				1: "上午",
+				2: "下午"
+			};
+			var sexTypes = {
+				1: "不限",
+				2: "男性",
+				3: "女性"
+			};
+
+			$(document).ready(function() {
+				//token
+				$.token();
+				//初始年份
+				var now = $.timeNow();
+				$(".form-control-year").append("<option value=\"" + (now.getFullYear() + 1) + "\">" + (now.getFullYear() + 1) + "</option>");
+				for(var i = 0; i < 5; i++) {
+					if(i > 0) {
+						now.addMonth(-12);
+					}
+					$(".form-control-year").append("<option " + (i == 0 ? "selected='selected'" : "") + " value=\"" + now.getFullYear() + "\">" + now.getFullYear() + "</option>");
+				}
+				//切换年份
+				$(".form-control-year").change(function() {
+					reloadHolidayGrid();
+				});
+				//初始放假
+				initHolidayData();
+			});
+			//初始放假
+			function initHolidayData() {
+				//年假天数
+				loadHolidayDays();
+				//grid
+				//122 = pager height 55 + table header 37 + body padding 10 + content margin-top 10;
+				var gridHeight = $(window).height() - $(".search").outerHeight(true) - $(".total-holiday .table").outerHeight(true) - 140;
+				//alert($(".remark").height());
+				var colNames = ['', '', '放假主题', '放假事由', '适用范围', '放假时间', '补班时间', '更新时间'];
+				var colModel = [{
+					name: 'id',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return rowObject.holiday_rule_id;
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: '__data',
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return JSON.stringify(rowObject);
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: '__holiday_rule_title',
+					width: 180,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							return "<a href='javascript:;' onclick=\"openHolidayInfoPop('update','" + rowObject.holiday_rule_id + "');\" role-auth=\"saas/holidays/0|put\" role-auth-tip=\"你无权限修改放假数据。\">" + rowObject.holiday_rule_title + "</a>";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'holiday_rule_desc'
+				}, {
+					name: '__depts',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var deptNames = [],otherSex=["","","限男性","限女性"],otherDepar="";
+							for(var i in rowObject.holiday_rule_departments) {
+								deptNames.push(rowObject.holiday_rule_departments[i].depa_name);
+							}
+							
+							return deptNames.join(",")+"（"+rowObject.holiday_rule_department_apply_type_cn+(otherSex[rowObject.holiday_rule_sex]?"、"+otherSex[rowObject.holiday_rule_sex]:"")+"）";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: '__time',
+					width: 310,
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var dayCount = $.getDaysOfTimeDifference(rowObject.holiday_rule_end_date, rowObject.holiday_rule_begin_date, true);
+							if(dayCount == 0) {
+								if(rowObject.holiday_rule_end_type == rowObject.holiday_rule_begin_type) {
+									dayCount = 0.5;
+								} else {
+									dayCount = 1;
+								}
+							} else {
+								if(rowObject.holiday_rule_end_type == rowObject.holiday_rule_begin_type) {
+									dayCount += 0.5;
+								} else if(rowObject.holiday_rule_end_type == "2" && rowObject.holiday_rule_begin_type == "1") {
+									dayCount += 1;
+								} else {
+									//dayCount +=1;
+								}
+							}
+							return rowObject.holiday_rule_begin_date + "(" + dayTypes[rowObject.holiday_rule_begin_type] + ")" + " 至 " +
+								rowObject.holiday_rule_end_date + "(" + dayTypes[rowObject.holiday_rule_end_type] + ")，共" +
+								dayCount + "天";
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: '__file',
+					formatter: function(cellvalue, options, rowObject) {
+						try {
+							var fileTimes = [];
+							for(var i in rowObject.holiday_rule_fill) {
+								fileTimes.push(rowObject.holiday_rule_fill[i].date + "(" + dayTypes[rowObject.holiday_rule_fill[i].type] + ")");
+							}
+							return fileTimes.join(",");
+						} catch(e) {
+							return '';
+						}
+					}
+				}, {
+					name: 'update_time'
+				}];
+				gridOfHoliday = $(gridSelectorOfHoliday).initJqGrid({
+					showPager: false,
+					pager: pagerSelectorOfHoliday,
+					url: ATTENDANCEAPIS.holidays + "?year=" + $(".form-control-year").val(),
+					colNames: colNames,
+					colModel: colModel,
+					height: gridHeight,
+					afterLoadComplete: function(response) {
+
+					}
+				});
+			}
+			//重新加载
+			function reloadHolidayGrid() {
+				var year = $(".form-control-year").val();
+				//年假天数
+				loadHolidayDays();
+				//表格数据
+				$(gridOfHoliday).jqGrid('setGridParam', {
+					page: 1,
+					url: ATTENDANCEAPIS.holidays + "?year=" + year
+				}).trigger("reloadGrid", {});
+			}
+			//加载放假天数
+			function loadHolidayDays() {
+				var year = $(".form-control-year").val();
+				//年假天数
+				$.ajaxGet(ATTENDANCEAPIS.holidayDays + "/" + year, function(response) {
+					if(response.code != 0) {
+						$.showErrorGritter("加载放假信息失败：" + response.msg)
+						return false;
+					}
+					var holidayData = response.data;
+					$(".label-holiday-year").text(holidayData.year);
+					$(".label-holiday-count").text(holidayData.num);
+					$(".label-holiday-days").text(holidayData.day);
+				});
+			}
+			//导入法定节假日
+			function openStatutoryHolidayImportPop() {
+				$.modal().confirm("你将导入法定节假日，确定导入吗？", function() {
+					$.showLoadingPop("正在导入，请稍候...");
+					$.ajaxPost(ATTENDANCEAPIS.holidaysImport + "?year=" + $(".form-control-year option:selected").val(), {}, function(response) {
+						if(response.code != 0) {
+							$.showErrorGritter("导入法定节假日失败：" + response.msg);
+							reloadHolidayGrid();
+						} else {
+							$.showSuccessGritter("导入法定节假日完成。");
+							reloadHolidayGrid();
+						}
+						$.hideLoadingPop();
+					});
+				});
+			}
+			//设置假期
+			function openHolidayInfoPop(action, id) {
+				var actionText = (action == "add" ? "添加" : "编辑");
+				if(action == "update" && (!$(gridOfHoliday).isSelectedRowForjqGrid() && !id)) {
+					$.showErrorGritter("请先选择要编辑的角色。");
+					return false;
+				}
+				var defaultCheckedIds = [];
+				var defaultCheckedArea = "";
+				var rule_department_apply_type = "";
+				var modalId = $.modal({
+					okButtonText: "保存"
+				}).show(actionText + "放假", ".pnl-holiday-info",
+					function(modal) {
+						if(!inputValidateForGritter(formContainer)) {
+							return false;
+						}
+						var formData = holidayController.getJSON();
+						var selectDeptIds = [];
+						$(formContainer + " .form-control-dept-select span[data-dept-id]").each(function() {
+							selectDeptIds.push($(this).data("dept-id"));
+						});
+						if(selectDeptIds.length == 0) {
+							$.showErrorGritter("请先选择放假适用的部门。");
+							return false;
+						}
+						formData.holiday_rule_departments = selectDeptIds;
+						var fillDates = [];
+						$(formContainer + " .table-fill tr[fill]").each(function() {
+							fillDates.push({
+								date: $(this).find("td>input").val(),
+								type: $(this).find("td>select option:selected").val()
+							});
+						});
+						if(boolFilledRuleHasRepeat(fillDates)) {
+							$.showErrorGritter("您添加的补假规则有重复，请检查！");
+							return false;
+						};
+						formData.holiday_rule_fill = fillDates;
+						formData.holiday_rule_sex = $(formContainer + " input[name=rdSex]:checked").val();
+						formData.holiday_rule_department_apply_type = rule_department_apply_type;
+						var tmpUrl = ATTENDANCEAPIS.holidays;
+						if(action == "update") {
+							tmpUrl += "/" + id;
+						}
+						$.ajaxByAction(action, tmpUrl, formData,
+							function(response) {
+								if(response.code == 0) {
+									//success
+									$.showSuccessGritter(actionText + "放假成功。");
+									modal.modal('hide');
+									$(gridOfHoliday).reloadGrid();
+									//刷新顶部表格
+									loadHolidayDays();
+								} else {
+									$.showErrorGritter("保存失败：" + response.msg);
+								}
+							});
+
+					}
+				);
+				$("#" + modalId + " .modal-body").css("max-height", 500)
+				//model pop id
+				var formContainer = "#" + modalId + " .model-holiday-info";
+				//common dom
+				var tempHtml = "<span class=\"item close-icon-container\" data-dept-id=\"{0}\">{1} <img class='close-icon-container' src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().remove();\"/></span> ";
+				var selectDeptDom = $(formContainer + " .form-control-dept-select");
+				var holidayController = new Controller(formContainer);
+				//部门选择
+				$(formContainer + " .btn-dept-select").click(function() {
+					/*initDeptTree()
+					$.showDeptSelectPop({
+						subTitle: "选择适用部门：",
+						selectedDeptIds: [],
+						multiple: true,
+						okCallback: function(selectDepts) {
+							for(var i in selectDepts) {
+								var deptData = selectDepts[i];
+								if(selectDeptDom.find("span[data-dept-id='" + deptData.dept_id + "']").length > 0) {
+									continue;
+								}
+								selectDeptDom.append($.format(tempHtml, deptData.dept_id, deptData.dept_name));
+							}
+						}
+					});*/
+					defaultCheckedIds = [];
+					$(formContainer + " .form-control-dept-select>span").each(function() {
+						defaultCheckedIds.push($(this).data("dept-id"));
+					});
+					var options = {
+						url: SAASAPIS.BS.company.departments.replace("{id}", $.uuid()),
+						leftTitle: "请以部门为单位选择适用范围：",
+						rightTitle: "已选择的范围：",
+						//isNeedRightPanel: true, //是否需要右边的模块
+						defaultCheckedIds: defaultCheckedIds,
+						defaultCheckedArea: defaultCheckedArea,
+						areaItems: [{
+							name: "rule_department_apply_type",
+							value: 0,
+							text: "仅所选部门"
+						}, {
+							name: "rule_department_apply_type",
+							value: 1,
+							text: "所选部门及所有下属部门",
+							notAllowedRepeat: true
+						}],
+						linkageType: 0, //联动类型   0统计(不联动)   1（下联动） 2 （双联动）
+						//modalId: modalIdOfDeptId, //打开的modal的id
+						clickCallback: function(data) { //为关闭modal时需要的数据赋值
+							selectDepts = data.selectDepts;
+							defaultCheckedIds = [];
+							defaultCheckedArea = data.area_value;
+							rule_department_apply_type = data.area_value;
+							selectDeptDom.empty();
+							selectDeptDom.append("<p style='color: #999;'>生效范围：" + data.area_text + "</p>")
+							for(var i in selectDepts) {
+								var deptData = selectDepts[i];
+								defaultCheckedIds.push(deptData.dept_id);
+								if(selectDeptDom.find("span[data-dept-id='" + deptData.dept_id + "']").length > 0) {
+									continue;
+								}
+								selectDeptDom.append($.format(tempHtml, deptData.dept_id, deptData.dept_name));
+							}
+							selectDeptDom.find(".item").unbind("mouseover").mouseover(function() {
+								transImgSrc($(this).find("img"));
+							}).unbind("mouseout").mouseout(function() {
+								transImgSrc($(this).find("img"));
+							});
+						}
+					}
+					initDeptTreeOfTwoStep(options);
+				});
+				//日期选择
+				$(formContainer + " .date-picker").datepicker({
+					autoclose: true,
+					format: "yyyy-mm-dd"
+				});
+				var setDatepickerLocation = function() {
+					var left = $(formContainer + " .table-fill .date-picker").offset().left - 130;
+					var top = $(formContainer + " .table-fill .date-picker").offset().top - 260;
+					console.log("left:" + left + "top:" + top);
+					$(".datepicker-dropdown").css({
+						"top": top
+					}, {
+						"left": left
+					});
+				}
+				//添加补休
+				$(formContainer + " .btn-add").click(function() {
+					var trDom = "<tr fill class='fill-tr'>" +
+						"<td class='close-icon-container'>" +
+						"<input type=\"text\" class=\"form-control date-picker form-control-date form-control-height-30\" style=\"width: 120px;\" placeholder=\"选择日期\" />" +
+						"<select class=\"form-control form-control-type form-control-height-30\" style=\"width: 65px;margin:0 10px;\">" +
+						"<option value=\"1\">上午</option>" +
+						"<option value=\"2\">下午</option>" +
+						"</select>" +
+						"<img class='close-icon' src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().parent().remove();\"/>" +
+						"</td>" +
+						"</tr>";
+					$(formContainer + " .table-fill").append(trDom);
+					//日期选择
+					$(formContainer + " .table-fill .date-picker").datepicker({
+						autoclose: true,
+						format: "yyyy-mm-dd"
+					});
+					$(formContainer + " .table-fill input").change(function() {
+						var dateVal = $(this).val();
+						var typeVal = $(this).parent().next().find("option:selected").val();
+						$(this).parent().parent().data("rule", {
+							date: dateVal,
+							type: typeVal
+						});
+					});
+				});
+				//判断补假规则是否有重复
+				var boolFilledRuleHasRepeat = function(data) {
+					var thisItemHasFilled = false;
+					for(var i in data) {
+						var ruleFill = data[i].date,
+							fillType = data[i].type;
+						for(var n in data) {
+							if(i == n) continue;
+							if(data[n].date == ruleFill && data[n].type == fillType) {
+								return true;
+							}
+						}
+					}
+					return thisItemHasFilled;
+				};
+				if(action == "update") {
+					var rowIndex = $(gridOfHoliday).getJqGridRowIndexByField("id", id) || $(gridOfHoliday).jqGrid('getGridParam', 'selrow');
+					if(!rowIndex) {
+						return false;
+					}
+					var rowData = JSON.parse(unescape($(gridOfHoliday).jqGrid('getRowData', rowIndex).__data));
+					defaultCheckedArea = rowData.holiday_rule_department_apply_type;
+					rule_department_apply_type = rowData.holiday_rule_department_apply_type;
+					for(var i in rowData.holiday_rule_departments) {
+						defaultCheckedIds.push(rowData.holiday_rule_departments[i].depa_id);
+					}
+					id = rowData.holiday_rule_id;
+					var areaText = rowData.holiday_rule_department_apply_type == 0 ? "所选部门" : "所选部门及其所有子部门";
+					$(formContainer + " .form-control-dept-select").append("<p style=\"color: #999;\">生效范围：" + areaText + "</p>")
+					holidayController.set(rowData);
+					//适用部门
+					for(var i in rowData.holiday_rule_departments) {
+						var deptData = rowData.holiday_rule_departments[i];
+						selectDeptDom.append($.format(tempHtml, deptData.depa_id, deptData.depa_name));
+					}
+					selectDeptDom.find(".item").unbind("mouseover").mouseover(function() {
+						transImgSrc($(this).find("img"));
+					}).unbind("mouseout").mouseout(function() {
+						transImgSrc($(this).find("img"));
+					});
+					//补假
+					for(var i in rowData.holiday_rule_fill) {
+						var trDom = $("<tr fill class='fill-tr'>" +
+							"<td class='close-icon-container'>" +
+							"<input type=\"text\" class=\"form-control date-picker form-control-date form-control-height-30\" value='" + rowData.holiday_rule_fill[i].date + "' style=\"width: 120px;\" placeholder=\"选择日期\" />" +
+							"<select class=\"form-control form-control-type form-control-height-30\" style=\"width: 65px;margin:0 10px;\">" +
+							"<option " + (rowData.holiday_rule_fill[i].type == 1 ? "selected=selected" : "") + " value=\"1\">上午</option>" +
+							"<option " + (rowData.holiday_rule_fill[i].type == 2 ? "selected=selected" : "") + " value=\"2\">下午</option>" +
+							"</select>" +
+							"<img class='close-icon' src='../resources/images/item-close-black-icon.png' data-trans-src='../resources/images/item-close-red-icon.png' onclick=\"$(this).parent().parent().remove();\"/>" +
+							"</td>" +
+							"</tr>");
+						trDom.data("rule", {
+							date: rowData.holiday_rule_fill[i].date,
+							type: rowData.holiday_rule_fill[i].type,
+						})
+						$(formContainer + " .table-fill").append(trDom);
+					}
+				}
+			}
+			//删除放假
+			function openHolidayDeletePop() {
+				if(!$(gridOfHoliday).isSelectedRowForjqGrid()) {
+					$.showErrorGritter("请先选择要删除的放假。");
+					return false;
+				}
+				$.modal().confirm("你将删除选择的放假，删除后不能恢复，确认删除吗？", function() {
+					var selRowsIndex = $(gridOfHoliday).jqGrid('getGridParam', 'selarrrow');
+					if(selRowsIndex.length > 0) {
+						var selectRowIds = $(gridOfHoliday).getSelectRowIdsForjqGrid("id");
+						$.ajaxDelete(ATTENDANCEAPIS.holidays, {
+								holiday_rule_ids: selectRowIds
+							},
+							function(response) {
+								if(response.code == 0) {
+									//刷新顶部表格
+									loadHolidayDays();
+									//success
+									$.showSuccessGritter("删除放假成功。");
+									//refresh data
+									var len = selRowsIndex.length;
+									for(var i = 0; i < len; i++) {
+										$(gridOfHoliday).jqGrid("delRowData", $(gridOfHoliday).jqGrid('getGridParam', 'selrow'));
+									}
+								} else {
+									$.showErrorGritter("删除放假失败：" + response.msg);
+								}
+							});
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

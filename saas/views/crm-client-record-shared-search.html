@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>客户共享记录查询</title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="../resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="../resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../resources/css/datepicker.css" />
+		<link rel="stylesheet" href="../resources/css/main-page.css" />
+		<style>
+			.share-tree div {
+				line-height: 30px;
+				cursor: pointer;
+			}
+			
+			.share-tree div:hover {
+				background: #EFF3F8;
+			}
+			
+			.share-tree div:hover div,
+			.share-tree div:hover p {
+				background: #EFF3F8;
+			}
+			
+			.share-tree li div>i {
+				margin-right: 5px;
+				cursor: pointer;
+			}
+			
+			.share-tree li .tree-info-share-power {
+				width: 170px;
+				text-align: left;
+			}
+			
+			.share-tree li .tree-info-share-power .share-power {
+				display: inline-block;
+				margin-right: 5px;
+			}
+			
+			.share-tree li li div {
+				padding-left: 20px;
+			}
+			
+			.tree-info img {
+				vertical-align: baseline;
+				margin-right: 5px;
+			}
+			
+			.share-tree li li li div {
+				padding-left: 40px;
+			}
+			
+			.view-share-note {
+				margin-top: 30px;
+				color: #AB5315;
+			}
+			
+			.view-share-note i {
+				color: red;
+			}
+			
+			.view-share-note label {
+				margin-left: 10px;
+			}
+			
+			.change-history-tab {
+				width: 100%;
+				line-height: 30px;
+				text-align: center;
+				border-collapse: collapse;
+			}
+			
+			.change-history-tab tr th {
+				background: #F2F2F2;
+			}
+			
+			.change-history-tab tr th,
+			.change-history-tab tr td {
+				text-align: center;
+				border: 1px solid #F9F9F9;
+			}
+			
+			.change-history-tab tr td:nth-child(3),
+			.change-history-tab tr td:nth-child(4),
+			.change-history-tab tr td:nth-child(5) {
+				padding-left: 0!important;
+				padding-right: 0!important;
+			}
+			
+			.change-common-ul li {
+				border-bottom: 1px solid #fff;
+			}
+			
+			.dashed-line-container {
+				position: relative;
+				height: 30px;
+			}
+			
+			.dashed-line-container>div,
+			.dashed-line-container>p {
+				position: absolute;
+				top: 0;
+				z-index: 2;
+				background-color: #fff;
+			}
+			
+			.dashed-line-container>div {
+				left: 0;
+				padding-right: 10px;
+			}
+			
+			.dashed-line-container>p {
+				right: 0;
+			}
+			
+			.dashed-line {
+				position: absolute;
+				border-bottom: 1px dashed #eee;
+				left: 0;
+				right: 180px;
+				top: 15px;
+				z-index: 1;
+			}
+			
+			.share-tree {
+				border: 1px solid #e3e3e3;
+				padding: 14px;
+				overflow-y: auto;
+			}
+			
+			.summery-view li,
+			.detail-view li {
+				border-bottom: 1px solid #eee;
+				padding: 10px 5px;
+			}
+			
+			.summery-view li:last-child,
+			.detail-view li:last-child {
+				border: 0;
+			}
+			
+			.ui-jqgrid tr.ui-row-ltr td:nth-child(5),
+			.ui-jqgrid tr.ui-row-rtl td:nth-child(5),
+			.ui-jqgrid tr.ui-row-ltr td:nth-child(6),
+			.ui-jqgrid tr.ui-row-rtl td:nth-child(6) {
+				padding-left: 0;
+				padding-right: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="page-container crm-client-record-shared-search">
+			<div class="remark">
+				<img src="../resources/images/share-icon.png" alt="" /><span>*客户共享记录查询及管理</span>
+			</div>
+			<div class="content">
+				<!--客户共享记录查询及管理-->
+				<div class="search">
+
+				</div>
+				<table id="grid-table-record-shared"></table>
+				<div id="grid-pager-record-shared"></div>
+			</div>
+		</div>
+		<div class="cancel-share hide">
+			<label class="input-flag">取消共享原因：</label>
+			<textarea cols="70" rows="4" class="cancel-share-reason" placeholder="" nulltip="取消共享原因"></textarea>
+		</div>
+		<!--共享权限详情弹窗-->
+		<div class="view-share-page hide">
+			<div class="share-tree">
+				<ul class="">
+					
+				</ul>
+			</div>
+			<!--<p class="view-share-note">
+				<label><i class='fa fa-eye-slash' aria-hidden='true'></i>：查看权限</label>
+				<label><i class='fa fa-pencil-square-o' aria-hidden='true'></i>：修改权限</label>
+				<label><i class='fa fa-plus-circle' aria-hidden='true'></i>：添加权限</label>
+			</p>-->
+		</div>
+		<!--更改历史弹窗-->
+		<div class="change-history-page hide">
+			<table class="change-history-tab table table-hover">
+				<tr>
+					<th>操作人</th>
+					<th>操作时间</th>
+					<th>共享内容</th>
+					<th>修改前权限</th>
+					<th>修改后权限</th>
+					<th>修改前共享对象</th>
+					<th>修改后共享对象</th>
+				</tr>
+			</table>
+		</div>
+		<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="../resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="../resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="../resources/js/sortable.js"></script>
+		<script type="text/javascript" src="../resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="../resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			var gridSelectorOfRecordShared = "#grid-table-record-shared";
+			var pagerSelectOfRecordShared = "#grid-pager-record-shared",gridOfRecordShared;
+			var isFirstloadGridOfRecordShared = false;
+			var infoListData = [];
+			var crm={
+            	data_type: {//移交类型
+            		COMPANY:　1,//单位
+            		DEPA: 2,//部门
+            		CONTACT: 3//联系人
+            	},
+				share_permissons:{//共享权限
+					VIEW: "1",//查看
+					UPDATE: "2",//修改
+					ADD: "4"//新增
+				}
+            }	
+			////共享记录
+			function loadGridOfRecordShared() {
+				if(isFirstloadGridOfRecordShared) {
+					$(gridOfRecordShared).jqGrid('setGridParam', {
+						page: 1,
+						url: BSAPIURL + "/crm/records/share?data_type="+crm.data_type.COMPANY+","+crm.data_type.CONTACT+","+crm.data_type.DEPA,
+					}).trigger("reloadGrid", {});
+					return true;
+				}
+				////共享记录  search
+				$.initSearchControls4TagMode({
+					auto: true,
+					url: BSAPIURL + "/crm/records/share",
+					grid: gridSelectorOfRecordShared,
+					container: ".search",
+					key_name: "key",
+					key_placeholder: "请输入客户单位名称、共享人进行查询",
+					onChange: function(selectTags) {},
+					groups: [{
+						type: "date",
+						text: "共享日期",
+						items: [{
+							name: "date_begin",
+							placeholder: "年/月/日",
+							type: "date"
+						}, {
+							type: "text",
+							value: "至"
+						}, {
+							name: "date_end",
+							placeholder: "年/月/日",
+							type: "date"
+						}]
+					}, {
+						name: "data_type",
+						text: "共享内容",
+						items: [{
+							key: "客户单位",
+							value: crm.data_type.COMPANY
+						}, {
+							key: "科室/部门",
+							value: crm.data_type.DEPA
+						}, {
+							key: "联系人",
+							value: crm.data_type.CONTACT
+						}]
+					}]
+				});
+				/////共享记录的表格
+				var colNames = ['', '共享人', '共享日期', '客户单位', '共享内容', '具体内容', '共享的权限', '共享原因', '共享对象', '当前状态', '操作'];
+				var colModel = [{
+					name: "id",
+					hidden: true,
+					formatter: function(cellvalue, options, rowObject){
+						return rowObject.share_id;
+					}
+				}, {
+					name: "share_by_employee_name",
+					index: "share_by_employee_name",
+					sortable: false
+				}, {
+					name: "share_date",
+					index: "share_date",
+					sortable: false
+				}, {
+					name: "client_full_name",
+					index: "client_full_name",
+					sortable: false
+				}, {
+					name: "share_content",
+					index: "share_content",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						if(boolHasSharedClientOrDepasOrContactPermisson(rowObject.share_depas)) {
+							var depasDom = "科室/部门";
+						}
+						if(boolHasSharedClientOrDepasOrContactPermisson(rowObject.share_contacts)) {
+							var contactsDom = "联系人";
+						}
+						if(boolHasSharedClientOrDepasOrContactPermisson(rowObject.share_clients)) {
+							var clientsDom = "客户单位";
+						}
+						return "<ul class='summery-view'>"+((clientsDom?"<li>"+clientsDom+"</li>":"")+(depasDom?"<li>"+depasDom+"</li>":"")+(contactsDom?"<li>"+contactsDom+"</li>":""))+"</ul>";
+					}
+				}, {
+					name: "share_content_detail",
+					index: "share_content_detail",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						var client_name="";
+                        var depasDom=[];
+                        for(var i in rowObject.share_depas){
+                            depasDom.push(rowObject.share_depas[i].client_name+">"+rowObject.share_depas[i].depa_name);
+                        }
+                        var contactsDom=[];
+                        var dividedContacts={};
+                        for(var i in rowObject.share_contacts){
+                        	client_name=rowObject.share_contacts[i].client_name;
+                        	if(dividedContacts[rowObject.share_contacts[i].depa_id]){
+                        		dividedContacts[rowObject.share_contacts[i].depa_id].contacts.push(rowObject.share_contacts[i].contact_name);
+                        	}else{
+                        		dividedContacts[rowObject.share_contacts[i].depa_id]={};
+                        		dividedContacts[rowObject.share_contacts[i].depa_id].contacts=[];
+                        		dividedContacts[rowObject.share_contacts[i].depa_id].depa_name=rowObject.share_contacts[i].depa_name;
+                        		dividedContacts[rowObject.share_contacts[i].depa_id].contacts.push(rowObject.share_contacts[i].contact_name);
+                        	}
+                        }
+                        for(var i  in dividedContacts){
+                        	contactsDom.push(client_name+">"+dividedContacts[i].depa_name+">"+dividedContacts[i].contacts.join(","));
+                        }
+                        var clientsDom=[];
+                        for(var i in rowObject.share_clients){
+                            clientsDom.push(rowObject.share_clients[i].client_name);
+                        }
+						return "<ul class='detail-view'>"+ (clientsDom.length>0?"<li>"+clientsDom.join("<br>")+"</li>":"")+(depasDom.length>0?"<li>"+depasDom.join("<br>")+"</li>":"")+(contactsDom.length>0?"<li>"+contactsDom.join("<br>")+"</li>":"")+"</ul>";
+					}
+				}, {
+					name: "share_permission_tag",
+					index: "share_permission_tag",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						return "<a href=\"javascript:;\" onclick=\"viewSearchJurisdiction('" + rowObject.share_id + "')\">查看权限</a>";
+					}
+				}, {
+					name: "share_reason",
+					index: "share_reason",
+					sortable: false
+				}, {
+					name: "target_data_names",
+					index: "target_data_names",
+					sortable: false
+				}, {
+					name: "curr_status",
+					index: "curr_status",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						return rowObject.cancel_status_cn ? rowObject.cancel_status_cn : rowObject.share_status_cn
+					}
+				}, {
+					name: "operators",
+					index: "operators",
+					sortable: false,
+					formatter: function(cellvalue, options, rowObject) {
+						var str = rowObject.cancel_status_cn ? "无" : "<a href='javascript:;' class='btn-cancel-share' onclick=\"cancelShare('" + rowObject.share_id + "','" + rowObject.client_id + "')\" data-rowObject='" + JSON.stringify(rowObject) + "'>取消共享</a>";
+						str+="<br><a href='javascript:;' class='btn-cancel-share' onclick=\"changeHistory('" + rowObject.share_id + "','" + rowObject.share_clients[0].client_id + "')\">更改历史</a>";
+						return str;
+					}
+				}];
+				gridOfRecordShared = $(gridSelectorOfRecordShared).initJqGrid({
+					pager: pagerSelectOfRecordShared,
+					storeRowDataInCache: true,
+					url: BSAPIURL + "/crm/records/share?data_type="+crm.data_type.COMPANY+","+crm.data_type.DEPA+","+crm.data_type.CONTACT,
+					colNames: colNames,
+					colModel: colModel,
+					multiselect: false,
+					gridComplete: function(){
+                    	$(".ui-row-ltr").each(function(){
+                    		var _this=$(this);
+                    		$(this).find(".summery-view li").each(function(index){
+                    			$(this).css({
+                    				height: _this.find(".detail-view li:nth-child("+(parseInt(index)+1)+")").outerHeight(true)+"px",
+                    				"line-height":_this.find(".detail-view li:nth-child("+(parseInt(index)+1)+")").outerHeight(true)/1.5+"px"
+                    			});
+                    			
+                    		});
+                    	});
+                    },
+					afterLoadComplete: function(response) {
+						infoListData = response.rows;
+					}
+				});
+				isFirstloadGridOfRecordShared = true;
+			}
+			//判断一条共享记录是否有单位或者部门或者联系人的权限
+			function boolHasSharedClientOrDepasOrContactPermisson(data){
+				var hasPermission=false;
+				for(var i in data){
+					if(data[i].permissions){
+						hasPermission=true;
+						break;
+					}
+				}
+				return hasPermission;
+			}
+			function cancelShare(id, clientID) {
+				var modalId = $.modal().show("提示", ".cancel-share", function(modal) {
+					if(!$("#" + modalId + " .cancel-share-reason").val()) {
+						$.showErrorGritter($("#" + modalId + " .cancel-share-reason").attr("nulltip") + "不能为空，请输入！");
+						return false;
+					}
+					var shareUpdateUrl = BSAPIURL + "/crm/customer/shared/customer_id/" + clientID;
+					////发起审批
+					$.showApprovalPostPop({
+						routine: "clientSharedCancel",
+						routineName: "取消共享",
+						successCallback: function(apvData, apvModal) {
+							apvData.share_reason = $("#" + modalId + " .cancel-share-reason").val();
+							if(apvData.needApv) {
+								apvData.diy_step_data = apvData.steps;
+								apvData.plan_id = apvData.planId;
+							}
+							$.ajaxDelete(shareUpdateUrl + "/" + id, apvData, function(resp) {
+								if(resp.code == 0) {
+									$.showSuccessGritter(apvData.needApv?"审批已提交，请等待审批！":"取消共享成功！");
+									$("#" + modalId).modal('hide');
+									apvModal&&apvModal.modal("hide");
+									//$(apvModal).modal('hide');
+								} else {
+									$.showErrorGritter(resp.msg);
+								}
+							});
+						}
+					});
+				});
+			}
+			loadGridOfRecordShared();
+			//更改历史
+			function changeHistory(shareId, clientId) {
+				var rowData=$(gridOfRecordShared).getRowData4JqGrid("id", shareId);
+				if(!rowData.share_update_records){
+					$.showErrorGritter("当前记录无更改历史");
+					return false;
+				}
+				var modalId = $.modal({
+					width: $("body").outerWidth(true)-200
+				}).showOfLarge("更改历史", ".change-history-page", function(modal) {
+					$("#"+modalId).modal("hide");
+				});
+				var changeHistoryTrDom="";
+				for(var i=0;i<rowData.share_update_records.length;i++){
+					var oneRecordsData=rowData.share_update_records[i];
+					var change_targets_after_arr=[],change_targets_before_arr=[];
+					//修改前共享对象
+					for(var n=0,len=oneRecordsData.change_targets_before.length;n<len;n++){
+						change_targets_before_arr.push(oneRecordsData.change_targets_before[n].employee_name);
+					}
+					//修改后共享对象
+					for(var n=0,len=oneRecordsData.change_targets_after.length;n<len;n++){
+						change_targets_after_arr.push(oneRecordsData.change_targets_after[n].employee_name);
+					}
+					var changedShareDataAndPermissonObj=getChangedShareDataAndPermissonHtmlObj(oneRecordsData.change_datas_before,oneRecordsData.change_datas_after);
+						changeHistoryTrDom+="<tr>"+
+						"	<td>"+oneRecordsData.employee_name+"</td>"+
+						"	<td>"+oneRecordsData.change_time+"</td>"+
+						"	<td>"+(changedShareDataAndPermissonObj.changedDataHtml||"无更改")+"</td>"+
+						"	<td>"+(changedShareDataAndPermissonObj.beforeChangedPermissonHtml||"无更改")+"</td>"+
+						"	<td>"+(changedShareDataAndPermissonObj.afterChangedPermissonHtml||"无更改")+"</td>"+
+						"	<td>"+change_targets_before_arr.join(",")+"</td>"+
+						"	<td>"+change_targets_after_arr.join(",")+"</td>"+
+						"</tr>";
+						break;
+				}
+				$("#"+modalId+" .change-history-tab tbody").append(changeHistoryTrDom);
+			}
+			//共享内容
+			function getChangedShareDataAndPermissonHtmlObj(change_datas_before,change_datas_after){
+				var changedDataHtml="<ul class='change-common-ul'>";
+				var beforeChangedPermissonHtml="<ul class='change-common-ul'>";
+				var afterChangedPermissonHtml="<ul class='change-common-ul'>";
+				var beforeLen=change_datas_before.length,afterLen=change_datas_after.length,
+				largerLen=beforeLen>=afterLen?beforeLen:afterLen,shorterLen=beforeLen>=afterLen?afterLen:beforeLen;
+				var allDataHasChanged=false;
+				//先遍历较长的那个
+				for(var i=0,len=largerLen;i<len;i++) {
+					var thisHasChanged=false;
+					if(beforeLen>=afterLen){//之前的比较大 
+						var index=getIndexInOtherArrByDataId(change_datas_before[i].share_data_id,change_datas_after);
+						if(index<0){//不存在   被删除了
+							var dataLi="<li>"+(change_datas_before[i].share_data_type=="3"?change_datas_before[i].share_data_depa_name+">"+change_datas_before[i].share_data_name:change_datas_before[i].share_data_name)+"</li>";
+							var	beforePermissonLi="<li>"+getPermissionCn(change_datas_before[i].share_permission)+"</li>";
+							var	afterPermissonLi="<li>无</li>";
+							thisHasChanged=true;
+						}else{
+							//存在，判断权限是否一致
+							if(!boolIsSamePermisson(change_datas_before[i].share_permission,change_datas_after[index].share_permission)){
+								//权限不一致  发生了改变
+								var dataLi="<li>"+(change_datas_before[i].share_data_type=="3"?change_datas_before[i].share_data_depa_name+">"+change_datas_before[i].share_data_name:change_datas_before[i].share_data_name)+"</li>";
+								var	beforePermissonLi="<li>"+getPermissionCn(change_datas_before[i].share_permission)+"</li>";
+								var	afterPermissonLi="<li>"+getPermissionCn(change_datas_after[index].share_permission)+"</li>";
+								thisHasChanged=true;
+							}
+						}
+						
+					}else{
+						var index=getIndexInOtherArrByDataId(change_datas_after[i].share_data_id,change_datas_before);
+						if(index<0){//不存在   新增的
+							var dataLi="<li>"+(change_datas_after[i].share_data_type==crm.data_type.CONTACT?change_datas_after[i].share_data_depa_name+">"+change_datas_after[i].share_data_name:change_datas_after[i].share_data_name)+"</li>";
+							var	beforePermissonLi="<li>无</li>";
+							var	afterPermissonLi="<li>"+getPermissionCn(change_datas_after[i].share_permission)+"</li>";
+							thisHasChanged=true;
+						}else{
+							//存在，判断权限是否一致
+							if(!boolIsSamePermisson(change_datas_after[i].share_permission,change_datas_before[index].share_permission)){
+								//权限不一致  发生了改变
+								var dataLi="<li>"+(change_datas_after[i].share_data_type==crm.data_type.CONTACT?change_datas_after[i].share_data_depa_name+">"+change_datas_after[i].share_data_name:change_datas_after[i].share_data_name)+"</li>";
+								var	beforePermissonLi="<li>"+getPermissionCn(change_datas_before[index].share_permission)+"</li>";
+								var	afterPermissonLi="<li>"+getPermissionCn(change_datas_after[i].share_permission)+"</li>";
+								thisHasChanged=true;
+							}
+						}
+						
+					}
+					if(thisHasChanged) {
+						changedDataHtml+=dataLi;
+						beforeChangedPermissonHtml+=beforePermissonLi;
+						afterChangedPermissonHtml+=afterPermissonLi;
+						allDataHasChanged=true;
+					}
+					
+				}
+				//遍历完之后，在判断长度较短的那个是否有新增或者删除的
+				for(var i=0,len=shorterLen;i<len;i++) {
+					var thisHasChanged=false;
+					if(beforeLen<afterLen){//之前的比较小
+						var index=getIndexInOtherArrByDataId(change_datas_before[i].share_data_id,change_datas_after);
+						if(index<0){//不存在   被删除了
+							var dataLi="<li>"+(change_datas_before[i].share_data_type=="3"?change_datas_before[i].share_data_depa_name+">"+change_datas_before[i].share_data_name:change_datas_before[i].share_data_name)+"</li>";
+							var	beforePermissonLi="<li>"+getPermissionCn(change_datas_before[i].share_permission)+"</li>";
+							var	afterPermissonLi="<li>无</li>";
+							thisHasChanged=true;
+						}
+						//存在的就已经添加过了
+						
+					}else{
+						var index=getIndexInOtherArrByDataId(change_datas_after[i].share_data_id,change_datas_before);
+						if(index<0){//不存在   新增的
+							var dataLi="<li>"+(change_datas_after[i].share_data_type==crm.data_type.CONTACT?change_datas_after[i].share_data_depa_name+">"+change_datas_after[i].share_data_name:change_datas_after[i].share_data_name)+"</li>";
+							var	beforePermissonLi="<li>无</li>";
+							var	afterPermissonLi="<li>"+getPermissionCn(change_datas_after[i].share_permission)+"</li>";
+							thisHasChanged=true;
+						}
+						//存在的就已经做过了
+					}
+					if(thisHasChanged) {
+						changedDataHtml+=dataLi;
+						beforeChangedPermissonHtml+=beforePermissonLi;
+						afterChangedPermissonHtml+=afterPermissonLi;
+						allDataHasChanged=true;
+					}
+					
+				}
+				if(allDataHasChanged) {
+					return {
+						changedDataHtml:changedDataHtml+"</ul>",
+						beforeChangedPermissonHtml:beforeChangedPermissonHtml+"</ul>",
+						afterChangedPermissonHtml:afterChangedPermissonHtml+"</ul>"
+					}
+				}else {
+					return {};
+				}
+				
+			}
+			//判断某个共享内容是否在另一个之中存在，存在返回下标，不存在返回-1
+			function getIndexInOtherArrByDataId(dataId,otherData){
+				for(var i=0,len=otherData.length;i<len;i++){
+					if(otherData[i].share_data_id==dataId) return i;
+				}
+				return -1;
+			}
+			//判断某个共享内容前后的权限是否一致
+			function boolIsSamePermisson(oneArr,anotherArr){
+				if(oneArr.join("")===anotherArr.join("")) return true;
+				return false;
+			}
+			//获得权限的中文
+			function getPermissionCn(permissonArr){
+				var permissonCnArr=[];
+				for(var i in permissonArr){
+					if(permissonArr[i]==crm.share_permissons.VIEW) permissonCnArr.push("查看");
+					if(permissonArr[i]==crm.share_permissons.UPDATE) permissonCnArr.push("修改");
+					if(permissonArr[i]==crm.share_permissons.ADD) permissonCnArr.push("新增");
+				}
+				return permissonCnArr.join("、");
+			}
+			//查看权限
+			function viewSearchJurisdiction(id) {
+				var modalId = $.modal({
+					height: $(window).height()-200,
+					width: 650,
+					shownCallback: function(){
+						$("#"+modalId+ " .share-tree").css("height",$("#"+modalId+" .modal-body").outerHeight(true)-35+"px");
+					}
+				}).show("查看共享权限、内容", ".view-share-page", function() {
+
+				});
+				var contentLocation = "#" + modalId;
+				//生成树
+				for(var i in infoListData) {
+					if(infoListData[i].share_id == id) {
+						//生成单位
+						console.log(infoListData[i])
+						var companyTreeData = infoListData[i].share_clients;
+						loadTree(crm.data_type.COMPANY, companyTreeData, contentLocation);
+						var deparTreeData = infoListData[i].share_depas;
+						loadTree(crm.data_type.DEPA, deparTreeData, contentLocation);
+						var linkmanTreeData = infoListData[i].share_contacts;
+						loadTree(crm.data_type.CONTACT, linkmanTreeData, contentLocation);
+					}
+				}
+			}
+			//加载权限树
+			function loadTree(type, datas, modaId) {
+				console.log(datas)
+				for(var i in datas) {
+					var data = datas[i];
+					var jurisdictionData = data.permissions.split(",");
+					var str ="";
+					str += "<li data-id={ID}>";
+					str += "<div class=\"tree-info dashed-line-container at\" onclick=\"letTreeUpOrDown(this)\">";
+					str += "<div class='lt'><img src='../resources/images/minus-o-icon.png' data-trans-src='../resources/images/plus-o-icon.png' aria-hidden=\"false\"/>";
+					str += "<span class=\"tree-info-name\">{NAME}</span></div>";
+					str += "<i class='dashed-line'></i>";
+					str += "<p class=\"tree-info-share-power pull-right\">";
+					str += "<span class=\"\">共享权限：</span>";
+					for(var j in jurisdictionData) {
+						str += getJurisdiction(jurisdictionData[j]);
+					}
+					str += "";
+					str += "";
+					str += "</p>";
+					str += "</div>";
+					str += "<ul>";
+					str += "</ul>";
+					str += "</li>";
+
+					if(type == crm.data_type.COMPANY) {
+						$(modaId + " .share-tree>ul").append(str.replace('{ID}', data.client_id).replace('{NAME}', data.client_name));
+					} else if(type == crm.data_type.DEPA) {
+						$(modaId + " .share-tree>ul>li>ul").append(str.replace('{ID}', data.depa_id).replace('{NAME}', data.depa_name));
+					} else {
+						$(modaId + " .share-tree>ul li[data-id=" + data.depa_id + "]>ul").append(str.replace('{ID}', data.contact_id).replace('{NAME}', data.contact_name));
+					}
+
+				}
+
+			}
+			//获取权限内容
+			function getJurisdiction(index) {
+				switch(index) {
+					case crm.share_permissons.VIEW:
+						return "<span class='share-power' title=\"查看权限\">查看</span>";
+						break;
+					case crm.share_permissons.UPDATE:
+						return "<span class='share-power' title=\"修改权限\">修改</span>";
+						break;
+					case crm.share_permissons.ADD:
+						return "<span class='share-power' title=\"添加权限\">添加</span>";
+						break;
+					default:
+						return "";
+				}
+			}
+			//树搜索
+			function letTreeUpOrDown(obj) {
+				if($(obj).find(" img").attr("aria-hidden")=="false") {
+					$(obj).find(" img").attr("aria-hidden",true);
+					$(obj).next().slideUp();
+				} else {
+					$(obj).find(" img").attr("aria-hidden",false);
+					$(obj).next().slideDown();
+				}
+				transImgSrc($(obj).find(" img"));
+			}
+		</script>
+	</body>
+
+</html>

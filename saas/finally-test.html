@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+	<head lang="zh-CN">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title></title>
+		<meta name="viewport" contnet="width=device-width, initial-scale=1.0" />
+		<style>
+
+		</style>
+	</head>
+
+	<body>
+		<div id="output"></div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<script type="text/javascript" src="resources/js/customize/websocket.js"></script>
+		<script type="text/javascript">
+			var ws = $.webSoket({
+				wsServer: "192.168.1.250",
+				protocal: "8012",
+				onopenCallback: function(data) {},
+				onmessageCallback: function(data) {},
+				onerrorCallback: function(data) {},
+				oncloseCallback: function(data) {}
+			});
+		</script>
+	</body>
+
+</html>

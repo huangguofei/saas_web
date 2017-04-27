@@ -1,0 +1,57 @@
+.clear-float:after{
+	content: "";
+	display: block;
+	clear: both;
+}
+
+.a-btn,
+.a-btn:hover,
+.a-btn:focus {
+	display: inline-block;
+	color:#fff;
+	background-color: #169BD5;
+	padding: 5px 10px;
+	border: 1px solid #169BD5;
+	border-radius: 5px;
+	margin-right: 10px;
+	text-decoration: none;
+}
+
+.jianbian {
+	background:-moz-linear-gradient(left,#F2F2F2,#f96);/*Mozilla*/
+				background:-webkit-gradient(linear,0 50%,100% 50%,from(#F2F2F2),to(#f96));/*Old gradient for webkit*/
+                background:-webkit-linear-gradient(left,#F2F2F2,#f96);/*new gradient for Webkit*/
+                background:-o-linear-gradient(left,#F2F2F2,#f96); /*Opera11*/
+}
+
+.input-search {
+	position: relative;
+}
+
+.input-search input {
+	width: 100%;
+}
+
+.input-search i {
+	position: absolute;
+	right: 10px;
+	top: 0;
+	color:#999;
+}
+
+.input-search-inline-block {
+	position: relative;
+	display: inline-block;
+}
+
+.input-search-inline-block input {
+	width: 100%;
+}
+
+.input-search-inline-block i {
+	position: absolute;
+	right: 10px;
+	top: 0;
+	color:#999;
+}
+

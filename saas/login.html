@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<meta charset="utf-8" />
+		<title>销秘云计算 运营平台</title>
+		<link rel="stylesheet" href="resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="resources/css/index.css" />
+		<link rel="stylesheet" href="resources/css/login.css" />
+	</head>
+
+	<body class="login">
+		<div class="login-container">
+			<div class="header">
+				<img src="resources/images/logo-black.png" />
+				<!--<p>一体化办公解决方案提供商</p>-->
+			</div>
+			<div class="content">
+				<div class="box-login">
+					<!--<h3>登 录</h3>-->
+					<p class="input-bg account">
+						<i></i><input type="text" id="txtAccount" placeholder="请输入手机号码" maxlength="11" nulltip="手机号码" valitype="mobile" tabindex="1" autocomplete="off" />
+					</p>
+					<p class="input-bg pwd">
+						<i></i><input type="password" id="txtPwd" placeholder="请输入密码" nulltip="密码" maxlength="20" tabindex="2" autocomplete="off" />
+					</p>
+					<p class="input-bg code">
+						<i></i><input type="text" id="txtCode" placeholder="验证码" maxlength="6" nulltip="验证码" tabindex="3" />
+					</p>
+					<img class="img-code" src="resources/images/code.jpg" title="点击刷新验证码" />
+					<p class="rem">
+						<input type="checkbox" id="ckRem" /><label for="ckRem">记住我</label>
+						<label class='link-container'>
+							<a class="link-forget" href="forget.html">忘记密码？</a><i></i><a class="link-forget" href="register.html">注册账号</a>
+						</label>
+					</p>
+					<p class="btns">
+						<input id="btnLogin" type="button" value="登 录" tabindex="4" />
+					</p>
+				</div>
+				<p class="suggestions" style="display: block;">
+					建议使用浏览器：
+						<img src="resources/images/login-IE.png" alt="" />
+						<a href="https://support.microsoft.com/zh-cn/help/17621/internet-explorer-downloads" target="_blank">IE10</a>
+						<img src="resources/images/login-FX.png" alt="" />
+						<a href="http://www.firefox.com.cn/" target="_blank">火狐Firefox</a> 
+						<img src="resources/images/login-CHROME.png" alt="" />
+						<a href="http://www.googlechromer.cn/" target="_blank">谷歌Chrome</a>
+				</p>
+			</div>
+			<div class="footer">
+				<div class="copyright">
+					<span>
+						重庆销秘云计算有限公司版权所有
+						<a style="color:#337ab7!important;" href="http://www.miitbeian.gov.cn" target="_blank">渝ICP备16014572号</a>
+					</span>
+					<span class="footer-link"><a href="index.html">返回首页</a> &nbsp;|&nbsp; <a href="register.html">注册帐号</a> </span>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<script type="text/javascript">
+			sessionStorage.setItem("need_login", true);
+			$(document).ready(function() {
+				$("#txtAccount").val($.cookie("_account"));
+				if($.cookie("_rem"))
+					$("#ckRem").attr("checked", "checked");
+				//token
+				$.token(function(){
+					//code
+					initVerifyCode();
+				});
+				var isLogining = false;
+				$("#btnLogin").click(function() {
+					if(isLogining) {
+						return false;
+					}
+					if(!inputValidateForGritter(".box-login", "login-center")) {
+						return false;
+					}
+					isLogining = true;
+					var btnObj = $(this);
+					btnObj.val("登录中...");
+					$.clearGritter();
+					//login
+					var loginData = {
+						"account": $("#txtAccount").val(),
+						"password": $("#txtPwd").val(),
+						"captcha_code": $("#txtCode").val()
+					};
+					$.ajaxPost(SAASAPIS.BS.passport, loginData,
+						function(response) {
+							loginCallback(response.code, response);
+							isLogining = false;
+						},
+						function() {
+							loginCallback(500);
+						});
+				});
+				$(".box-login .input-bg input").focus(function() {
+					$(".box-login .input-bg").removeClass("focus");
+					$(this).parent().addClass("focus");
+				}).blur(function() {
+					$(".box-login .input-bg").removeClass("focus");
+				});
+				$("#txtAccount").keypress(function(k) {
+					if(k.keyCode == 13) {
+						$("#txtPwd").focus();
+					}
+				});
+				$("#txtPwd").keypress(function(k) {
+					if(k.keyCode == 13) {
+						$("#txtCode").focus();
+					}
+				});
+				$("#txtCode").keypress(function(k) {
+					if(k.keyCode == 13) {
+						$("#btnLogin").click();
+					}
+				});
+				$(".img-code").click(function() {
+					initVerifyCode();
+				});
+				$(".box-login .input-bg").click(function() {
+					$(this).find("input").focus();
+				});
+			});
+
+			function loginCallback(code, response) {
+				if(code == 0) {
+					//console.log(response);
+					/*if(response.data.cmp_info.status==1){
+						$.showErrorGritter("企业已停用，暂时无法使用，有问题请联系客服",{
+							position: "login-center"
+						});
+						return false;
+					}*/
+					if(response.data.account_roles) {
+						var canLogin = false;
+						$.each(response.data.account_roles, function(i, item) {
+							if(item.role_status == 1) {
+								canLogin = true;
+							}
+						});
+						if(!canLogin) {
+							$.showErrorGritter("您当前无可用角色，如有疑问请联系人管理员", {
+								position: "login-center"
+							});
+							return false;
+						}
+					}
+					//success
+					$.showSuccessGritter("登录成功，跳转到主页...", {
+						time: 3000,
+						position: "login-center"
+					});
+					//save local
+					$.cookie("_u_id", response.data.account_id);
+					$.cookie("_u_name", response.data.account_real_name);
+					$.cookie("_u_account", response.data.account_mobile);
+					$.cookie("_u_is_admin", response.data.account_is_super_admin);
+					$.cookie("_u_avatar", response.data.employee_avatar);
+					$.cookie("_u_depa_name", response.data.employee_department_cn);
+
+					$.cookie("session_id", response.session_id);
+					setTimeout(function() {
+						window.location = "main.html";
+					}, 1000);
+					if($("#ckRem").is(":checked")) {
+						$.cookie("_account", response.data.account_mobile, {
+							expires: 7
+						});
+						$.cookie("_rem", true, {
+							expires: 7
+						});
+					} else {
+						$.removeCookie("_account");
+						$.removeCookie("_rem");
+					}
+				} else {
+					$.showErrorGritter("登录失败：" + response.msg, {
+						position: "login-center"
+					});
+					//code
+					initVerifyCode();
+				}
+				$("#btnLogin").val("登 录");
+			}
+
+			function initVerifyCode() {
+				var codeSrc=SAASAPIS.BASE.captcha + "?height=32&session_id="+$.cookie("session_id")+"&width=110&t=" + new Date().getTime();
+				console.log("请求前："+codeSrc);
+				$(".img-code").attr("src", codeSrc);
+				console.log("请求后："+codeSrc);
+				$("#txtCode").val("");
+			}
+		</script>
+	</body>
+
+</html>

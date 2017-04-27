@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="resources/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="resources/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="resources/css/jquery.gritter.css" />
+		<link rel="stylesheet" href="resources/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="resources/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="resources/css/datepicker.css" />
+		<link rel="stylesheet" href="resources/css/main-page.css" />
+		<style>
+			.hide {
+				display: none;
+			}
+			
+			#waterPrint {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				opacity: .1;
+				color: #005A8C;
+			}
+			
+			#waterPrint span {
+				display: inline-block;
+				transform: rotateZ(-33deg);
+				font-size: 17px;
+				font-weight: 600;
+				margin: 20px;
+			}
+			
+			
+		</style>
+	</head>
+
+	<body style="margin: 0;">
+		<div id="test" style="margin-left:500px;margin-top:200px;">
+			<div>点击下面按钮测试：</div>
+			<label><input name="bzd" type="radio" value="0"/>统计类型(不支持联动，值为0)</label><br />
+			<label><input name="bzd" type="radio" value="1"/>考勤规则类（向下联动不向上联动，值为1）</label><br />
+			<label><input name="bzd" type="radio" value="2"/>双向联动（值为2）</label><br />
+		</div>
+
+		<div class="pnl-leader-info dept-tree-container hide">
+			<form class="form-horizontal model-leader-info model-dept-select-share">
+				<div class="wrap wrap-source">
+					<label>选择部门：</label>
+					<div class="box">
+						<ul class="list-emp tree tree-dept">
+
+						</ul>
+					</div>
+				</div>
+				<div class="wrap seg">
+					<div class="box">
+					</div>
+				</div>
+				<div class="wrap wrap-new">
+					<label>已选择：</label>
+					<div class="box">
+						<ul class="list-emp list-dept-select-temp">
+
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">Panel heading without title</div>
+			<div class="panel-body">
+				Panel content
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Panel title</h3>
+			</div>
+			<div class="panel-body">
+				Panel content
+			</div>
+		</div>
+		<!--<input type="text" bind="uname" />
+		<input type="text" bind="user.name" />
+		<input type="text" bind="user.age" />
+		<input type="text" bind="user.info.ss" />-->
+		<!--<button id="btn1" type="button" onclick="f1();">sasa</button>
+		<p class="label-ret"></p>-->
+		<!--<div id="settings">
+			<h1>Diff</h1>
+			<label><input type="radio" name="diff_type" value="diffChars" checked> Chars</label>
+			<label><input type="radio" name="diff_type" value="diffWords"> Words</label>
+			<label><input type="radio" name="diff_type" value="diffLines"> Lines</label>
+		</div>
+
+		<a href="https://github.com/kpdecker/jsdiff" class="source">github.com/kpdecker/jsdiff</a>
+
+		<table>
+			<tr>
+				<td contenteditable="true" id="a"></td>
+				<td contenteditable="true" id="b"></td>
+				<td><pre id="result"></pre></td>
+			</tr>
+		</table>-->
+
+		<script type="text/javascript" src="resources/js/jquery.min.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+		<!--<script type="text/javascript" src="resources/js/jquery.gritter.min.js"></script>
+		<script type="text/javascript" src="resources/js/jquery.jqGrid.min.js"></script>
+		<script type="text/javascript" src="resources/js/grid.locale-zh.js"></script>
+		<script type="text/javascript" src="resources/upload/plupload.full.min.js"></script>
+		<script type="text/javascript" src="resources/js/sortable.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap-treeview.js"></script>
+		<script type="text/javascript" src="resources/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="resources/js/main.min.js"></script>
+		<script type="text/javascript" src="resources/js/diff.js"></script>
+		<script type="text/javascript" src="resources/js/customize/hxj.js"></script>-->
+		<script>
+			var waterPrint=function(){
+				$("body").append("<div id='waterPrint'></div>");
+				$("#waterPrint").append("<span class='name-style'>一个名字</span>");
+				var width=$("body").outerWidth(true);
+				var height=$("body").outerHeight(true);
+				var spanWidth=$(".name-style").outerWidth(true);
+				var spanHeight=$(".name-style").outerHeight(true);
+				//console.log("width:"+width+"height:"+height+"spanWidth:"+spanWidth+"spanHeight:"+spanHeight)
+				var lenW=parseInt(width/spanWidth);
+				var lenH=parseInt(height/spanHeight);
+				//console.log(lenW+"+++"+lenH)
+				for(var i =0;i<lenW;i++){
+					for(var n=0;n<lenH;n++){
+						//console.log(n)
+						$("#waterPrint").append("<span class='name-style'>一个名字</span>");
+					}
+				}
+			}
+			waterPrint();
+			//			var addTpl = "┢"; //、增加
+			//			var delTpl ="┩"; //减少
+			//			var addArr = [];
+			//			var delArr = [];
+			//			var str1 = "我求两二比较字符66处理"; //原始
+			//			var s1Length = str1.length;
+			//			var str2 = "求11两22或三个44比较字符串处理55"; //新的
+			//			var s2Length = str2.length;
+			//			var re = new RegExp("(?=.*?)[^" + str1 + "](?=.*?)|(?=.*?)[^" + str2 + "](?=.*?)", "g");
+			//			var arr;
+			//			document.write(str1 + "<br/>" + str2);
+			//			var changeArr = [];
+			//			while((arr = re.exec(str1 + str2)) != null) {
+			//				changeArr.push(arr);
+			//			}
+			//			if(changeArr.length > 0) {
+			//				//倒序
+			//				changeArr = changeArr.sort(function(a, b) {
+			//					return b.index - a.index;
+			//				});
+			//
+			//				var sourceStr = str1;
+			//				var sourceStr2=str2;
+			//				//过滤删除的字符
+			//				var deledArr = [];
+			//				//console.log(changeArr)
+			//				for(var i in changeArr) {
+			//					var changeData = changeArr[i];
+			//					if(changeData.index <= s1Length) { ////被删除的
+			//						sourceStr = sourceStr.substring(0, changeData.index) + sourceStr.substring(changeData.index + 1, sourceStr.length);
+			//						deledArr.push(changeArr[i]);
+			//					}
+			//				}
+			//				var sourceLength = sourceStr.length;
+			//				//重新拼接
+			//				////先做删除
+			//				for(var i in deledArr) {
+			//					var changeData=deledArr[i];
+			//					var currIndex = changeData.index-(deledArr.length-i-1);
+			//					if(i>0&&(changeData["index"] + 1 == deledArr[i - 1]["index"])) {
+			//						currIndex++;
+			//					}
+			//					sourceStr = sourceStr.substring(0, currIndex) + $.format(delTpl, changeData["0"]) + sourceStr.substring(currIndex, sourceStr.length);
+			//					delArr.push(changeData["0"]);
+			//				}
+			//				//console.log(sourceStr)
+			//				//、、做增加
+			//				var m=0;
+			//				for(var i=0;i<changeArr.length-deledArr.length;i++) {//新增
+			//					var len=0;
+			//					var changeData = changeArr[i];
+			//						var p=changeData["index"]-s1Length-(changeArr.length-deledArr.length-i);
+			//						//var currIndex =p;//changeData["index"]-s1Length;;
+			//						var currIndex=changeData["index"]-s1Length;
+			//						sourceStr2 = sourceStr2.substring(0, currIndex) + $.format(addTpl, changeData["0"]) + sourceStr2.substring(currIndex+1, sourceStr2.length);
+			//						addArr.push(changeData["0"]);
+			//				}
+			//				//console.log(sourceStr2)
+			//				var newStr="";
+			//				sourceStr=sourceStr.split("");
+			//				sourceStr2=sourceStr2.split("");
+			//				var m=0;
+			//				for(var i in sourceStr){//删除
+			//					if(sourceStr[i]=="┩"){//0  
+			//							newStr+=sourceStr[i];//红色   表示删除
+			//						}else{
+			//							////console.log(i+"+++"+m+"++++")
+			//							for(var n=m;n<sourceStr2.length;n++){//增加
+			//								if(sourceStr2[n]=="┢"){
+			//									newStr+=sourceStr2[n];
+			//									//console.log(newStr)
+			//									m++;
+			//								}else{
+			//									if(sourceStr2[n]==sourceStr[i]){
+			//										newStr+=sourceStr2[n];
+			//										m++;
+			//										if(i==sourceStr.length-1){
+			//											while(m<sourceStr2.length){
+			//												newStr+=sourceStr2[m];
+			//												m++;
+			//											}
+			//										}
+			//										break;
+			//									}
+			//								}
+			//							}
+			//						}
+			//				}
+			//				//console.log(newStr)
+			//				var handleSourceArr = newStr.split("");
+			//				for(var i = handleSourceArr.length; i >= 0; i--) {
+			//					if(handleSourceArr[i] == "┢") { //增加
+			//						handleSourceArr[i] = "<b style='color:blue;'>" + addArr.shift() + "</b>"
+			//					}
+			//					if(handleSourceArr[i] == "┩") { //减少
+			//						handleSourceArr[i] = "<del style='color:red;'>" + delArr.shift() + "</del>"
+			//					}
+			//				}
+			//				domStr = handleSourceArr.join("");
+			//				$(".label-ret").html(domStr);
+			//			}
+			////字符串处理
+			function handleStr(str1, str2) {
+				var str1 = "document1231.getElementById('a')"; //原始的
+				var str2 = "document.getElementById('b')fgjhfgjgf"; //修改的
+				var domStr = "";
+
+				window.diffType = "diffChars";
+
+				function changed() {
+					var diff = JsDiff[window.diffType](str1, str2);
+					for(var i = 0; i < diff.length; i++) {
+
+						if(diff[i].added && diff[i + 1] && diff[i + 1].removed) {
+							var swap = diff[i];
+							diff[i] = diff[i + 1];
+							diff[i + 1] = swap;
+						}
+						if(diff[i].removed) {
+							domStr += "<del>" + diff[i].value + "</del>"
+						} else if(diff[i].added) {
+							domStr += "<ins>" + diff[i].value + "</ins>"
+						} else {
+							domStr += diff[i].value
+						}
+					}
+					return domStr;
+				}
+				return changed();
+			}
+			/*var myreg = /([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})/g;
+			var reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+			var str = "38122412@yahoo.com;38122412@yahoo.com.com38122412@yahoo.com38122412@yahoo.com38122412@yahoo.com";
+			var tempArr = str.split("@");
+			for(var i in tempArr){
+				if(i!=0) tempArr[i]="@"+tempArr[i];
+				//console.log(tempArr[i])
+				tempArr[i] = tempArr[i].replace(/(^@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3})/g, "$1;");
+				
+			}
+			str=tempArr.join("");
+			//console.log(str)*/
+			//var tempStr = str.substring(index, str.length);
+			//var reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-z]{2,3}$/g;
+
+			//var indexOfHZ = "";
+			//tempStr = tempStr.replace(/(^@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$)/g, "$1;");
+			////console.log(tempStr)
+			//str=str.substring(0,index)+tempStr;//console.log(str);
+			$("#test label input").click(function() {
+				var deptTreeModalId = $.modal({
+					width: 920
+				}).show("选择部门", ".dept-tree-container", function() {
+					$("#" + deptTreeModalId).modal("hide");
+					//console.log(modalHideData);
+				});
+				var modalHideData = [];
+				var options = {
+					url: "",
+					leftTitle: "选则部门",
+					rightTitle: "已选择的部门",
+					isNeedRightPanel: true, //是否需要右边的模块
+					linkageType: $(this).attr("value"), //联动类型   0统计类型    
+					modalId: deptTreeModalId, //打开的modal的id
+					clickCallback: function(data) { //为关闭modal时需要的数据赋值
+						modalHideData = data;
+					}
+				}
+				initDeptTree(options); //主函数
+			});
+			remarkClientDiff("strBefore", "strAfter");
+			//客户的标识处理
+			function remarkClientDiff(strBefore, strAfter) {
+				var strBefore = "XXXXX医院>是打发132>割发代首、讽德诵功<br>" +
+					"45645645>789>艾弗森的骄傲是、不知道12、SB<br>" +
+					"bug#219-01>房顶上个>叶良辰<br>" +
+					"撒的发生大>的司法>不知道<br>" +
+					"泸州老窖>测试一部>徐娇、黄国飞<br>" +
+					"泸州老窖>测试二部>徐晓静";
+				strAfter = "XXXXX医院>是打发132>割发代首、讽德诵功<br>" +
+					"XXXXX医院>是打发>的分公司的、梵蒂冈<br>" +
+					"45645645>789>艾弗森的骄傲是、不知道12、SB<br>" +
+					"bug#219-01>房顶上个>叶良辰<br>" +
+					"撒的发生大>的司法>不知道<br>" +
+					"泸州老窖>测试一部>黄国飞<br>" +
+					"泸州老窖>测试二部>徐晓静";
+				var returnDomArr = [];
+				var strBeforeArr = strBefore.split("<br>"),
+					strAfterArr = strAfter.split("<br>");
+				for(var i in strBeforeArr) {
+					//先比较单位名称
+					var cmpName = strBeforeArr[i].split(">")[0];
+					if(ckeckHasCpmName(cmpName, strAfterArr)) {
+						if(ckeckHasDepaName(strBeforeArr[i].split(">")[1], strAfterArr)) {
+							if(ckeckHasContactName(strBeforeArr[i].split(">")[2], strAfterArr)) {
+								returnDomArr.push(strBeforeArr[i]);
+							} else {
+								returnDomArr.push("<del>" + strBeforeArr[i] + "</del>");
+							}
+						} else {
+							returnDomArr.push("<del>" + strBeforeArr[i] + "</del>");
+						}
+					} else {
+						returnDomArr.push("<del>" + strBeforeArr[i] + "</del>");
+					}
+				}
+
+				for(var i in strAfterArr) {
+					//先比较单位名称
+					var cmpName = strAfterArr[i].split(">")[0];
+					if(ckeckHasCpmName(cmpName, strBeforeArr)) {
+						if(ckeckHasDepaName(strAfterArr[i].split(">")[1], strBeforeArr)) {
+							if(ckeckHasContactName(strAfterArr[i].split(">")[2], strBeforeArr)) {
+								//returnDomArr.push(strAfterArr[i]);
+							} else {
+								returnDomArr.push("<ins>" + strAfterArr[i] + "</ins>");
+							}
+						} else {
+							returnDomArr.push("<ins>" + strAfterArr[i] + "</ins>");
+						}
+					} else {
+						returnDomArr.push("<ins>" + strAfterArr[i] + "</ins>");
+					}
+				}
+				//letDelWithIns(returnDomArr);
+				document.write(letDelWithIns(returnDomArr).join("<br>"));
+			}
+			//检查是否包含单位名称
+			function ckeckHasCpmName(cmpName, strAfterArr) {
+				for(var i in strAfterArr) {
+					if(cmpName == strAfterArr[i].split(">")[0]) {
+						return true;
+					}
+				}
+				return false;
+			}
+			//检查是否包含科室名称
+			function ckeckHasDepaName(depaName, strAfterArr) {
+				for(var i in strAfterArr) {
+					if(depaName == strAfterArr[i].split(">")[1]) {
+						return true;
+					}
+				}
+				return false;
+			}
+			//检查是否包含联系人名称
+			function ckeckHasContactName(contactName, strAfterArr) {
+				for(var i in strAfterArr) {
+					if(contactName == strAfterArr[i].split(">")[2]) {
+						return true;
+					}
+				}
+				return false;
+			}
+			//将先删除后添加的拼接到一起
+			function letDelWithIns(sourceArr) {
+				for(var i in sourceArr) {
+					if(sourceArr[i].indexOf("<del>") >= 0) {
+						var tempDelStr = sourceArr[i].replace("<del>", "").replace("</del>", "");
+						for(var n in sourceArr) {
+							if(sourceArr[n].indexOf("<ins>") >= 0) {
+								var tempInsStr = sourceArr[n].replace("<ins>", "").replace("</ins>", "");
+								if(tempDelStr.split(">")[0] == tempInsStr.split(">")[0]) {
+									//交换数组项
+									var tempArr = sourceArr[parseInt(i) + parseInt(1)];
+									sourceArr[parseInt(i) + parseInt(1)] = sourceArr[n];
+									sourceArr[n] = tempArr;
+								} else if(tempDelStr.split(">")[1] == tempInsStr.split(">")[1]) {
+									//交换数组项
+									var tempArr = sourceArr[i + 1];
+									sourceArr[i + 1] = sourceArr[n];
+									sourceArr[n] = tempArr;
+								}
+							}
+						}
+					}
+				}
+				return sourceArr;
+			}
+			var text1 = '<span class="select-item" data-count="province" data-code="100130">新疆维吾尔自治区</span>/<span class="select-item" data-count="city" data-code="100130108">克孜勒苏柯尔克孜自治州</span>';
+			var str = text1.replace(/<span[^>]+>(.*?)<\/span>\/<span[^>]+>(.*?)<\/span>/, '$1/$2');
+			//console.log(str);
+			//////////////////////////////////////////////////////////
+			//水印
+			function GetWaterMarked(targetObj, jpgUrl, targetStr) {
+				var windowobj = targetObj;
+				var waterMarkPicUrl = jpgUrl;
+				var controlWindowStr = targetStr;
+				if(windowobj.document.getElementById("waterMark") != null)
+					return;
+				var m = "waterMark";
+				var newMark = windowobj.document.createElement("div");
+				newMark.id = m;
+				newMark.style.position = "absolute";
+				newMark.style.zIndex = "9527";
+				newMark.style.top = "0px";
+				newMark.style.left = "0px";
+				newMark.style.width = windowobj.document.body.clientWidth;
+				if(parseInt(windowobj.document.body.scrollHeight) > parseInt(windowobj.document.body.clientHeight)) {
+					newMark.style.height = windowobj.document.body.scrollHeight;
+				} else {
+					newMark.style.height = windowobj.document.body.clientHeight;
+				}
+				newMark.style.backgroundImage = "url(" + waterMarkPicUrl + ")";
+				newMark.style.filter = "alpha(opacity=50)";
+				windowobj.document.body.appendChild(newMark);
+				var markStr = "var sobj =" + controlWindowStr + ".document.getElementById('waterMark');sobj.style.width =" + controlWindowStr + ".document.body.clientWidth;sobj.style.height =" + controlWindowStr + ".document.body.clientHeight;";
+				if(windowobj.document.body.onresize != null) {
+					var oldResiae = windowobj.document.body.onresize.toString();
+					var oldResiaeStr = oldResiae.substr(oldResiae.indexOf("{") + 1);
+					var oldResiaeStr = oldResiaeStr.substr(0, oldResiaeStr.lastIndexOf("}"));
+					oldResiaeStr += ";" + markStr;
+					windowobj.document.body.onresize = new Function(oldResiaeStr);
+				} else {
+					windowobj.document.body.onresize = new Function(markStr);
+				}
+			}
+			Array.prototype.ie_slice=function(si,ei,ss){
+				
+			}
+			//var arr=new ArrayBuffer({id:1234asd5f4asdf});
+			//console.log(arr)
+			var str='<a href="https://appleid.apple.com/cn" role="link">Apple ID</a><a href="https://appleid.apple.com/cn" role="link">Apple ID</a><a href="https://appleid.apple.com/cn" role="link">Apple ID</a>';
+			console.log(str.replace(/^(<a(.*)>)+?(.*)+?(<\/a>)+?/g,"$1"));//<a$1 targert='_blank'>$2</a>
+			//////////////////////////////////////////////////////////
+		</script>
+	</body>
+
+</html>
